@@ -36,11 +36,11 @@ Working document for the build-evaluate-improve loop. Goal: **all 19 criteria in
 
 ## Queue (next iterations, in order)
 
-1. **Experiment engine v1**: ExperimentSpec type, param controls, shared state store (zustand), first visualization kit pieces (ScatterCanvas, fitted line, residuals, loss readout).
-4. **Linear-regression exhibit v1 (interactive)**: draggable points, live fit, the manipulation→insight chain (B1) — first scoreable A3/B1/B2/B3 work.
-5. **Exhibit page template + shell design pass** (A1/A4/A5): real lab home, exhibit chrome, graph explorer v1.
-6. **CI (C5/C2)**: GitHub Actions — validate, lint, test, build, axe-core, bundle budgets; dependency-cruiser rules.
-7. **Narrative + audio pipeline for exhibit #1** (B4); assessments (B5); polish toward flagship (B6).
+1. **Playwright + browser verification**: screenshot tests of exhibit key states, drag-interaction smoke test — closes the loop on iter 3's unverified interactivity, advances C4.
+2. **Gradient-descent exhibit (interactive)**: steppable descent (play/pause/step/scrub, learning-rate slider, divergence scenario) — model layer is ready; proving ground for B3 (motion) and the second data point for C1.
+3. **Exhibit page template + shell design pass** (A1/A4/A5): real lab home, exhibit chrome, graph explorer v1.
+4. **CI (C5/C2)**: GitHub Actions — validate, lint, test, build, axe-core, bundle budgets; dependency-cruiser rules.
+5. **Narrative + audio pipeline for exhibit #1** (B4); assessments (B5); polish toward flagship (B6).
 
 ## Standing rules for the loop
 
