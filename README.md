@@ -23,6 +23,7 @@ ML Lab is a pedagogical web application that makes machine learning concepts fee
 | [docs/03-data-model.md](docs/03-data-model.md) | Knowledge graph schema, concept format, assessments, mastery model |
 | [docs/04-content-pipeline.md](docs/04-content-pipeline.md) | AI-assisted production workflow for narrative, art, audio, interactives |
 | [docs/05-roadmap.md](docs/05-roadmap.md) | Phased plan: popular ML → niche/nascent → mathematics → connected disciplines |
+| [docs/06-evaluation-criteria.md](docs/06-evaluation-criteria.md) | The quality bar: research-grounded criteria for UX, visual/interactive craft, and architecture |
 
 ## Status
 
