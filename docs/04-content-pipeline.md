@@ -28,7 +28,7 @@ A one-page exhibit brief: the single *aha* this exhibit delivers, the core metap
 
 ### 4. Art (image generation + art direction)
 
-- **Characters**: each domain (or recurring force — e.g., "the optimizer", "noise") may be personified by a guide character. Generated with Midjourney/equivalent under a strict style bible: consistent rendering style, palette, adult-oriented (scientific-illustration register, not cartoon). Character refs stored centrally; every exhibit using a character pulls from the same approved sheet. **[OPEN — character treatment is a key direction question]**
+- **Characters** (decided: light-touch personification): a small cast personifying recurring *forces* — the Optimizer, Noise, the Regularizer, the Curse of Dimensionality — not one mascot per domain. Generated with Midjourney/equivalent under a strict style bible: consistent rendering style, palette, scientific-illustration register for adults. Character refs stored centrally; every exhibit using a character pulls from the same approved sheet. Small cast + sparing appearances keeps the consistency burden tractable.
 - **Scene/diagram art**: hero images, narrative interstitials, metaphor illustrations. Generated, then curated hard — reject rate will be high; that's the process.
 - Hand-built SVG diagrams remain the right tool for anything precise (geometry, architectures); generated art is for atmosphere, metaphor, and character.
 - All assets named per manifest convention and recorded in `ExhibitMeta.assets`.

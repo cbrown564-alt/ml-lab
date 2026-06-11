@@ -17,6 +17,7 @@ ML Lab is a pedagogical web application that makes machine learning concepts fee
 
 | Doc | Contents |
 | --- | --- |
+| [docs/00-decisions.md](docs/00-decisions.md) | Decision log for direction-setting choices |
 | [docs/01-vision.md](docs/01-vision.md) | Vision, pedagogy, design principles, what "exceptional" means here |
 | [docs/02-architecture.md](docs/02-architecture.md) | Technical architecture, stack, rendering and in-browser ML strategy |
 | [docs/03-data-model.md](docs/03-data-model.md) | Knowledge graph schema, concept format, assessments, mastery model |
@@ -25,4 +26,4 @@ ML Lab is a pedagogical web application that makes machine learning concepts fee
 
 ## Status
 
-Pre-implementation. Documentation and direction-setting phase.
+Direction aligned (2026-06-11): Python-via-Pyodide code mode, light-touch force personification, local-first persistence, dual-mode (light shell / dark lab) design system. Next: Phase 0 platform build — see [docs/05-roadmap.md](docs/05-roadmap.md).

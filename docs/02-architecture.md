@@ -1,20 +1,20 @@
 # Technical Architecture
 
-> Status: proposed defaults, pending alignment. Items marked **[OPEN]** are direction questions.
+> Status: direction aligned 2026-06-11 — see [00-decisions.md](00-decisions.md) for the decision log.
 
 ## Stack overview
 
 | Layer | Choice | Rationale |
 | --- | --- | --- |
 | Framework | **Next.js (App Router) + TypeScript** | Static-first rendering for content, React ecosystem for interactives, first-class Vercel deployment |
-| Styling | **Tailwind CSS + design tokens** | Speed + consistency; custom design system on top (see exhibit theming below) |
+| Styling | **Tailwind CSS + design tokens, dual-mode design system** | Calm light shell for navigation/reading; dark immersive canvas inside experiments and cinematic sequences. Tokens are mode-aware from day one |
 | Content | **MDX + typed TS/JSON data files** | Prose with embedded interactive components; graph/metadata as typed data |
 | 2D visualization | **SVG (D3 scales/shapes) + Canvas** | SVG for annotated, axis-heavy diagrams; Canvas for many-particle/dense renders |
 | 3D / GPU visualization | **Three.js / react-three-fiber** (where warranted) | Loss landscapes, embedding spaces, high-dimensional projections |
 | In-browser ML | **Hand-rolled micro-implementations first; TensorFlow.js / ONNX Runtime Web for neural exhibits** | See "Experiment engine" below |
-| Code mode runtime | **[OPEN]** Pyodide (Python in WASM) vs. JS/TS sandbox vs. both | See decision section |
+| Code mode runtime | **Pyodide (Python in WASM)** | Decided — see code runtime section |
 | State | **Zustand** (per-exhibit experiment state) + React context (app shell) | Light, ergonomic, fine-grained updates for 60fps interactions |
-| Persistence | **Local-first (localStorage/IndexedDB)**; accounts/DB deferred **[OPEN]** | Ship Phase 1 without auth complexity |
+| Persistence | **Local-first (IndexedDB)**; accounts/DB deferred to Phase 2 | Decided — ship Phase 1 without auth complexity |
 | Audio | Pre-generated ElevenLabs assets + word-timing JSON, custom player | Proven in mathland prototype |
 | Hosting | **Vercel** | Static + Fluid Compute when server needs emerge |
 
@@ -63,13 +63,15 @@ Both modes drive the **same model instance**:
 - **Code mode**: an editor (CodeMirror 6) holding a runnable script. Running it executes against the same dataset and renders into the same views. Parameter changes made visually are reflected as values in a designated config block of the code, and vice versa, where feasible.
 - The contract per exhibit: a typed `ExperimentSpec` defining dataset(s), parameters, model API, and which views it renders to. This keeps each exhibit's wiring declarative.
 
-### Code runtime **[OPEN — key decision]**
+### Code runtime — decided: Python via Pyodide
 
-- **Option A — Python via Pyodide**: matches the ML lingua franca; numpy available; learners transfer skills directly. Cost: ~10–15MB WASM download (lazy-loaded, cached), slower startup, a bridge layer between Python state and JS visualization.
-- **Option B — JavaScript/TypeScript sandbox**: instant, zero download, code *is* the model layer (perfect mirroring). Cost: learners practice a language they likely won't use for ML at work.
-- **Option C — both**: Python as the learner-facing default, JS available; more build cost.
+Code mode runs **Python in the browser via Pyodide** (numpy available), chosen for pedagogical authenticity: learners practice the ML lingua franca and skills transfer directly to real work.
 
-Recommendation: **A (Pyodide)** for pedagogical authenticity, with the model layer remaining TS for visualization (code mode teaches; the visual sim runs native). Final call pending alignment.
+Implementation consequences:
+- Pyodide (~10–15MB WASM) lazy-loads on first entry into code mode, cached aggressively (service worker), with an honest loading treatment. Visual mode never pays this cost.
+- The model layer remains TypeScript — the visual simulation runs native at 60fps. Code mode executes the learner's Python against the same datasets and parameters via a typed bridge (`ExperimentSpec` defines the shared contract), and renders results into the same views.
+- Code templates are idiomatic teaching Python mirroring the TS model's logic; keeping the two implementations honest with shared numeric fixtures is part of exhibit QA.
+- Pyodide runs in a Web Worker so long-running learner code never blocks the UI.
 
 ## Content architecture
 
@@ -120,6 +122,6 @@ Recommendation: **A (Pyodide)** for pedagogical authenticity, with the model lay
 
 ## Deferred until needed
 
-- Accounts, sync, server persistence (Phase 1 is local-first **[OPEN]**).
+- Accounts, sync, server persistence (Phase 1 is local-first; learner schema is versioned so sync can arrive in Phase 2 without migration pain. An export/import-progress affordance hedges against browser-storage loss in the meantime).
 - Server-side compute (could later power bigger-model demos via API).
 - LLM-powered features in-product (e.g., a tutor that explains your experiment state) — exciting, deliberately out of scope for Phase 1 to keep the experience deterministic and free.

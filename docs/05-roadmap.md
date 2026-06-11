@@ -75,7 +75,7 @@ The practitioner's surrounding world: software engineering for ML (testing, abst
 
 ## Near-term sequence
 
-1. Align on open direction questions (stack details, code runtime, characters, persistence, visual direction).
+1. ~~Align on open direction questions~~ — done 2026-06-11, see [00-decisions.md](00-decisions.md).
 2. Phase 0 build.
 3. First two flagships → review against the vision doc's bar → recalibrate cadence estimates.
 4. Phase 1 cluster-by-cluster.
