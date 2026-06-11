@@ -1,5 +1,9 @@
+import Link from "next/link";
 import { nodes } from "@content/graph/nodes";
 import { journeys } from "@content/journeys/foundations";
+
+/** Nodes whose exhibit routes exist. Becomes graph-driven once ExhibitMeta lands. */
+const LIVE_EXHIBITS = new Set(["linear-regression"]);
 
 /**
  * Placeholder shell home. Exists to prove the content pipeline end-to-end
@@ -31,15 +35,27 @@ export default function Home() {
           {[...byDomain.keys()].length} domains
         </p>
         <ul className="mt-4 flex flex-wrap gap-2">
-          {nodes.map((n) => (
-            <li
-              key={n.id}
-              className="rounded-full border border-line bg-sunken px-3 py-1 text-sm text-ink-muted"
-              title={n.oneLiner}
-            >
-              {n.title}
-            </li>
-          ))}
+          {nodes.map((n) =>
+            LIVE_EXHIBITS.has(n.id) ? (
+              <li key={n.id}>
+                <Link
+                  href={`/exhibits/${n.id}`}
+                  title={n.oneLiner}
+                  className="inline-block rounded-full border border-accent bg-raised px-3 py-1 text-sm font-medium text-accent hover:bg-accent hover:text-accent-ink"
+                >
+                  {n.title} →
+                </Link>
+              </li>
+            ) : (
+              <li
+                key={n.id}
+                className="rounded-full border border-line bg-sunken px-3 py-1 text-sm text-ink-muted"
+                title={n.oneLiner}
+              >
+                {n.title}
+              </li>
+            ),
+          )}
         </ul>
       </section>
 
