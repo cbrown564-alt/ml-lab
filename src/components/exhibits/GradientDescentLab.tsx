@@ -6,6 +6,7 @@ import { ParamSlider } from "@/components/viz/ParamSlider";
 import { TrainingCurve } from "@/components/viz/TrainingCurve";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
 import { createExperimentStore } from "@/lib/experiment/store";
+import { useLearner, whenHydrated } from "@/lib/learner/store";
 import {
   createGradientDescent,
   olsFit,
@@ -91,6 +92,8 @@ export function GradientDescentLab() {
   const advance = (steps: number) => {
     const run = runRef.current;
     if (!run || offTheCliff(run.current) || run.current.step >= MAX_STEPS) return;
+    // Driving the descent is the moment "seen" becomes "practiced".
+    whenHydrated(() => useLearner.getState().recordPractice(spec.id));
     run.run(Math.min(steps, MAX_STEPS - run.current.step));
     syncFromRun(run);
   };
@@ -150,7 +153,10 @@ export function GradientDescentLab() {
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <button
           type="button"
-          onClick={() => setPlaying((p) => !p)}
+          onClick={() => {
+            whenHydrated(() => useLearner.getState().recordPractice(spec.id));
+            setPlaying((p) => !p);
+          }}
           disabled={diverged || exhausted}
           className="rounded-full border border-accent px-5 py-1.5 text-sm font-medium text-accent hover:bg-accent hover:text-accent-ink disabled:cursor-not-allowed disabled:opacity-40"
         >

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GraphExplorer } from "@/components/graph/GraphExplorer";
+import { MasteryBadge } from "@/components/learner/MasteryBadge";
 import { domainLabel } from "@/lib/graph/labels";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
@@ -133,12 +134,15 @@ export default function Home() {
                   </span>
                   <div>
                     {live ? (
-                      <Link
-                        href={liveExhibits[node.id].href}
-                        className="font-medium text-accent transition-colors hover:underline"
-                      >
-                        {node.title} →
-                      </Link>
+                      <span className="inline-flex flex-wrap items-center gap-3">
+                        <Link
+                          href={liveExhibits[node.id].href}
+                          className="font-medium text-accent transition-colors hover:underline"
+                        >
+                          {node.title} →
+                        </Link>
+                        <MasteryBadge nodeId={node.id} />
+                      </span>
                     ) : (
                       <span className="font-medium text-ink-muted">
                         {node.title}

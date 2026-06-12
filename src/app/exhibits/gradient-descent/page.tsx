@@ -1,10 +1,12 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { GradientDescentLab } from "@/components/exhibits/GradientDescentLab";
+import { gradientDescentCheck } from "@content/exhibits/gradient-descent/concept-check";
 
 export default function GradientDescentExhibit() {
   return (
     <ExhibitFrame
       nodeId="gradient-descent"
+      check={gradientDescentCheck}
       lede={
         <p>
           The engine under nearly everything. A model starts out wrong,

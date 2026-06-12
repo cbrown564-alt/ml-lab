@@ -1,5 +1,9 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ConceptCheckSection } from "@/components/assessment/ConceptCheckSection";
+import { MasteryBadge } from "@/components/learner/MasteryBadge";
+import { RecordVisit } from "@/components/learner/RecordVisit";
+import type { ConceptCheck } from "@/lib/assessment/schema";
 import { domainLabel, kindLabel } from "@/lib/graph/labels";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
@@ -35,11 +39,13 @@ function NodeChip({ node }: { node: ConceptNode }) {
 export function ExhibitFrame({
   nodeId,
   lede,
+  check,
   children,
 }: {
   nodeId: string;
   /** The exhibit's opening prose — the one part of the chrome that is content. */
   lede: ReactNode;
+  check?: ConceptCheck;
   children: ReactNode;
 }) {
   const node = nodes.find((n) => n.id === nodeId);
@@ -61,13 +67,20 @@ export function ExhibitFrame({
         </Link>
       </nav>
 
+      <RecordVisit nodeId={nodeId} />
+
       <p className="font-mono text-sm tracking-widest text-ink-faint uppercase">
         {domainLabel(node.domain)} · {kindLabel(node.kind)}
       </p>
-      <h1 className="mt-3 text-4xl font-semibold tracking-tight">{node.title}</h1>
+      <div className="mt-3 flex flex-wrap items-center gap-4">
+        <h1 className="text-4xl font-semibold tracking-tight">{node.title}</h1>
+        <MasteryBadge nodeId={nodeId} />
+      </div>
       <div className="mt-4 max-w-[65ch] text-lg leading-relaxed text-ink-muted">{lede}</div>
 
       <div className="mt-10">{children}</div>
+
+      {check && <ConceptCheckSection check={check} />}
 
       <section className="mt-12 border-t border-line pt-8">
         <h2 className="sr-only">This exhibit in the knowledge graph</h2>

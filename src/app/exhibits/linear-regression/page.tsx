@@ -1,10 +1,12 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { LinearRegressionLab } from "@/components/exhibits/LinearRegressionLab";
+import { linearRegressionCheck } from "@content/exhibits/linear-regression/concept-check";
 
 export default function LinearRegressionExhibit() {
   return (
     <ExhibitFrame
       nodeId="linear-regression"
+      check={linearRegressionCheck}
       lede={
         <p>
           The straight line that started it all. Before the math, get your

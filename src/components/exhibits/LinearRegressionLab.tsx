@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Axes, DataPoints, FitLine, Plot, ResidualLines } from "@/components/viz/Plot";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
 import { createExperimentStore } from "@/lib/experiment/store";
+import { useLearner, whenHydrated } from "@/lib/learner/store";
 import { mse, olsFit } from "@/lib/models/linear-regression";
 import { linearRegressionExperiment } from "@content/exhibits/linear-regression/experiment";
 
@@ -48,7 +49,14 @@ export function LinearRegressionLab() {
           <Axes />
           {showResiduals && <ResidualLines points={points} params={fit} />}
           <FitLine params={fit} />
-          <DataPoints points={points} onChange={movePoint} />
+          <DataPoints
+            points={points}
+            onChange={(i, p) => {
+              // Manipulating the data is the moment "seen" becomes "practiced".
+              whenHydrated(() => useLearner.getState().recordPractice(spec.id));
+              movePoint(i, p);
+            }}
+          />
         </Plot>
       </div>
 
