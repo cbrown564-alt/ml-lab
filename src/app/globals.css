@@ -14,7 +14,8 @@
   --surface-sunken: #f1ede7;
   --ink: #1c1a17;
   --ink-muted: #5c574f;
-  --ink-faint: #8a847a;
+  /* 4.7:1 on --surface-bg — axe-core gates serious contrast failures */
+  --ink-faint: #746f65;
   --line: #e2dcd2;
   --accent: #1f6f6b;
   --accent-ink: #ffffff;
@@ -35,7 +36,8 @@
   --surface-sunken: #070910;
   --ink: #e8eaf0;
   --ink-muted: #9aa3b5;
-  --ink-faint: #5c6478;
+  /* 5.1:1 on the dark canvas — same gate as the shell */
+  --ink-faint: #7b8499;
   --line: #232a3b;
   --accent: #3fd0c9;
   --accent-ink: #06211f;

@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "lint:deps": "depcruise src content scripts",
+    "check:budgets": "node scripts/check-budgets.mjs",
     "validate": "tsx scripts/validate-graph.ts",
     "prebuild": "npm run validate",
     "test": "vitest run",
@@ -20,11 +22,13 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
     "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dependency-cruiser": "^17.4.3",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",

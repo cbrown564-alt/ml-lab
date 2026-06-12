@@ -1,0 +1,56 @@
+# Every gate the loop relies on (docs/06): graph validation, lint,
+# architecture rules, unit tests, build, performance budgets, e2e + axe.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Validate knowledge graph
+        run: npm run validate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Architecture rules
+        run: npm run lint:deps
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Performance budgets
+        run: npm run check:budgets
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end + accessibility
+        # Screenshot baselines are win32 (the dev machine); CI runs the
+        # interaction and axe assertions and skips pixel comparisons until
+        # linux baselines are generated.
+        run: npx playwright test --ignore-snapshots
+
+      - name: Upload Playwright traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7
