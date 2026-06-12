@@ -9,10 +9,12 @@ import {
   Plot,
   ResidualLines,
 } from "@/components/viz/Plot";
+import { CodePanel } from "@/components/code/CodePanel";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
 import { createExperimentStore } from "@/lib/experiment/store";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import { mse, olsFit } from "@/lib/models/linear-regression";
+import { linearRegressionPython } from "@/lib/models/linear-regression-py";
 import { linearRegressionExperiment } from "@content/exhibits/linear-regression/experiment";
 
 const useExperiment = createExperimentStore(linearRegressionExperiment);
@@ -36,6 +38,7 @@ export function LinearRegressionLab() {
     reset,
   } = useExperiment();
   const [showResiduals, setShowResiduals] = useState(true);
+  const [mode, setMode] = useState<"visual" | "code">("visual");
 
   const editable =
     spec.datasets.find((d) => d.id === datasetId)?.editable ?? false;
@@ -62,7 +65,35 @@ export function LinearRegressionLab() {
 
       <p className="mt-4 max-w-[70ch] leading-relaxed text-ink-muted">{scenario.prompt}</p>
 
-      <div className="mt-6">
+      <div
+        role="group"
+        aria-label="Experiment mode"
+        className="mt-6 inline-flex rounded-full border border-line p-0.5 text-sm"
+      >
+        {(["visual", "code"] as const).map((m) => (
+          <button
+            key={m}
+            type="button"
+            aria-pressed={mode === m}
+            onClick={() => setMode(m)}
+            className={`rounded-full px-4 py-1 capitalize transition-colors ${
+              mode === m ? "bg-accent text-accent-ink" : "text-ink-muted hover:text-ink"
+            }`}
+          >
+            {m}
+          </button>
+        ))}
+      </div>
+
+      {mode === "code" ? (
+        <div className="mt-4">
+          <CodePanel
+            template={linearRegressionPython(points)}
+            onRan={practiced}
+          />
+        </div>
+      ) : (
+      <div className="mt-4">
         <Plot
           xDomain={xDomain}
           yDomain={yDomain}
@@ -92,24 +123,25 @@ export function LinearRegressionLab() {
             }}
           />
         </Plot>
-      </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-2 font-mono text-sm">
-        <span style={{ color: "var(--viz-prediction)" }}>
-          ŷ = {fit.slope.toFixed(2)}·x {fit.intercept < 0 ? "−" : "+"}{" "}
-          {Math.abs(fit.intercept).toFixed(2)}
-        </span>
-        <span style={{ color: "var(--viz-error)" }}>MSE = {loss.toFixed(2)}</span>
-        <label className="ml-auto flex cursor-pointer items-center gap-2 text-ink-muted">
-          <input
-            type="checkbox"
-            checked={showResiduals}
-            onChange={(e) => setShowResiduals(e.target.checked)}
-            className="accent-[var(--accent)]"
-          />
-          Show residuals
-        </label>
+        <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-2 font-mono text-sm">
+          <span style={{ color: "var(--viz-prediction)" }}>
+            ŷ = {fit.slope.toFixed(2)}·x {fit.intercept < 0 ? "−" : "+"}{" "}
+            {Math.abs(fit.intercept).toFixed(2)}
+          </span>
+          <span style={{ color: "var(--viz-error)" }}>MSE = {loss.toFixed(2)}</span>
+          <label className="ml-auto flex cursor-pointer items-center gap-2 text-ink-muted">
+            <input
+              type="checkbox"
+              checked={showResiduals}
+              onChange={(e) => setShowResiduals(e.target.checked)}
+              className="accent-[var(--accent)]"
+            />
+            Show residuals
+          </label>
+        </div>
       </div>
+      )}
     </div>
   );
 }
