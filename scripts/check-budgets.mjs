@@ -17,11 +17,17 @@ const BASE = `http://localhost:${PORT}`;
  * Baseline measured 2026-06-12: 618–639 KB js per route, almost all of it
  * the React/Next runtime. The budget hugs that baseline so any accidental
  * dependency lands as a red build, and ratchets down only deliberately.
+ *
+ * Exhibit html raised 100 → 110 KB (2026-06-12): the math drawer completed
+ * the exhibit anatomy and its prose ships twice by framework design (SSR
+ * markup + RSC payload), costing ~10 KB per exhibit. That is content, not
+ * bloat — the gate exists to catch the latter. Next ratchet candidate: the
+ * word-sync transcript markup, which is the dominant per-prose multiplier.
  */
 const BUDGETS = [
   { route: "/", jsKb: 680, htmlKb: 100 },
-  { route: "/exhibits/linear-regression", jsKb: 680, htmlKb: 100 },
-  { route: "/exhibits/gradient-descent", jsKb: 680, htmlKb: 100 },
+  { route: "/exhibits/linear-regression", jsKb: 680, htmlKb: 110 },
+  { route: "/exhibits/gradient-descent", jsKb: 680, htmlKb: 110 },
 ];
 
 const server =

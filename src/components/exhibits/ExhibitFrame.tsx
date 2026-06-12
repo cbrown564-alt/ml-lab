@@ -2,17 +2,19 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ConceptCheckSection } from "@/components/assessment/ConceptCheckSection";
 import { MasteryBadge } from "@/components/learner/MasteryBadge";
+import { MathDrawer } from "@/components/exhibits/MathDrawer";
 import { NarratedSection } from "@/components/narrative/NarratedSection";
+import { NodeChip } from "@/components/graph/NodeChip";
 import { RecordVisit } from "@/components/learner/RecordVisit";
 import type { ConceptCheck } from "@/lib/assessment/schema";
 import type { ExhibitNarrative } from "@/lib/narrative/schema";
+import type { MathDrawerContent } from "@/lib/narrative/math";
 import { domainLabel, kindLabel } from "@/lib/graph/labels";
 import { audioManifests } from "@content/exhibits/audio";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
 import { edges } from "@content/graph/edges";
 import { journeys } from "@content/journeys/foundations";
-import type { ConceptNode } from "@/lib/graph/schema";
 
 /**
  * Exhibit page template — the standard chrome of every exhibit (docs/06, C1):
@@ -21,29 +23,11 @@ import type { ConceptNode } from "@/lib/graph/schema";
  * supply only what is theirs: the lede and the island.
  */
 
-function NodeChip({ node }: { node: ConceptNode }) {
-  return isLive(node.id) ? (
-    <Link
-      href={liveExhibits[node.id].href}
-      title={node.oneLiner}
-      className="rounded-full border border-accent px-3 py-1 text-sm text-accent transition-colors hover:bg-accent hover:text-accent-ink"
-    >
-      {node.title} →
-    </Link>
-  ) : (
-    <span
-      title={node.oneLiner}
-      className="rounded-full border border-line bg-sunken px-3 py-1 text-sm text-ink-muted"
-    >
-      {node.title}
-    </span>
-  );
-}
-
 export function ExhibitFrame({
   nodeId,
   lede,
   narrative,
+  math,
   check,
   children,
 }: {
@@ -51,6 +35,7 @@ export function ExhibitFrame({
   /** The exhibit's opening prose — the one part of the chrome that is content. */
   lede: ReactNode;
   narrative?: ExhibitNarrative;
+  math?: MathDrawerContent;
   check?: ConceptCheck;
   children: ReactNode;
 }) {
@@ -122,6 +107,8 @@ export function ExhibitFrame({
           ))}
         </section>
       )}
+
+      {math && <MathDrawer math={math} />}
 
       {check && <ConceptCheckSection check={check} />}
 
@@ -218,9 +205,9 @@ export function ExhibitFrame({
       )}
 
       <p className="mt-10 max-w-[65ch] text-sm leading-relaxed text-ink-faint">
-        Still to come for this exhibit: the math drawer. The experiment above
-        is the real thing — the same implementation our tests verify against
-        scikit-learn.
+        {math
+          ? "The experiment above is the real thing — the same implementation our tests verify against scikit-learn, and the same equations in the math drawer."
+          : "Still to come for this exhibit: the math drawer. The experiment above is the real thing — the same implementation our tests verify against scikit-learn."}
       </p>
     </main>
   );

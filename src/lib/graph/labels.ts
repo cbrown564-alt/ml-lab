@@ -22,3 +22,6 @@ export const domainLabel = (domain: Domain): string => DOMAIN_LABELS[domain];
 
 export const kindLabel = (kind: string): string =>
   kind.charAt(0).toUpperCase() + kind.slice(1);
+
+/** Status as a learner-facing quality claim ("Interactive", "Flagship"). */
+export const statusLabel = kindLabel;

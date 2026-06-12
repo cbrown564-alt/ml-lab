@@ -2,7 +2,7 @@ import Link from "next/link";
 import { GraphExplorer } from "@/components/graph/GraphExplorer";
 import { MasteryBadge } from "@/components/learner/MasteryBadge";
 import { NextStep } from "@/components/learner/NextStep";
-import { domainLabel } from "@/lib/graph/labels";
+import { domainLabel, statusLabel } from "@/lib/graph/labels";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
 import { foundations } from "@content/journeys/foundations";
@@ -152,7 +152,7 @@ export default function Home() {
                 className="group rounded-xl border border-line bg-raised p-7 transition-colors hover:border-accent"
               >
                 <p className="font-mono text-xs tracking-widest text-ink-faint uppercase">
-                  {domainLabel(n.domain)} · Interactive
+                  {domainLabel(n.domain)} · {statusLabel(n.status)}
                 </p>
                 <h3 className="mt-3 text-2xl font-semibold tracking-tight">{n.title}</h3>
                 <p className="mt-2 leading-relaxed text-ink-muted">{n.oneLiner}</p>

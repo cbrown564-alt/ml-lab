@@ -18,6 +18,15 @@ let stopActive: (() => void) | null = null;
 const formatTime = (s: number) =>
   `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, "0")}`;
 
+/** Spoken-friendly duration for the accessible name ("45 seconds"). */
+const describeDuration = (s: number) => {
+  const r = Math.round(s);
+  if (r < 60) return `${r} seconds`;
+  const m = Math.floor(r / 60);
+  const rest = r % 60;
+  return rest ? `${m} minutes ${rest} seconds` : `${m} minutes`;
+};
+
 export function NarratedSection({
   audio,
   paragraphs,
@@ -112,6 +121,14 @@ export function NarratedSection({
         <button
           type="button"
           aria-pressed={playing}
+          // Without this the name concatenates as "Listen0:45" (a real
+          // screen reader would speak the mash). Keep the Listen/Pause
+          // prefix — it is the stable contract the e2e selectors hold.
+          aria-label={
+            playing
+              ? "Pause the narration"
+              : `Listen — this section read aloud, ${describeDuration(audio.durationSeconds)}`
+          }
           onClick={toggle}
           className="rounded-full border border-line px-4 py-1 text-sm text-ink-muted transition-colors hover:border-ink-faint hover:text-ink"
         >

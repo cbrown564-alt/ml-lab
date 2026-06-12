@@ -14,6 +14,9 @@ export const edges: ConceptEdge[] = [
   { from: "loss-functions", to: "gradient-descent", type: "prerequisite", strength: "hard" },
   { from: "linear-regression", to: "gradient-descent", type: "prerequisite", strength: "soft" },
   { from: "the-gradient", to: "gradient-descent", type: "applies", strength: "soft" },
+  // The OLS closed form is the gradient-vanishes condition, solved — the
+  // linear-regression math drawer leans on the same math node.
+  { from: "the-gradient", to: "linear-regression", type: "applies", strength: "soft" },
   { from: "linear-regression", to: "logistic-regression", type: "generalizes", strength: "hard" },
   { from: "classification-task", to: "logistic-regression", type: "prerequisite", strength: "hard" },
   {

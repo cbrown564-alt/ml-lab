@@ -49,7 +49,9 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Confirmed by the Phase 0 exit review (docs/reviews/phase0-exit-review.md);
+    // flagship advancement awaits the next acceptance review.
+    status: "interactive",
   },
   {
     id: "loss-functions",
@@ -71,7 +73,9 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Confirmed by the Phase 0 exit review (docs/reviews/phase0-exit-review.md);
+    // flagship advancement awaits the next acceptance review.
+    status: "interactive",
   },
   {
     id: "train-test-generalization",

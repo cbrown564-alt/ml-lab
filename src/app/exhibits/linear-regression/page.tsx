@@ -1,6 +1,7 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { LinearRegressionLab } from "@/components/exhibits/LinearRegressionLab";
 import { linearRegressionCheck } from "@content/exhibits/linear-regression/concept-check";
+import { linearRegressionMath } from "@content/exhibits/linear-regression/math";
 import { linearRegressionNarrative } from "@content/exhibits/linear-regression/narrative";
 
 export default function LinearRegressionExhibit() {
@@ -9,6 +10,7 @@ export default function LinearRegressionExhibit() {
       nodeId="linear-regression"
       check={linearRegressionCheck}
       narrative={linearRegressionNarrative}
+      math={linearRegressionMath}
       lede={
         <p>
           The straight line that started it all. Before the math, get your
