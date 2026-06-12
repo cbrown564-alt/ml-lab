@@ -64,7 +64,12 @@ export function GradientDescentLab() {
   const runRef = useRef<GradientDescentRun | null>(null);
   const lrRef = useRef(learningRate);
 
-  const [trace, setTrace] = useState<ReadonlyArray<DescentStep>>([]);
+  // The step-0 trace is computed synchronously so the island has its full
+  // shape from the very first (and server) render — a lab that pops in
+  // after hydration is a layout shift, and CLS is gated in CI (A3).
+  const [trace, setTrace] = useState<ReadonlyArray<DescentStep>>(() => [
+    ...createGradientDescent(points, { learningRate }).trace,
+  ]);
   const [cursor, setCursor] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [surfaceShown, setSurfaceShown] = useState(false);

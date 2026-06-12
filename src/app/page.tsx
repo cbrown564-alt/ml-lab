@@ -39,7 +39,8 @@ export default function Home() {
       </header>
 
       <main className="mx-auto w-full max-w-6xl px-8">
-        <section className="py-24">
+        <section className="grid items-center gap-12 py-24 lg:grid-cols-[3fr_2fr]">
+          <div>
           <h1 className="max-w-[18ch] text-6xl font-semibold tracking-tight text-balance">
             Get your hands on machine learning.
           </h1>
@@ -63,6 +64,77 @@ export default function Home() {
               Browse the map
             </a>
           </div>
+          </div>
+
+          {/* The lab's signature in one glance: data you can grab, the line
+              that chases it, the penalty it pays — drawn in the same visual
+              grammar every exhibit speaks. */}
+          <svg
+            viewBox="0 0 380 280"
+            aria-hidden
+            className="hidden h-auto w-full max-w-md justify-self-end lg:block"
+          >
+            <line
+              x1="20"
+              y1="232"
+              x2="372"
+              y2="56"
+              stroke="var(--viz-prediction)"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+            {/* one big miss, squared */}
+            <rect
+              x="178"
+              y="42"
+              width="76"
+              height="76"
+              fill="var(--viz-error)"
+              fillOpacity="0.12"
+              stroke="var(--viz-error)"
+              strokeOpacity="0.55"
+            />
+            <line
+              x1="254"
+              y1="42"
+              x2="254"
+              y2="118"
+              stroke="var(--viz-error)"
+              strokeWidth="1.5"
+              strokeOpacity="0.7"
+              strokeDasharray="3 3"
+            />
+            {[
+              [44, 212],
+              [86, 202],
+              [118, 176],
+              [152, 170],
+              [196, 140],
+              [254, 42],
+              [262, 116],
+              [300, 86],
+              [340, 78],
+            ].map(([cx, cy], i) => (
+              <circle
+                key={i}
+                cx={cx}
+                cy={cy}
+                r={i === 5 ? 8 : 6.5}
+                fill="var(--viz-truth)"
+                stroke="var(--surface-bg)"
+                strokeWidth="1.5"
+              />
+            ))}
+            <text
+              x="270"
+              y="32"
+              fontSize="13"
+              fontStyle="italic"
+              fill="var(--viz-error)"
+            >
+              the one that got away
+            </text>
+          </svg>
         </section>
 
         <NextStep />

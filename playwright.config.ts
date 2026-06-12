@@ -18,11 +18,24 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
+      testIgnore: /responsiveness/,
       use: {
         ...devices["Desktop Chrome"],
         // Big-screen native (docs/01-vision.md): test at the design target.
         // Must come after the device spread — Desktop Chrome carries its own
         // 1280×720 viewport that would otherwise win.
+        viewport: { width: 1440, height: 900 },
+      },
+    },
+    {
+      // Measurements need a quiet server: the perf project runs serially,
+      // after the functional suite has finished hammering the dev server.
+      name: "perf",
+      testMatch: /responsiveness/,
+      dependencies: ["chromium"],
+      fullyParallel: false,
+      use: {
+        ...devices["Desktop Chrome"],
         viewport: { width: 1440, height: 900 },
       },
     },
