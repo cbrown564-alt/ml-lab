@@ -2,7 +2,7 @@
 
 Working document for the build-evaluate-improve loop. Goal: **all 19 criteria in [docs/06-evaluation-criteria.md](../06-evaluation-criteria.md) at ≥3** (benchmark standard). Scores are honest self-assessments against the rubric (0–4); independent review still applies before any exhibit status advances.
 
-## Scorecard — after iteration 8 (2026-06-12)
+## Scorecard — after iteration 9 (2026-06-12)
 
 | # | Criterion | Score | Note |
 | --- | --- | --- | --- |
@@ -12,10 +12,10 @@ Working document for the build-evaluate-improve loop. Goal: **all 19 criteria in
 | A4 | Streamlined flow | 2 | Coherent loop: home → exhibit → graph neighbors → home; anchor nav; every door tested in e2e. No dead ends. Missing: journey continuation from within an exhibit |
 | A5 | Beauty of the shell | 2 | Designed editorial home (calm shell) + consistent exhibit chrome via ExhibitFrame; explorer is server-rendered with zero client JS. Not yet honestly comparable to Distill/3B1B surfaces |
 | A6 | Access & comfort | 2 | axe-core gates serious/critical violations in CI across all routes (contrast tokens fixed to ≥4.5:1 on both surfaces); reduced-motion global; controls are native inputs. Missing: keyboard alternative for point dragging, focus-visible design pass |
-| B1 | Experiment teaches | 2 | Two manipulation→insight chains live: drag→refit→residuals (linreg) and time-controlled descent with converge/crawl/explode scenarios (GD). Scenario claims are themselves unit-tested. Missing: guided multi-beat structure within a scenario |
+| B1 | Experiment teaches | 3 | Full teaching arc on both exhibits: hook sets the problem, experiment delivers the manipulation→insight beat (claims unit-tested), story consolidates, concept check confirms with misconception-targeted feedback. The 20-minute whiteboard test is honestly arguable for both |
 | B2 | Visual excellence | 2 | Visual grammar enforced via tokens (truth/prediction/error); clean annotated SVG. Not yet poster-worthy; no benchmark side-by-side written |
 | B3 | Motion that explains | 2 | Steppable training is live: play/pause/step/scrub over the descent trace, learning-rate knob works mid-run, divergence auto-pauses with explanation. Motion is honest (each frame is a real descent step). Missing: eased transitions, loss-surface view |
-| B4 | Multi-modal orchestration | 0 | No narrative/audio content |
+| B4 | Multi-modal orchestration | 1 | Narrative layer live on both exhibits: cold-open hook → experiment → story sections that unpack what the hands just did → field notes. Text channel only — audio (ElevenLabs) blocked on an API key; no transcript sync yet |
 | B5 | Assessment | 2 | Concept checks live on both exhibits: retrieval-style choice items, distractors encode real misconceptions, every option carries explanatory feedback, latest-answer-counts scoring feeds the mastery model. Missing: parameter-prediction and experiment-task kinds |
 | B6 | Delight | 1 | "Tyranny of the outlier" has a spark; nothing peak-engineered yet |
 | C1 | Marginal cost of content | 2 | Exhibit #2 composed from the kit (Plot/TrainingCurve/ParamSlider/ScenarioBar + store factory) with zero kit rework; first reuse pass extracted ScenarioBar. Still no scaffolder |
@@ -26,12 +26,13 @@ Working document for the build-evaluate-improve loop. Goal: **all 19 criteria in
 | C6 | Dependency discipline | 3 | Deps: next/react/zod/tsx only; conventions documented in docs/ |
 | C7 | Operational simplicity | 3 | Fully static output, zero runtime infra, atomic deploys |
 
-**Passing (≥3): 6/19**
+**Passing (≥3): 7/19**
 
 ## Iteration log
 
 - **Iter 5 (2026-06-12)**: Gradient-descent exhibit — the second Phase 0 flagship territory. Viz kit grows two pieces: `TrainingCurve` (log-10 loss axis so convergence and divergence both stay readable) and `ParamSlider` (log-aware; the track moves through exponents). `ScenarioBar` extracted as the first kit reuse. `/exhibits/gradient-descent`: three scenarios on one loss surface (converge / crawl / explode) with full time control — play/pause/step/×10/scrub, mid-run learning-rate changes, divergence auto-pause at 1e12 with explanation, 500-step budget. Scenario prompts' claims are pinned by unit tests at the exhibit's step budget. 28 unit + 13 e2e + build green.
 - **Iter 7 (2026-06-12)**: CI + quality gates. GitHub Actions workflow runs the full gauntlet: graph validation, eslint, dependency-cruiser architecture rules (lib pure / content data-only / components never pages / no cycles), unit tests, build, performance budgets, Playwright e2e + axe-core. Budgets measure the production server per route (what actually crosses the wire) and hug the framework baseline. axe-core gates serious/critical violations — fixing the real contrast failures it found (`--ink-faint` on both surfaces). CI skips pixel comparisons (win32 baselines) until linux baselines exist. 35 unit + 20 e2e + budgets + build green.
+- **Iter 9 (2026-06-12)**: Narrative layer. `ExhibitNarrative` type (hook / story sections / field notes, plain prose — no markdown pipeline until content demands it) rendered by ExhibitFrame in the full exhibit anatomy order: lede → hook → experiment → story → concept check → field notes → graph neighborhood. Both exhibits written: Galton cold-open and squared-error character study for linreg; fog-on-the-hillside and the three stride regimes for GD. Story sections deliberately reference what the learner just manipulated. Content integrity unit-tested; narrative presence e2e-tested. 52 unit + 23 e2e green. **Audio blocked**: ElevenLabs needs an API key — player + word-sync transcript format deferred until one exists.
 - **Iter 8 (2026-06-12)**: Learner model + concept checks. `lib/learner`: mastery store (coarse legible levels, monotonic, latest-answer-counts scoring, evidence log) persisted to IndexedDB via a hand-rolled ~40-line storage adapter with in-memory fallback. Concept checks (3 choice items each, misconception-encoding distractors, per-option explanatory feedback) on both exhibits; answers, visits, and experiment manipulation feed mastery; badges surface on exhibit headers and journey stops. One real race found and fixed: writes issued before async rehydration completed were persisting blank-state snapshots over the stored record — all learner writes now gate on `whenHydrated`. 46 unit + 22 e2e green.
 - **Iter 6 (2026-06-12)**: Shell design pass. Real home (hero, open-exhibit cards, map, Foundations journey timeline, footer) replacing the placeholder. Graph explorer v1: deterministic layered layout (`lib/graph/layout.ts`, longest-path over ordering edge types, cycle-guarded, unit-tested) rendered as SVG edges under HTML chips — server component, zero client JS; live exhibits are doors, stubs are territory. `ExhibitFrame` template extracts all exhibit chrome (graph-driven kicker, lede slot, Builds on / Leads to neighborhood) — exhibit pages are now ~20 lines of content. Exhibit registry (`content/exhibits/index.ts`) separates "route exists" from review-gated node status. 35 unit + 17 e2e + build green.
 - **Iter 4 (2026-06-12)**: Playwright browser verification. 6 e2e tests: home + exhibit screenshots, drag→refit smoke test, outlier scenario, reset, residual toggle — iter 3's interactivity is now browser-verified. Two real fixes shaken out: (1) `DataPoints` drag moved from per-element pointer capture to window-level listeners so fast drags can't outrun the point; (2) Playwright viewport was silently 1280×720 because the `devices["Desktop Chrome"]` spread overrode the configured 1440×900 — pointer events below the fold landed on `<html>` and the drag tests could never pass. Vitest now excludes `e2e/`; `npm run test:e2e` added. 23 unit + 6 e2e + build green.
@@ -41,8 +42,8 @@ Working document for the build-evaluate-improve loop. Goal: **all 19 criteria in
 
 ## Queue (next iterations, in order)
 
-1. **Narrative layer for both exhibits** (B4 partial): hook + story sections with the experiment as centerpiece; field notes. Audio pipeline (ElevenLabs) needs an API key — player + transcript format can land first.
-2. **Remaining Phase 0 engine pieces**: dataset painter (viz kit), code-mode bridge (Pyodide decision), content scaffolder + drafting-context assembler.
+1. **Remaining Phase 0 engine pieces**: dataset painter (viz kit), code-mode bridge (Pyodide decision), content scaffolder + drafting-context assembler.
+2. **Audio pipeline** (B4): blocked on an ElevenLabs API key; then player + word-synced transcript.
 
 ## Standing rules for the loop
 

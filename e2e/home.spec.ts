@@ -50,6 +50,26 @@ test.describe("home", () => {
   });
 });
 
+test.describe("exhibit narrative", () => {
+  test("hook, story sections, and field notes render on both exhibits", async ({
+    page,
+  }) => {
+    await page.goto("/exhibits/linear-regression");
+    await expect(page.getByText(/Francis Galton/)).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Why squared error" }),
+    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Field notes" })).toBeVisible();
+
+    await page.goto("/exhibits/gradient-descent");
+    await expect(page.getByText(/hillside in fog/)).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "One knob to rule the walk" }),
+    ).toBeVisible();
+    await expect(page.getByText(/what's the learning rate\?/)).toBeVisible();
+  });
+});
+
 test.describe("exhibit frame", () => {
   test("shows the exhibit's place in the graph with live links", async ({ page }) => {
     await page.goto("/exhibits/gradient-descent");

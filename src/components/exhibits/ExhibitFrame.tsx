@@ -4,6 +4,7 @@ import { ConceptCheckSection } from "@/components/assessment/ConceptCheckSection
 import { MasteryBadge } from "@/components/learner/MasteryBadge";
 import { RecordVisit } from "@/components/learner/RecordVisit";
 import type { ConceptCheck } from "@/lib/assessment/schema";
+import type { ExhibitNarrative } from "@/lib/narrative/schema";
 import { domainLabel, kindLabel } from "@/lib/graph/labels";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
@@ -39,12 +40,14 @@ function NodeChip({ node }: { node: ConceptNode }) {
 export function ExhibitFrame({
   nodeId,
   lede,
+  narrative,
   check,
   children,
 }: {
   nodeId: string;
   /** The exhibit's opening prose — the one part of the chrome that is content. */
   lede: ReactNode;
+  narrative?: ExhibitNarrative;
   check?: ConceptCheck;
   children: ReactNode;
 }) {
@@ -78,9 +81,52 @@ export function ExhibitFrame({
       </div>
       <div className="mt-4 max-w-[65ch] text-lg leading-relaxed text-ink-muted">{lede}</div>
 
+      {narrative && (
+        <div className="mt-10 max-w-[65ch] border-l-2 border-line pl-6">
+          {narrative.hook.map((p, i) => (
+            <p key={i} className="mt-4 leading-relaxed text-ink first:mt-0">
+              {p}
+            </p>
+          ))}
+        </div>
+      )}
+
       <div className="mt-10">{children}</div>
 
+      {narrative && (
+        <section className="mt-14">
+          {narrative.story.map((s) => (
+            <div key={s.id} className="mt-10 first:mt-0">
+              <h2 className="text-2xl font-semibold tracking-tight">{s.heading}</h2>
+              {s.paragraphs.map((p, i) => (
+                <p key={i} className="mt-4 max-w-[65ch] leading-relaxed text-ink-muted">
+                  {p}
+                </p>
+              ))}
+            </div>
+          ))}
+        </section>
+      )}
+
       {check && <ConceptCheckSection check={check} />}
+
+      {narrative && narrative.fieldNotes.length > 0 && (
+        <section className="mt-12 border-t border-line pt-8">
+          <h2 className="text-sm font-medium tracking-wide text-ink-faint uppercase">
+            Field notes
+          </h2>
+          <ul className="mt-4 max-w-[65ch]">
+            {narrative.fieldNotes.map((note, i) => (
+              <li
+                key={i}
+                className="mt-3 border-l-2 border-line pl-4 text-sm leading-relaxed text-ink-muted first:mt-0"
+              >
+                {note}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="mt-12 border-t border-line pt-8">
         <h2 className="sr-only">This exhibit in the knowledge graph</h2>
