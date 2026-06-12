@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Axes, DataPoints, FitLine, Plot, usePlot } from "@/components/viz/Plot";
+import { LossSurface } from "@/components/viz/LossSurface";
 import { ParamSlider } from "@/components/viz/ParamSlider";
 import { TrainingCurve } from "@/components/viz/TrainingCurve";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
@@ -65,6 +66,7 @@ export function GradientDescentLab() {
   const [trace, setTrace] = useState<ReadonlyArray<DescentStep>>([]);
   const [cursor, setCursor] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [surfaceShown, setSurfaceShown] = useState(false);
 
   // Declared before the run-creation effect: when a scenario load changes
   // points and learning rate in one commit, the ref must sync first.
@@ -222,6 +224,33 @@ export function GradientDescentLab() {
           higher than the last. This is divergence. Scrub back to watch the
           first overshoot, or lower the learning rate and restart the descent.
         </p>
+      )}
+
+      {!surfaceShown ? (
+        <div className="mt-6 border-t border-line pt-5">
+          <button
+            type="button"
+            onClick={() => setSurfaceShown(true)}
+            className="rounded-full border border-accent px-5 py-1.5 text-sm font-medium text-accent hover:bg-accent hover:text-accent-ink"
+          >
+            Lift the fog — reveal the loss surface
+          </button>
+          <span className="ml-4 text-sm text-ink-faint">
+            see the whole hillside this walk has been descending
+          </span>
+        </div>
+      ) : (
+        <div className="lift-fog mt-6 border-t border-line pt-5">
+          <LossSurface points={points} trace={trace} cursor={cursor} />
+          <p className="mt-3 max-w-[70ch] text-sm leading-relaxed text-ink-muted">
+            This is the territory: every point on the map is a candidate line —
+            slope across, intercept up — and the shading is how wrong that line
+            is, in log bands. The <span style={{ color: "var(--viz-param)" }}>purple path</span>{" "}
+            is the walk you just took; the dot is where the scrubber is standing.
+            Step, scrub, and re-run the scenarios — watch the careful walk curve
+            into the valley, and the reckless one rocket off the map.
+          </p>
+        </div>
       )}
       {exhausted && !diverged && (
         <p className="mt-4 text-sm leading-relaxed text-ink-muted">

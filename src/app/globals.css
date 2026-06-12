@@ -92,6 +92,18 @@ body {
     cy var(--motion-move) var(--ease-out);
 }
 
+/* The fog lifts (docs/06, B6): reveals enter softly. Reduced motion gets
+   the instant cut via the global media rule. */
+@keyframes lift-fog {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+.lift-fog {
+  animation: lift-fog 600ms var(--ease-out);
+}
+
 [data-surface] {
   background: var(--surface-bg);
   color: var(--ink);

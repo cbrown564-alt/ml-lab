@@ -65,6 +65,23 @@ test.describe("gradient-descent exhibit", () => {
     await expect(page.getByRole("button", { name: "Play" })).toBeEnabled();
   });
 
+  test("the loss surface reveals on demand and draws the walked path", async ({ page }) => {
+    // Walk first, then lift the fog: the path should already be on the map.
+    await page.getByRole("button", { name: "Step ×10" }).click();
+    await expect(page.getByText("step 10")).toBeVisible();
+
+    await page.getByRole("button", { name: /reveal the loss surface/i }).click();
+    const surface = page.getByRole("img", { name: /Map of the loss surface/ });
+    await expect(surface).toBeVisible();
+    await expect(surface).toHaveAccessibleName(/10 steps/);
+    await expect(page.getByText("the valley floor (OLS)")).toBeVisible();
+    expect(await surface.locator("polyline").count()).toBe(1);
+
+    // Scrubbing moves the dot — the surface is live, not a snapshot.
+    await page.getByLabel("Scrub through descent steps").fill("0");
+    await expect(surface).toHaveAccessibleName(/current position is slope 0\.00/);
+  });
+
   test("scenario switch resets the run with the scenario's learning rate", async ({ page }) => {
     await page.getByRole("button", { name: "Step ×10" }).click();
     await expect(page.getByText("step 10")).toBeVisible();
