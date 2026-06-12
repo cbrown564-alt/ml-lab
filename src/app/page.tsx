@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { GraphExplorer } from "@/components/graph/GraphExplorer";
 import { MasteryBadge } from "@/components/learner/MasteryBadge";
+import { NextStep } from "@/components/learner/NextStep";
 import { domainLabel } from "@/lib/graph/labels";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
@@ -63,6 +64,8 @@ export default function Home() {
             </a>
           </div>
         </section>
+
+        <NextStep />
 
         <section id="exhibits" className="scroll-mt-8 border-t border-line py-16">
           <h2 className="font-mono text-sm tracking-widest text-ink-faint uppercase">

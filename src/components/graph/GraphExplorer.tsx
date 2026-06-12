@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MasteryDot } from "@/components/learner/MasteryDot";
 import { layoutGraph } from "@/lib/graph/layout";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
@@ -64,6 +65,7 @@ export function GraphExplorer() {
                 style={{ left: x, top: y }}
               >
                 {node.title} →
+                <MasteryDot nodeId={node.id} />
               </Link>
             ) : (
               <span
@@ -73,6 +75,7 @@ export function GraphExplorer() {
                 style={{ left: x, top: y }}
               >
                 {node.title}
+                <MasteryDot nodeId={node.id} />
               </span>
             ),
           )}
@@ -103,6 +106,10 @@ export function GraphExplorer() {
             <line x1="0" y1="1" x2="28" y2="1" stroke="var(--ink-faint)" strokeWidth="1.5" strokeDasharray="2 5" />
           </svg>
           related
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span aria-hidden className="inline-block h-3 w-3 rounded-full border-2 border-accent bg-accent" />
+          your progress (filled = mastered)
         </span>
       </figcaption>
     </figure>

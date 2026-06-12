@@ -57,4 +57,23 @@ test.describe("concept check + mastery", () => {
       page.locator("#foundations").getByText("mastered", { exact: true }),
     ).toBeVisible();
   });
+
+  test("an unfinished exhibit becomes an explainable recommendation", async ({
+    page,
+  }) => {
+    // Visiting earns "seen" — enough to have started, not enough to finish.
+    await page.goto("/exhibits/linear-regression");
+    await expect(page.getByText("seen", { exact: true })).toBeVisible();
+
+    await page.goto("/");
+    const next = page.getByRole("region", { name: "Your next step" });
+    await expect(next).toBeVisible();
+    await expect(
+      next.getByText(/You've explored Linear Regression but haven't taken its concept check/),
+    ).toBeVisible();
+
+    // The recommendation is a working door.
+    await next.getByRole("link", { name: /Linear Regression/ }).click();
+    await expect(page).toHaveURL(/exhibits\/linear-regression/);
+  });
 });
