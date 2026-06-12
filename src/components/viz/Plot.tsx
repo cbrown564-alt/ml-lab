@@ -4,8 +4,10 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
+  useState,
   type ReactNode,
 } from "react";
 import { linearScale, type LinearScale } from "@/lib/viz/scale";
@@ -168,7 +170,11 @@ export function ResidualLines({
   );
 }
 
-/** Observed data — truth hue. Draggable when onChange is provided. */
+/**
+ * Observed data — truth hue. Draggable when onChange is provided.
+ * Dragging uses window-level listeners rather than per-element pointer
+ * capture: a fast drag must never outrun the point, in any browser.
+ */
 export function DataPoints({
   points,
   onChange,
@@ -177,18 +183,37 @@ export function DataPoints({
   onChange?: (index: number, point: Point) => void;
 }) {
   const { x, y, svgRef, width, height } = usePlot();
+  const [dragging, setDragging] = useState<number | null>(null);
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
 
   const toData = useCallback(
-    (e: React.PointerEvent): Point => {
+    (clientX: number, clientY: number): Point => {
       const svg = svgRef.current!;
       const rect = svg.getBoundingClientRect();
       // viewBox scaling: client px → viewBox units → data coords
-      const vx = ((e.clientX - rect.left) / rect.width) * width;
-      const vy = ((e.clientY - rect.top) / rect.height) * height;
+      const vx = ((clientX - rect.left) / rect.width) * width;
+      const vy = ((clientY - rect.top) / rect.height) * height;
       return { x: x.invert(vx), y: y.invert(vy) };
     },
     [svgRef, x, y, width, height],
   );
+
+  useEffect(() => {
+    if (dragging === null) return;
+    const move = (e: PointerEvent) => {
+      onChangeRef.current?.(dragging, toData(e.clientX, e.clientY));
+    };
+    const up = () => setDragging(null);
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+    };
+  }, [dragging, toData]);
 
   return (
     <g>
@@ -197,7 +222,7 @@ export function DataPoints({
           key={i}
           cx={x(p.x)}
           cy={y(p.y)}
-          r={6}
+          r={dragging === i ? 8 : 6}
           fill="var(--viz-truth)"
           stroke="var(--surface-bg)"
           strokeWidth={1.5}
@@ -205,15 +230,8 @@ export function DataPoints({
           onPointerDown={
             onChange
               ? (e) => {
-                  (e.target as Element).setPointerCapture(e.pointerId);
-                }
-              : undefined
-          }
-          onPointerMove={
-            onChange
-              ? (e) => {
-                  if (e.buttons !== 1) return;
-                  onChange(i, toData(e));
+                  e.preventDefault();
+                  setDragging(i);
                 }
               : undefined
           }
