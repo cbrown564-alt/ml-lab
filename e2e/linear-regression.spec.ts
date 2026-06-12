@@ -110,10 +110,27 @@ test.describe("linear-regression exhibit", () => {
     await expect(page.getByText(/Journey · Foundations · stop 4 of 11/)).toBeVisible();
   });
 
-  test("residuals toggle shows and hides error lines", async ({ page }) => {
+  test("the error view switches between lines, squares, and hidden", async ({ page }) => {
     const dashed = page.locator("svg line[stroke-dasharray]");
+    const squares = page.locator("svg rect[stroke]");
     expect(await dashed.count()).toBeGreaterThan(0);
-    await page.getByLabel("Show residuals").uncheck();
+    await expect(squares).toHaveCount(0);
+
+    await page.getByRole("button", { name: "Squares" }).click();
+    expect(await squares.count()).toBeGreaterThan(0);
     await expect(dashed).toHaveCount(0);
+
+    await page.getByRole("button", { name: "Hide" }).click();
+    await expect(squares).toHaveCount(0);
+    await expect(dashed).toHaveCount(0);
+  });
+
+  test("the outlier scenario stages the squared-error punchline", async ({ page }) => {
+    await page.getByRole("button", { name: /tyranny of the outlier/i }).click();
+    // The error view switches itself to squares: the outlier's giant square
+    // dwarfing every other penalty is the lesson. (They appear after the
+    // 450ms morph beat — first() retries until then.)
+    await expect(page.locator("svg rect[stroke]").first()).toBeVisible();
+    await expect(page.getByText("area = the penalty it pays here")).toBeVisible();
   });
 });

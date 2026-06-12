@@ -131,19 +131,43 @@ export function Axes() {
   );
 }
 
-/** The model's prediction line — always the prediction hue, lab-wide. */
-export function FitLine({ params }: { params: LinearParams }) {
+/**
+ * The model's prediction line — always the prediction hue, lab-wide.
+ * Rendered as a unit segment under a matrix transform: transform is the one
+ * SVG geometry CSS can animate, so `ease` morphs (scenario swaps) cost no
+ * JavaScript. vector-effect keeps the stroke width honest under the skew.
+ */
+export function FitLine({
+  params,
+  ease = false,
+}: {
+  params: LinearParams;
+  /** Travel to a new position instead of teleporting (never during drags). */
+  ease?: boolean;
+}) {
   const { x, y } = usePlot();
+  if (!Number.isFinite(params.slope + params.intercept)) return null;
   const [d0, d1] = x.domain;
+  const x1 = x(d0);
+  const y1 = y(params.slope * d0 + params.intercept);
+  const x2 = x(d1);
+  const y2 = y(params.slope * d1 + params.intercept);
   return (
     <line
-      x1={x(d0)}
-      y1={y(params.slope * d0 + params.intercept)}
-      x2={x(d1)}
-      y2={y(params.slope * d1 + params.intercept)}
+      x1={0}
+      y1={0}
+      x2={1}
+      y2={0}
+      vectorEffect="non-scaling-stroke"
       stroke="var(--viz-prediction)"
       strokeWidth={2.5}
       strokeLinecap="round"
+      style={{
+        transform: `matrix(${x2 - x1}, ${y2 - y1}, 0, 1, ${x1}, ${y1})`,
+        transition: ease
+          ? "transform var(--motion-move) var(--ease-out)"
+          : undefined,
+      }}
       aria-hidden
     />
   );
@@ -173,6 +197,98 @@ export function ResidualLines({
           strokeDasharray="3 3"
         />
       ))}
+    </g>
+  );
+}
+
+/**
+ * Squared error made literal (docs/06, B2/B6): each residual becomes an
+ * actual square whose side is the residual — so its *area* is the penalty
+ * the line pays there. One glance at an outlier's square explains "squared"
+ * better than any sentence. Squares grow toward the plot's interior so they
+ * stay readable at the edges.
+ */
+export function ResidualSquares({
+  points,
+  params,
+}: {
+  points: Point[];
+  params: LinearParams;
+}) {
+  const { x, y, width } = usePlot();
+  return (
+    <g aria-hidden>
+      {points.map((p, i) => {
+        const py = y(p.y);
+        const pyHat = y(params.slope * p.x + params.intercept);
+        const side = Math.abs(pyHat - py);
+        if (side < 0.5) return null;
+        const px = x(p.x);
+        // Draw between the point and the line; grow leftward unless that
+        // would leave the frame.
+        const rx = px - side >= MARGIN.left ? px - side : px;
+        return (
+          <rect
+            key={i}
+            x={Math.min(rx, width - MARGIN.right - side)}
+            y={Math.min(py, pyHat)}
+            width={side}
+            height={side}
+            fill="var(--viz-error)"
+            fillOpacity={0.12}
+            stroke="var(--viz-error)"
+            strokeOpacity={0.55}
+            strokeWidth={1}
+          />
+        );
+      })}
+    </g>
+  );
+}
+
+/**
+ * Annotation — the explanation carried into the graphic (docs/06, B2):
+ * a short label with a leader line, anchored at data coordinates.
+ */
+export function Annotation({
+  at,
+  dx = 14,
+  dy = -14,
+  label,
+  color = "var(--viz-neutral)",
+}: {
+  at: Point;
+  dx?: number;
+  dy?: number;
+  label: string;
+  color?: string;
+}) {
+  const { x, y } = usePlot();
+  const ax = x(at.x);
+  const ay = y(at.y);
+  const tx = ax + dx;
+  const ty = ay + dy;
+  return (
+    <g aria-hidden>
+      <line
+        x1={ax}
+        y1={ay}
+        x2={tx - Math.sign(dx) * 4}
+        y2={ty + 4}
+        stroke={color}
+        strokeWidth={1}
+        strokeOpacity={0.6}
+      />
+      <text
+        x={tx}
+        y={ty}
+        textAnchor={dx >= 0 ? "start" : "end"}
+        fontSize={12}
+        fontStyle="italic"
+        fill={color}
+      >
+        {label}
+      </text>
     </g>
   );
 }
@@ -219,10 +335,13 @@ export function DataPoints({
   points,
   onChange,
   onRemove,
+  ease = false,
 }: {
   points: Point[];
   onChange?: (index: number, point: Point) => void;
   onRemove?: (index: number) => void;
+  /** Morph point moves along eased paths (scenario swaps — never drags). */
+  ease?: boolean;
 }) {
   const { x, y, svgRef, width, height } = usePlot();
   const [dragging, setDragging] = useState<number | null>(null);
@@ -278,7 +397,7 @@ export function DataPoints({
   }, [dragging, toData]);
 
   return (
-    <g>
+    <g className={ease && dragging === null ? "viz-ease" : undefined}>
       {points.map((p, i) => (
         <circle
           key={i}

@@ -26,6 +26,12 @@
   --viz-error: oklch(54% 0.17 8);
   --viz-param: oklch(52% 0.16 303);
   --viz-neutral: oklch(57% 0.025 245);
+
+  /* One motion language lab-wide (docs/06, A5/B3): quick for microfeedback,
+     move for state-to-state transitions the eye should follow. */
+  --motion-quick: 120ms;
+  --motion-move: 400ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
@@ -66,6 +72,24 @@ body {
   outline: none;
   stroke: var(--accent);
   stroke-width: 3;
+}
+
+/* Microinteractions (docs/06, B3): a point that can be grabbed says so on
+   approach. CSS r beats the presentation attribute, so hover wins cleanly. */
+.viz-point {
+  transition: r var(--motion-quick) var(--ease-out);
+}
+.viz-point:hover {
+  r: 8px;
+}
+
+/* State-to-state morph: scenario swaps move points along eased paths so the
+   eye can track which point went where (object constancy). The exhibit turns
+   this on only around dataset changes — never during a drag. */
+.viz-ease circle {
+  transition:
+    cx var(--motion-move) var(--ease-out),
+    cy var(--motion-move) var(--ease-out);
 }
 
 [data-surface] {
