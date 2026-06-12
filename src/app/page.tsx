@@ -3,7 +3,7 @@ import { nodes } from "@content/graph/nodes";
 import { journeys } from "@content/journeys/foundations";
 
 /** Nodes whose exhibit routes exist. Becomes graph-driven once ExhibitMeta lands. */
-const LIVE_EXHIBITS = new Set(["linear-regression"]);
+const LIVE_EXHIBITS = new Set(["linear-regression", "gradient-descent"]);
 
 /**
  * Placeholder shell home. Exists to prove the content pipeline end-to-end

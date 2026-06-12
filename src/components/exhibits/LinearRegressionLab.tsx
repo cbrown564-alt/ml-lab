@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Axes, DataPoints, FitLine, Plot, ResidualLines } from "@/components/viz/Plot";
+import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
 import { createExperimentStore } from "@/lib/experiment/store";
 import { mse, olsFit } from "@/lib/models/linear-regression";
 import { linearRegressionExperiment } from "@content/exhibits/linear-regression/experiment";
@@ -29,30 +30,12 @@ export function LinearRegressionLab() {
 
   return (
     <div data-surface="lab" className="rounded-xl border border-line p-6">
-      <div className="flex flex-wrap items-center gap-2">
-        {spec.scenarios.map((s) => (
-          <button
-            key={s.id}
-            type="button"
-            onClick={() => loadScenario(s.id)}
-            className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
-              s.id === scenario.id
-                ? "border-accent bg-accent text-accent-ink"
-                : "border-line text-ink-muted hover:border-ink-faint"
-            }`}
-          >
-            {s.failure ? "⚠ " : ""}
-            {s.title}
-          </button>
-        ))}
-        <button
-          type="button"
-          onClick={reset}
-          className="ml-auto rounded-full border border-line px-4 py-1.5 text-sm text-ink-muted hover:border-ink-faint"
-        >
-          Reset
-        </button>
-      </div>
+      <ScenarioBar
+        scenarios={spec.scenarios}
+        activeId={scenario.id}
+        onSelect={loadScenario}
+        onReset={reset}
+      />
 
       <p className="mt-4 max-w-[70ch] leading-relaxed text-ink-muted">{scenario.prompt}</p>
 

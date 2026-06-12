@@ -185,7 +185,9 @@ export function DataPoints({
   const { x, y, svgRef, width, height } = usePlot();
   const [dragging, setDragging] = useState<number | null>(null);
   const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   const toData = useCallback(
     (clientX: number, clientY: number): Point => {
