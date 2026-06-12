@@ -126,8 +126,9 @@ export default function Home() {
               />
             ))}
             <text
-              x="270"
+              x="244"
               y="32"
+              textAnchor="end"
               fontSize="13"
               fontStyle="italic"
               fill="var(--viz-error)"

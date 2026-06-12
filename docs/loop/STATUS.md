@@ -26,7 +26,7 @@ Working document for the build-evaluate-improve loop. Goal: **all 19 criteria in
 | C6 | Dependency discipline | 3 | Deps: next/react/zod/tsx only; conventions documented in docs/ |
 | C7 | Operational simplicity | 3 | Fully static output, zero runtime infra, atomic deploys |
 
-**Passing (≥3): 19/19** — per the standing rules, the loop stops here: report for independent review (Phase 0 exit review is the natural vehicle).
+**Passing (≥3): 19/19** — loop stopped; independent review completed. **Phase 0 exit: PASSED** — see [docs/reviews/phase0-exit-review.md](../reviews/phase0-exit-review.md) (2026-06-12). The review confirmed all 19 scores, scored the Mayer checklist (9/12 full, 3 partial — all one root cause: narration anchored to prose, not the experiment), audited the accessibility tree, ran the screenshot lineup, checked the red lines (all clear), and fixed one defect it found (hero annotation clipped at the SVG edge). Both exhibits stay `interactive`; flagship advancement is gated on the math drawer. Human cold walkthroughs (n≥3) and a real NVDA pass remain on the *release* checklist.
 
 ## Iteration log
 
@@ -51,8 +51,11 @@ Working document for the build-evaluate-improve loop. Goal: **all 19 criteria in
 
 ## Queue (next iterations, in order)
 
-1. **Phase 0 exit review** (the loop's exit condition is met — all 19 ≥ 3): independent review of both exhibits against the vision bar. The rubric measures that only fresh eyes can score remain open: cold-user walkthroughs (A1/A4/B1/B5), the screenshot lineup (A5), the Mayer 12-principle checklist per exhibit (B4), manual screen-reader pass (A6). Recalibrate cadence estimates, then Phase 1 cluster-by-cluster.
-2. **Known level-4 work, deliberately deferred**: narration choreographed to experiment visuals (temporal contiguity), force-personification characters + art bible, explorer filter/search when the graph approaches 30 nodes, 3D loss surfaces with the deep-learning cluster.
+1. ~~**Phase 0 exit review**~~ — done 2026-06-12, passed; see [docs/reviews/phase0-exit-review.md](../reviews/phase0-exit-review.md). Cadence recalibrated: 1–3 iterations per `interactive` exhibit on the existing kit (confidence low at n=2; re-measure after the regression cluster).
+2. **Review punch list**: math drawers on both exhibits (the flagship gate), mobile "best on a larger screen" treatment (vision commitment, currently absent), Listen-button accessible name + word-span SR check, page-transition treatment.
+3. **Phase 1, regression cluster** (graph-coherent shipping order per docs/05).
+4. **Known level-4 work, deliberately deferred**: narration choreographed to experiment visuals (temporal contiguity), force-personification characters + art bible, explorer filter/search when the graph approaches 30 nodes, 3D loss surfaces with the deep-learning cluster.
+5. **Release gate (pre-public-launch)**: human cold walkthroughs (n≥3, think-aloud) and a manual NVDA/VoiceOver pass.
 
 ## Standing rules for the loop
 

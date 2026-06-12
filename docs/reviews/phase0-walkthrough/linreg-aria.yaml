@@ -1,0 +1,123 @@
+- main:
+  - navigation:
+    - link "← ML Lab":
+      - /url: /
+  - paragraph: Supervised · Algorithm
+  - heading "Linear Regression" [level=1]
+  - text: seen
+  - paragraph: "The straight line that started it all. Before the math, get your hands on it: every point below is data the line must answer to, and the line you see is always the best one available — for a very particular meaning of “best.”"
+  - paragraph:
+    - button "Listen0:45"
+  - paragraph: "In 1885, Francis Galton plotted the heights of nearly a thousand adult children against the heights of their parents and noticed something odd: tall parents had tall children, but not quite as tall; short parents had short children, but not quite as short. To describe how strongly one number pulls on another, he drew a line through the cloud — and accidentally founded the most-used statistical tool of the next century."
+  - paragraph: The question his line answers is everywhere once you see it. How much does another bedroom add to a flat's price? How much does an extra hour of revision move an exam score? One number, predicted from another, with a straight line as the claim. The experiment below puts that claim in your hands.
+  - button "Meet the line of best fit"
+  - button "⚠ The tyranny of the outlier"
+  - button "Paint your own data"
+  - button "Reset"
+  - paragraph: "Two rogue points have wandered in. Drag one of them further out and watch how violently the line chases it. Squared error doesn't just notice big mistakes — it obsesses over them. Predict first: how far must one point stray to drag the line completely off the trend?"
+  - group "Experiment mode":
+    - button "visual" [pressed]
+    - button "code"
+  - group "Scatter plot of 30 data points with the least-squares line fitted live. Slope 1.49, intercept 2.11, mean squared error 34.58. Dragging points refits the line. Clicking empty space adds a point; double-clicking a point removes it.":
+    - button "Data point at x 0.0, y 2.3. Arrow keys move it; Delete removes it."
+    - button "Data point at x 0.4, y 1.8. Arrow keys move it; Delete removes it."
+    - button "Data point at x 0.7, y 1.4. Arrow keys move it; Delete removes it."
+    - button "Data point at x 1.1, y 3.9. Arrow keys move it; Delete removes it."
+    - button "Data point at x 1.5, y 3.6. Arrow keys move it; Delete removes it."
+    - button "Data point at x 1.9, y 4.4. Arrow keys move it; Delete removes it."
+    - button "Data point at x 2.2, y 4.8. Arrow keys move it; Delete removes it."
+    - button "Data point at x 2.6, y 5.8. Arrow keys move it; Delete removes it."
+    - button "Data point at x 3.0, y 7.3. Arrow keys move it; Delete removes it."
+    - button "Data point at x 3.3, y 7.1. Arrow keys move it; Delete removes it."
+    - button "Data point at x 3.7, y 7.4. Arrow keys move it; Delete removes it."
+    - button "Data point at x 4.1, y 7.3. Arrow keys move it; Delete removes it."
+    - button "Data point at x 4.4, y 7.3. Arrow keys move it; Delete removes it."
+    - button "Data point at x 4.8, y 8.8. Arrow keys move it; Delete removes it."
+    - button "Data point at x 5.2, y 9.7. Arrow keys move it; Delete removes it."
+    - button "Data point at x 5.6, y 11.7. Arrow keys move it; Delete removes it."
+    - button "Data point at x 5.9, y 11.0. Arrow keys move it; Delete removes it."
+    - button "Data point at x 6.3, y 12.2. Arrow keys move it; Delete removes it."
+    - button "Data point at x 6.7, y 11.6. Arrow keys move it; Delete removes it."
+    - button "Data point at x 7.0, y 11.6. Arrow keys move it; Delete removes it."
+    - button "Data point at x 7.4, y 12.3. Arrow keys move it; Delete removes it."
+    - button "Data point at x 7.8, y 13.1. Arrow keys move it; Delete removes it."
+    - button "Data point at x 8.1, y 15.9. Arrow keys move it; Delete removes it."
+    - button "Data point at x 8.5, y 14.1. Arrow keys move it; Delete removes it."
+    - button "Data point at x 8.9, y 16.0. Arrow keys move it; Delete removes it."
+    - button "Data point at x 9.3, y 15.2. Arrow keys move it; Delete removes it."
+    - button "Data point at x 9.6, y 17.2. Arrow keys move it; Delete removes it."
+    - button "Data point at x 10.0, y 17.3. Arrow keys move it; Delete removes it."
+    - button "Data point at x 5.0, y 34.4. Arrow keys move it; Delete removes it."
+    - button "Data point at x 6.0, y -9.0. Arrow keys move it; Delete removes it."
+  - text: ŷ = 1.49·x + 2.11 MSE = 34.58
+  - button "Add point"
+  - group "How to show the errors":
+    - text: "Errors:"
+    - button "Lines"
+    - button "Squares" [pressed]
+    - button "Hide"
+  - heading "A line is a claim" [level=2]
+  - paragraph:
+    - button "Listen0:35"
+  - paragraph: "Every straight line through the data is a little theory: every unit of x is worth this much y, starting from here. Two numbers — slope and intercept — and the theory is fully specified. The plot above shows the only such theory the data cannot improve on."
+  - paragraph: "But “cannot improve on” needs a judge. That judge is the set of dashed segments you toggled: the residuals, one per point, each measuring how far the theory missed reality — vertically, because x is taken as given and only the prediction of y is on trial."
+  - heading "Why squared error" [level=2]
+  - paragraph:
+    - button "Listen0:47"
+  - paragraph: "The line you saw minimizes the sum of the residuals squared. Squaring does two jobs at once. It makes misses count regardless of direction — overshooting by 3 is exactly as bad as undershooting by 3. And it makes big misses count disproportionately: one residual of 10 outweighs ten residuals of 1, a hundred to ten."
+  - paragraph: That second property is a personality trait, and you met its dark side in the outlier scenario. A single rogue point carries enough squared error to bend the line away from twenty-eight well-behaved ones. Squared error isn't wrong to do this — it is doing exactly what it was told. Whether that's what you wanted is a different question, and it's why other loss functions exist.
+  - heading "What “best” buys you" [level=2]
+  - paragraph:
+    - button "Listen0:28"
+  - paragraph: "Choosing squared error has a famous reward: the best line can be computed directly, with a formula, no search required. Drag a point and the line snaps instantly to the new optimum — that snap is the formula at work. Most models you'll meet after this one offer no such formula; their best parameters must be searched for, step by step, downhill. That search has its own exhibit, and this line is where it starts."
+  - heading "Check your understanding" [level=2]
+  - list:
+    - listitem:
+      - paragraph: The line of best fit you dragged points around is “best” in exactly what sense?
+      - button "It passes through as many points as possible"
+      - button "It makes the sum of squared vertical distances to the points as small as possible"
+      - button "It minimizes the perpendicular distance from each point to the line"
+    - listitem:
+      - paragraph: In the outlier scenario, one rogue point dragged the whole line off the trend. What gives a single point that much power?
+      - button "Squaring makes a big error count far more than several small ones"
+      - button "Points further from the line are weighted by the algorithm"
+      - button "Outliers change the average of x, which moves the line"
+    - listitem:
+      - paragraph: A point has a residual of −3. What does that tell you?
+      - button "The line predicts 3 units higher than the point's actual value"
+      - button "The point is 3 units to the left of the line"
+      - button "The point is an outlier and should be removed"
+    - listitem:
+      - paragraph: Predict, then verify
+      - paragraph: Load “The tyranny of the outlier” and switch the error view to Squares. Find the biggest penalty square.
+      - paragraph: If that rogue point wanders twice as far from the line, the area of its penalty square will be…
+      - button "About twice as big — twice the miss, twice the penalty"
+      - button "About four times as big — the penalty is the square of the miss"
+      - button "About the same — the line refits to absorb the move"
+    - listitem:
+      - paragraph: Lab task
+      - paragraph: "Make the tyranny stop: on “The tyranny of the outlier,” deal with both rogue points — drag them back to the trend, or double-click them out — until the MSE drops below 2."
+      - status: Waiting on the experiment above — this one is completed with your hands, not a click here.
+  - heading "Field notes" [level=2]
+  - list:
+    - listitem: In industry, linear regression is the baseline that fancier models must beat to justify their complexity — and embarrassingly often, they don't beat it by much.
+    - listitem: "In science and economics, the slope is the headline: “an extra year of schooling is associated with X% higher earnings” is a regression coefficient speaking."
+    - listitem: "Its failure mode travels too: the outlier sensitivity you just saw is why analysts inspect residual plots before trusting any fitted line."
+  - heading "This exhibit in the knowledge graph" [level=2]
+  - heading "Builds on" [level=3]
+  - list:
+    - listitem: The Dataset
+    - listitem: Regression
+  - heading "Leads to" [level=3]
+  - list:
+    - listitem: Loss Functions
+    - listitem:
+      - link "Gradient Descent →":
+        - /url: /exhibits/gradient-descent
+  - paragraph: Journey · Foundations · stop 4 of 11
+  - paragraph:
+    - text: The next stop, Loss Functions, isn't open yet —
+    - link "browse the map":
+      - /url: /#map
+    - text: for an open door, or wander the connections below.
+  - paragraph: "Still to come for this exhibit: the math drawer. The experiment above is the real thing — the same implementation our tests verify against scikit-learn."

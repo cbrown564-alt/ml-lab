@@ -1,0 +1,15 @@
+[home] loaded in 575ms (networkidle, cold)
+[home] h1: "Get your hands on machine learning."
+[home] first paragraph: "A laboratory, not a course. Every concept is an exhibit with a live experiment at its heart — drag the data, turn the knobs, break the model on purpose — until the intuition practitioners build over years is sitting in y"
+[home] exhibit links on page: 7
+[flow] click 1: home -> linear-regression exhibit
+[flow] manipulating (dragged a data point) 305ms after leaving home; total clicks: 1
+[orientation] journey references on linreg page: 1
+[orientation] graph neighborhood blocks: builds-on=1 leads-to=1
+[linreg] tyranny scenario selected; residual squares staged
+[a11y] linreg aria snapshot written (9817 chars)
+[gd] played and paused the descent
+[gd] loss surface revealed
+[a11y] gd aria snapshot written (8338 chars)
+[flow] onward links present at gd page bottom region: 2
+[a11y] keyboard moved a focused point: cy 254.9315215286716 -> 242.66485486200492 (WORKS)

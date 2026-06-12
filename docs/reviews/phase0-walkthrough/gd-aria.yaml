@@ -1,0 +1,94 @@
+- main:
+  - navigation:
+    - link "← ML Lab":
+      - /url: /
+  - paragraph: ML Practice · Algorithm
+  - heading "Gradient Descent" [level=1]
+  - text: practiced
+  - paragraph: "The engine under nearly everything. A model starts out wrong, measures exactly how wrong, and takes one small step downhill — then does it again, a few thousand times. Here you hold the clock: step, play, scrub back through time, and turn the one knob that decides whether the walk converges, crawls, or explodes."
+  - paragraph:
+    - button "Listen0:42"
+  - paragraph: Imagine standing on a hillside in fog so thick you can see nothing — no valley, no horizon, only the ground under your boots. You want the lowest point of the landscape. The one thing you can always sense is the tilt of the ground where you stand. So you take a step in the steepest downhill direction, feel again, and repeat.
+  - paragraph: "That is the entire algorithm. No map, no overview, no cleverness — just slope, step, repeat, thousands of times. It sounds too primitive to matter, and it trains essentially everything: the line below, and by the same logic, models with billions of parameters. The experiment puts the fog, the hillside, and the stride length under your control."
+  - button "Watch it learn"
+  - button "Too timid"
+  - button "⚠ Over the edge"
+  - button "Restart descent"
+  - paragraph: "The flat line knows nothing. Press play and watch it learn: each step reads the slope of the loss surface and walks downhill. The dashed line is the destination — the least-squares fit. Watch the loss fall by whole powers of ten, then crawl as the surface flattens near the bottom."
+  - 'img "Scatter plot of 30 data points. The line being learned by gradient descent is at step 12: slope 2.60, intercept 0.43, loss 0.59. A dashed line marks the least-squares destination."'
+  - 'img "Training curve: loss over 12 descent steps, log scale. At step 12 the loss is 0.594."'
+  - button "Play"
+  - button "Step"
+  - button "Step ×10"
+  - text: Learning rate
+  - slider "Learning rate": "-1.7"
+  - text: "0.020"
+  - slider "Scrub through descent steps": "12"
+  - text: step 12 ŷ = 2.60·x + 0.43 loss = 0.59
+  - img "Map of the loss surface over slope and intercept. Darker shading is higher loss; the minimum sits at slope 2.55, intercept 0.78. The descent path so far has 12 steps; the current position is slope 2.60, intercept 0.43."
+  - paragraph: "This is the territory: every point on the map is a candidate line — slope across, intercept up — and the shading is how wrong that line is, in log bands. The purple path is the walk you just took; the dot is where the scrubber is standing. Step, scrub, and re-run the scenarios — watch the careful walk curve into the valley, and the reckless one rocket off the map."
+  - heading "The invisible landscape" [level=2]
+  - paragraph:
+    - button "Listen0:38"
+  - paragraph: "Where does the hillside come from? Every possible line — every pair of slope and intercept — is a place, and the altitude of that place is the loss: how badly that line fits the data. Good lines live in valleys; terrible lines live on peaks. Training is travel across this landscape, and the training curve you watched is the altimeter log of the journey."
+  - paragraph: "The model never sees the whole landscape — computing it everywhere would mean trying every possible line, which is exactly what we're trying to avoid. It only ever measures the tilt underfoot: the gradient."
+  - heading "Slope, step, repeat" [level=2]
+  - paragraph:
+    - button "Listen0:34"
+  - paragraph: "The gradient points in the direction of steepest ascent, so the update rule walks the other way: new parameters equal old parameters minus the learning rate times the gradient. That minus sign is the entire “descent” in gradient descent."
+  - paragraph: "Notice what the rule buys for free: where the surface is steep, the gradient is large and the steps are long; near the valley floor, the gradient shrinks and the walk slows itself down precisely where care is needed. The fast-fall-then-crawl shape of your training curve is this self-throttling, drawn in loss."
+  - heading "One knob to rule the walk" [level=2]
+  - paragraph:
+    - button "Listen0:41"
+  - paragraph: The learning rate is stride length, and you've now seen all three of its regimes. Too small, and the walk is technically correct but practically frozen — “too timid” would take thousands of steps to cross a landscape it could cross in fifty. Too large, and each stride sails over the valley and lands higher up the opposite wall; the loss compounds upward and explodes. In between sits a band where descent is quick and stable.
+  - paragraph: Nothing about the data changed across your three scenarios — only the stride. That is why the learning rate is the first hyperparameter every practitioner learns to respect, and usually the first one they blame.
+  - heading "Check your understanding" [level=2]
+  - list:
+    - listitem:
+      - paragraph: In “Over the edge,” a learning rate of 1 made the loss explode. What actually went wrong at each step?
+      - button "The step was so large it overshot the valley and landed higher up the far side"
+      - button "The algorithm started moving uphill instead of downhill"
+      - button "Large learning rates make the gradient itself larger"
+    - listitem:
+      - paragraph: With a good learning rate, the loss fell fast at first and then crawled. Why do the steps shrink near the bottom?
+      - button "The gradient gets smaller as the surface flattens, so each step covers less ground"
+      - button "The algorithm reduces the learning rate as it goes"
+      - button "The model runs out of steps in its budget"
+    - listitem:
+      - paragraph: Which way does the gradient itself point, and why do we subtract it?
+      - button "It points uphill — toward steepest increase — so stepping downhill means going the opposite way"
+      - button "It points downhill, and subtracting is just a convention"
+      - button "It points toward the minimum from anywhere on the surface"
+    - listitem:
+      - paragraph: Predict, then verify
+      - paragraph: Stay on “Watch it learn” — learning rate 0.02, which converges comfortably. You're about to double the stride.
+      - paragraph: Set the learning rate to 0.04 — twice the step size — and restart the walk. After a few hundred steps, the loss will be…
+      - button "Lower, sooner — bigger steps cover the same ground in half the time"
+      - button "About the same — the walk converges either way, just along a different path"
+      - button "Astronomically worse — 0.04 is past this surface's speed limit, and the walk explodes"
+    - listitem:
+      - paragraph: Lab task
+      - paragraph: "Break it on purpose: find a learning rate that makes the descent diverge, press play, and watch the first overshoot happen."
+      - status: Waiting on the experiment above — this one is completed with your hands, not a click here.
+  - heading "Field notes" [level=2]
+  - list:
+    - listitem: "Real training sets are too large to measure the slope exactly, so practice uses stochastic gradient descent: estimate the gradient from a small random batch and take the slightly noisy step anyway."
+    - listitem: Modern optimizers — momentum, Adam — are this same walk with memory and per-parameter stride adjustment bolted on. The fog, the slope, and the step survive intact.
+    - listitem: "When a training run diverges and the loss curve rockets upward, the first question asked in any ML team is the one this exhibit taught: what's the learning rate?"
+  - heading "This exhibit in the knowledge graph" [level=2]
+  - heading "Builds on" [level=3]
+  - list:
+    - listitem: Loss Functions
+    - listitem:
+      - link "Linear Regression →":
+        - /url: /exhibits/linear-regression
+  - heading "Leads to" [level=3]
+  - list:
+    - listitem: Neural Network Fundamentals
+  - paragraph: Journey · Foundations · stop 6 of 11
+  - paragraph:
+    - text: The next stop, Train, Test & Generalization, isn't open yet —
+    - link "browse the map":
+      - /url: /#map
+    - text: for an open door, or wander the connections below.
+  - paragraph: "Still to come for this exhibit: the math drawer. The experiment above is the real thing — the same implementation our tests verify against scikit-learn."
