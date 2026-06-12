@@ -13,7 +13,7 @@ test.describe("linear-regression exhibit", () => {
 
   test("renders the experiment with data, fit line, and readouts", async ({ page }) => {
     await expect(page.getByRole("heading", { name: "Linear Regression" })).toBeVisible();
-    const svg = page.getByRole("img", { name: /least-squares line/ });
+    const svg = page.getByRole("group", { name: /least-squares line/ });
     await expect(svg).toBeVisible();
     await expect(svg.locator("circle")).toHaveCount(30); // clean-linear fixture
     await expect(page.getByText(/MSE = /)).toBeVisible();
@@ -65,7 +65,7 @@ test.describe("linear-regression exhibit", () => {
 
   test("the dataset painter adds and removes points", async ({ page }) => {
     await page.getByRole("button", { name: /paint your own data/i }).click();
-    const svg = page.getByRole("img", { name: /least-squares line/ });
+    const svg = page.getByRole("group", { name: /least-squares line/ });
     await expect(svg.locator("circle")).toHaveCount(0);
 
     await svg.scrollIntoViewIfNeeded();
@@ -77,6 +77,37 @@ test.describe("linear-regression exhibit", () => {
 
     await svg.locator("circle").first().dblclick();
     await expect(svg.locator("circle")).toHaveCount(1);
+  });
+
+  test("a data point can be moved and removed with the keyboard", async ({ page }) => {
+    const readout = page.getByText(/MSE = /);
+    const before = await readout.textContent();
+
+    const point = page.locator("svg circle").first();
+    await point.scrollIntoViewIfNeeded();
+    await point.focus();
+    for (let i = 0; i < 4; i++) await page.keyboard.press("ArrowUp");
+    await expect(readout).not.toHaveText(before!);
+
+    const count = await page.locator("svg circle").count();
+    await page.keyboard.press("Delete");
+    await expect(page.locator("svg circle")).toHaveCount(count - 1);
+  });
+
+  test("the mode preference persists across a reload", async ({ page }) => {
+    await page.getByRole("button", { name: /^code$/i }).click();
+    await expect(
+      page.getByLabel("Python code mirroring the experiment"),
+    ).toBeVisible();
+
+    await page.reload();
+    await expect(
+      page.getByLabel("Python code mirroring the experiment"),
+    ).toBeVisible();
+  });
+
+  test("the journey continuation offers the next stop", async ({ page }) => {
+    await expect(page.getByText(/Journey · Foundations · stop 4 of 11/)).toBeVisible();
   });
 
   test("residuals toggle shows and hides error lines", async ({ page }) => {

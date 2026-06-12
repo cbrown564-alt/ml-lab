@@ -44,6 +44,7 @@ export function Plot({
   xDomain,
   yDomain,
   ariaLabel,
+  interactive = false,
   children,
 }: {
   width?: number;
@@ -52,6 +53,12 @@ export function Plot({
   yDomain: [number, number];
   /** The teaching point of this visualization, for screen readers (docs/06, A6). */
   ariaLabel: string;
+  /**
+   * Plots with focusable children (keyboard-movable points) must not be
+   * role="img" — ARIA makes an image's children presentational, which
+   * contradicts focusable content inside it.
+   */
+  interactive?: boolean;
   children: ReactNode;
 }) {
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -71,7 +78,7 @@ export function Plot({
       <svg
         ref={svgRef}
         viewBox={`0 0 ${width} ${height}`}
-        role="img"
+        role={interactive ? "group" : "img"}
         aria-label={ariaLabel}
         className="h-auto w-full touch-none select-none"
       >
@@ -205,6 +212,8 @@ export function PaintLayer({ onAdd }: { onAdd: (point: Point) => void }) {
  * by double-click when onRemove is provided.
  * Dragging uses window-level listeners rather than per-element pointer
  * capture: a fast drag must never outrun the point, in any browser.
+ * Every draggable point is also keyboard-operable (docs/06, A6): arrow keys
+ * move it through data space, Delete removes it.
  */
 export function DataPoints({
   points,
@@ -221,6 +230,24 @@ export function DataPoints({
   useEffect(() => {
     onChangeRef.current = onChange;
   }, [onChange]);
+
+  // One keyboard nudge is 1/60 of the domain — fine enough to aim, coarse
+  // enough that a held key crosses the plot in about a second.
+  const xNudge = (x.domain[1] - x.domain[0]) / 60;
+  const yNudge = (y.domain[1] - y.domain[0]) / 60;
+
+  const onKeyDown = (i: number, p: Point) => (e: React.KeyboardEvent) => {
+    if (!onChange) return;
+    const dx = e.key === "ArrowLeft" ? -1 : e.key === "ArrowRight" ? 1 : 0;
+    const dy = e.key === "ArrowDown" ? -1 : e.key === "ArrowUp" ? 1 : 0;
+    if (dx !== 0 || dy !== 0) {
+      e.preventDefault();
+      onChange(i, { x: p.x + dx * xNudge, y: p.y + dy * yNudge });
+    } else if ((e.key === "Delete" || e.key === "Backspace") && onRemove) {
+      e.preventDefault();
+      onRemove(i);
+    }
+  };
 
   const toData = useCallback(
     (clientX: number, clientY: number): Point => {
@@ -261,7 +288,17 @@ export function DataPoints({
           fill="var(--viz-truth)"
           stroke="var(--surface-bg)"
           strokeWidth={1.5}
-          className={onChange ? "cursor-grab active:cursor-grabbing" : undefined}
+          className={
+            onChange ? "viz-point cursor-grab active:cursor-grabbing" : undefined
+          }
+          tabIndex={onChange ? 0 : undefined}
+          role={onChange ? "button" : undefined}
+          aria-label={
+            onChange
+              ? `Data point at x ${p.x.toFixed(1)}, y ${p.y.toFixed(1)}. Arrow keys move it${onRemove ? "; Delete removes it" : ""}.`
+              : undefined
+          }
+          onKeyDown={onChange ? onKeyDown(i, p) : undefined}
           onPointerDown={
             onChange
               ? (e) => {

@@ -9,6 +9,7 @@ import { domainLabel, kindLabel } from "@/lib/graph/labels";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
 import { edges } from "@content/graph/edges";
+import { journeys } from "@content/journeys/foundations";
 import type { ConceptNode } from "@/lib/graph/schema";
 
 /**
@@ -61,6 +62,18 @@ export function ExhibitFrame({
   const unlocks = edges
     .filter((e) => e.from === nodeId && (e.type === "prerequisite" || e.type === "sequel"))
     .map((e) => lookup.get(e.to)!);
+
+  // Journey continuation (docs/06, A4): an exhibit that is a journey stop
+  // offers the next stop at the bottom — the linear path stays one click
+  // away without ever being imposed.
+  const journey = journeys.find((j) => j.stops.some((s) => s.nodeId === nodeId));
+  const stopIndex = journey
+    ? journey.stops.findIndex((s) => s.nodeId === nodeId)
+    : -1;
+  const nextStop =
+    journey && stopIndex >= 0 && stopIndex + 1 < journey.stops.length
+      ? lookup.get(journey.stops[stopIndex + 1].nodeId)
+      : undefined;
 
   return (
     <main className="mx-auto w-full max-w-5xl px-8 py-16">
@@ -162,10 +175,50 @@ export function ExhibitFrame({
         </div>
       </section>
 
+      {journey && (
+        <section className="mt-12 rounded-xl border border-line bg-raised p-6">
+          <p className="font-mono text-xs tracking-widest text-ink-faint uppercase">
+            Journey · {journey.title} · stop {stopIndex + 1} of {journey.stops.length}
+          </p>
+          {nextStop ? (
+            isLive(nextStop.id) ? (
+              <p className="mt-3">
+                <Link
+                  href={liveExhibits[nextStop.id].href}
+                  className="font-medium text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2"
+                >
+                  Continue the journey: {nextStop.title} →
+                </Link>
+                <span className="mt-1 block text-sm leading-relaxed text-ink-muted">
+                  {nextStop.oneLiner}
+                </span>
+              </p>
+            ) : (
+              <p className="mt-3 max-w-[65ch] text-sm leading-relaxed text-ink-muted">
+                The next stop, <span className="font-medium text-ink">{nextStop.title}</span>,
+                isn&apos;t open yet —{" "}
+                <Link href="/#map" className="text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2">
+                  browse the map
+                </Link>{" "}
+                for an open door, or wander the connections below.
+              </p>
+            )
+          ) : (
+            <p className="mt-3 max-w-[65ch] text-sm leading-relaxed text-ink-muted">
+              This is the journey&apos;s final stop.{" "}
+              <Link href="/#map" className="text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2">
+                Back to the map
+              </Link>{" "}
+              to pick your next territory.
+            </p>
+          )}
+        </section>
+      )}
+
       <p className="mt-10 max-w-[65ch] text-sm leading-relaxed text-ink-faint">
-        Exhibit under construction: narrative, audio, the math drawer, and
-        concept checks are on their way. The experiment above is the real thing
-        — the same implementation our tests verify against scikit-learn.
+        Still to come for this exhibit: narrated audio with a synced transcript
+        and the math drawer. The experiment above is the real thing — the same
+        implementation our tests verify against scikit-learn.
       </p>
     </main>
   );

@@ -1,16 +1,7 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import { useLearner, type MasteryLevel } from "@/lib/learner/store";
-
-const emptySubscribe = () => () => {};
-/** False during SSR and the hydration render, true afterwards. */
-const useHydrated = () =>
-  useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false,
-  );
+import { useHydrated } from "@/lib/use-hydrated";
 
 /**
  * The learner's own state, legible at a glance (docs/06, A2): "seen",

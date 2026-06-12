@@ -13,6 +13,8 @@ import { CodePanel } from "@/components/code/CodePanel";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
 import { createExperimentStore } from "@/lib/experiment/store";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
+import { useSettings } from "@/lib/settings/store";
+import { useHydrated } from "@/lib/use-hydrated";
 import { mse, olsFit } from "@/lib/models/linear-regression";
 import { linearRegressionPython } from "@/lib/models/linear-regression-py";
 import { linearRegressionExperiment } from "@content/exhibits/linear-regression/experiment";
@@ -38,7 +40,12 @@ export function LinearRegressionLab() {
     reset,
   } = useExperiment();
   const [showResiduals, setShowResiduals] = useState(true);
-  const [mode, setMode] = useState<"visual" | "code">("visual");
+  // Mode preference persists lab-wide (docs/06, A4); render the server
+  // default until the persisted value has hydrated.
+  const hydrated = useHydrated();
+  const storedMode = useSettings((s) => s.mode);
+  const setMode = useSettings((s) => s.setMode);
+  const mode = hydrated ? storedMode : "visual";
 
   const editable =
     spec.datasets.find((d) => d.id === datasetId)?.editable ?? false;
@@ -97,6 +104,7 @@ export function LinearRegressionLab() {
         <Plot
           xDomain={xDomain}
           yDomain={yDomain}
+          interactive
           ariaLabel={`Scatter plot of ${points.length} data points with the least-squares line fitted live. Slope ${fit.slope.toFixed(2)}, intercept ${fit.intercept.toFixed(2)}, mean squared error ${loss.toFixed(2)}. Dragging points refits the line.${editable ? " Clicking empty space adds a point; double-clicking a point removes it." : ""}`}
         >
           <Axes />
@@ -130,6 +138,23 @@ export function LinearRegressionLab() {
             {Math.abs(fit.intercept).toFixed(2)}
           </span>
           <span style={{ color: "var(--viz-error)" }}>MSE = {loss.toFixed(2)}</span>
+          {editable && (
+            <button
+              type="button"
+              onClick={() => {
+                practiced();
+                // Keyboard-accessible alternative to painting (docs/06, A6):
+                // the new point lands mid-plot, ready to be arrow-keyed.
+                addPoint({
+                  x: (xDomain[0] + xDomain[1]) / 2,
+                  y: (yDomain[0] + yDomain[1]) / 2,
+                });
+              }}
+              className="rounded-full border border-line px-4 py-1 font-sans text-sm text-ink-muted hover:border-ink-faint"
+            >
+              Add point
+            </button>
+          )}
           <label className="ml-auto flex cursor-pointer items-center gap-2 text-ink-muted">
             <input
               type="checkbox"
