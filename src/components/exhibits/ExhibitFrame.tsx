@@ -2,10 +2,12 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ConceptCheckSection } from "@/components/assessment/ConceptCheckSection";
 import { MasteryBadge } from "@/components/learner/MasteryBadge";
+import { NarratedSection } from "@/components/narrative/NarratedSection";
 import { RecordVisit } from "@/components/learner/RecordVisit";
 import type { ConceptCheck } from "@/lib/assessment/schema";
 import type { ExhibitNarrative } from "@/lib/narrative/schema";
 import { domainLabel, kindLabel } from "@/lib/graph/labels";
+import { audioManifests } from "@content/exhibits/audio";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
 import { edges } from "@content/graph/edges";
@@ -96,11 +98,11 @@ export function ExhibitFrame({
 
       {narrative && (
         <div className="mt-10 max-w-[65ch] border-l-2 border-line pl-6">
-          {narrative.hook.map((p, i) => (
-            <p key={i} className="mt-4 leading-relaxed text-ink first:mt-0">
-              {p}
-            </p>
-          ))}
+          <NarratedSection
+            tone="hook"
+            paragraphs={narrative.hook}
+            audio={audioManifests[nodeId]?.sections.find((s) => s.id === "hook")}
+          />
         </div>
       )}
 
@@ -111,11 +113,11 @@ export function ExhibitFrame({
           {narrative.story.map((s) => (
             <div key={s.id} className="mt-10 first:mt-0">
               <h2 className="text-2xl font-semibold tracking-tight">{s.heading}</h2>
-              {s.paragraphs.map((p, i) => (
-                <p key={i} className="mt-4 max-w-[65ch] leading-relaxed text-ink-muted">
-                  {p}
-                </p>
-              ))}
+              <NarratedSection
+                tone="story"
+                paragraphs={s.paragraphs}
+                audio={audioManifests[nodeId]?.sections.find((a) => a.id === s.id)}
+              />
             </div>
           ))}
         </section>
@@ -216,9 +218,9 @@ export function ExhibitFrame({
       )}
 
       <p className="mt-10 max-w-[65ch] text-sm leading-relaxed text-ink-faint">
-        Still to come for this exhibit: narrated audio with a synced transcript
-        and the math drawer. The experiment above is the real thing — the same
-        implementation our tests verify against scikit-learn.
+        Still to come for this exhibit: the math drawer. The experiment above
+        is the real thing — the same implementation our tests verify against
+        scikit-learn.
       </p>
     </main>
   );

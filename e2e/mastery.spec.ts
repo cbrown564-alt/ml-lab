@@ -34,7 +34,8 @@ test.describe("concept check + mastery", () => {
     await page.goto("/exhibits/gradient-descent");
 
     // The visit alone earns "seen" on the exhibit header.
-    await expect(page.getByText("seen", { exact: true })).toBeVisible();
+    const badge = page.getByTestId("mastery-badge");
+    await expect(badge).toHaveText("seen");
 
     const check = page.locator("section", {
       hasText: "Check your understanding",
@@ -47,23 +48,23 @@ test.describe("concept check + mastery", () => {
     await check.getByRole("button", { name: /Astronomically worse/ }).click();
 
     // The fifth item is a lab task: mastery requires actually diverging.
-    await expect(page.getByText("mastered", { exact: true })).not.toBeVisible();
+    await expect(badge).not.toHaveText("mastered");
     await page.getByRole("button", { name: /over the edge/i }).click();
     await page.getByRole("button", { name: "Play" }).click();
     await expect(page.getByText(/This is divergence/)).toBeVisible({ timeout: 15000 });
     await expect(check.getByText(/Done — the experiment felt it/)).toBeVisible();
 
-    await expect(page.getByText("mastered", { exact: true })).toBeVisible();
+    await expect(badge).toHaveText("mastered");
 
     // Mastery is local-first state: a fresh load still knows.
     await page.reload();
-    await expect(page.getByText("mastered", { exact: true })).toBeVisible();
+    await expect(badge).toHaveText("mastered");
 
     // And the home journey shows it.
     await page.goto("/");
     await expect(
-      page.locator("#foundations").getByText("mastered", { exact: true }),
-    ).toBeVisible();
+      page.locator("#foundations").getByTestId("mastery-badge"),
+    ).toHaveText("mastered");
   });
 
   test("an unfinished exhibit becomes an explainable recommendation", async ({
@@ -71,7 +72,7 @@ test.describe("concept check + mastery", () => {
   }) => {
     // Visiting earns "seen" — enough to have started, not enough to finish.
     await page.goto("/exhibits/linear-regression");
-    await expect(page.getByText("seen", { exact: true })).toBeVisible();
+    await expect(page.getByTestId("mastery-badge")).toHaveText("seen");
 
     await page.goto("/");
     const next = page.getByRole("region", { name: "Your next step" });

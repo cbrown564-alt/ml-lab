@@ -9,6 +9,9 @@ import { expect, test } from "@playwright/test";
 test.describe("linear-regression exhibit", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/exhibits/linear-regression");
+    // Hydration sentinel: the badge renders client-side only, so once it's
+    // here, handlers are attached and interactions are real.
+    await expect(page.getByTestId("mastery-badge")).toHaveText("seen");
   });
 
   test("renders the experiment with data, fit line, and readouts", async ({ page }) => {

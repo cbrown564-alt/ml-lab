@@ -9,6 +9,11 @@ import { expect, test } from "@playwright/test";
 test.describe("gradient-descent exhibit", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/exhibits/gradient-descent");
+    // The mastery badge only renders after hydration: interacting before
+    // React has attached handlers silently no-ops (the narrated transcript
+    // made hydration long enough to lose that race). The testid matters —
+    // bare text would also match narration word spans.
+    await expect(page.getByTestId("mastery-badge")).toHaveText("seen");
   });
 
   test("renders the experiment at step 0 with target line and curve", async ({ page }) => {
@@ -33,9 +38,10 @@ test.describe("gradient-descent exhibit", () => {
     await page.getByRole("button", { name: "Play" }).click();
     await expect(page.getByText(/^step [1-9]\d*/)).toBeVisible({ timeout: 5000 });
     await page.getByRole("button", { name: "Pause" }).click();
-    const frozen = await page.getByText(/^step /).textContent();
+    // /^step \d/ keeps this off the narration's word spans ("step " etc.).
+    const frozen = await page.getByText(/^step \d/).textContent();
     await page.waitForTimeout(400);
-    await expect(page.getByText(/^step /)).toHaveText(frozen!);
+    await expect(page.getByText(/^step \d/)).toHaveText(frozen!);
   });
 
   test("scrubbing rewinds the view to earlier steps", async ({ page }) => {

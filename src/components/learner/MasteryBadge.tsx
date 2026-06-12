@@ -23,6 +23,7 @@ export function MasteryBadge({ nodeId }: { nodeId: string }) {
 
   return (
     <span
+      data-testid="mastery-badge"
       className={`rounded-full border px-2.5 py-0.5 font-mono text-xs tracking-wide ${styles[level]}`}
     >
       {level}
