@@ -14,14 +14,41 @@ describe("concept checks", () => {
         expect(nodes.some((n) => n.id === check.nodeId)).toBe(true);
       });
 
-      it("every item has exactly one correct option and feedback on all of them", () => {
+      it("every option-bearing item has exactly one correct option and feedback on all of them", () => {
         for (const item of check.items) {
+          if (item.kind === "experiment-task") continue;
           const correct = item.options.filter((o) => o.correct === true);
           expect(correct, item.id).toHaveLength(1);
           for (const o of item.options) {
             expect(o.feedback.length, `${item.id}: "${o.label}"`).toBeGreaterThan(20);
           }
         }
+      });
+
+      it("predict items say what to set up and how to verify", () => {
+        for (const item of check.items) {
+          if (item.kind !== "predict") continue;
+          expect(item.setup.length, item.id).toBeGreaterThan(20);
+          expect(item.verify.length, item.id).toBeGreaterThan(20);
+        }
+      });
+
+      it("experiment tasks carry real feedback and a namespaced event", () => {
+        for (const item of check.items) {
+          if (item.kind !== "experiment-task") continue;
+          expect(item.feedback.length, item.id).toBeGreaterThan(20);
+          // The event namespace ties the task to its own exhibit.
+          expect(item.taskEvent, item.id).toMatch(
+            new RegExp(`^${check.nodeId}:[a-z-]+$`),
+          );
+        }
+      });
+
+      it("uses every assessment kind the exhibit has earned", () => {
+        // Both flagship exhibits carry all three kinds (docs/06, B5):
+        // retrieval, predict-then-verify, and assessment-as-play.
+        const kinds = new Set(check.items.map((i) => i.kind));
+        expect([...kinds].sort()).toEqual(["choice", "experiment-task", "predict"]);
       });
 
       it("item ids are unique", () => {

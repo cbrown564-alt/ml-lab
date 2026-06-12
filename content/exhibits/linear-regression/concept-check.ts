@@ -85,5 +85,46 @@ export const linearRegressionCheck: ConceptCheck = {
       difficulty: 1,
       targets: ["linreg:interpret-residuals"],
     },
+    {
+      id: "double-the-distance",
+      kind: "predict",
+      setup:
+        "Load “The tyranny of the outlier” and switch the error view to Squares. Find the biggest penalty square.",
+      prompt:
+        "If that rogue point wanders twice as far from the line, the area of its penalty square will be…",
+      options: [
+        {
+          label: "About twice as big — twice the miss, twice the penalty",
+          feedback:
+            "That's how it would work if the loss were the plain distance. But the penalty is the square of the miss: double the residual and the area goes up fourfold. That nonlinearity is the whole story of this exhibit.",
+        },
+        {
+          label: "About four times as big — the penalty is the square of the miss",
+          correct: true,
+          feedback:
+            "Right — side doubles, area quadruples. That's why the line capitulates to outliers: pleasing one point at residual 20 is worth disappointing four hundred points at residual 1.",
+        },
+        {
+          label: "About the same — the line refits to absorb the move",
+          feedback:
+            "The line does chase the outlier a little, but with thirty points anchoring it, the refit absorbs only a sliver of the move. The square still roughly quadruples — go watch it.",
+        },
+      ],
+      verify:
+        "Drag that rogue point to twice its distance from the line and watch its square. (The line will chase it a little — that's the tyranny part.)",
+      difficulty: 2,
+      targets: ["linreg:squared-error-sensitivity"],
+    },
+    {
+      id: "evict-the-outliers",
+      kind: "experiment-task",
+      prompt:
+        "Make the tyranny stop: on “The tyranny of the outlier,” deal with both rogue points — drag them back to the trend, or double-click them out — until the MSE drops below 2.",
+      taskEvent: "linear-regression:outliers-tamed",
+      feedback:
+        "The line snapped back to the crowd the moment the giant penalties vanished — squared error's obsession works in reverse, too. (In real work you'd investigate an outlier before deleting it; sometimes the rogue point is the discovery.)",
+      difficulty: 2,
+      targets: ["linreg:outlier-influence"],
+    },
   ],
 };

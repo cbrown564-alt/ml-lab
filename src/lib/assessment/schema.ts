@@ -1,9 +1,13 @@
 /**
- * Assessment types (docs/03-data-model.md §3), v1: choice items. Every
- * option carries learner-facing feedback — distractors encode real
- * misconceptions, and the feedback addresses the misconception, not just
- * the verdict (docs/06, B5). Other kinds (parameter-prediction,
- * experiment-task) land with Phase 1.
+ * Assessment types (docs/03-data-model.md §3). Three kinds (docs/06, B5):
+ *
+ * - `choice` — retrieval practice; distractors encode real misconceptions
+ *   and every option carries feedback addressing the misconception.
+ * - `predict` — predict-observe-explain (White & Gunstone): commit to a
+ *   prediction first, then go verify it in the experiment above.
+ * - `experiment-task` — assessment inside the simulation ("make it
+ *   diverge"): the experiment itself reports completion, so the check is
+ *   continued play, not exam cosplay.
  */
 
 export type ChoiceOption = {
@@ -13,15 +17,39 @@ export type ChoiceOption = {
   feedback: string;
 };
 
-export type AssessmentItem = {
+type ItemBase = {
   id: string;
-  kind: "choice";
-  prompt: string;
-  options: ChoiceOption[];
   difficulty: 1 | 2 | 3;
   /** Sub-skills this item measures, e.g. "linreg:why-squared-error". */
   targets: string[];
 };
+
+export type ChoiceItem = ItemBase & {
+  kind: "choice";
+  prompt: string;
+  options: ChoiceOption[];
+};
+
+export type PredictItem = ItemBase & {
+  kind: "predict";
+  /** The state to put the experiment in before committing to a prediction. */
+  setup: string;
+  prompt: string;
+  options: ChoiceOption[];
+  /** After answering: how to go see the truth with your own hands. */
+  verify: string;
+};
+
+export type ExperimentTaskItem = ItemBase & {
+  kind: "experiment-task";
+  prompt: string;
+  /** Event id the experiment reports when the task condition is met. */
+  taskEvent: string;
+  /** Shown on completion: what just happened and why it matters. */
+  feedback: string;
+};
+
+export type AssessmentItem = ChoiceItem | PredictItem | ExperimentTaskItem;
 
 export type ConceptCheck = {
   nodeId: string;

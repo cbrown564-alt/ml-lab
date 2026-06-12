@@ -44,6 +44,14 @@ test.describe("concept check + mastery", () => {
       .getByRole("button", { name: /gradient gets smaller as the surface flattens/ })
       .click();
     await check.getByRole("button", { name: /points uphill/ }).click();
+    await check.getByRole("button", { name: /Astronomically worse/ }).click();
+
+    // The fifth item is a lab task: mastery requires actually diverging.
+    await expect(page.getByText("mastered", { exact: true })).not.toBeVisible();
+    await page.getByRole("button", { name: /over the edge/i }).click();
+    await page.getByRole("button", { name: "Play" }).click();
+    await expect(page.getByText(/This is divergence/)).toBeVisible({ timeout: 15000 });
+    await expect(check.getByText(/Done — the experiment felt it/)).toBeVisible();
 
     await expect(page.getByText("mastered", { exact: true })).toBeVisible();
 

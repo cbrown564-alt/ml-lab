@@ -41,7 +41,7 @@ test.describe("linear-regression exhibit", () => {
 
   test("the outlier failure scenario loads its dataset and prompt", async ({ page }) => {
     await page.getByRole("button", { name: /tyranny of the outlier/i }).click();
-    await expect(page.getByText(/rogue points/)).toBeVisible();
+    await expect(page.getByText(/Two rogue points have wandered in/)).toBeVisible();
     await expect(page.locator("svg circle")).toHaveCount(30); // with-outliers fixture
     await expect(page).toHaveScreenshot("exhibit-outlier-scenario.png", { fullPage: true });
   });
@@ -108,6 +108,47 @@ test.describe("linear-regression exhibit", () => {
 
   test("the journey continuation offers the next stop", async ({ page }) => {
     await expect(page.getByText(/Journey · Foundations · stop 4 of 11/)).toBeVisible();
+  });
+
+  test("evicting the outliers completes the lab task", async ({ page }) => {
+    const task = page.locator("li", { hasText: "Make the tyranny stop" });
+    await expect(task.getByText(/Waiting on the experiment/)).toBeVisible();
+
+    await page.getByRole("button", { name: /tyranny of the outlier/i }).click();
+    const svg = page.getByRole("group", { name: /least-squares line/ });
+    await svg.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(600); // let the scenario morph settle
+
+    // The two rogues are the vertical extremes of the cloud: top and bottom.
+    const evictExtreme = async (pick: "min" | "max") => {
+      const circles = svg.locator("circle");
+      const count = await circles.count();
+      let target = 0;
+      let extreme = pick === "min" ? Infinity : -Infinity;
+      for (let i = 0; i < count; i++) {
+        const box = (await circles.nth(i).boundingBox())!;
+        const cy = box.y + box.height / 2;
+        if (pick === "min" ? cy < extreme : cy > extreme) {
+          extreme = cy;
+          target = i;
+        }
+      }
+      await circles.nth(target).dblclick();
+    };
+
+    await evictExtreme("min");
+    await evictExtreme("max");
+
+    await expect(task.getByText(/Done — the experiment felt it/)).toBeVisible();
+    await expect(task.getByText(/snapped back to the crowd/)).toBeVisible();
+  });
+
+  test("the predict item reveals the verify step after answering", async ({ page }) => {
+    const item = page.locator("li", { hasText: "Predict, then verify" });
+    await expect(item.getByText(/Now verify it/)).not.toBeVisible();
+    await item.getByRole("button", { name: /four times as big/ }).click();
+    await expect(item.getByText(/Right\./)).toBeVisible();
+    await expect(item.getByText(/Now verify it/)).toBeVisible();
   });
 
   test("the error view switches between lines, squares, and hidden", async ({ page }) => {

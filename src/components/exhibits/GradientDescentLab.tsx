@@ -6,6 +6,7 @@ import { LossSurface } from "@/components/viz/LossSurface";
 import { ParamSlider } from "@/components/viz/ParamSlider";
 import { TrainingCurve } from "@/components/viz/TrainingCurve";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
+import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { createExperimentStore } from "@/lib/experiment/store";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import {
@@ -120,6 +121,11 @@ export function GradientDescentLab() {
   const scenario = spec.scenarios.find((s) => s.id === scenarioId) ?? spec.scenarios[0];
   const diverged = latest !== undefined && offTheCliff(latest);
   const exhausted = latest !== undefined && latest.step >= MAX_STEPS;
+
+  // The "break it on purpose" lab task (docs/06, B5) listens for this.
+  useEffect(() => {
+    if (diverged) reportTaskEvent("gradient-descent:diverged");
+  }, [diverged]);
 
   const xDomain: [number, number] = [-1, 11];
   const yDomain: [number, number] = [-5, 30];

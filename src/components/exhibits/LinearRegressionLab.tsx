@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Annotation,
   Axes,
@@ -13,6 +13,7 @@ import {
 } from "@/components/viz/Plot";
 import { CodePanel } from "@/components/code/CodePanel";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
+import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { createExperimentStore } from "@/lib/experiment/store";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import { useSettings } from "@/lib/settings/store";
@@ -80,6 +81,14 @@ export function LinearRegressionLab() {
 
   const fit = useMemo(() => olsFit(points), [points]);
   const loss = useMemo(() => mse(points, fit), [points, fit]);
+
+  // The "evict the outliers" lab task (docs/06, B5): on the outlier dataset,
+  // both rogues tamed (dragged back or removed) without nuking the crowd.
+  const outliersTamed =
+    datasetId === "with-outliers" && points.length >= 26 && loss < 2;
+  useEffect(() => {
+    if (outliersTamed) reportTaskEvent("linear-regression:outliers-tamed");
+  }, [outliersTamed]);
   const scenario = spec.scenarios.find((s) => s.id === scenarioId) ?? spec.scenarios[0];
 
   // The biggest mistake gets named in the graphic itself (docs/06, B2).

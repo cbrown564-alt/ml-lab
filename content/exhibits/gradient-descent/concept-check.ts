@@ -85,5 +85,46 @@ export const gradientDescentCheck: ConceptCheck = {
       difficulty: 1,
       targets: ["gd:gradient-direction"],
     },
+    {
+      id: "double-the-stride",
+      kind: "predict",
+      setup:
+        "Stay on “Watch it learn” — learning rate 0.02, which converges comfortably. You're about to double the stride.",
+      prompt:
+        "Set the learning rate to 0.04 — twice the step size — and restart the walk. After a few hundred steps, the loss will be…",
+      options: [
+        {
+          label: "Lower, sooner — bigger steps cover the same ground in half the time",
+          feedback:
+            "That's true right up until the step size crosses this surface's stability limit — which sits, inconveniently, between 0.02 and 0.04. Past it, every step overshoots more than it gains.",
+        },
+        {
+          label: "About the same — the walk converges either way, just along a different path",
+          feedback:
+            "There's a cliff between these two rates, not a gentle trade-off. Below the critical step size the walk converges; above it, each step lands higher than the last and the loss explodes.",
+        },
+        {
+          label: "Astronomically worse — 0.04 is past this surface's speed limit, and the walk explodes",
+          correct: true,
+          feedback:
+            "Right — and this is the unsettling part: the safe-looking 0.02 was already half of the critical step size. The boundary between converging and exploding is a line you cross, not a slope you climb.",
+        },
+      ],
+      verify:
+        "Drag the learning-rate knob to 0.04, restart the descent, and play. Then lift the fog and watch the path rocket off the map.",
+      difficulty: 3,
+      targets: ["gd:stability-threshold"],
+    },
+    {
+      id: "go-over-the-edge",
+      kind: "experiment-task",
+      prompt:
+        "Break it on purpose: find a learning rate that makes the descent diverge, press play, and watch the first overshoot happen.",
+      taskEvent: "gradient-descent:diverged",
+      feedback:
+        "You've met the failure mode that haunts every real training run — loss climbing by powers of ten, each step landing higher than the last. Now you know its face, and the knob that causes it.",
+      difficulty: 1,
+      targets: ["gd:divergence"],
+    },
   ],
 };
