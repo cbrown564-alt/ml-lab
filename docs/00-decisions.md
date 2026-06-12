@@ -4,6 +4,18 @@ Lightweight ADR-style log. One entry per direction-setting decision; newest firs
 
 ---
 
+## 005 - Visual direction: unified light design system (2026-06-12)
+
+**Decision**: Narrative, assessment, code, and experiments all use the same calm light surface. Visualization tokens remain semantic, but are tuned for contrast on light backgrounds instead of switching to a dark lab canvas.
+
+**Why**: Exhibit pages interleave explanation and manipulation. A dark experiment island inside a light narrative page made the reading flow feel broken rather than cinematic.
+
+**Trade-off accepted**: Data visualizations lose some dark-canvas glow, but gain continuity, readability, and simpler theme maintenance.
+
+**Supersedes**: 004.
+
+---
+
 ## 004 — Visual direction: dual-mode design system (2026-06-11)
 
 **Decision**: Calm, light, editorial shell for navigation, prose, and assessment; dark immersive canvas inside experiments and cinematic sequences. Design tokens are mode-aware from day one.

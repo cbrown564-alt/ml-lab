@@ -9,7 +9,7 @@ import { foundations } from "@content/journeys/foundations";
 /**
  * The lab's front door (docs/06, A1): orient in seconds — what this place
  * is, what's open today, the map of the territory, and one guided path in.
- * Calm editorial shell; the dark lab canvas appears only inside exhibits.
+ * Calm editorial surface throughout, including interactive exhibits.
  */
 
 const nodeById = new Map(nodes.map((n) => [n.id, n]));

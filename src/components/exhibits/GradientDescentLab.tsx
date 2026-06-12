@@ -125,7 +125,7 @@ export function GradientDescentLab() {
   if (!viewing) return null;
 
   return (
-    <div data-surface="lab" className="rounded-xl border border-line p-6">
+    <div className="rounded-xl border border-line bg-raised p-6">
       <ScenarioBar
         scenarios={spec.scenarios}
         activeId={scenario.id}

@@ -27,4 +27,4 @@ ML Lab is a pedagogical web application that makes machine learning concepts fee
 
 ## Status
 
-Direction aligned (2026-06-11): Python-via-Pyodide code mode, light-touch force personification, local-first persistence, dual-mode (light shell / dark lab) design system. Next: Phase 0 platform build — see [docs/05-roadmap.md](docs/05-roadmap.md).
+Direction aligned (updated 2026-06-12): Python-via-Pyodide code mode, light-touch force personification, local-first persistence, unified light design system. Next: Phase 0 platform build — see [docs/05-roadmap.md](docs/05-roadmap.md).

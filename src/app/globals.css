@@ -1,53 +1,31 @@
 @import "tailwindcss";
 
 /*
- * ML Lab dual-mode token system (docs/00-decisions.md #004).
- * The light "shell" is the default surface; the dark "lab" canvas is opted
- * into per-region via [data-surface="lab"], not via prefers-color-scheme —
- * surface is a semantic choice, never a user-agent one.
+ * ML Lab unified light token system (docs/00-decisions.md #005).
+ * Narrative, assessment, code, and visual experiments share one surface so
+ * interleaved exhibit pages feel continuous instead of switching rooms.
  */
 
 :root {
-  /* Shell — calm, light, editorial */
-  --surface-bg: #faf8f5;
-  --surface-raised: #ffffff;
-  --surface-sunken: #f1ede7;
-  --ink: #1c1a17;
-  --ink-muted: #5c574f;
+  /* Calm, light, editorial */
+  --surface-bg: oklch(98.1% 0.009 76);
+  --surface-raised: oklch(99.3% 0.006 76);
+  --surface-sunken: oklch(94.5% 0.018 76);
+  --ink: oklch(21.8% 0.017 72);
+  --ink-muted: oklch(42.6% 0.026 72);
   /* 4.7:1 on --surface-bg — axe-core gates serious contrast failures */
-  --ink-faint: #746f65;
-  --line: #e2dcd2;
-  --accent: #1f6f6b;
-  --accent-ink: #ffffff;
+  --ink-faint: oklch(50.8% 0.024 72);
+  --line: oklch(88.5% 0.023 76);
+  --accent: oklch(46.8% 0.091 190);
+  --accent-ink: oklch(98.6% 0.006 190);
 
   /* Visual grammar (docs/06, B2): these hues mean the same thing in every
      exhibit in the lab. Never encode by color alone. */
-  --viz-prediction: #2f7de1;
-  --viz-truth: #e8a33d;
-  --viz-error: #d6456c;
-  --viz-param: #8a63d2;
-  --viz-neutral: #9aa3ad;
-}
-
-[data-surface="lab"] {
-  /* Lab — dark immersive canvas where data glows */
-  --surface-bg: #0b0e14;
-  --surface-raised: #131826;
-  --surface-sunken: #070910;
-  --ink: #e8eaf0;
-  --ink-muted: #9aa3b5;
-  /* 5.1:1 on the dark canvas — same gate as the shell */
-  --ink-faint: #7b8499;
-  --line: #232a3b;
-  --accent: #3fd0c9;
-  --accent-ink: #06211f;
-
-  /* Same semantic hues, tuned to glow on dark */
-  --viz-prediction: #5aa2f7;
-  --viz-truth: #f7c266;
-  --viz-error: #f06d92;
-  --viz-param: #ab8af0;
-  --viz-neutral: #6b7585;
+  --viz-prediction: oklch(54% 0.18 258);
+  --viz-truth: oklch(66% 0.145 75);
+  --viz-error: oklch(54% 0.17 8);
+  --viz-param: oklch(52% 0.16 303);
+  --viz-neutral: oklch(57% 0.025 245);
 }
 
 @theme inline {

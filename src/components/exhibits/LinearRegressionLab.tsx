@@ -55,7 +55,7 @@ export function LinearRegressionLab() {
   const yDomain: [number, number] = [-25, 50];
 
   return (
-    <div data-surface="lab" className="rounded-xl border border-line p-6">
+    <div className="rounded-xl border border-line bg-raised p-6">
       <ScenarioBar
         scenarios={spec.scenarios}
         activeId={scenario.id}

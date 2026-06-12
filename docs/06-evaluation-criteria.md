@@ -44,7 +44,7 @@ The lab must feel effortless to move through. Research base: Nielsen's usability
 - *Measure*: count of clicks/decisions from landing → manipulating an experiment (budget: ≤3); friction log kept during walkthroughs.
 
 ### A5. Beauty of the shell — restraint and coherence
-- The dual-mode system is disciplined: the light shell is typographically excellent and calm (reading measure 60–75ch, consistent vertical rhythm); the dark canvas is reserved for experiments/cinematic moments, making the transition meaningful.
+- The unified light system is disciplined: reading, assessment, code, and experiments share one calm surface; visualization colors remain semantic, high-contrast, and never carry meaning alone.
 - One type system, one spacing scale, one motion language across the entire lab; any screenshot is recognizably ML Lab.
 - *Measure*: design review against the design-token spec; "screenshot lineup" test — shuffle screenshots with benchmark-set screenshots, the lab's should not be identifiable as the weakest.
 

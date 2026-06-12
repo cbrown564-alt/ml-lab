@@ -7,7 +7,7 @@
 | Layer | Choice | Rationale |
 | --- | --- | --- |
 | Framework | **Next.js (App Router) + TypeScript** | Static-first rendering for content, React ecosystem for interactives, first-class Vercel deployment |
-| Styling | **Tailwind CSS + design tokens, dual-mode design system** | Calm light shell for navigation/reading; dark immersive canvas inside experiments and cinematic sequences. Tokens are mode-aware from day one |
+| Styling | **Tailwind CSS + design tokens, unified light design system** | Calm light surface across navigation, reading, assessment, code, and experiments; semantic visualization tokens are tuned for light backgrounds |
 | Content | **MDX + typed TS/JSON data files** | Prose with embedded interactive components; graph/metadata as typed data |
 | 2D visualization | **SVG (D3 scales/shapes) + Canvas** | SVG for annotated, axis-heavy diagrams; Canvas for many-particle/dense renders |
 | 3D / GPU visualization | **Three.js / react-three-fiber** (where warranted) | Loss landscapes, embedding spaces, high-dimensional projections |
