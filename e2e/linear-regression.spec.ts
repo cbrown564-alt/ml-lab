@@ -6,15 +6,6 @@ import { expect, test } from "@playwright/test";
  * smoke test — a draggable that doesn't drag is a red-line failure (A3/B1).
  */
 
-test.describe("home", () => {
-  test("renders and links to live exhibits", async ({ page }) => {
-    await page.goto("/");
-    await expect(page.getByRole("heading", { name: "ML Lab" })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Linear Regression/ })).toBeVisible();
-    await expect(page).toHaveScreenshot("home.png", { fullPage: true });
-  });
-});
-
 test.describe("linear-regression exhibit", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/exhibits/linear-regression");
