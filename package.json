@@ -10,6 +10,8 @@
     "lint:deps": "depcruise src content scripts",
     "check:budgets": "node scripts/check-budgets.mjs",
     "validate": "tsx scripts/validate-graph.ts",
+    "new:exhibit": "tsx scripts/new-exhibit.ts",
+    "brief": "tsx scripts/brief.ts",
     "prebuild": "npm run validate",
     "test": "vitest run",
     "test:e2e": "playwright test"

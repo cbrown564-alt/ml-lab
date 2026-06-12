@@ -17,6 +17,8 @@ export type ExperimentState = {
   params: Record<string, number>;
   scenarioId: string | null;
   movePoint: (index: number, point: Point) => void;
+  addPoint: (point: Point) => void;
+  removePoint: (index: number) => void;
   setParam: (id: string, value: number) => void;
   loadDataset: (datasetId: string) => void;
   loadScenario: (scenarioId: string) => void;
@@ -43,6 +45,11 @@ export function createExperimentStore(spec: ExperimentSpec) {
       set((s) => ({
         points: s.points.map((p, i) => (i === index ? point : p)),
       })),
+
+    addPoint: (point) => set((s) => ({ points: [...s.points, point] })),
+
+    removePoint: (index) =>
+      set((s) => ({ points: s.points.filter((_, i) => i !== index) })),
 
     setParam: (id, value) => set((s) => ({ params: { ...s.params, [id]: value } })),
 

@@ -171,16 +171,49 @@ export function ResidualLines({
 }
 
 /**
- * Observed data — truth hue. Draggable when onChange is provided.
+ * Dataset painter (viz kit v1) — click empty plot space to place a data
+ * point. Sits under the DataPoints layer, so existing points keep their
+ * drag behavior; only genuinely empty canvas paints.
+ */
+export function PaintLayer({ onAdd }: { onAdd: (point: Point) => void }) {
+  const { x, y, svgRef, width, height } = usePlot();
+  const [x0, x1] = x.range;
+  const [y1, y0] = y.range; // y range is inverted (pixel space)
+
+  return (
+    <rect
+      x={Math.min(x0, x1)}
+      y={Math.min(y0, y1)}
+      width={Math.abs(x1 - x0)}
+      height={Math.abs(y1 - y0)}
+      fill="transparent"
+      className="cursor-crosshair"
+      aria-hidden
+      onPointerDown={(e) => {
+        const svg = svgRef.current!;
+        const rect = svg.getBoundingClientRect();
+        const vx = ((e.clientX - rect.left) / rect.width) * width;
+        const vy = ((e.clientY - rect.top) / rect.height) * height;
+        onAdd({ x: x.invert(vx), y: y.invert(vy) });
+      }}
+    />
+  );
+}
+
+/**
+ * Observed data — truth hue. Draggable when onChange is provided; removable
+ * by double-click when onRemove is provided.
  * Dragging uses window-level listeners rather than per-element pointer
  * capture: a fast drag must never outrun the point, in any browser.
  */
 export function DataPoints({
   points,
   onChange,
+  onRemove,
 }: {
   points: Point[];
   onChange?: (index: number, point: Point) => void;
+  onRemove?: (index: number) => void;
 }) {
   const { x, y, svgRef, width, height } = usePlot();
   const [dragging, setDragging] = useState<number | null>(null);
@@ -237,6 +270,7 @@ export function DataPoints({
                 }
               : undefined
           }
+          onDoubleClick={onRemove ? () => onRemove(i) : undefined}
         />
       ))}
     </g>

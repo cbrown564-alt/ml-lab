@@ -1,7 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Axes, DataPoints, FitLine, Plot, ResidualLines } from "@/components/viz/Plot";
+import {
+  Axes,
+  DataPoints,
+  FitLine,
+  PaintLayer,
+  Plot,
+  ResidualLines,
+} from "@/components/viz/Plot";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
 import { createExperimentStore } from "@/lib/experiment/store";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
@@ -17,8 +24,23 @@ const useExperiment = createExperimentStore(linearRegressionExperiment);
  * obsession with big mistakes.
  */
 export function LinearRegressionLab() {
-  const { points, scenarioId, spec, movePoint, loadScenario, reset } = useExperiment();
+  const {
+    points,
+    datasetId,
+    scenarioId,
+    spec,
+    movePoint,
+    addPoint,
+    removePoint,
+    loadScenario,
+    reset,
+  } = useExperiment();
   const [showResiduals, setShowResiduals] = useState(true);
+
+  const editable =
+    spec.datasets.find((d) => d.id === datasetId)?.editable ?? false;
+  const practiced = () =>
+    whenHydrated(() => useLearner.getState().recordPractice(spec.id));
 
   const fit = useMemo(() => olsFit(points), [points]);
   const loss = useMemo(() => mse(points, fit), [points, fit]);
@@ -44,17 +66,29 @@ export function LinearRegressionLab() {
         <Plot
           xDomain={xDomain}
           yDomain={yDomain}
-          ariaLabel={`Scatter plot of ${points.length} data points with the least-squares line fitted live. Slope ${fit.slope.toFixed(2)}, intercept ${fit.intercept.toFixed(2)}, mean squared error ${loss.toFixed(2)}. Dragging points refits the line.`}
+          ariaLabel={`Scatter plot of ${points.length} data points with the least-squares line fitted live. Slope ${fit.slope.toFixed(2)}, intercept ${fit.intercept.toFixed(2)}, mean squared error ${loss.toFixed(2)}. Dragging points refits the line.${editable ? " Clicking empty space adds a point; double-clicking a point removes it." : ""}`}
         >
           <Axes />
+          {editable && (
+            <PaintLayer
+              onAdd={(p) => {
+                practiced();
+                addPoint(p);
+              }}
+            />
+          )}
           {showResiduals && <ResidualLines points={points} params={fit} />}
           <FitLine params={fit} />
           <DataPoints
             points={points}
             onChange={(i, p) => {
               // Manipulating the data is the moment "seen" becomes "practiced".
-              whenHydrated(() => useLearner.getState().recordPractice(spec.id));
+              practiced();
               movePoint(i, p);
+            }}
+            onRemove={(i) => {
+              practiced();
+              removePoint(i);
             }}
           />
         </Plot>

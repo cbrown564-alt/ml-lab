@@ -63,6 +63,22 @@ test.describe("linear-regression exhibit", () => {
     await expect(readout).toHaveText(before!);
   });
 
+  test("the dataset painter adds and removes points", async ({ page }) => {
+    await page.getByRole("button", { name: /paint your own data/i }).click();
+    const svg = page.getByRole("img", { name: /least-squares line/ });
+    await expect(svg.locator("circle")).toHaveCount(0);
+
+    await svg.scrollIntoViewIfNeeded();
+    const box = (await svg.boundingBox())!;
+    await page.mouse.click(box.x + box.width * 0.4, box.y + box.height * 0.5);
+    await page.mouse.click(box.x + box.width * 0.7, box.y + box.height * 0.3);
+    await expect(svg.locator("circle")).toHaveCount(2);
+    await expect(page.getByText(/MSE = /)).toBeVisible();
+
+    await svg.locator("circle").first().dblclick();
+    await expect(svg.locator("circle")).toHaveCount(1);
+  });
+
   test("residuals toggle shows and hides error lines", async ({ page }) => {
     const dashed = page.locator("svg line[stroke-dasharray]");
     expect(await dashed.count()).toBeGreaterThan(0);

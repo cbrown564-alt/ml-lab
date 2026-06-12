@@ -31,6 +31,12 @@ export const linearRegressionExperiment: ExperimentSpec = {
       points: fixturePoints("with-outliers"),
       editable: true,
     },
+    {
+      id: "blank",
+      label: "Your data",
+      points: [],
+      editable: true,
+    },
   ],
   scenarios: [
     {
@@ -47,6 +53,13 @@ export const linearRegressionExperiment: ExperimentSpec = {
         "Two rogue points have wandered in. Drag one of them further out and watch how violently the line chases it. Squared error doesn't just notice big mistakes — it obsesses over them. Predict first: how far must one point stray to drag the line completely off the trend?",
       datasetId: "with-outliers",
       failure: true,
+    },
+    {
+      id: "blank-canvas",
+      title: "Paint your own data",
+      prompt:
+        "An empty canvas. Click anywhere to place a point and the line refits to every flick of your wrist; double-click a point to take it back. Paint a tight trend, then a loose cloud, then two separate blobs — at what moment does a single straight line stop being an honest summary of your data?",
+      datasetId: "blank",
     },
   ],
 };
