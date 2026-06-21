@@ -115,7 +115,7 @@ test.describe("interaction latency", () => {
     for (let i = 0; i < 5; i++) {
       await page.getByRole("button", { name: "Step ×10" }).click();
     }
-    await page.getByRole("button", { name: /reveal the loss surface/i }).click();
+    await page.getByRole("button", { name: "The surface", exact: true }).click();
     const scrub = page.getByLabel("Scrub through descent steps");
     await scrub.scrollIntoViewIfNeeded();
     for (const v of ["0", "13", "25", "37", "50", "25", "0", "50"]) {

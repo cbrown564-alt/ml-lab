@@ -21,7 +21,9 @@ test.describe("gradient-descent exhibit", () => {
     await expect(page.getByText("step 0")).toBeVisible();
     await expect(page.getByRole("img", { name: /gradient descent is at step 0/ })).toBeVisible();
     await expect(page.getByRole("img", { name: /Training curve/ })).toBeVisible();
-    await expect(page).toHaveScreenshot("gd-initial.png", { fullPage: true });
+    // Viewport, not fullPage: the spine's sticky graphic smears in stitched
+    // fullPage captures.
+    await expect(page).toHaveScreenshot("gd-initial.png");
   });
 
   test("Step advances the descent and lowers the loss", async ({ page }) => {
@@ -71,12 +73,13 @@ test.describe("gradient-descent exhibit", () => {
     await expect(page.getByRole("button", { name: "Play" })).toBeEnabled();
   });
 
-  test("the loss surface reveals on demand and draws the walked path", async ({ page }) => {
-    // Walk first, then lift the fog: the path should already be on the map.
+  test("the loss surface view draws the walked path", async ({ page }) => {
+    // Walk first, then switch to the surface: the path should already be on the
+    // map (the walk survives the view swap — object constancy).
     await page.getByRole("button", { name: "Step ×10" }).click();
     await expect(page.getByText("step 10")).toBeVisible();
 
-    await page.getByRole("button", { name: /reveal the loss surface/i }).click();
+    await page.getByRole("button", { name: "The surface", exact: true }).click();
     const surface = page.getByRole("img", { name: /Map of the loss surface/ });
     await expect(surface).toBeVisible();
     await expect(surface).toHaveAccessibleName(/10 steps/);

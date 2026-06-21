@@ -3,6 +3,7 @@ import { LinearRegressionLab } from "@/components/exhibits/LinearRegressionLab";
 import { linearRegressionCheck } from "@content/exhibits/linear-regression/concept-check";
 import { linearRegressionMath } from "@content/exhibits/linear-regression/math";
 import { linearRegressionNarrative } from "@content/exhibits/linear-regression/narrative";
+import { linearRegressionSpine } from "@content/exhibits/linear-regression/spine";
 
 export default function LinearRegressionExhibit() {
   return (
@@ -10,6 +11,7 @@ export default function LinearRegressionExhibit() {
       nodeId="linear-regression"
       check={linearRegressionCheck}
       narrative={linearRegressionNarrative}
+      spine={linearRegressionSpine}
       math={linearRegressionMath}
       lede={
         <p>

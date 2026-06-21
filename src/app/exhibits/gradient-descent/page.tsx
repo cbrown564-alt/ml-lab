@@ -3,6 +3,7 @@ import { GradientDescentLab } from "@/components/exhibits/GradientDescentLab";
 import { gradientDescentCheck } from "@content/exhibits/gradient-descent/concept-check";
 import { gradientDescentMath } from "@content/exhibits/gradient-descent/math";
 import { gradientDescentNarrative } from "@content/exhibits/gradient-descent/narrative";
+import { gradientDescentSpine } from "@content/exhibits/gradient-descent/spine";
 
 export default function GradientDescentExhibit() {
   return (
@@ -10,6 +11,7 @@ export default function GradientDescentExhibit() {
       nodeId="gradient-descent"
       check={gradientDescentCheck}
       narrative={gradientDescentNarrative}
+      spine={gradientDescentSpine}
       math={gradientDescentMath}
       lede={
         <p>

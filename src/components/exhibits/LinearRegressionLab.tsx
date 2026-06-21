@@ -13,6 +13,8 @@ import {
 } from "@/components/viz/Plot";
 import { CodePanel } from "@/components/code/CodePanel";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
+import { useActiveFrame } from "@/components/exhibits/StoryScroller";
+import type { LinearRegressionFrame } from "@content/exhibits/linear-regression/spine";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { createExperimentStore } from "@/lib/experiment/store";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
@@ -55,6 +57,14 @@ export function LinearRegressionLab() {
   // stay perceived-instant.
   const [easing, setEasing] = useState(false);
   const easeTimer = useRef<number | null>(null);
+  // Once the learner takes the controls — any pointer or key press inside the
+  // lab — the scroll spine stops switching the experiment under them. The
+  // guided tour yields to manual exploration (and a scroll never swaps the
+  // dataset out from under a drag or a code run).
+  const manualRef = useRef(false);
+  const takeControl = () => {
+    manualRef.current = true;
+  };
   const beginEase = () => {
     setEasing(true);
     if (easeTimer.current !== null) clearTimeout(easeTimer.current);
@@ -73,6 +83,24 @@ export function LinearRegressionLab() {
     beginEase();
     reset();
   };
+
+  // Scroll spine (Stream 2): when a beat reaches centre it hands the lab a
+  // frame — a scenario + error view. We re-assert it with a morph, but only
+  // reload the dataset when the scenario actually changes, so points the
+  // learner dragged survive a beat that only changes the error view (object
+  // constancy). Outside a spine `frame` is null and the lab runs free.
+  const frame = useActiveFrame<LinearRegressionFrame>();
+  useEffect(() => {
+    if (!frame || manualRef.current) return;
+    beginEase();
+    if (frame.scenarioId !== useExperiment.getState().scenarioId) {
+      loadScenario(frame.scenarioId);
+    }
+    setErrorView(frame.errorView);
+    // Runs only when the active beat changes; reading scenarioId live (not as a
+    // dep) keeps a manual scenario click from being overridden mid-beat.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [frame]);
 
   const editable =
     spec.datasets.find((d) => d.id === datasetId)?.editable ?? false;
@@ -108,7 +136,11 @@ export function LinearRegressionLab() {
   const yDomain: [number, number] = [-25, 50];
 
   return (
-    <div className="rounded-xl border border-line bg-raised p-6">
+    <div
+      className="rounded-xl border border-line bg-raised p-6"
+      onPointerDownCapture={takeControl}
+      onKeyDownCapture={takeControl}
+    >
       <ScenarioBar
         scenarios={spec.scenarios}
         activeId={scenario.id}

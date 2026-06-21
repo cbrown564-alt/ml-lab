@@ -1,33 +1,50 @@
 import type { ExhibitNarrative } from "@/lib/narrative/schema";
 
+/**
+ * Linear regression, told as a scroll spine (Stream 2). Each story section is
+ * one beat that re-frames the sticky graphic on the right: the hook meets the
+ * line, then residuals, then squares, then the outlier's tyranny, then the
+ * closed-form reward. The colour grammar and per-beat framing live in
+ * `spine.ts`; the prose lives here so the narration audio has one source (C3).
+ */
+
 export const linearRegressionNarrative: ExhibitNarrative = {
   nodeId: "linear-regression",
   hook: [
-    "In 1885, Francis Galton plotted the heights of nearly a thousand adult children against the heights of their parents and noticed something odd: tall parents had tall children, but not quite as tall; short parents had short children, but not quite as short. To describe how strongly one number pulls on another, he drew a line through the cloud — and accidentally founded the most-used statistical tool of the next century.",
-    "The question his line answers is everywhere once you see it. How much does another bedroom add to a flat's price? How much does an extra hour of revision move an exam score? One number, predicted from another, with a straight line as the claim. The experiment below puts that claim in your hands.",
+    "In 1885, Francis Galton plotted the heights of nearly a thousand adult children against their parents' and found something gentle and strange: tall parents had tall children, but a little shorter; short parents had short children, but a little taller. To capture how strongly one number pulls on another, he drew a straight line through the cloud — and stumbled into the most-used statistical tool of the next century.",
+    "That line is now in your hands, on the right. Each gold dot is one real observation; the blue line is a single claim about all of them at once. Grab a point and drag it — the line answers on the very next frame. The rule that decides where it lands is the rest of this story.",
   ],
   story: [
     {
-      id: "the-claim",
-      heading: "A line is a claim",
+      id: "the-residuals",
+      heading: "How wrong is the line?",
       paragraphs: [
-        "Every straight line through the data is a little theory: every unit of x is worth this much y, starting from here. Two numbers — slope and intercept — and the theory is fully specified. The plot above shows the only such theory the data cannot improve on.",
-        "But “cannot improve on” needs a judge. That judge is the set of dashed segments you toggled: the residuals, one per point, each measuring how far the theory missed reality — vertically, because x is taken as given and only the prediction of y is on trial.",
+        "“Best” needs a judge, and the judge is error. Turn on the dashed drops between the dots and the line: each one is a residual — how far the line missed that point, measured straight up and down, because we take x as given and put only the prediction of y on trial.",
+        "Drag a point away from the crowd and watch its residual stretch. The line never honours any single point perfectly; it is the one line that keeps all of these misses, taken together, as small as it can.",
       ],
     },
     {
-      id: "why-squares",
-      heading: "Why squared error",
+      id: "squared-error",
+      heading: "Why the errors get squared",
       paragraphs: [
-        "The line you saw minimizes the sum of the residuals squared. Squaring does two jobs at once. It makes misses count regardless of direction — overshooting by 3 is exactly as bad as undershooting by 3. And it makes big misses count disproportionately: one residual of 10 outweighs ten residuals of 1, a hundred to ten.",
-        "That second property is a personality trait, and you met its dark side in the outlier scenario. A single rogue point carries enough squared error to bend the line away from twenty-eight well-behaved ones. Squared error isn't wrong to do this — it is doing exactly what it was told. Whether that's what you wanted is a different question, and it's why other loss functions exist.",
+        "Switch the errors from lines to squares. Each residual becomes a literal square whose area is the penalty the line pays there, and the fit is the line that makes the total area smallest — the mean squared error in the readout.",
+        "Squaring does two jobs. It ignores direction: overshooting by three is exactly as bad as undershooting by three. And it punishes large misses out of all proportion — one residual of ten outweighs a hundred residuals of one. That second habit is squared error's whole personality, and the next beat shows its dark side.",
       ],
     },
     {
-      id: "what-best-bought",
-      heading: "What “best” buys you",
+      id: "the-outlier",
+      heading: "The tyranny of one outlier",
       paragraphs: [
-        "Choosing squared error has a famous reward: the best line can be computed directly, with a formula, no search required. Drag a point and the line snaps instantly to the new optimum — that snap is the formula at work. Most models you'll meet after this one offer no such formula; their best parameters must be searched for, step by step, downhill. That search has its own exhibit, and this line is where it starts.",
+        "Two rogue points have crept into otherwise sensible data. Squared error does not merely notice them — it obsesses. The biggest square dwarfs every other penalty on the plot, and to shrink that one square the line abandons the honest crowd and lurches toward the outliers.",
+        "This is not a bug. Squared error is doing exactly what it was told: make the largest miss small, whatever it costs the rest. Whether that is what you wanted is a different question — and it is the reason other loss functions exist.",
+      ],
+    },
+    {
+      id: "closed-form",
+      heading: "What “best” actually buys you",
+      paragraphs: [
+        "Notice what dragging never does: it never makes the line search. Move a point and the best line is simply there, on the next frame. Choosing squared error bought something rare — the optimal slope and intercept have a closed-form solution, evaluated in a single stroke, with no trial and error at all.",
+        "Most models you meet after this one come with no such formula. Their best parameters must be hunted for, downhill, one step at a time. That hunt is its own exhibit — and this line, the one you can solve outright, is exactly where it begins.",
       ],
     },
   ],

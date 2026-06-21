@@ -57,14 +57,14 @@ test.describe("exhibit narrative", () => {
     await page.goto("/exhibits/linear-regression");
     await expect(page.getByText(/Francis Galton/)).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Why squared error" }),
+      page.getByRole("heading", { name: "Why the errors get squared" }),
     ).toBeVisible();
     await expect(page.getByRole("heading", { name: "Field notes" })).toBeVisible();
 
     await page.goto("/exhibits/gradient-descent");
     await expect(page.getByText(/hillside in fog/)).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "One knob to rule the walk" }),
+      page.getByRole("heading", { name: "One knob behind it all" }),
     ).toBeVisible();
     await expect(page.getByText(/what's the learning rate\?/)).toBeVisible();
   });

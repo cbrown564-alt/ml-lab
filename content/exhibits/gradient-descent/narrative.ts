@@ -1,34 +1,59 @@
 import type { ExhibitNarrative } from "@/lib/narrative/schema";
 
+/**
+ * Gradient descent, told as a scroll spine (Stream 2). The hook walks in the
+ * fog; the landscape beat lifts it to reveal the loss surface; the rule beat
+ * names the one-line update; then two failure regimes — too timid, over the
+ * edge — and a closing beat on the single knob behind all three. The sticky
+ * graphic switches between the line view and the surface view per beat
+ * (see spine.ts); the prose lives here so the narration has one source (C3).
+ */
+
 export const gradientDescentNarrative: ExhibitNarrative = {
   nodeId: "gradient-descent",
   hook: [
-    "Imagine standing on a hillside in fog so thick you can see nothing — no valley, no horizon, only the ground under your boots. You want the lowest point of the landscape. The one thing you can always sense is the tilt of the ground where you stand. So you take a step in the steepest downhill direction, feel again, and repeat.",
-    "That is the entire algorithm. No map, no overview, no cleverness — just slope, step, repeat, thousands of times. It sounds too primitive to matter, and it trains essentially everything: the line below, and by the same logic, models with billions of parameters. The experiment puts the fog, the hillside, and the stride length under your control.",
+    "Imagine a hillside in fog so thick you can see nothing — no valley, no horizon, only the ground beneath your boots. You want the lowest point in the whole landscape, and the one thing you can always sense is the tilt of the ground where you stand. So you step in the steepest downhill direction, feel again, and repeat.",
+    "That is the entire algorithm. No map, no overview, no cleverness — only slope, step, repeat, thousands of times over. On the right, a flat line that knows nothing is about to learn exactly this way. Press play and watch its loss fall by whole powers of ten.",
   ],
   story: [
     {
       id: "the-landscape",
       heading: "The invisible landscape",
       paragraphs: [
-        "Where does the hillside come from? Every possible line — every pair of slope and intercept — is a place, and the altitude of that place is the loss: how badly that line fits the data. Good lines live in valleys; terrible lines live on peaks. Training is travel across this landscape, and the training curve you watched is the altimeter log of the journey.",
-        "The model never sees the whole landscape — computing it everywhere would mean trying every possible line, which is exactly what we're trying to avoid. It only ever measures the tilt underfoot: the gradient.",
+        "Switch to the surface to see what that walk was crossing. Every spot on this map is one candidate line — slope left to right, intercept up and down — and its shade is the loss: how badly that line fits the data. Good lines sit in the valley; hopeless ones glare from the bright peaks.",
+        "The walker never sees this map. Drawing it would mean scoring every possible line, the very labour we are trying to avoid. It only ever feels the tilt underfoot — the gradient — and the purple path is the trail those blind, local steps leave across the whole landscape.",
       ],
     },
     {
-      id: "the-step",
+      id: "slope-step-repeat",
       heading: "Slope, step, repeat",
       paragraphs: [
-        "The gradient points in the direction of steepest ascent, so the update rule walks the other way: new parameters equal old parameters minus the learning rate times the gradient. That minus sign is the entire “descent” in gradient descent.",
-        "Notice what the rule buys for free: where the surface is steep, the gradient is large and the steps are long; near the valley floor, the gradient shrinks and the walk slows itself down precisely where care is needed. The fast-fall-then-crawl shape of your training curve is this self-throttling, drawn in loss.",
+        "One step is almost embarrassingly simple. The gradient points the way uphill, so the update walks the opposite way: the new parameters are the old ones minus the learning rate times the gradient. That single minus sign is the entire “descent” in gradient descent.",
+        "Notice the gift hidden in the rule. Where the surface is steep the gradient is large and the strides are long; near the valley floor it shrinks and the walk slows itself precisely where care is wanted. The fast-fall-then-crawl shape of the loss curve is this self-throttling, drawn in loss.",
       ],
     },
     {
-      id: "the-stride",
-      heading: "One knob to rule the walk",
+      id: "too-timid",
+      heading: "Too timid",
       paragraphs: [
-        "The learning rate is stride length, and you've now seen all three of its regimes. Too small, and the walk is technically correct but practically frozen — “too timid” would take thousands of steps to cross a landscape it could cross in fifty. Too large, and each stride sails over the valley and lands higher up the opposite wall; the loss compounds upward and explodes. In between sits a band where descent is quick and stable.",
-        "Nothing about the data changed across your three scenarios — only the stride. That is why the learning rate is the first hyperparameter every practitioner learns to respect, and usually the first one they blame.",
+        "Now make the stride tiny. The gradient still points the right way, but at this learning rate the walker only shuffles — the dot barely leaves where it began, and thousands of steps would pass before it reached the valley. Undertraining is not a broken model; it is an unfinished walk.",
+        "Nudge the learning rate up mid-walk and watch the descent wake. Nothing about the data or the landscape changed — only the length of the step.",
+      ],
+    },
+    {
+      id: "over-the-edge",
+      heading: "Over the edge",
+      paragraphs: [
+        "Bigger steps learn faster, so why not enormous ones? With a stride this long, each step sails clean over the valley and lands higher up the far wall than where it set out. The loss does not fall; it compounds upward, and the path rockets off the edge of the map.",
+        "That runaway has a name — divergence — and it is the most common way a training run dies. The fix is humbling: take smaller steps.",
+      ],
+    },
+    {
+      id: "the-one-knob",
+      heading: "One knob behind it all",
+      paragraphs: [
+        "You have now seen all three regimes, and the data never changed across any of them — only the stride. Too short and the walk freezes; too long and it explodes; between them lies a band where descent is both quick and stable.",
+        "That is why the learning rate is the first hyperparameter every practitioner learns to respect, and usually the first one they blame. The same fog, the same slope, the same step scale up untouched to models with billions of parameters.",
       ],
     },
   ],

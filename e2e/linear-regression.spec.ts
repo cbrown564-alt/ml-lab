@@ -20,7 +20,10 @@ test.describe("linear-regression exhibit", () => {
     await expect(svg).toBeVisible();
     await expect(svg.locator("circle")).toHaveCount(30); // clean-linear fixture
     await expect(page.getByText(/MSE = /)).toBeVisible();
-    await expect(page).toHaveScreenshot("exhibit-initial.png", { fullPage: true });
+    // Viewport, not fullPage: the spine's sticky graphic smears in stitched
+    // fullPage captures. The opening view (masthead + first beat + lab) is the
+    // stable thing to guard.
+    await expect(page).toHaveScreenshot("exhibit-initial.png");
   });
 
   test("dragging a point refits the line live", async ({ page }) => {
@@ -46,7 +49,7 @@ test.describe("linear-regression exhibit", () => {
     await page.getByRole("button", { name: /tyranny of the outlier/i }).click();
     await expect(page.getByText(/Two rogue points have wandered in/)).toBeVisible();
     await expect(page.locator("svg circle")).toHaveCount(30); // with-outliers fixture
-    await expect(page).toHaveScreenshot("exhibit-outlier-scenario.png", { fullPage: true });
+    await expect(page).toHaveScreenshot("exhibit-outlier-scenario.png");
   });
 
   test("reset restores the original data", async ({ page }) => {
@@ -154,14 +157,21 @@ test.describe("linear-regression exhibit", () => {
     await expect(item.getByText(/Now verify it/)).toBeVisible();
   });
 
-  test("the error view switches between lines, squares, and hidden", async ({ page }) => {
+  test("the error view switches between hidden, lines, and squares", async ({ page }) => {
     const dashed = page.locator("svg line[stroke-dasharray]");
     const squares = page.locator("svg rect[stroke]");
-    expect(await dashed.count()).toBeGreaterThan(0);
+    // The opening beat shows just the cloud and the line — errors hidden.
+    await expect(dashed).toHaveCount(0);
+    await expect(squares).toHaveCount(0);
+
+    await page.getByRole("button", { name: "Lines" }).click();
+    // Residual lines are vertical (zero-width), which Playwright reads as
+    // "hidden" — assert on count, which retries until they render.
+    await expect(dashed).not.toHaveCount(0);
     await expect(squares).toHaveCount(0);
 
     await page.getByRole("button", { name: "Squares" }).click();
-    expect(await squares.count()).toBeGreaterThan(0);
+    await expect(squares).not.toHaveCount(0);
     await expect(dashed).toHaveCount(0);
 
     await page.getByRole("button", { name: "Hide" }).click();
