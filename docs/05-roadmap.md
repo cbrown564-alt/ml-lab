@@ -77,5 +77,5 @@ The practitioner's surrounding world: software engineering for ML (testing, abst
 
 1. ~~Align on open direction questions~~ — done 2026-06-11, see [00-decisions.md](00-decisions.md).
 2. ~~Phase 0 build~~ — done 2026-06-12 (18 iterations, see [loop/STATUS.md](loop/STATUS.md)).
-3. ~~First two exhibits → review against the vision doc's bar → recalibrate cadence estimates~~ — done 2026-06-12, **Phase 0 exit passed**: [reviews/phase0-exit-review.md](reviews/phase0-exit-review.md). Both exhibits `interactive`; flagship gated on math drawers.
-4. Phase 1 cluster-by-cluster (regression cluster first), with the review punch list.
+3. ~~First two exhibits → review against the vision doc's bar → recalibrate cadence estimates~~ — Phase 0 exit passed 2026-06-12; flagship acceptance passed 2026-06-21 after math drawers landed: [reviews/phase0-exit-review.md](reviews/phase0-exit-review.md), [reviews/flagship-acceptance-review.md](reviews/flagship-acceptance-review.md).
+4. Phase 1 cluster-by-cluster (regression cluster first).

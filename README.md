@@ -27,4 +27,4 @@ ML Lab is a pedagogical web application that makes machine learning concepts fee
 
 ## Status
 
-Direction aligned (updated 2026-06-12): Python-via-Pyodide code mode, light-touch force personification, local-first persistence, unified light design system. Next: Phase 0 platform build — see [docs/05-roadmap.md](docs/05-roadmap.md).
+Phase 0 complete: Linear Regression and Gradient Descent are live flagship exhibits, with graph validation, narration, mastery, code mode, math drawers, budgets, and browser tests in place. Next: Phase 1 regression cluster — see [docs/05-roadmap.md](docs/05-roadmap.md).
