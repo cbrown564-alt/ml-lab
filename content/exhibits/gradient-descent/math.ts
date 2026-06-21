@@ -3,7 +3,7 @@ import type { MathDrawerContent } from "@/lib/narrative/math";
 export const gradientDescentMath: MathDrawerContent = {
   nodeId: "gradient-descent",
   invitation:
-    "You've walked the surface. The drawer holds the update rule, the gradient it follows, and the precise number where this dataset's walk tips from convergence into explosion.",
+    "You've walked the surface. Here is the update rule, the gradient it follows, and the precise number where this dataset's walk tips from convergence into explosion.",
   sections: [
     {
       id: "the-update-rule",

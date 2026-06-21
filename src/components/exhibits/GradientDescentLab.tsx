@@ -6,8 +6,6 @@ import { LossSurface } from "@/components/viz/LossSurface";
 import { ParamSlider } from "@/components/viz/ParamSlider";
 import { TrainingCurve } from "@/components/viz/TrainingCurve";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
-import { useActiveFrame } from "@/components/exhibits/StoryScroller";
-import type { GradientDescentFrame } from "@content/exhibits/gradient-descent/spine";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { createExperimentStore } from "@/lib/experiment/store";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
@@ -65,14 +63,6 @@ export function GradientDescentLab() {
 
   const runRef = useRef<GradientDescentRun | null>(null);
   const lrRef = useRef(learningRate);
-  // Once the learner takes the controls — any pointer or key press inside the
-  // lab — the scroll spine stops switching the experiment under them. The
-  // guided tour yields to manual exploration (and a scroll never resets the
-  // descent mid-walk).
-  const manualRef = useRef(false);
-  const takeControl = () => {
-    manualRef.current = true;
-  };
 
   // The step-0 trace is computed synchronously so the island has its full
   // shape from the very first (and server) render — a lab that pops in
@@ -146,31 +136,13 @@ export function GradientDescentLab() {
     if (diverged) reportTaskEvent("gradient-descent:diverged");
   }, [diverged]);
 
-  // Scroll spine (Stream 2): each beat hands the lab a scenario + which face to
-  // show. We only reload when the scenario actually changes, so the walk the
-  // learner already played survives a beat that merely lifts the fog (object
-  // constancy). Outside a spine `frame` is null and the lab runs free.
-  const frame = useActiveFrame<GradientDescentFrame>();
-  useEffect(() => {
-    if (!frame || manualRef.current) return;
-    setView(frame.view);
-    if (frame.scenarioId !== useExperiment.getState().scenarioId) {
-      loadScenario(frame.scenarioId);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frame]);
-
   const xDomain: [number, number] = [-1, 11];
   const yDomain: [number, number] = [-5, 30];
 
   if (!viewing) return null;
 
   return (
-    <div
-      className="rounded-xl border border-line bg-raised p-6"
-      onPointerDownCapture={takeControl}
-      onKeyDownCapture={takeControl}
-    >
+    <div className="rounded-xl border border-line bg-raised p-6">
       <ScenarioBar
         scenarios={spec.scenarios}
         activeId={scenario.id}

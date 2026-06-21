@@ -1,5 +1,6 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { LinearRegressionLab } from "@/components/exhibits/LinearRegressionLab";
+import { LinearRegressionStory } from "@/components/exhibits/LinearRegressionStory";
 import { linearRegressionCheck } from "@content/exhibits/linear-regression/concept-check";
 import { linearRegressionMath } from "@content/exhibits/linear-regression/math";
 import { linearRegressionNarrative } from "@content/exhibits/linear-regression/narrative";
@@ -21,8 +22,8 @@ export default function LinearRegressionExhibit() {
           particular meaning of &ldquo;best.&rdquo;
         </p>
       }
-    >
-      <LinearRegressionLab />
-    </ExhibitFrame>
+      story={<LinearRegressionStory />}
+      experiment={<LinearRegressionLab />}
+    />
   );
 }

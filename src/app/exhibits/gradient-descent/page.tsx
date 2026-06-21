@@ -1,5 +1,6 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { GradientDescentLab } from "@/components/exhibits/GradientDescentLab";
+import { GradientDescentStory } from "@/components/exhibits/GradientDescentStory";
 import { gradientDescentCheck } from "@content/exhibits/gradient-descent/concept-check";
 import { gradientDescentMath } from "@content/exhibits/gradient-descent/math";
 import { gradientDescentNarrative } from "@content/exhibits/gradient-descent/narrative";
@@ -22,8 +23,8 @@ export default function GradientDescentExhibit() {
           whether the walk converges, crawls, or explodes.
         </p>
       }
-    >
-      <GradientDescentLab />
-    </ExhibitFrame>
+      story={<GradientDescentStory />}
+      experiment={<GradientDescentLab />}
+    />
   );
 }

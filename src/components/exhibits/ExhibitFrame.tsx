@@ -1,8 +1,9 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ConceptCheckSection } from "@/components/assessment/ConceptCheckSection";
+import { ExhibitShell, type ExhibitViewDef } from "@/components/exhibits/ExhibitShell";
 import { MasteryBadge } from "@/components/learner/MasteryBadge";
-import { MathDrawer } from "@/components/exhibits/MathDrawer";
+import { MathView } from "@/components/exhibits/MathView";
 import { StoryScroller } from "@/components/exhibits/StoryScroller";
 import { NodeChip } from "@/components/graph/NodeChip";
 import { RecordVisit } from "@/components/learner/RecordVisit";
@@ -18,12 +19,17 @@ import { edges } from "@content/graph/edges";
 import { journeys } from "@content/journeys/foundations";
 
 /**
- * Exhibit page template (Stream 2). Canvas-first: the experiment is the
- * protagonist, told as a scroll spine — one persistent graphic that prose beats
- * re-frame as the learner scrolls (SYNTHESIS patterns 1, 2, 6). The frame keeps
- * the page grammar around it — graph-driven kicker and title, the lede, then the
- * deeper layers (math, concept check, field notes, the exhibit's place in the
- * graph). The page supplies its lede, its narrative + spine, and its lab.
+ * Exhibit page template (Stream 2, iteration 2). An exhibit is a set of distinct,
+ * switchable views — never a hero that snaps into a narrow appendix:
+ *
+ *   Story       guided scrollytelling; the graphic is scroll-driven, the prose
+ *               explains, interaction is minimal and direct.
+ *   Math        the formal treatment, composed as its own act.
+ *   Experiment  the open sandbox — every scenario, paint your own data, code.
+ *   Check       the capstone.
+ *
+ * The masthead and the graph coda frame all of them. The page supplies its lede,
+ * its narrative + spine, its guided `story` graphic, and its full `experiment`.
  */
 
 export function ExhibitFrame({
@@ -33,25 +39,26 @@ export function ExhibitFrame({
   spine,
   math,
   check,
-  children,
+  story,
+  experiment,
 }: {
   nodeId: string;
   /** The exhibit's opening prose — the one part of the chrome that is content. */
   lede: ReactNode;
   narrative: ExhibitNarrative;
-  /** The ordered beats that drive the sticky graphic. */
+  /** The ordered beats that drive the guided graphic. */
   spine: Beat<unknown>[];
   math?: MathDrawerContent;
   check?: ConceptCheck;
-  /** The persistent interactive — reads its per-beat frame from the spine. */
-  children: ReactNode;
+  /** The guided graphic for the Story view (reads its per-beat frame). */
+  story: ReactNode;
+  /** The full interactive sandbox for the Experiment view. */
+  experiment: ReactNode;
 }) {
   const node = nodes.find((n) => n.id === nodeId);
   if (!node) throw new Error(`ExhibitFrame: no graph node with id "${nodeId}"`);
 
-  // Join the spine's framing with the prose + audio it narrates over. The prose
-  // lives in the narrative (one source for the audio generator); the spine adds
-  // the canvas framing, coloured terms, and equations.
+  // Join the spine's framing with the prose + audio it narrates over.
   const sections = new Map<string, { heading?: string; paragraphs: string[] }>();
   sections.set("hook", { paragraphs: narrative.hook });
   for (const s of narrative.story) {
@@ -81,9 +88,6 @@ export function ExhibitFrame({
     .filter((e) => e.from === nodeId && (e.type === "prerequisite" || e.type === "sequel"))
     .map((e) => lookup.get(e.to)!);
 
-  // Journey continuation (docs/06, A4): an exhibit that is a journey stop
-  // offers the next stop at the bottom — the linear path stays one click
-  // away without ever being imposed.
   const journey = journeys.find((j) => j.stops.some((s) => s.nodeId === nodeId));
   const stopIndex = journey
     ? journey.stops.findIndex((s) => s.nodeId === nodeId)
@@ -92,6 +96,62 @@ export function ExhibitFrame({
     journey && stopIndex >= 0 && stopIndex + 1 < journey.stops.length
       ? lookup.get(journey.stops[stopIndex + 1].nodeId)
       : undefined;
+
+  const storyView = (
+    <div>
+      <StoryScroller beats={beats} graphic={story} />
+      {narrative.fieldNotes.length > 0 && (
+        <section className="mt-20 max-w-[68ch] border-t border-line pt-8">
+          <h2 className="text-sm font-medium tracking-wide text-ink-faint uppercase">
+            Field notes
+          </h2>
+          <ul className="mt-4">
+            {narrative.fieldNotes.map((note, i) => (
+              <li
+                key={i}
+                className="mt-3 border-l-2 border-line pl-4 text-sm leading-relaxed text-ink-muted first:mt-0"
+              >
+                {note}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+  );
+
+  const experimentView = (
+    <div>
+      <div className="max-w-[68ch]">
+        <h2 className="text-3xl font-semibold tracking-tight">Experiment freely</h2>
+        <p className="mt-4 text-lg leading-relaxed text-ink-muted">
+          The guardrails are off. Switch scenarios, build your own data, turn the
+          knobs — and when you want the real thing, run it as code. The same
+          implementation our tests verify against scikit-learn.
+        </p>
+      </div>
+      <div className="mt-8">{experiment}</div>
+    </div>
+  );
+
+  const views: ExhibitViewDef[] = [
+    { id: "story", label: "Story", content: storyView },
+    ...(math ? [{ id: "math", label: "Math", content: <MathView math={math} /> }] : []),
+    { id: "experiment", label: "Experiment", content: experimentView },
+    ...(check
+      ? [
+          {
+            id: "check",
+            label: "Check",
+            content: (
+              <div className="max-w-[68ch]">
+                <ConceptCheckSection check={check} />
+              </div>
+            ),
+          },
+        ]
+      : []),
+  ];
 
   return (
     <main className="mx-auto w-full max-w-7xl px-6 py-16 sm:px-8">
@@ -114,36 +174,13 @@ export function ExhibitFrame({
         <div className="mt-4 text-lg leading-relaxed text-ink-muted">{lede}</div>
       </header>
 
-      {/* The protagonist: the experiment, told as a scroll spine. */}
-      <div className="mt-14">
-        <StoryScroller beats={beats} graphic={children} />
+      <div className="mt-10">
+        <ExhibitShell views={views} />
       </div>
 
-      {/* The deeper layers return to a single reading column. */}
+      {/* The coda frames every view: where this sits in the graph, where next. */}
       <div className="mt-24 max-w-[68ch]">
-        {math && <MathDrawer math={math} />}
-
-        {check && <ConceptCheckSection check={check} />}
-
-        {narrative.fieldNotes.length > 0 && (
-          <section className="mt-14 border-t border-line pt-8">
-            <h2 className="text-sm font-medium tracking-wide text-ink-faint uppercase">
-              Field notes
-            </h2>
-            <ul className="mt-4">
-              {narrative.fieldNotes.map((note, i) => (
-                <li
-                  key={i}
-                  className="mt-3 border-l-2 border-line pl-4 text-sm leading-relaxed text-ink-muted first:mt-0"
-                >
-                  {note}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        <section className="mt-12 border-t border-line pt-8">
+        <section className="border-t border-line pt-8">
           <h2 className="sr-only">This exhibit in the knowledge graph</h2>
           <div className="flex flex-col gap-5 sm:flex-row sm:gap-16">
             {buildsOn.length > 0 && (
@@ -202,7 +239,7 @@ export function ExhibitFrame({
                   <Link href="/#map" className="text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2">
                     browse the map
                   </Link>{" "}
-                  for an open door, or wander the connections below.
+                  for an open door, or wander the connections above.
                 </p>
               )
             ) : (
@@ -216,12 +253,6 @@ export function ExhibitFrame({
             )}
           </section>
         )}
-
-        <p className="mt-10 text-sm leading-relaxed text-ink-faint">
-          {math
-            ? "The experiment above is the real thing — the same implementation our tests verify against scikit-learn, and the same equations in the math drawer."
-            : "Still to come for this exhibit: the math drawer. The experiment above is the real thing — the same implementation our tests verify against scikit-learn."}
-        </p>
       </div>
     </main>
   );

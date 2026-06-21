@@ -54,7 +54,12 @@ export function TrainingCurve({
 
   // Non-finite losses (true divergence) pin to the top of the frame.
   const yFor = (s: DescentStep) => (Number.isFinite(s.loss) ? y(logLoss(s.loss)) : y(hi));
-  const path = trace.map((s) => `${x(s.step)},${yFor(s)}`).join(" ");
+  // Round emitted coordinates: a precomputed trace is rendered on the server and
+  // rehydrated on the client, and Math.log10 over a long walk can differ by a
+  // ULP between V8 builds — enough to mismatch the path string. Two decimals is
+  // sub-pixel and deterministic across both.
+  const snap = (n: number) => Math.round(n * 100) / 100;
+  const path = trace.map((s) => `${snap(x(s.step))},${snap(yFor(s))}`).join(" ");
 
   const decadeStep = Math.max(1, Math.ceil((hi - lo) / 6));
   const decades: number[] = [];
@@ -130,8 +135,8 @@ export function TrainingCurve({
         )}
         {current && (
           <circle
-            cx={x(current.step)}
-            cy={yFor(current)}
+            cx={snap(x(current.step))}
+            cy={snap(yFor(current))}
             r={5}
             fill="var(--viz-error)"
             stroke="var(--surface-bg)"
