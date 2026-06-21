@@ -56,6 +56,36 @@ const EXEMPLARS = [
     url: "https://seeing-theory.brown.edu/regression-analysis/index.html",
     concept: "least squares, residuals (our closest single-concept rival)",
     criteria: ["B1 manipulation", "B3 motion"],
+    // Seeing Theory scroll-jacks: its viz sections are position:fixed and
+    // visibility:hidden until a nav card is clicked, and the plot stays empty
+    // until a dataset is chosen. Drive it like a user instead of scrolling.
+    capture: async (page, shot) => {
+      await shot("00-index.png"); // the chapter landing (visual-register ref)
+      await page.locator("#one").click(); // → Ordinary Least Squares section
+      await page.waitForTimeout(1500);
+      // Anscombe's Quartet: I is a clean linear fit; III is one outlier bending
+      // the line; IV is the vertical-x pathology — the same failure pedagogy as
+      // our linear-regression "tyranny of the outlier" scenario.
+      for (const [value, name] of [
+        ["0", "01-ols-anscombe-1.png"],
+        ["2", "02-ols-anscombe-3-outlier.png"],
+        ["3", "03-ols-anscombe-4-pathology.png"],
+      ]) {
+        await page.locator(`input[name="ols"][value="${value}"]`).check({ force: true });
+        await page.waitForTimeout(1200);
+        await shot(name);
+      }
+      await page.locator("#two").click(); // → Correlation section
+      await page.waitForTimeout(1500);
+      for (const sp of ["setosa", "versicolor", "virginica"]) {
+        await page
+          .locator(`input[name="correlation"][value="${sp}"]`)
+          .check({ force: true })
+          .catch(() => {});
+      }
+      await page.waitForTimeout(1200);
+      await shot("04-correlation.png");
+    },
   },
   {
     slug: "3b1b-gradient-descent",
@@ -147,36 +177,44 @@ for (const ex of targets) {
       await page.waitForTimeout(4000).catch(() => {});
     }
 
-    // Above-the-fold frame at the big-screen reference viewport.
-    await page.screenshot({ path: path.join(dir, "00-viewport.png") });
-    note(`  ✓ 00-viewport.png`);
+    const shot = async (name) => {
+      await page.screenshot({ path: path.join(dir, name) });
+      note(`  ✓ ${name}`);
+    };
 
-    // Evenly spaced scroll positions — captures how the graphic rebuilds as the
-    // narrative advances (the move our document-column template doesn't make).
-    const pageHeight = await page.evaluate(() => document.body.scrollHeight);
-    const span = Math.max(0, pageHeight - VIEWPORT.height);
-    if (span > 200) {
-      for (let i = 1; i <= SCROLL_STEPS; i++) {
-        const y = Math.round((span * i) / (SCROLL_STEPS + 1));
-        await page.evaluate((yy) => window.scrollTo(0, yy), y);
-        await page.waitForTimeout(1200);
-        const name = `0${i}-scroll-${Math.round((100 * i) / (SCROLL_STEPS + 1))}pct.png`;
-        await page.screenshot({ path: path.join(dir, name) });
-        note(`  ✓ ${name}`);
+    let pageHeight = null;
+    if (typeof ex.capture === "function") {
+      // Bespoke driver for sites that scroll-jack or hide content behind
+      // interaction (the default scroll loop can't reveal those).
+      await ex.capture(page, shot);
+    } else {
+      // Default: above-the-fold frame + evenly spaced scroll positions —
+      // captures how a scroll-driven graphic rebuilds as the narrative advances
+      // (the move our document-column template doesn't make).
+      await shot("00-viewport.png");
+      pageHeight = await page.evaluate(() => document.body.scrollHeight);
+      const span = Math.max(0, pageHeight - VIEWPORT.height);
+      if (span > 200) {
+        for (let i = 1; i <= SCROLL_STEPS; i++) {
+          const y = Math.round((span * i) / (SCROLL_STEPS + 1));
+          await page.evaluate((yy) => window.scrollTo(0, yy), y);
+          await page.waitForTimeout(1200);
+          await shot(`0${i}-scroll-${Math.round((100 * i) / (SCROLL_STEPS + 1))}pct.png`);
+        }
+      } else {
+        note(`  · single-screen page (height ${pageHeight}px); no scroll steps`);
       }
-    } else {
-      note(`  · single-screen page (height ${pageHeight}px); no scroll steps`);
-    }
 
-    // Full page, best effort — skip absurdly tall canvas pages that would
-    // produce a multi-hundred-MB image or time out.
-    if (pageHeight > 0 && pageHeight < 24000) {
-      await page.evaluate(() => window.scrollTo(0, 0));
-      await page.waitForTimeout(500);
-      await page.screenshot({ path: path.join(dir, "full.png"), fullPage: true });
-      note(`  ✓ full.png (${pageHeight}px)`);
-    } else {
-      note(`  · full.png skipped (page height ${pageHeight}px out of range)`);
+      // Full page, best effort — skip absurdly tall canvas pages that would
+      // produce a multi-hundred-MB image or time out.
+      if (pageHeight > 0 && pageHeight < 24000) {
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.waitForTimeout(500);
+        await page.screenshot({ path: path.join(dir, "full.png"), fullPage: true });
+        note(`  ✓ full.png (${pageHeight}px)`);
+      } else {
+        note(`  · full.png skipped (page height ${pageHeight}px out of range)`);
+      }
     }
 
     // Record what was captured for the teardown author.
