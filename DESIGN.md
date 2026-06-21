@@ -34,7 +34,16 @@ Use the tokens in `src/app/globals.css` as the source of truth. Current palette:
 --viz-error: oklch(54% 0.17 8);
 --viz-param: oklch(52% 0.16 303);
 --viz-neutral: oklch(57% 0.025 245);
+
+/* Same hues, darkened for body-text contrast (Stream 2, colour-into-prose) */
+--viz-prediction-ink, --viz-truth-ink, --viz-error-ink,
+--viz-param-ink, --viz-neutral-ink
 ```
+
+The `--viz-*-ink` siblings carry the visual grammar into the prose: a key term
+("the line", "residual", "the gradient") is tinted to match its mark on the
+canvas. Use them only for the `-ink` (text) context — never as the only carrier
+of meaning, so terms always pair the hue with weight and an underline.
 
 Rules:
 
@@ -78,23 +87,31 @@ Rules:
 
 ## Layout
 
-The page grammar is intentionally stable:
+The product is canvas-first (Stream 2): the experiment is the protagonist, not a
+figure inside an article. The page grammar:
 
 1. Graph-aware back link.
 2. Domain and kind kicker.
 3. Title and mastery badge.
 4. Lede.
-5. Narrative hook.
-6. Experiment island.
-7. Story sections.
-8. Concept checks.
-9. Field notes.
-10. Builds on and Leads to graph links.
-11. Honest construction/status note when needed.
+5. **The story spine** — a full-width scrollytelling hero (`StoryScroller`): a
+   narrow rail of prose beats on the left, the live interactive sticky on the
+   right. As each beat reaches the centre of the viewport it re-frames the one
+   persistent graphic (object constancy); the same graphic transforms rather
+   than being replaced. The hook is the first beat; the story sections are the
+   rest. Once the learner touches the controls, the spine stops driving the
+   graphic — the guided tour yields to manual exploration.
+6. The deeper layers return to a single reading column (~68ch): math drawer,
+   concept checks, field notes, Builds on / Leads to graph links, and an honest
+   construction/status note when needed.
 
-Use generous vertical rhythm. The current system uses `mt-10`, `mt-12`, `mt-14`, and `py-16` for major sections. Keep prose narrow and experiments wider.
+The hero spans the full content width (`max-w-7xl`); prose elsewhere stays around
+65–68ch. Use generous vertical rhythm: `mt-14`, `mt-24`, `py-16` for major
+sections; beats are tall (`min-h-[68vh]`) so the sticky graphic stays pinned
+through each.
 
-Experiment panels use a single raised container:
+Experiment panels use a single raised container, and that container is the unit
+the spine pins:
 
 ```tsx
 <div className="rounded-xl border border-line bg-raised p-6">

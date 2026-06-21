@@ -53,3 +53,31 @@ So Stream 2 is **not** "copy Distill." It is: keep our interactivity/pedagogy ed
 
 - **Stream 2 — base-template rework:** implement requirements 1–8 in `ExhibitFrame.tsx` and the viz kit, design tokens, and motion language. Patterns 1–4 are the highest leverage and should land first; re-derive the two Phase 0 exhibits onto the new template as the proof.
 - **Stream 3 — non-circular review:** an independent reviewer agent fed these stored exemplars (not memory) and required to produce a side-by-side verdict against a named frame; a Playwright "review contact sheet" at big-screen viewport; honest re-baseline of the scorecard per the section above.
+
+## Stream 2 — implemented (2026-06-22)
+
+Landed in commit "Stream 2: canvas-first scrollytelling template". The page is
+now canvas-first: `ExhibitFrame` runs a `StoryScroller` spine (text-left beats,
+sticky graphic right; `src/components/exhibits/StoryScroller.tsx`) over a per-
+exhibit `spine.ts`, with the colour grammar carried into prose. Both Phase 0
+exhibits re-derived as the proof.
+
+| Pattern | Status |
+| --- | --- |
+| 1 full-bleed graphic | ✅ wide hero; prose returns to a reading column below |
+| 2 sticky graphic + scrolling prose | ✅ `StoryScroller` + frame-via-context; object constancy across beats |
+| 3 colour vocabulary into prose | ✅ `Term` hues + `--viz-*-ink` tokens (AA), weight+underline so colour isn't alone |
+| 4 controls docked to the graphic | ✅ controls live in the sticky lab |
+| 5 math beside its consequence | ◑ key equation composed at the relevant beat; full drawer still below |
+| 6 one composed peak visual | ✅ the lab is the page's face; GD line↔surface view swap |
+| 7 calm density | ◑ grid discipline in place; untested at a genuinely dense exhibit |
+| 8 warm one-action onboarding | ◑ "grab a point", "press play" beats; no persona/art yet |
+
+**Deferred (not Stream 2):** the GD conditioning/eigen small-multiples from the
+Distill teardown; persona/character warmth; and the honest re-baseline + verdict,
+which belong to **Stream 3** — quality must be judged against these exemplars by
+an independent pass, not self-assessed here.
+
+**Follow-up owed:** narration audio was regenerated for the new prose; the
+Playwright screenshot baselines were regenerated for darwin only — the committed
+**win32/CI baselines are stale** and must be re-run on that platform.
