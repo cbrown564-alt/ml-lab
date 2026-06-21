@@ -1,0 +1,9 @@
+
+[r2d3-trees] http://www.r2d3.us/visual-intro-to-machine-learning-part-1/
+  · origin looks down — falling back to archive
+  ✓ 00-viewport.png
+  ✓ 01-scroll-20pct.png
+  ✓ 02-scroll-40pct.png
+  ✓ 03-scroll-60pct.png
+  ✓ 04-scroll-80pct.png
+  ✓ full.png (21572px)

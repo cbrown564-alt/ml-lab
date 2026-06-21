@@ -1,0 +1,17 @@
+{
+  "slug": "tensorflow-playground",
+  "title": "TensorFlow Playground",
+  "url": "https://playground.tensorflow.org/",
+  "concept": "live neural-network training, dense control surface",
+  "criteria": [
+    "B1 manipulation",
+    "B3 live motion",
+    "A5 dense-but-calm shell"
+  ],
+  "capturedAt": "2026-06-21T22:03:46.318Z",
+  "pageHeight": 3027,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  }
+}
