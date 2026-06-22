@@ -46,6 +46,27 @@ A one-page exhibit brief: the single *aha* this exhibit delivers, the core metap
 - Wire everything into the exhibit package; set `SectionStatus` honestly.
 - QA checklist: narrative reads aloud cleanly; every experiment scenario reachable and teaching what it claims; concept-check feedback correct; performance budgets met; screenshots captured for visual regression.
 - A "lab review" pass: walk the exhibit as a learner, cold. The 20-minute whiteboard test (vision doc) is the acceptance criterion.
+- **The exhibit acceptance rubric** (docs/06) is checked here: an exhibit does not advance to `flagship` unless every one of the 14 rubric questions answers "yes." The rubric lives in the release process, not only in editorial taste.
+
+## The ideal twenty-minute choreography
+
+Narrative + experiment are drafted to one shared blueprint — the arc that turns a polished interactive into durable intuition. Each exhibit's spine should hit these beats (compressed or expanded to fit the concept, never skipped wholesale):
+
+| Time | Learner experience | Purpose |
+| --- | --- | --- |
+| 0–2 min | A surprising case, question, or **prediction** | Activate prior beliefs and create tension |
+| 2–6 min | Guided **direct manipulation** | Establish the main causal relationship |
+| 6–10 min | Zoom into mechanism + mathematics | Convert observation into a reusable model |
+| 10–13 min | Switch to **mirrored code** | Show the visual mechanism *is* the implementation |
+| 13–17 min | **Break the model** two or three ways | Teach boundary conditions and diagnosis |
+| 17–19 min | A novel **transfer** challenge | Test whether the intuition generalises |
+| 19–20 min | Whiteboard summary + graph-aware onward links | Consolidate and situate the concept |
+
+The success criterion is whether the learner can *explain and diagnose* the idea afterwards — not whether they reached the bottom of the page. "Guided inquiry first, open sandbox second" (the Transformer-Explainer evaluation finding): begin with the designed path and reveal free exploration progressively.
+
+### The failure gallery is a stage, not a footnote
+
+The "Break the model" beat is a first-class build stage, not a list of caveats. Most products teach the happy path; practitioners spend their time on validation collapse, misleading metrics, seed sensitivity, deployment mismatch, and spurious features. Each failure is authored as a structured **failure card** — Trigger → Visible symptom → Diagnosis prompt → Repair → Boundary (when the repair itself is wrong) — bound to a reusable taxonomy id (see [07-failure-taxonomy.md](07-failure-taxonomy.md)). Reusing the same failure primitives across exhibits makes them recognisable wherever they recur, which is itself the teaching device.
 
 ## House style guide (to be written as `docs/style/`)
 
