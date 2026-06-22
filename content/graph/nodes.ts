@@ -143,7 +143,9 @@ export const nodes: ConceptNode[] = [
     kind: "technique",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Live on the four-act spine (See it + Run it); Break it + Explain it land
+    // next to reach flagship.
+    status: "interactive",
   },
   {
     id: "bias-variance",

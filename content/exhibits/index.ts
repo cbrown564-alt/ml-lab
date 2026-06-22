@@ -8,6 +8,7 @@ export const liveExhibits: Record<string, { href: string }> = {
   "linear-regression": { href: "/exhibits/linear-regression" },
   "gradient-descent": { href: "/exhibits/gradient-descent" },
   "loss-functions": { href: "/exhibits/loss-functions" },
+  "feature-scaling": { href: "/exhibits/feature-scaling" },
 };
 
 export const isLive = (nodeId: string): boolean => nodeId in liveExhibits;

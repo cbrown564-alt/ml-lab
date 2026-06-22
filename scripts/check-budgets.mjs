@@ -38,6 +38,7 @@ const BUDGETS = [
   { route: "/exhibits/linear-regression", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/gradient-descent", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/loss-functions", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/feature-scaling", jsKb: 700, htmlKb: 110 },
 ];
 
 const server =
