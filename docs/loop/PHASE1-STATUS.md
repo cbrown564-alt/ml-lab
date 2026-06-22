@@ -139,6 +139,29 @@ exhibits, confirmed by the critic agent against named frames, before scaling.
   walk is well-conditioned in slope — chasing Distill's dramatic momentum path
   would mean a different, ill-conditioned scenario.
 
+- **Foundations pass (2026-06-22) — post-template, pre-scale.** Before scaling,
+  folded the market-strategy report (`docs/ML_Lab_Market_Landscape_and_Product_Strategy.pdf`)
+  into the docs and landed the compounding primitives every scale-out exhibit now
+  composes — so exhibit 30 inherits them rather than retrofitting:
+  - **Typed pedagogical graph edges** (C1): the structural vocabulary became the
+    report's 11 learner-facing types (`requires`/`generalises`/`optimised_by`/
+    `evaluated_by`/`fails_when`/`often_confused_with`/`mathematical_basis`/…); DAG,
+    recommender, journeys, and layout re-key on `requires`; the placard gains a
+    "Compare with" row that explains *why* a neighbour is a neighbour.
+  - **Failure-gallery primitive** (C2): `FailureCard` (Trigger→Symptom→Diagnose→
+    Repair→Boundary, bound to a 15-id taxonomy in `docs/07-failure-taxonomy.md`) +
+    `FailureGallery` + a **"Break it" view** — the third beat of See/Run/Break/
+    Explain. Both flagships retrofitted (2 cards each, scenario-pinned).
+  - **Transfer assessment item** (C3): the north-star `transfer` kind (a novel case
+    that can't be passed by parroting); both flagships gain a transfer capstone.
+  - Docs sharpened: positioning ("intuition layer", See/Run/Break/Explain),
+    whiteboard-transfer metric, 14-Q acceptance rubric, content tiers, the 20-min
+    choreography. Scale-out plan parked in `PHASE1-SCALE-PLAN.md`; the three review
+    agents stood up in `.claude/agents/`.
+  - Green: validate (12 nodes/17 edges) + 102 unit + build/tsc + 46 e2e + budgets.
+    Carried flag: GD route js at the 680/680 KB ceiling; 3 pre-existing eslint
+    `set-state-in-effect` errors in the Story steppers (likely red in CI lint).
+
 ## Queue — scaling Phase 1 (template locked)
 
 The hard, high-leverage part — getting the *shared template* to the bar — is done
