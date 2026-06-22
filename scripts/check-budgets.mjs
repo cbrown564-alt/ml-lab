@@ -41,6 +41,7 @@ const BUDGETS = [
   { route: "/exhibits/feature-scaling", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/bias-variance", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/overfitting-regularization", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/data-leakage", jsKb: 700, htmlKb: 110 },
 ];
 
 const server =
