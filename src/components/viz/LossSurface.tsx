@@ -220,9 +220,30 @@ export function LossSurface({
                 points={path}
                 fill="none"
                 stroke="var(--viz-param)"
-                strokeWidth={2.25}
+                strokeWidth={2.5}
                 strokeLinejoin="round"
               />
+              {/* Each iterate as a dot: the trajectory reads as a sequence of
+                  discrete steps (Distill/3B1B foreground the walk, not just the
+                  bowl), and the dots bunching toward the valley *are* the
+                  self-throttling the narrative names. Subsampled for long walks. */}
+              {(() => {
+                const stride = Math.max(1, Math.ceil(trace.length / 64));
+                return trace
+                  .filter((_, i) => i % stride === 0 || i === trace.length - 1)
+                  .map((s, i) => (
+                    <circle
+                      key={i}
+                      cx={clampPx(sx(s.params.slope))}
+                      cy={clampPx(sy(s.params.intercept))}
+                      r={1.9}
+                      fill="var(--viz-param)"
+                      stroke="var(--surface-bg)"
+                      strokeWidth={0.75}
+                      opacity={0.85}
+                    />
+                  ));
+              })()}
             </>
           )}
           {current && (

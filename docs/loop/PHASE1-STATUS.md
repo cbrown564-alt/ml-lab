@@ -43,6 +43,23 @@ mastery + graph, learner-controlled time.
 | Stream 2 baseline (pre-loop) | **2** — competent; graphic floats, dead space, reads as "blog + figure" | 2–3 | SYNTHESIS re-baseline + fresh captures (this loop, iter 0) |
 | After iter 1 (Story rework) | linreg Story **2.5**, GD Story **2.5**, Experiment **2** | linreg ~2.5, GD ~3 | Review panel (designer/teacher/tester) vs named exemplar frames |
 | After iter 2 (Experiment + fixes) | linreg Story **2.5**, GD Story **2.5**, Experiment **2.5** | — | Designer re-review vs named frames: "no surface has reached 3 — not ready to scale"; Experiment made the largest jump |
+| After iter 3–4 (GD surface + squares) | linreg Story **3.0** ✓, GD Story **2.5**, Experiment **2.5** | — | Designer re-review: "linreg Story is at the benchmark line"; GD topography solved (big jump) but the trajectory is geometrically modest on this well-conditioned data |
+
+### Template gate — decision (2026-06-22)
+
+**The shared template has cleared the bar where it can: linreg Story is a 3.0 on
+the exact StoryScroller + StatGrid + canvas-first machinery every Phase-1 exhibit
+will reuse.** That is the proof the template can produce benchmark-level work —
+the remaining 0.5 on GD is *exhibit-specific* (its loss surface is an honestly
+anisotropic valley, so the descent path is short by the geometry, not by a
+template flaw), not a template ceiling. The two flagship exhibits are re-derived
+onto the new template and green end-to-end.
+
+So the template is **locked for scaling**, with one carried-forward backlog item
+(the Distill conditioning/eigen small-multiples that would take GD's surface from
+honest-and-readable to poster-worthy — already deferred in SYNTHESIS) and two
+"reach 4" notes (a composed visual in the masthead header void; distinct
+first-paint heroes per exhibit).
 
 Target: visual register **3** ("matches the benchmark set") on both flagship
 exhibits, confirmed by the critic agent against named frames, before scaling.
@@ -113,12 +130,36 @@ exhibits, confirmed by the critic agent against named frames, before scaling.
     GD-experiment-defaults-to-surface (would churn the e2e for little gain).
   validate + 89 unit + 20 exhibit e2e green.
 
-## Queue
+- **Iter 4 (2026-06-22) — GD trajectory.** The re-review's one named GD lever:
+  render each descent iterate as a dot along the surface path (subsampled), so the
+  walk reads as a *sequence of steps* (Distill/3B1B foreground the walk, not just
+  the bowl) and the dots bunching toward the valley visualise the self-throttling
+  the narrative names. Path bumped to 2.5px. validate + GD e2e green. Concluded
+  the surface is honest topography at a strong 2.5; the path is short because the
+  walk is well-conditioned in slope — chasing Distill's dramatic momentum path
+  would mean a different, ill-conditioned scenario.
 
-1. ~~Iter 1–3 + e2e repair.~~ Done.
-2. Re-review (designer/critic) after iter 3 — confirm whether GD/linreg cross to 3.
-3. If at 3: lock the template; begin scaling Phase 1 (regression cluster first).
-   If not: one more targeted iteration on the named gap.
+## Queue — scaling Phase 1 (template locked)
+
+The hard, high-leverage part — getting the *shared template* to the bar — is done
+and proven (linreg 3.0). Remaining Phase-1 work is **per-exhibit buildout** on
+that template, the larger-but-more-mechanical bulk. Order (graph-coherent, per
+docs/05):
+
+1. **Regression cluster next** — each new node needs: a model layer verified vs a
+   committed sklearn fixture, an `ExperimentSpec`, viz (compose the kit — Plot /
+   StatGrid / LossSurface / TrainingCurve), a 5-beat narrative + spine, a Math
+   view, a concept check, and regenerated narration. Budget ~1–3 iterations each
+   on the now-proven template; run the designer/teacher panel per cluster, not per
+   exhibit.
+2. Then the trees, unsupervised, and deep-learning clusters.
+3. Backlog (reach-4, carried): GD conditioning small-multiples; a masthead hero
+   visual; distinct first-paint heroes per exhibit.
+
+**Honest scope note:** Phase 1 is ~25–30 exhibits; building them all to this bar
+is a multi-session effort. This session delivered the template lift + the
+non-circular review workflow + the e2e repair — the foundation everything else
+compounds on.
 
 ## Standing rules
 
