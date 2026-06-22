@@ -11,6 +11,7 @@ import {
   ResidualLines,
   ResidualSquares,
 } from "@/components/viz/Plot";
+import { StatGrid } from "@/components/viz/StatGrid";
 import { useActiveFrame } from "@/components/exhibits/StoryScroller";
 import type { LinearRegressionFrame } from "@content/exhibits/linear-regression/spine";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
@@ -63,6 +64,12 @@ export function LinearRegressionStory() {
 
   const fit = useMemo(() => olsFit(points), [points]);
   const loss = useMemo(() => mse(points, fit), [points, fit]);
+  const means = useMemo(() => {
+    if (points.length === 0) return { x: 0, y: 0 };
+    const x = points.reduce((s, p) => s + p.x, 0) / points.length;
+    const y = points.reduce((s, p) => s + p.y, 0) / points.length;
+    return { x, y };
+  }, [points]);
 
   // The "evict the outliers" lab task (docs/06, B5) — tamable right here.
   const outliersTamed =
@@ -85,8 +92,18 @@ export function LinearRegressionStory() {
   const yDomain: [number, number] = [-25, 50];
 
   return (
-    <div className="rounded-xl border border-line bg-raised p-5">
+    <figure className="flex flex-col rounded-xl border border-line bg-raised p-5">
+      <figcaption className="mb-3 flex items-baseline justify-between gap-4">
+        <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
+          One claim about every point at once
+        </span>
+        <span className="hidden text-[11px] text-ink-faint sm:inline">
+          drag a point · click to add · double-click to remove
+        </span>
+      </figcaption>
       <Plot
+        width={640}
+        height={560}
         xDomain={xDomain}
         yDomain={yDomain}
         interactive
@@ -141,16 +158,32 @@ export function LinearRegressionStory() {
         />
       </Plot>
 
-      <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-1 font-mono text-sm">
-        <span style={{ color: "var(--viz-prediction)" }}>
-          ŷ = {fit.slope.toFixed(2)}·x {fit.intercept < 0 ? "−" : "+"}{" "}
-          {Math.abs(fit.intercept).toFixed(2)}
-        </span>
-        <span style={{ color: "var(--viz-error)" }}>MSE = {loss.toFixed(2)}</span>
-        <span className="font-sans text-xs text-ink-faint">
-          drag a point · click to add · double-click to remove
-        </span>
+      <div className="mt-4">
+        <StatGrid
+          caption="The fit, live"
+          stats={[
+            { label: "n", value: String(points.length) },
+            { label: "mean x̄", value: means.x.toFixed(1) },
+            { label: "mean ȳ", value: means.y.toFixed(1) },
+            {
+              label: "slope ŵ",
+              value: fit.slope.toFixed(2),
+              hue: "var(--viz-prediction)",
+            },
+            {
+              label: "intcpt b̂",
+              value: fit.intercept.toFixed(2),
+              hue: "var(--viz-prediction)",
+            },
+            {
+              label: "MSE",
+              value: loss.toFixed(2),
+              hue: "var(--viz-error)",
+              note: "avg squared miss",
+            },
+          ]}
+        />
       </div>
-    </div>
+    </figure>
   );
 }

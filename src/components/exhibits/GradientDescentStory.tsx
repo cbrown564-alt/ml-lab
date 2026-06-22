@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Axes, DataPoints, FitLine, Plot, usePlot } from "@/components/viz/Plot";
 import { LossSurface } from "@/components/viz/LossSurface";
 import { TrainingCurve } from "@/components/viz/TrainingCurve";
+import { StatGrid } from "@/components/viz/StatGrid";
 import { useActiveFrame } from "@/components/exhibits/StoryScroller";
 import type { GradientDescentFrame } from "@content/exhibits/gradient-descent/spine";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
@@ -118,10 +119,23 @@ export function GradientDescentStory() {
   const atEnd = cursor >= trace.length - 1;
 
   return (
-    <div className="rounded-xl border border-line bg-raised p-5">
+    <figure className="flex flex-col rounded-xl border border-line bg-raised p-5">
+      <figcaption className="mb-3 flex items-baseline justify-between gap-4">
+        <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
+          {view === "line"
+            ? "Watch the line learn"
+            : "The loss surface it is crossing"}
+        </span>
+        <span className="hidden text-[11px] text-ink-faint sm:inline">
+          press play · scrub through time
+        </span>
+      </figcaption>
+
       {view === "line" ? (
-        <div className="grid gap-5 lg:grid-cols-[3fr_2fr]">
+        <div className="flex flex-col gap-2">
           <Plot
+            width={640}
+            height={384}
             xDomain={xDomain}
             yDomain={yDomain}
             ariaLabel={`Scatter plot of ${points.length} data points. The line being learned by gradient descent is at step ${viewing.step}: slope ${viewing.params.slope.toFixed(2)}, intercept ${viewing.params.intercept.toFixed(2)}, loss ${formatLoss(viewing.loss)}. A dashed line marks the least-squares destination.`}
@@ -131,11 +145,17 @@ export function GradientDescentStory() {
             <FitLine params={viewing.params} />
             <DataPoints points={points} />
           </Plot>
-          <TrainingCurve trace={trace} cursor={cursor} />
+          <TrainingCurve trace={trace} cursor={cursor} width={640} height={168} />
         </div>
       ) : (
         <div className="lift-fog">
-          <LossSurface points={points} trace={trace} cursor={cursor} />
+          <LossSurface
+            points={points}
+            trace={trace}
+            cursor={cursor}
+            width={760}
+            height={620}
+          />
         </div>
       )}
 
@@ -167,17 +187,35 @@ export function GradientDescentStory() {
         />
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-x-8 gap-y-1 font-mono text-sm">
-        <span className="text-ink-muted">
-          step {viewing.step}
-          {viewing.step !== latest.step ? ` / ${latest.step}` : ""}
-        </span>
-        <span style={{ color: "var(--viz-prediction)" }}>
-          ŷ = {viewing.params.slope.toFixed(2)}·x{" "}
-          {viewing.params.intercept < 0 ? "−" : "+"}{" "}
-          {Math.abs(viewing.params.intercept).toFixed(2)}
-        </span>
-        <span style={{ color: "var(--viz-error)" }}>loss = {formatLoss(viewing.loss)}</span>
+      <div className="mt-4">
+        <StatGrid
+          caption="Where the walk stands"
+          stats={[
+            {
+              label: "step",
+              value:
+                viewing.step !== latest.step
+                  ? `${viewing.step} / ${latest.step}`
+                  : String(viewing.step),
+            },
+            {
+              label: "slope ŵ",
+              value: viewing.params.slope.toFixed(2),
+              hue: "var(--viz-prediction)",
+            },
+            {
+              label: "intcpt b̂",
+              value: viewing.params.intercept.toFixed(2),
+              hue: "var(--viz-prediction)",
+            },
+            {
+              label: "loss",
+              value: formatLoss(viewing.loss),
+              hue: "var(--viz-error)",
+              note: diverged && atEnd ? "left the chart" : "lower is better",
+            },
+          ]}
+        />
       </div>
 
       {diverged && atEnd && (
@@ -187,6 +225,6 @@ export function GradientDescentStory() {
           overshoot.
         </p>
       )}
-    </div>
+    </figure>
   );
 }
