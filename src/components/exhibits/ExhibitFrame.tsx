@@ -101,11 +101,21 @@ export function ExhibitFrame({
 
   const lookup = new Map(nodes.map((n) => [n.id, n]));
   const buildsOn = edges
-    .filter((e) => e.to === nodeId && e.type === "prerequisite")
+    .filter((e) => e.to === nodeId && e.type === "requires")
     .map((e) => lookup.get(e.from)!);
   const unlocks = edges
-    .filter((e) => e.from === nodeId && (e.type === "prerequisite" || e.type === "sequel"))
+    .filter((e) => e.from === nodeId && e.type === "requires")
     .map((e) => lookup.get(e.to)!);
+  // Lateral relationships carry the misconception/comparison the learner most
+  // needs (the typed graph explaining *why*, not just *what*): surface them with
+  // their note so the neighbourhood teaches rather than merely links.
+  const RELATED_TYPES = new Set(["often_confused_with", "alternative_to"]);
+  const related = edges
+    .filter((e) => RELATED_TYPES.has(e.type) && (e.from === nodeId || e.to === nodeId))
+    .map((e) => {
+      const neighbor = e.from === nodeId ? e.to : e.from;
+      return { node: lookup.get(neighbor)!, type: e.type, note: e.note };
+    });
 
   const journey = journeys.find((j) => j.stops.some((s) => s.nodeId === nodeId));
   const stopIndex = journey
@@ -209,6 +219,7 @@ export function ExhibitFrame({
           node={node}
           buildsOn={buildsOn}
           leadsTo={unlocks}
+          related={related}
           journey={
             journey
               ? { title: journey.title, stopIndex, count: journey.stops.length }

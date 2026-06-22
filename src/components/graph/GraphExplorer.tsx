@@ -13,7 +13,7 @@ import { edges } from "@content/graph/edges";
  */
 
 const edgeClass = (type: string, strength: string) => {
-  if (type === "prerequisite") {
+  if (type === "requires") {
     return strength === "hard"
       ? { dash: undefined, opacity: 0.55 }
       : { dash: "6 5", opacity: 0.4 };

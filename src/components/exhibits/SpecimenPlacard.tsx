@@ -1,10 +1,15 @@
 import type { ComponentProps, ReactNode } from "react";
 import { NodeChip } from "@/components/graph/NodeChip";
 import { MasteryBadge } from "@/components/learner/MasteryBadge";
-import { domainLabel, kindLabel } from "@/lib/graph/labels";
+import { domainLabel, edgeRelationLabel, kindLabel } from "@/lib/graph/labels";
+import type { EdgeType } from "@/lib/graph/schema";
 import type { nodes } from "@content/graph/nodes";
 
 type GraphNode = (typeof nodes)[number];
+
+/** A lateral neighbour (often-confused-with / alternative-to) and the note
+ * that says why the comparison matters. */
+type RelatedNeighbor = { node: GraphNode; type: EdgeType; note?: string };
 
 /**
  * The specimen placard — the exhibit's catalogue record (the design signature).
@@ -31,11 +36,13 @@ export function SpecimenPlacard({
   node,
   buildsOn,
   leadsTo,
+  related = [],
   journey,
 }: {
   node: GraphNode;
   buildsOn: GraphNode[];
   leadsTo: GraphNode[];
+  related?: RelatedNeighbor[];
   journey?: { title: string; stopIndex: number; count: number };
 }) {
   return (
@@ -75,6 +82,21 @@ export function SpecimenPlacard({
               {leadsTo.map((n) => (
                 <li key={n.id}>
                   <NodeChip node={n as ComponentProps<typeof NodeChip>["node"]} />
+                </li>
+              ))}
+            </ul>
+          </Row>
+        )}
+
+        {related.length > 0 && (
+          <Row label="Compare with">
+            <ul className="flex flex-col gap-1.5">
+              {related.map(({ node: n, type, note }) => (
+                <li key={`${type}:${n.id}`} className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                  <NodeChip node={n as ComponentProps<typeof NodeChip>["node"]} title={note} />
+                  <span className="font-mono text-[10px] tracking-[0.12em] text-ink-faint uppercase">
+                    {edgeRelationLabel(type, "out")}
+                  </span>
                 </li>
               ))}
             </ul>
