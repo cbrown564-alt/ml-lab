@@ -42,6 +42,7 @@ mastery + graph, learner-controlled time.
 | --- | --- | --- | --- |
 | Stream 2 baseline (pre-loop) | **2** — competent; graphic floats, dead space, reads as "blog + figure" | 2–3 | SYNTHESIS re-baseline + fresh captures (this loop, iter 0) |
 | After iter 1 (Story rework) | linreg Story **2.5**, GD Story **2.5**, Experiment **2** | linreg ~2.5, GD ~3 | Review panel (designer/teacher/tester) vs named exemplar frames |
+| After iter 2 (Experiment + fixes) | linreg Story **2.5**, GD Story **2.5**, Experiment **2.5** | — | Designer re-review vs named frames: "no surface has reached 3 — not ready to scale"; Experiment made the largest jump |
 
 Target: visual register **3** ("matches the benchmark set") on both flagship
 exhibits, confirmed by the critic agent against named frames, before scaling.
@@ -96,14 +97,28 @@ exhibits, confirmed by the critic agent against named frames, before scaling.
     assessment flow (drive Experiment → read Check), and the Math view as a tab.
     Regenerated the three darwin screenshot baselines. **40/40 chromium e2e green.**
 
+- **Iter 3 (2026-06-22) — re-review fixes.** Acting on the designer re-review's
+  three "to reach 3" levers:
+  - **GD loss-surface colormap re-graded** (the highest-leverage fix — it is GD's
+    intended face). Replaced the flat alpha-over-one-hue pink wash with an opaque
+    perceptual **cream → red → maroon** ramp (sRGB lerp over three anchors, 11
+    quantized bands): the valley blends into the surface, the high-loss peaks
+    darken and saturate, and the bowl finally reads as a topographic map. Added an
+    in-graphic **"start"** marker + label (Distill move) and gave the valley-floor
+    label a halo; both legible on the ramp now.
+  - **Linreg residual squares** clamped into the plot frame — a giant outlier
+    square reads as "off the chart", never as a square clipped by the left axis.
+  - Deferred (inherent/lower-leverage): the experiment-view dead air (it is the
+    diagonal a tight linear fit always leaves), the masthead header void, and
+    GD-experiment-defaults-to-surface (would churn the e2e for little gain).
+  validate + 89 unit + 20 exhibit e2e green.
+
 ## Queue
 
-1. ~~Iter 1 — canvas-first scale & composition.~~ Done.
-2. ~~Review panel pass (designer/critic, teacher, tester) vs exemplars.~~ Done.
-3. ~~Iter 2 — act on the verdict (F6/F7/F11 + bug + copy) + repair e2e.~~ Done.
-4. Re-review (designer/critic) vs exemplars; confirm register movement.
-5. Iterate template to register 3 on both flagships, then lock the template and
-   scale Phase 1 (regression cluster, then trees, unsupervised, deep-learning).
+1. ~~Iter 1–3 + e2e repair.~~ Done.
+2. Re-review (designer/critic) after iter 3 — confirm whether GD/linreg cross to 3.
+3. If at 3: lock the template; begin scaling Phase 1 (regression cluster first).
+   If not: one more targeted iteration on the named gap.
 
 ## Standing rules
 

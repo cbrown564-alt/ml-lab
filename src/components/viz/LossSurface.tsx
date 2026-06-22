@@ -17,11 +17,25 @@ import type { DescentStep, Point } from "@/lib/models/linear-regression";
  */
 
 const MARGIN = { top: 16, right: 16, bottom: 40, left: 56 };
-// More bands + a deeper alpha ramp make the bowl read as a topographic map
-// rather than a flat pink wash (FINDINGS F11): the high-loss peaks darken hard,
-// the valley stays near the surface colour, and the contour steps are legible.
+// A perceptual cream → red → maroon ramp makes the bowl read as a topographic
+// map rather than a flat pink wash (FINDINGS F11 + the re-review): low loss
+// blends into the surface, high loss darkens and saturates hard, and quantizing
+// into bands draws contour-like steps. Still "loss = red" (grammar), now with a
+// real value+chroma ramp. sRGB lerp between three anchors — universal, no oklch
+// canvas dependency.
 const BANDS = 11;
-const PEAK_ALPHA = 0.82;
+const RAMP: [number, number, number][] = [
+  [250, 247, 240], // t=0   low loss — the surface colour (valley blends in)
+  [202, 78, 96], //  t=0.5 the error hue, mid loss
+  [86, 18, 33], //   t=1   deep maroon, the bright peaks
+];
+
+const lerp = (a: number, b: number, u: number) => Math.round(a + (b - a) * u);
+const rampColor = (t: number) => {
+  const u = t <= 0.5 ? t * 2 : (t - 0.5) * 2;
+  const [c0, c1] = t <= 0.5 ? [RAMP[0], RAMP[1]] : [RAMP[1], RAMP[2]];
+  return `rgb(${lerp(c0[0], c1[0], u)}, ${lerp(c0[1], c1[1], u)}, ${lerp(c0[2], c1[2], u)})`;
+};
 
 const clampPx = (v: number) => Math.max(-2000, Math.min(2000, v));
 
@@ -53,25 +67,18 @@ export function LossSurface({
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
-    const styles = getComputedStyle(canvas);
-    const errorHue = styles.getPropertyValue("--viz-error").trim() || "#b03050";
-    const surface = styles.getPropertyValue("--surface-bg").trim() || "#faf7f0";
     const { cols, rows, values } = grid;
     canvas.width = cols;
     canvas.height = rows;
-    ctx.fillStyle = surface;
-    ctx.fillRect(0, 0, cols, rows);
-    ctx.fillStyle = errorHue;
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
         // Quantizing into bands turns the gradient into contour-like steps.
         const t = Math.round(values[r * cols + c] * BANDS) / BANDS;
-        ctx.globalAlpha = t * PEAK_ALPHA;
+        ctx.fillStyle = rampColor(t);
         // Grid rows ascend in intercept; canvas y grows downward.
         ctx.fillRect(c, rows - 1 - r, 1, 1);
       }
     }
-    ctx.globalAlpha = 1;
   }, [grid]);
 
   const current = trace[Math.min(cursor, Math.max(0, trace.length - 1))];
@@ -156,12 +163,31 @@ export function LossSurface({
             intercept
           </text>
 
+          {/* Where the walk begins — labelled in the graphic, Distill-style. */}
+          {trace[0] && (
+            <g transform={`translate(${clampPx(sx(trace[0].params.slope))},${clampPx(sy(trace[0].params.intercept))})`}>
+              <circle r={4} fill="none" stroke="var(--surface-bg)" strokeWidth={3} />
+              <circle r={4} fill="none" stroke="var(--viz-param)" strokeWidth={1.75} />
+              <text
+                x={10}
+                y={4}
+                fontSize={12}
+                paintOrder="stroke"
+                stroke="var(--surface-bg)"
+                strokeWidth={3}
+                fill="var(--viz-param-ink)"
+              >
+                start
+              </text>
+            </g>
+          )}
+
           {/* The valley floor — where every honest walk ends up. */}
           <g
             transform={`translate(${sx(grid.minimum.slope)},${sy(grid.minimum.intercept)})`}
           >
-            <line x1={-5} x2={5} y1={-5} y2={5} stroke="var(--viz-neutral)" strokeWidth={1.5} />
-            <line x1={-5} x2={5} y1={5} y2={-5} stroke="var(--viz-neutral)" strokeWidth={1.5} />
+            <line x1={-5} x2={5} y1={-5} y2={5} stroke="var(--ink)" strokeWidth={1.5} />
+            <line x1={-5} x2={5} y1={5} y2={-5} stroke="var(--ink)" strokeWidth={1.5} />
             {/* Label sits below the mark, out of the descent path's way. */}
             <text
               x={0}
@@ -169,7 +195,10 @@ export function LossSurface({
               textAnchor="middle"
               fontSize={12}
               fontStyle="italic"
-              fill="var(--viz-neutral)"
+              paintOrder="stroke"
+              stroke="var(--surface-bg)"
+              strokeWidth={3}
+              fill="var(--ink)"
             >
               the valley floor (OLS)
             </text>

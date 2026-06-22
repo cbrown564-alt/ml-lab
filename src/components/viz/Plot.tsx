@@ -224,13 +224,15 @@ export function ResidualSquares({
         const side = Math.abs(pyHat - py);
         if (side < 0.5) return null;
         const px = x(p.x);
-        // Draw between the point and the line; grow leftward unless that
-        // would leave the frame.
+        // Draw between the point and the line; grow toward the interior, and
+        // clamp so a square never spills past the left axis or the right edge
+        // (a giant outlier square reads as "off the chart", not as a clipped bug).
         const rx = px - side >= MARGIN.left ? px - side : px;
+        const maxX = width - MARGIN.right - side;
         return (
           <rect
             key={i}
-            x={Math.min(rx, width - MARGIN.right - side)}
+            x={Math.max(MARGIN.left, Math.min(rx, maxX))}
             y={Math.min(py, pyHat)}
             width={side}
             height={side}
