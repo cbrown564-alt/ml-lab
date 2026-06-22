@@ -112,6 +112,7 @@ function ItemHeader({
         {KIND_LABEL[kind]}
       </span>
       <span
+        role="img"
         className="flex items-center gap-1"
         aria-label={`Difficulty ${difficulty} of 3`}
         title={`Difficulty ${difficulty} of 3`}

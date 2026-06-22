@@ -139,7 +139,10 @@ export function GradientDescentBreakIt() {
             ariaLabel={`Gradient descent at step ${viewing.step}: loss ${formatLoss(viewing.loss)}. ${diverged ? "The loss has exploded — the descent has diverged." : converged ? "The descent has converged to the least-squares fit." : "The descent is running."}`}
           >
             <Axes />
-            <FitLine params={viewing.params} />
+            {/* Once the step is off the cliff the params blow up and the line
+                would snap to a vertical artifact — hide it so the honest symptom
+                is the exploding loss curve, not a glitch. */}
+            {!offTheCliff(viewing) && <FitLine params={viewing.params} />}
             <DataPoints points={POINTS} />
           </Plot>
           <TrainingCurve trace={trace} cursor={cursor} width={640} height={172} />
