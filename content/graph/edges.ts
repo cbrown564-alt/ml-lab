@@ -36,4 +36,11 @@ export const edges: ConceptEdge[] = [
   { from: "logistic-regression", to: "neural-network-fundamentals", type: "used_inside", strength: "soft" },
   { from: "gradient-descent", to: "neural-network-fundamentals", type: "requires", strength: "hard" },
   { from: "overfitting-regularization", to: "neural-network-fundamentals", type: "requires", strength: "soft" },
+  // Regression cluster, breadth-first scale-out: data-prep + generalisation.
+  { from: "the-dataset", to: "feature-scaling", type: "requires", strength: "soft" },
+  { from: "gradient-descent", to: "feature-scaling", type: "requires", strength: "soft" },
+  { from: "train-test-generalization", to: "bias-variance", type: "requires", strength: "hard" },
+  { from: "linear-regression", to: "bias-variance", type: "requires", strength: "soft" },
+  { from: "bias-variance", to: "overfitting-regularization", type: "requires", strength: "soft" },
+  { from: "train-test-generalization", to: "data-leakage", type: "requires", strength: "hard" },
 ];
