@@ -111,8 +111,8 @@ export function GradientDescentStory() {
     if (diverged) reportTaskEvent("gradient-descent:diverged");
   }, [diverged]);
 
-  const xDomain: [number, number] = [-1, 11];
-  const yDomain: [number, number] = [-5, 30];
+  const xDomain: [number, number] = [-0.5, 6.5];
+  const yDomain: [number, number] = [-2, 22];
 
   if (!viewing) return null;
 

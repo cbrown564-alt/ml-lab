@@ -37,7 +37,7 @@ export const gradientDescentMath: MathDrawerContent = {
       blocks: [
         {
           kind: "prose",
-          text: "The predict item promised that 0.02 converges and 0.04 explodes. That cliff isn't folklore. For a quadratic bowl like this one, the sharpest curvature of the surface sets a hard ceiling on the stride:",
+          text: "The predict item promised that 0.06 converges and 0.12 explodes. That cliff isn't folklore. For a quadratic bowl like this one, the sharpest curvature of the surface sets a hard ceiling on the stride:",
         },
         {
           kind: "equation",
@@ -47,11 +47,11 @@ export const gradientDescentMath: MathDrawerContent = {
         },
         {
           kind: "prose",
-          text: "Step under the ceiling and every stride lands lower than it left. Step over it and every stride lands higher up the far wall, compounding upward — the explosion you triggered on purpose. For the dataset in this experiment the ceiling works out to η ≈ 0.029, which is exactly why 0.02 walks home and 0.04 rockets off the map. A unit test computes this number from the data and holds this paragraph to it.",
+          text: "Step under the ceiling and every stride lands lower than it left. Step over it and every stride lands higher up the far wall, compounding upward — the explosion you triggered on purpose. For the dataset in this experiment the ceiling works out to η ≈ 0.077, which is exactly why 0.06 walks home and 0.12 rockets off the map. A unit test computes this number from the data and holds this paragraph to it.",
         },
         {
           kind: "prose",
-          text: "One more honest number: this valley is about 135 times steeper across than along — the ratio of the two curvatures, called the condition number. That lopsidedness is why the descent path curves into the valley and then crawls along its floor, and it is the problem that optimizers with memory — momentum, Adam — were built to fix. They have their own exhibits ahead.",
+          text: "One more honest number: this valley is about 52 times steeper across than along — the ratio of the two curvatures, called the condition number. That lopsidedness is what makes the path zigzag: a stride large enough to make progress along the gentle valley overshoots the steep walls, so the walk bounces from side to side as it descends. It is exactly the problem that optimizers with memory — momentum, Adam — were built to fix. They have their own exhibits ahead.",
         },
       ],
     },

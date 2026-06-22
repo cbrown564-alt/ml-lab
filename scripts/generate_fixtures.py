@@ -52,6 +52,16 @@ def main() -> None:
     x = np.full(10, 3.0) + rng.normal(0, 1e-9, 10)
     cases.append(dataset("near-degenerate-x", x, rng.normal(5, 1, 10)))
 
+    # Gradient descent's own dataset (not shared with the linear-regression
+    # exhibit). Uncentered x with a high intercept makes the (slope, intercept)
+    # loss bowl elongated and tilted, and the flat-line start sits across its
+    # narrow axis — so descent from (0,0) zigzags down the valley instead of
+    # sliding straight in: the classic picture, and what makes it "feel like
+    # learning". Its own rng (seed 42) keeps it independent of the cases above.
+    rng_gd = np.random.default_rng(42)
+    x = np.linspace(0, 6, 30)
+    cases.append(dataset("gd-zigzag", x, 2.0 * x + 6.0 + rng_gd.normal(0, 1.0, x.size)))
+
     OUT.mkdir(parents=True, exist_ok=True)
     payload = {
         "generator": {

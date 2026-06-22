@@ -67,17 +67,17 @@ describe("scenario claims hold at the exhibit's step budget", () => {
     expect(gd.current.loss).toBeGreaterThan(initial * 0.8);
   });
 
-  it("the 'double the stride' predict item is honest: 0.02 converges, 0.04 explodes", () => {
+  it("the 'double the stride' predict item is honest: 0.06 converges, 0.12 explodes", () => {
     // The concept check claims this surface's stability limit sits between
     // the default rate and its double. Content is a claim; pin it.
     const points = scenarioPoints("watch-it-learn");
     const target = mse(points, olsFit(points));
 
-    const safe = createGradientDescent(points, { learningRate: 0.02 });
+    const safe = createGradientDescent(points, { learningRate: 0.06 });
     safe.run(STEP_BUDGET);
     expect(safe.current.loss).toBeLessThan(target * 1.05);
 
-    const doubled = createGradientDescent(points, { learningRate: 0.04 });
+    const doubled = createGradientDescent(points, { learningRate: 0.12 });
     doubled.run(STEP_BUDGET);
     // Past the exhibit's divergence ceiling: the auto-pause beat fires.
     expect(doubled.current.loss).toBeGreaterThan(1e12);

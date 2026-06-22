@@ -9,15 +9,15 @@ import { gradientDescentExperiment } from "@content/exhibits/gradient-descent/ex
  * The specimen hero — the first frame of the Gradient Descent exhibit. The loss
  * surface is the specimen: a topographic map where every point is a candidate
  * line and the shade is its loss. On load the purple descent path draws itself
- * from the flat line that knows nothing — sweeping across the surface and coming
- * to rest on the valley floor, long strides first then a crawl as the ground
- * flattens (the self-throttling the walk is named for). Reduced motion renders it
- * already at rest. A portrait: the working axes and labels are stripped, so the
- * learner meets the territory before reading its catalogue tag.
+ * from the flat line that knows nothing — overshooting on the first stride and
+ * zigzagging across the valley as it homes onto the floor (the elongated bowl's
+ * signature, and the self-throttling the walk is named for). Reduced motion
+ * renders it already at rest. A portrait: the working axes and labels are
+ * stripped, so the learner meets the territory before reading its catalogue tag.
  */
 
 const SPECIMEN = gradientDescentExperiment.datasets.find(
-  (d) => d.id === "clean-linear",
+  (d) => d.id === "gd-zigzag",
 )!.points;
 
 // The flat line (slope 0, intercept 0) — the exhibit's own start. Enough steps to
@@ -27,7 +27,7 @@ const DURATION = 1300;
 
 export function GradientDescentHero() {
   const trace = useMemo(() => {
-    const run = createGradientDescent(SPECIMEN, { learningRate: 0.02 });
+    const run = createGradientDescent(SPECIMEN, { learningRate: 0.06 });
     run.run(STEPS);
     return [...run.trace];
   }, []);
