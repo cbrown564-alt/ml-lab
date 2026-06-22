@@ -91,23 +91,35 @@ The product is canvas-first (Stream 2): the experiment is the protagonist, not a
 figure inside an article. The page grammar:
 
 1. Graph-aware back link.
-2. **The masthead** — a two-column header. The title leads on the left (no
-   kicker; the title is the hero of the masthead) with the lede beneath it; the
-   **specimen placard** (`SpecimenPlacard`) sits on the right. The placard is the
-   exhibit's catalogue record — classification (domain · kind) and the learner's
-   standing in the header, then Builds on / Leads to graph chips and the journey
-   position — set in the same mono-label-over-data voice the live readouts speak.
-   It fills the masthead and **orients** the learner in the graph before the
-   interactive; the page's **forward** motion (continue the journey) lives at the
-   foot. Orient at the top, advance at the bottom.
-3. **The story spine** — a full-width scrollytelling hero (`StoryScroller`): a
+2. **The specimen hero** — a wide, ambient portrait of the live object opens the
+   exhibit before any chrome (`hero` slot, e.g. `LinearRegressionHero`). It shares
+   the working experiment's visual grammar — the same truth-hued data, the same
+   prediction-hued line — but stripped to a portrait: no axes, no readouts, no
+   controls, set in the sanctioned panel (`rounded-xl border border-line
+   bg-raised`) with a mono figcaption. On load it performs one *explanatory*
+   motion (never decorative): for linear regression the line eases up from the
+   flat baseline and settles into the fit. You meet the living thing, then read
+   its tag. Like the placard, the slot is optional — an exhibit without one keeps
+   the title-led masthead until it earns its own specimen.
+3. **The masthead** — beneath the specimen, a two-column header. On the left the
+   title, the lede, and a one-line **promise** of the payoff (the `promise` slot —
+   often the failure mode this exhibit teaches), set off by an accent rule; this
+   promise also balances the column against the placard's height, so the
+   lower-left is invitation, not void. The **specimen placard** (`SpecimenPlacard`)
+   sits on the right: the exhibit's catalogue record — classification (domain ·
+   kind) and the learner's standing in the header, then Builds on / Leads to graph
+   chips and the journey position — set in the same mono-label-over-data voice the
+   live readouts speak. The masthead **orients** the learner in the graph before
+   the interactive; the page's **forward** motion (continue the journey) lives at
+   the foot. Orient at the top, advance at the bottom.
+4. **The story spine** — a full-width scrollytelling hero (`StoryScroller`): a
    narrow rail of prose beats on the left, the live interactive sticky on the
    right. As each beat reaches the centre of the viewport it re-frames the one
    persistent graphic (object constancy); the same graphic transforms rather
    than being replaced. The hook is the first beat; the story sections are the
    rest. Once the learner touches the controls, the spine stops driving the
    graphic — the guided tour yields to manual exploration.
-4. The deeper layers return to a single reading column (~68ch): math view,
+5. The deeper layers return to a single reading column (~68ch): math view,
    concept checks, field notes, and (when relevant) the journey continuation /
    an honest construction-status note.
 
