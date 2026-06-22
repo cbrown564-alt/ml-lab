@@ -69,3 +69,45 @@ export const polyMSE = (points: Point[], w: Poly): number =>
   points.length === 0
     ? 0
     : points.reduce((s, p) => s + (p.y - predictPoly(w, p.x)) ** 2, 0) / points.length;
+
+/**
+ * Ridge on a **Chebyshev** basis — the numerically honest way to do polynomial
+ * ridge. The raw powers xʲ are nearly collinear, so their Gram matrix is
+ * desperately ill-conditioned and the overfit hides in a sliver of λ near zero.
+ * Chebyshev polynomials Tₖ on x∈[−1,1] are nearly orthogonal over a spread of
+ * points, so the Gram matrix is well-conditioned and λ has an honest O(1) scale:
+ * a tiny λ overfits, a moderate λ reins it in, a large λ underfits. Used by the
+ * regularisation exhibit so its penalty knob means something.
+ */
+export function chebyshevRow(x: number, degree: number): number[] {
+  const t = 2 * x - 1; // map [0,1] → [−1,1]
+  const row: number[] = [1];
+  if (degree >= 1) row.push(t);
+  for (let k = 2; k <= degree; k++) row.push(2 * t * row[k - 1] - row[k - 2]);
+  return row;
+}
+
+export type ChebModel = { weights: number[]; degree: number };
+
+export function ridgeFitCheb(points: Point[], degree: number, lambda: number): ChebModel {
+  const d = degree + 1;
+  const G = Array.from({ length: d }, () => new Array<number>(d).fill(0));
+  const Gy = new Array<number>(d).fill(0);
+  for (const p of points) {
+    const row = chebyshevRow(p.x, degree);
+    for (let i = 0; i < d; i++) {
+      Gy[i] += row[i] * p.y;
+      for (let k = 0; k < d; k++) G[i][k] += row[i] * row[k];
+    }
+  }
+  for (let j = 1; j < d; j++) G[j][j] += lambda; // T₀ (the constant) is unpenalised
+  return { weights: solveLinear(G, Gy), degree };
+}
+
+export const predictCheb = (m: ChebModel, x: number): number =>
+  chebyshevRow(x, m.degree).reduce((s, v, j) => s + v * m.weights[j], 0);
+
+export const chebMSE = (points: Point[], m: ChebModel): number =>
+  points.length === 0
+    ? 0
+    : points.reduce((s, p) => s + (p.y - predictCheb(m, p.x)) ** 2, 0) / points.length;

@@ -10,6 +10,7 @@ export const liveExhibits: Record<string, { href: string }> = {
   "loss-functions": { href: "/exhibits/loss-functions" },
   "feature-scaling": { href: "/exhibits/feature-scaling" },
   "bias-variance": { href: "/exhibits/bias-variance" },
+  "overfitting-regularization": { href: "/exhibits/overfitting-regularization" },
 };
 
 export const isLive = (nodeId: string): boolean => nodeId in liveExhibits;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Point } from "@/lib/models/linear-regression";
-import { polyMSE, predictPoly, ridgeFit } from "@/lib/models/polynomial";
+import { chebMSE, polyMSE, predictPoly, ridgeFit, ridgeFitCheb } from "@/lib/models/polynomial";
 import fixtures from "@/lib/models/fixtures/polynomial.json";
 
 /**
@@ -47,5 +47,29 @@ describe("polynomial + ridge model", () => {
     // Ridge raises training error but lowers test error vs the unpenalised overfit.
     expect(polyMSE(train, ridged)).toBeGreaterThan(polyMSE(train, overfit));
     expect(polyMSE(test, ridged)).toBeLessThan(polyMSE(test, overfit));
+  });
+});
+
+describe("Chebyshev ridge (regularisation exhibit)", () => {
+  const D = 12;
+
+  it("a tiny penalty overfits: training error near zero, test error high", () => {
+    const tiny = ridgeFitCheb(train, D, 1e-4);
+    expect(chebMSE(train, tiny)).toBeLessThan(0.01); // memorises
+    expect(chebMSE(test, tiny)).toBeGreaterThan(0.3); // but generalises badly
+  });
+
+  it("test error is U-shaped in λ on a sane scale", () => {
+    const t = (lam: number) => chebMSE(test, ridgeFitCheb(train, D, lam));
+    // overfit (λ→0) and underfit (λ large) both beaten by a moderate λ — and the
+    // sweet spot sits at an honest O(0.1–1), not a sliver near zero.
+    expect(t(0.3)).toBeLessThan(t(1e-4));
+    expect(t(0.3)).toBeLessThan(t(100));
+  });
+
+  it("more penalty always costs training error", () => {
+    expect(chebMSE(train, ridgeFitCheb(train, D, 1))).toBeGreaterThan(
+      chebMSE(train, ridgeFitCheb(train, D, 1e-4)),
+    );
   });
 });

@@ -8,7 +8,7 @@ import { StatGrid } from "@/components/viz/StatGrid";
 import { ErrorCurves } from "@/components/exhibits/ErrorCurves";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import type { Point } from "@/lib/models/linear-regression";
-import { polyMSE, ridgeFit } from "@/lib/models/polynomial";
+import { polyMSE, predictPoly, ridgeFit } from "@/lib/models/polynomial";
 import { biasVarianceExperiment } from "@content/exhibits/bias-variance/experiment";
 import fixtures from "@/lib/models/fixtures/polynomial.json";
 
@@ -81,7 +81,7 @@ export function BiasVarianceLab() {
           >
             <Axes />
             <TestPoints points={TEST} />
-            <PolyCurve weights={w} />
+            <PolyCurve predict={(xv) => predictPoly(w, xv)} />
             <DataPoints points={TRAIN} />
           </Plot>
           <p className="mt-3 text-sm leading-relaxed text-ink-faint">

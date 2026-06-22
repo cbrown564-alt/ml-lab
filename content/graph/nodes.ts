@@ -99,7 +99,8 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Live on the four-act spine (See it + Run it); Break it + Explain it next.
+    status: "interactive",
   },
   {
     id: "logistic-regression",
