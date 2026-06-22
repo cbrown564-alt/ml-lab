@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Annotation,
   Axes,
@@ -33,30 +33,38 @@ const useExperiment = createExperimentStore(linearRegressionExperiment);
 export function LinearRegressionStory() {
   const { points, datasetId, spec, movePoint, addPoint, removePoint, loadScenario } =
     useExperiment();
-  const [errorView, setErrorView] = useState<"lines" | "squares" | "hidden">("hidden");
-
-  // Scenario swaps morph for one beat (object constancy); drags stay instant.
-  const [easing, setEasing] = useState(false);
-  const easeTimer = useRef<number | null>(null);
-  const beginEase = () => {
-    setEasing(true);
-    if (easeTimer.current !== null) clearTimeout(easeTimer.current);
-    easeTimer.current = window.setTimeout(() => setEasing(false), 450);
-  };
-
-  // The spine drives the scene. Reload the dataset only when the scenario
-  // actually changes, so points the learner dragged survive a beat that only
-  // swaps the error view (residuals → squares are the same dataset).
+  // The spine drives the scene. The error view is read straight off the active
+  // beat (derived, not synced), so there is no scene-change setState to cascade.
   const frame = useActiveFrame<LinearRegressionFrame>();
+  const errorView: "lines" | "squares" | "hidden" = frame?.errorView ?? "hidden";
+
+  // Reload the dataset only when the scenario actually changes, so points the
+  // learner dragged survive a beat that only swaps the error view (residuals →
+  // squares are the same dataset). loadScenario is a store action, not React
+  // state, so syncing it from an effect is safe.
   useEffect(() => {
-    if (!frame) return;
-    beginEase();
-    if (frame.scenarioId !== useExperiment.getState().scenarioId) {
+    if (frame && frame.scenarioId !== useExperiment.getState().scenarioId) {
       loadScenario(frame.scenarioId);
     }
-    setErrorView(frame.errorView);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frame]);
+  }, [frame, loadScenario]);
+
+  // Scenario/beat swaps morph for one beat (object constancy); drags stay
+  // instant. Begin the ease during render when the beat changes (React's
+  // adjust-on-change pattern), and clear it after the morph window from an
+  // effect — so the only setState in an effect rides a timer, not the render path.
+  const [easing, setEasing] = useState(false);
+  const [easedFrame, setEasedFrame] = useState<LinearRegressionFrame | null | undefined>(
+    undefined,
+  );
+  if (frame !== easedFrame) {
+    setEasedFrame(frame);
+    if (frame) setEasing(true);
+  }
+  useEffect(() => {
+    if (!easing) return;
+    const t = window.setTimeout(() => setEasing(false), 450);
+    return () => clearTimeout(t);
+  }, [easing, easedFrame]);
 
   const editable = spec.datasets.find((d) => d.id === datasetId)?.editable ?? false;
   const practiced = () =>

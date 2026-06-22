@@ -71,10 +71,14 @@ export function GradientDescentStory() {
   const [playing, setPlaying] = useState(false);
 
   // A new scene: rewind to the start so the learner watches it learn afresh.
-  useEffect(() => {
+  // Adjusting state during render (React's documented alternative to a reset
+  // effect) keeps a scene change from scheduling a cascading post-render setState.
+  const [prevTrace, setPrevTrace] = useState(trace);
+  if (trace !== prevTrace) {
+    setPrevTrace(trace);
     setCursor(0);
     setPlaying(false);
-  }, [trace]);
+  }
 
   // The spine sets scene + face. Reload only on a real scenario change.
   const frame = useActiveFrame<GradientDescentFrame>();

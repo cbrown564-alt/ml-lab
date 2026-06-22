@@ -18,12 +18,16 @@ export type ExhibitViewDef = { id: string; label: string; content: ReactNode };
 
 export function ExhibitShell({ views }: { views: ExhibitViewDef[] }) {
   const [active, setActive] = useState(views[0]?.id);
-  const visited = useRef(new Set([views[0]?.id]));
+  // Which views have been opened (so they stay mounted, hidden, after a detour).
+  // State, not a ref: it decides what renders, so it must be read during render.
+  const [visited, setVisited] = useState<Set<string | undefined>>(
+    () => new Set([views[0]?.id]),
+  );
   const tabsId = useId();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const select = (id: string) => {
-    visited.current.add(id);
+    setVisited((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
     setActive(id);
   };
 
@@ -73,7 +77,7 @@ export function ExhibitShell({ views }: { views: ExhibitViewDef[] }) {
       </div>
 
       {views.map((v) =>
-        visited.current.has(v.id) ? (
+        visited.has(v.id) ? (
           <div
             key={v.id}
             id={`${tabsId}-panel-${v.id}`}

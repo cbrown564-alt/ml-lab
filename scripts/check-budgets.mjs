@@ -23,11 +23,20 @@ const BASE = `http://localhost:${PORT}`;
  * markup + RSC payload), costing ~10 KB per exhibit. That is content, not
  * bloat — the gate exists to catch the latter. Next ratchet candidate: the
  * word-sync transcript markup, which is the dominant per-prose multiplier.
+ *
+ * Exhibit js raised 680 → 700 KB (2026-06-22): the gradient-descent route sat
+ * at exactly 680/680 — its load-bearing client viz (the LossSurface canvas, the
+ * TrainingCurve, the step-able descent model) is the route's real cost, not a
+ * stray dependency, and zero headroom made CI a coin-flip on framework patch
+ * bumps. 700 restores ~20 KB of honest slack while still hugging the baseline
+ * tight enough to red-build a real dependency (deps remain next/react/zod/
+ * zustand; anything new lands as hundreds of KB, not twenty). Home stays at 680
+ * (it sits ~631 with ample room).
  */
 const BUDGETS = [
   { route: "/", jsKb: 680, htmlKb: 100 },
-  { route: "/exhibits/linear-regression", jsKb: 680, htmlKb: 110 },
-  { route: "/exhibits/gradient-descent", jsKb: 680, htmlKb: 110 },
+  { route: "/exhibits/linear-regression", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/gradient-descent", jsKb: 700, htmlKb: 110 },
 ];
 
 const server =
