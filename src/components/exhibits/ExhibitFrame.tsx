@@ -33,6 +33,8 @@ import { journeys } from "@content/journeys/foundations";
 export function ExhibitFrame({
   nodeId,
   lede,
+  promise,
+  hero,
   narrative,
   spine,
   math,
@@ -43,6 +45,18 @@ export function ExhibitFrame({
   nodeId: string;
   /** The exhibit's opening prose — the one part of the chrome that is content. */
   lede: ReactNode;
+  /**
+   * A one-line promise of the payoff — what the learner will walk away knowing,
+   * stated as a hook (often the failure mode this exhibit teaches). It turns the
+   * masthead's lower-left from dead space into invitation. Optional.
+   */
+  promise?: ReactNode;
+  /**
+   * The specimen hero: a wide, ambient portrait of the live object that leads
+   * the masthead, so the learner meets the thing before its catalogue tag.
+   * Optional — an exhibit without one keeps the title-led masthead.
+   */
+  hero?: ReactNode;
   narrative: ExhibitNarrative;
   /** The ordered beats that drive the guided graphic. */
   spine: Beat<unknown>[];
@@ -160,14 +174,24 @@ export function ExhibitFrame({
 
       <RecordVisit nodeId={nodeId} />
 
-      {/* Masthead: the title block leads; the specimen placard fills the right
-          and orients the learner in the knowledge graph before the interactive. */}
+      {/* The specimen leads. A wide, ambient portrait of the live object opens
+          the exhibit before any chrome — you meet the thing, then read its tag. */}
+      {hero && <div className="mb-10">{hero}</div>}
+
+      {/* Masthead: under the specimen, the title and the placard sit as a pair —
+          the exhibit's name and its catalogue record, orienting the learner in
+          the knowledge graph before the interactive. */}
       <header className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)] lg:items-start lg:gap-12">
         <div className="max-w-[58ch]">
           <h1 className="text-4xl font-semibold tracking-tight text-balance">
             {node.title}
           </h1>
           <div className="mt-5 text-lg leading-relaxed text-ink-muted">{lede}</div>
+          {promise && (
+            <p className="mt-6 border-l-2 border-accent pl-4 text-[15px] leading-relaxed text-ink">
+              {promise}
+            </p>
+          )}
         </div>
         <SpecimenPlacard
           node={node}
