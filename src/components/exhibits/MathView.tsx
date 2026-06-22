@@ -1,27 +1,80 @@
+import { Fragment, type ReactNode } from "react";
 import { NodeChip } from "@/components/graph/NodeChip";
-import type { MathBlock, MathDrawerContent } from "@/lib/narrative/math";
+import { StabilityScale } from "@/components/exhibits/StabilityScale";
+import { HUE_INK } from "@/lib/narrative/hues";
+import type { MathBlock, MathDrawerContent, MathHighlight } from "@/lib/narrative/math";
 import { nodes } from "@content/graph/nodes";
 
 /**
- * The math, as a composed view (Stream 2, iteration 2) — the formal treatment
- * is its own act now, not a drawer collapsed at the foot of the page. Equations
- * are set Unicode in the mono voice the readouts speak; the prose runs in a
- * readable column beside them.
+ * The math, composed as its own act (Stream 2, pattern 5) — not a drawer sealed
+ * at the foot of the page. Equations are set Unicode in the mono voice the
+ * readouts speak; key symbols are tinted to their mark on the canvas (η in the
+ * param hue, the miss ŷ−y in error-red) so the formula speaks the same colour
+ * grammar as the graphic. Where a claim has a live consequence — the stability
+ * cliff — a widget lets the reader cross it rather than take it on faith.
  */
 
+const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/**
+ * Split text into runs, tinting any run that exactly matches a highlight. Longer
+ * phrases match first so "ŷᵢ − yᵢ" wins over a bare "yᵢ".
+ */
+function tint(
+  text: string,
+  highlights: MathHighlight[] | undefined,
+  variant: "prose" | "equation",
+): ReactNode {
+  if (!highlights || highlights.length === 0) return text;
+  const byText = new Map(highlights.map((h) => [h.text, h.hue]));
+  const phrases = [...byText.keys()].sort((a, b) => b.length - a.length);
+  const re = new RegExp(`(${phrases.map(esc).join("|")})`, "g");
+  const parts = text.split(re);
+  return parts.map((part, i) => {
+    const hue = byText.get(part);
+    if (!hue) return <Fragment key={i}>{part}</Fragment>;
+    return (
+      <span
+        key={i}
+        className={
+          variant === "prose"
+            ? "font-medium underline decoration-1 underline-offset-2"
+            : "font-medium"
+        }
+        style={{ color: HUE_INK[hue] }}
+      >
+        {part}
+      </span>
+    );
+  });
+}
+
 function Block({ block }: { block: MathBlock }) {
+  if (block.kind === "widget") {
+    return (
+      <div className="mt-6">
+        <StabilityScale config={block.config} />
+      </div>
+    );
+  }
   if (block.kind === "prose") {
-    return <p className="mt-4 leading-relaxed text-ink-muted">{block.text}</p>;
+    return (
+      <p className="mt-4 leading-relaxed text-ink-muted">
+        {tint(block.text, block.highlights, "prose")}
+      </p>
+    );
   }
   return (
     <div className="mt-5 overflow-x-auto rounded-lg border border-line bg-sunken px-6 py-5">
       {block.lines.map((line) => (
         <div key={line} className="font-mono text-[15px] leading-loose text-ink">
-          {line}
+          {tint(line, block.highlights, "equation")}
         </div>
       ))}
       {block.caption && (
-        <p className="mt-3 text-sm leading-relaxed text-ink-faint">{block.caption}</p>
+        <p className="mt-3 text-sm leading-relaxed text-ink-faint">
+          {tint(block.caption, block.highlights, "prose")}
+        </p>
       )}
     </div>
   );

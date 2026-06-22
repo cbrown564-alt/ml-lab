@@ -167,7 +167,7 @@ test.describe("linear-regression exhibit", () => {
 
   test("the predict item reveals the verify step after answering", async ({ page }) => {
     await openTab(page, "Check");
-    const item = panel(page).locator("li", { hasText: "Predict, then verify" });
+    const item = panel(page).locator("li", { hasText: "wanders twice as far" });
     await expect(item.getByText(/Now verify it/)).not.toBeVisible();
     await item.getByRole("button", { name: /four times as big/ }).click();
     await expect(item.getByText(/Right\./)).toBeVisible();

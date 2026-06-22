@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import type { AudioSection } from "@/lib/narrative/audio";
 import type { Term, VizHue } from "@/lib/exhibit/spine";
+import { HUE_INK } from "@/lib/narrative/hues";
 import { splitWords } from "@/lib/narrative/words";
 
 /**
@@ -19,14 +20,6 @@ import { splitWords } from "@/lib/narrative/words";
 
 /** One narrator at a time, lab-wide: starting a section stops the previous. */
 let stopActive: (() => void) | null = null;
-
-const HUE_INK: Record<VizHue, string> = {
-  prediction: "var(--viz-prediction-ink)",
-  truth: "var(--viz-truth-ink)",
-  error: "var(--viz-error-ink)",
-  param: "var(--viz-param-ink)",
-  neutral: "var(--viz-neutral-ink)",
-};
 
 /** Strip leading/trailing punctuation so "residuals," matches the term "residuals". */
 const normalize = (w: string) =>

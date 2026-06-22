@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import type {
   ChoiceItem,
@@ -9,16 +10,23 @@ import type {
   PredictItem,
 } from "@/lib/assessment/schema";
 import { onTaskEvent } from "@/lib/assessment/task-events";
-import { useLearner, whenHydrated } from "@/lib/learner/store";
+import { useLearner, whenHydrated, type MasteryLevel } from "@/lib/learner/store";
+import { useHydrated } from "@/lib/use-hydrated";
 
 /**
- * Concept check — assessment that deepens rather than interrupts (docs/06,
- * B5). Lives on the calm shell after the experiment. Choice and predict
- * items give explanatory feedback on every selection and let the learner
- * change their answer (the latest answer counts — correcting a misconception
- * counts as correcting it). Experiment-task items complete from inside the
- * simulation itself. Results feed the mastery model.
+ * Concept check — assessment that deepens rather than interrupts (docs/06, B5),
+ * composed as the exhibit's capstone (Stream 2: our learning loop is the edge the
+ * benchmark set lacks, so it earns real presentation). A live progress meter
+ * reads the bench like an instrument; each item carries its kind, difficulty, and
+ * status in the mono catalogue voice; and a closing payoff ties the mastery just
+ * earned to the next stop in the journey — orient, practise, advance.
+ *
+ * Choice and predict items give explanatory feedback on every selection and let
+ * the learner change their answer (the latest answer counts). Experiment-task
+ * items complete from inside the simulation itself. Results feed the mastery model.
  */
+
+type ItemStatus = "unanswered" | "resolved" | "revisit";
 
 function Options({
   options,
@@ -69,14 +77,72 @@ function Feedback({ chosen }: { chosen: ChoiceOption }) {
   );
 }
 
+const KIND_LABEL = {
+  choice: "Recall",
+  predict: "Predict & verify",
+  "experiment-task": "Lab task",
+} as const;
+
+/** The catalogue strip over each item: index · kind · difficulty · live status. */
+function ItemHeader({
+  index,
+  kind,
+  difficulty,
+  status,
+}: {
+  index: number;
+  kind: keyof typeof KIND_LABEL;
+  difficulty: 1 | 2 | 3;
+  status: ItemStatus;
+}) {
+  const chip =
+    status === "resolved"
+      ? { text: "Resolved", cls: "border-accent text-accent" }
+      : status === "revisit"
+        ? { text: "Revisit", cls: "border-[var(--viz-error)] text-[var(--viz-error-ink)]" }
+        : { text: "Open", cls: "border-line text-ink-faint" };
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+      <span className="font-mono text-xs tracking-widest text-ink-faint tabular-nums">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
+        {KIND_LABEL[kind]}
+      </span>
+      <span
+        className="flex items-center gap-1"
+        aria-label={`Difficulty ${difficulty} of 3`}
+        title={`Difficulty ${difficulty} of 3`}
+      >
+        {[1, 2, 3].map((d) => (
+          <span
+            key={d}
+            className={`h-1.5 w-1.5 rounded-full ${d <= difficulty ? "bg-ink-muted" : "bg-line"}`}
+          />
+        ))}
+      </span>
+      <span
+        className={`ml-auto rounded-full border px-2.5 py-0.5 font-mono text-[11px] tracking-wide ${chip.cls}`}
+        role="status"
+      >
+        {chip.text}
+      </span>
+    </div>
+  );
+}
+
 function ChoiceItemView({
   item,
+  index,
   nodeId,
   itemCount,
+  onStatus,
 }: {
   item: ChoiceItem | PredictItem;
+  index: number;
   nodeId: string;
   itemCount: number;
+  onStatus: (id: string, status: ItemStatus) => void;
 }) {
   const [picked, setPicked] = useState<number | null>(null);
   const recordAnswer = useLearner((s) => s.recordAnswer);
@@ -89,20 +155,19 @@ function ChoiceItemView({
   };
 
   const chosen = picked !== null ? item.options[picked] : null;
+  const status: ItemStatus =
+    chosen === null ? "unanswered" : chosen.correct ? "resolved" : "revisit";
+  useEffect(() => onStatus(item.id, status), [status, item.id, onStatus]);
 
   return (
     <li className="border-t border-line py-7 first:border-t-0">
+      <ItemHeader index={index} kind={item.kind} difficulty={item.difficulty} status={status} />
       {item.kind === "predict" && (
-        <p className="max-w-[65ch] font-mono text-xs tracking-widest text-ink-faint uppercase">
-          Predict, then verify
-        </p>
-      )}
-      {item.kind === "predict" && (
-        <p className="mt-2 max-w-[65ch] text-sm leading-relaxed text-ink-muted">
+        <p className="mt-4 max-w-[65ch] text-sm leading-relaxed text-ink-muted">
           {item.setup}
         </p>
       )}
-      <p className={`max-w-[65ch] font-medium ${item.kind === "predict" ? "mt-3" : ""}`}>
+      <p className={`max-w-[65ch] font-medium ${item.kind === "predict" ? "mt-3" : "mt-4"}`}>
         {item.prompt}
       </p>
       <Options options={item.options} picked={picked} onPick={pick} />
@@ -119,12 +184,16 @@ function ChoiceItemView({
 
 function ExperimentTaskView({
   item,
+  index,
   nodeId,
   itemCount,
+  onStatus,
 }: {
   item: ExperimentTaskItem;
+  index: number;
   nodeId: string;
   itemCount: number;
+  onStatus: (id: string, status: ItemStatus) => void;
 }) {
   const recordAnswer = useLearner((s) => s.recordAnswer);
   // Completion persists: the mastery evidence log already knows.
@@ -143,12 +212,15 @@ function ExperimentTaskView({
     });
   }, [done, item.taskEvent, item.id, nodeId, itemCount, recordAnswer]);
 
+  useEffect(
+    () => onStatus(item.id, done ? "resolved" : "unanswered"),
+    [done, item.id, onStatus],
+  );
+
   return (
     <li className="border-t border-line py-7 first:border-t-0">
-      <p className="max-w-[65ch] font-mono text-xs tracking-widest text-ink-faint uppercase">
-        Lab task
-      </p>
-      <p className="mt-2 max-w-[65ch] font-medium">{item.prompt}</p>
+      <ItemHeader index={index} kind={item.kind} difficulty={item.difficulty} status={done ? "resolved" : "unanswered"} />
+      <p className="mt-4 max-w-[65ch] font-medium">{item.prompt}</p>
       {done ? (
         <p className="mt-3 max-w-[65ch] text-sm leading-relaxed" role="status">
           <span className="font-semibold" style={{ color: "var(--accent)" }}>
@@ -166,31 +238,157 @@ function ExperimentTaskView({
   );
 }
 
-export function ConceptCheckSection({ check }: { check: ConceptCheck }) {
+/**
+ * The earned level, shown in the payoff. A sibling of MasteryBadge but without
+ * its shared test id — the header already owns that handle, and one node must
+ * not surface two elements under it.
+ */
+function EarnedLevel({ nodeId }: { nodeId: string }) {
+  const level = useLearner((s) => s.mastery[nodeId]?.level);
+  const hydrated = useHydrated();
+  if (!hydrated || !level || level === "untouched") return null;
+  const styles: Record<Exclude<MasteryLevel, "untouched">, string> = {
+    seen: "border-line text-ink-faint",
+    practiced: "border-line text-ink-muted",
+    assessed: "border-accent/50 text-accent",
+    mastered: "border-accent bg-accent text-accent-ink",
+  };
   return (
-    <section className="mt-12 border-t border-line pt-8">
-      <h2 className="text-sm font-medium tracking-wide text-ink-faint uppercase">
-        Check your understanding
-      </h2>
-      <ol className="mt-2">
-        {check.items.map((item) =>
+    <span className={`rounded-full border px-2.5 py-0.5 font-mono text-xs tracking-wide ${styles[level]}`}>
+      {level}
+    </span>
+  );
+}
+
+/** Where this exhibit leads, for the closing payoff. */
+export type CheckNext = { title: string; href?: string; live: boolean };
+
+export function ConceptCheckSection({
+  check,
+  nodeTitle,
+  next,
+}: {
+  check: ConceptCheck;
+  /** This exhibit's title, named in the payoff ("you've worked through …"). */
+  nodeTitle?: string;
+  /** The journey's next stop, surfaced once the bench is cleared. */
+  next?: CheckNext;
+}) {
+  const total = check.items.length;
+  const [status, setStatus] = useState<Record<string, ItemStatus>>({});
+  const onStatus = useStableStatusSetter(setStatus);
+
+  const resolved = Object.values(status).filter((s) => s === "resolved").length;
+  const allResolved = resolved === total;
+
+  return (
+    <section>
+      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+        <div className="max-w-[60ch]">
+          <h2 className="text-2xl font-semibold tracking-tight">Check what stuck</h2>
+          <p className="mt-2 leading-relaxed text-ink-muted">
+            A few quick reckonings — recall, a prediction to go verify, and a thing
+            to break with your own hands. The latest answer is the one that counts.
+          </p>
+        </div>
+        {/* The live meter — the bench read as an instrument. */}
+        <div className="shrink-0">
+          <p className="font-mono text-[11px] tracking-widest text-ink-faint uppercase tabular-nums">
+            {resolved} of {total} resolved
+          </p>
+          <ol className="mt-2 flex items-center gap-1.5" aria-hidden>
+            {check.items.map((item) => {
+              const s = status[item.id] ?? "unanswered";
+              const cls =
+                s === "resolved"
+                  ? "bg-accent"
+                  : s === "revisit"
+                    ? "bg-[var(--viz-error)]"
+                    : "bg-line";
+              return <li key={item.id} className={`h-1.5 w-7 rounded-full ${cls}`} />;
+            })}
+          </ol>
+        </div>
+      </div>
+
+      <ol className="mt-6">
+        {check.items.map((item, i) =>
           item.kind === "experiment-task" ? (
             <ExperimentTaskView
               key={item.id}
               item={item}
+              index={i}
               nodeId={check.nodeId}
-              itemCount={check.items.length}
+              itemCount={total}
+              onStatus={onStatus}
             />
           ) : (
             <ChoiceItemView
               key={item.id}
               item={item}
+              index={i}
               nodeId={check.nodeId}
-              itemCount={check.items.length}
+              itemCount={total}
+              onStatus={onStatus}
             />
           ),
         )}
       </ol>
+
+      {/* The payoff: mastery earned, and the road on. */}
+      <div className="mt-8 rounded-xl border border-line bg-raised p-6">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
+            {allResolved ? "Bench cleared" : "Your standing"}
+          </span>
+          <EarnedLevel nodeId={check.nodeId} />
+        </div>
+        <p className="mt-3 max-w-[60ch] leading-relaxed text-ink-muted">
+          {allResolved ? (
+            <>
+              All {total} resolved — you&apos;ve worked
+              {nodeTitle ? ` ${nodeTitle}` : " this"} from intuition through the
+              math to the failure mode, and the mastery model has the receipts.
+            </>
+          ) : (
+            <>
+              Resolve all {total} to lock in mastery for
+              {nodeTitle ? ` ${nodeTitle}` : " this exhibit"} — the meter above
+              tracks what&apos;s left.
+            </>
+          )}
+        </p>
+        {next && (
+          <p className="mt-4 text-sm">
+            {next.href ? (
+              <Link
+                href={next.href}
+                className="font-medium text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2"
+              >
+                {next.live ? `Next: ${next.title} →` : "Browse the map →"}
+              </Link>
+            ) : (
+              <Link
+                href="/#map"
+                className="font-medium text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2"
+              >
+                Back to the map →
+              </Link>
+            )}
+          </p>
+        )}
+      </div>
     </section>
   );
+}
+
+/** A stable callback that folds each item's reported status into the map. */
+function useStableStatusSetter(
+  setStatus: React.Dispatch<React.SetStateAction<Record<string, ItemStatus>>>,
+) {
+  const [fn] = useState(
+    () => (id: string, s: ItemStatus) =>
+      setStatus((prev) => (prev[id] === s ? prev : { ...prev, [id]: s })),
+  );
+  return fn;
 }

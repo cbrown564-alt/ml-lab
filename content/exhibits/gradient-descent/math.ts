@@ -13,10 +13,12 @@ export const gradientDescentMath: MathDrawerContent = {
           kind: "equation",
           lines: ["w ← w − η · ∂L/∂w", "b ← b − η · ∂L/∂b"],
           caption: "η (eta) is the learning rate — the stride knob you turned.",
+          highlights: [{ text: "η", hue: "param" }],
         },
         {
           kind: "prose",
           text: "For mean squared error the partial derivatives work out to sums over the misses, with ŷᵢ = w·xᵢ + b the current line's prediction:",
+          highlights: [{ text: "ŷᵢ", hue: "prediction" }],
         },
         {
           kind: "equation",
@@ -24,10 +26,12 @@ export const gradientDescentMath: MathDrawerContent = {
             "∂L/∂w = (2/n) · Σᵢ (ŷᵢ − yᵢ) · xᵢ",
             "∂L/∂b = (2/n) · Σᵢ (ŷᵢ − yᵢ)",
           ],
+          highlights: [{ text: "(ŷᵢ − yᵢ)", hue: "error" }],
         },
         {
           kind: "prose",
           text: "This is letter for letter the gradient function in the lab's model layer — every step you played, stepped, or scrubbed was computed by exactly these two lines. Notice that both sums are driven by the misses (ŷᵢ − yᵢ): a line that fits well feels almost no pull. That is the self-throttling you watched — the walk slows precisely where the surface flattens.",
+          highlights: [{ text: "(ŷᵢ − yᵢ)", hue: "error" }],
         },
       ],
     },
@@ -44,10 +48,25 @@ export const gradientDescentMath: MathDrawerContent = {
           lines: ["η < 2 / λₘₐₓ"],
           caption:
             "λₘₐₓ is the surface's steepest curvature — the largest eigenvalue of its matrix of second derivatives (the Hessian).",
+          highlights: [{ text: "η", hue: "param" }],
+        },
+        {
+          kind: "widget",
+          widget: "stability",
+          config: {
+            etaCritical: 0.077,
+            max: 0.15,
+            defaultEta: 0.06,
+            marks: [
+              { eta: 0.06, label: "the story's walk", tone: "safe" },
+              { eta: 0.12, label: "doubled — over", tone: "danger" },
+            ],
+          },
         },
         {
           kind: "prose",
           text: "Step under the ceiling and every stride lands lower than it left. Step over it and every stride lands higher up the far wall, compounding upward — the explosion you triggered on purpose. For the dataset in this experiment the ceiling works out to η ≈ 0.077, which is exactly why 0.06 walks home and 0.12 rockets off the map. A unit test computes this number from the data and holds this paragraph to it.",
+          highlights: [{ text: "η ≈ 0.077", hue: "param" }],
         },
         {
           kind: "prose",

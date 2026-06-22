@@ -17,7 +17,11 @@ const allText = (d: (typeof drawers)[number]): string =>
   d.sections
     .flatMap((s) =>
       s.blocks.map((b) =>
-        b.kind === "prose" ? b.text : [...b.lines, b.caption ?? ""].join(" "),
+        b.kind === "prose"
+          ? b.text
+          : b.kind === "equation"
+            ? [...b.lines, b.caption ?? ""].join(" ")
+            : "",
       ),
     )
     .join(" ");
@@ -37,6 +41,24 @@ describe("math drawers", () => {
         for (const s of d.sections) {
           expect(s.heading.length).toBeGreaterThan(0);
           expect(s.blocks.length).toBeGreaterThanOrEqual(1);
+        }
+      });
+
+      it("every tinted term actually occurs in its block (no silent highlight)", () => {
+        for (const s of d.sections) {
+          for (const b of s.blocks) {
+            if (b.kind === "widget" || !b.highlights) continue;
+            const hay =
+              b.kind === "prose"
+                ? b.text
+                : [...b.lines, b.caption ?? ""].join(" ");
+            for (const h of b.highlights) {
+              expect(
+                hay.includes(h.text),
+                `tinted term "${h.text}" not found in ${d.nodeId}/${s.id}`,
+              ).toBe(true);
+            }
+          }
         }
       });
 

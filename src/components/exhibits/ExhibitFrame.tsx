@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ConceptCheckSection } from "@/components/assessment/ConceptCheckSection";
+import { ConceptCheckSection, type CheckNext } from "@/components/assessment/ConceptCheckSection";
 import { ExhibitShell, type ExhibitViewDef } from "@/components/exhibits/ExhibitShell";
 import { MathView } from "@/components/exhibits/MathView";
 import { SpecimenPlacard } from "@/components/exhibits/SpecimenPlacard";
@@ -41,6 +41,7 @@ export function ExhibitFrame({
   check,
   story,
   experiment,
+  experimentLede,
 }: {
   nodeId: string;
   /** The exhibit's opening prose — the one part of the chrome that is content. */
@@ -66,6 +67,12 @@ export function ExhibitFrame({
   story: ReactNode;
   /** The full interactive sandbox for the Experiment view. */
   experiment: ReactNode;
+  /**
+   * The Experiment view's framing line. Each exhibit names what's actually on
+   * its bench (so the copy never promises a code mode the lab doesn't have).
+   * Optional — defaults to the scenario/knobs framing every lab shares.
+   */
+  experimentLede?: ReactNode;
 }) {
   const node = nodes.find((n) => n.id === nodeId);
   if (!node) throw new Error(`ExhibitFrame: no graph node with id "${nodeId}"`);
@@ -118,15 +125,33 @@ export function ExhibitFrame({
   const experimentView = (
     <div>
       <div className="max-w-[68ch]">
-        <h2 className="text-xl font-semibold tracking-tight">Experiment freely</h2>
+        <h2 className="text-2xl font-semibold tracking-tight">The open bench</h2>
         <p className="mt-2 leading-relaxed text-ink-muted">
-          Guardrails off — switch scenarios, build your own data, turn the knobs,
-          or run the verified model as code.
+          {experimentLede ?? (
+            <>
+              Guardrails off. Switch scenarios, build your own data, and turn the
+              knobs — the same instrument from the story, now yours to push past
+              where the walk-through stopped.
+            </>
+          )}
         </p>
       </div>
       <div className="mt-6">{experiment}</div>
     </div>
   );
+
+  // Where the exhibit leads, surfaced as the Check's closing payoff. A live
+  // next stop links straight on; a locked one (or a finished journey) routes
+  // back to the map.
+  const checkNext: CheckNext | undefined = journey
+    ? nextStop
+      ? {
+          title: nextStop.title,
+          href: isLive(nextStop.id) ? liveExhibits[nextStop.id].href : "/#map",
+          live: isLive(nextStop.id),
+        }
+      : { title: "the map", href: undefined, live: false }
+    : undefined;
 
   const views: ExhibitViewDef[] = [
     { id: "story", label: "Story", content: storyView },
@@ -139,7 +164,11 @@ export function ExhibitFrame({
             label: "Check",
             content: (
               <div className="max-w-[68ch]">
-                <ConceptCheckSection check={check} />
+                <ConceptCheckSection
+                  check={check}
+                  nodeTitle={node.title}
+                  next={checkNext}
+                />
               </div>
             ),
           },

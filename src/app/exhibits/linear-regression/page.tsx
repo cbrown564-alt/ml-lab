@@ -33,6 +33,13 @@ export default function LinearRegressionExhibit() {
       }
       story={<LinearRegressionStory />}
       experiment={<LinearRegressionLab />}
+      experimentLede={
+        <>
+          Guardrails off. Drag the data, paint your own points, watch the fit
+          chase every move — or flip to Code and run the very same least-squares
+          model in Python, verified against the lab.
+        </>
+      }
     />
   );
 }
