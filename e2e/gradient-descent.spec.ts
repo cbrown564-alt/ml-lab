@@ -110,7 +110,8 @@ test.describe("gradient-descent exhibit", () => {
     await expect(page.getByRole("img", { name: /at step 10:/ })).toBeVisible();
 
     await page.getByRole("button", { name: "The surface", exact: true }).click();
-    const surface = page.getByRole("img", { name: /Map of the loss surface/ });
+    // Scope to the Experiment panel — the specimen hero is also a loss surface.
+    const surface = panel(page).getByRole("img", { name: /Map of the loss surface/ });
     await expect(surface).toBeVisible();
     await expect(surface).toHaveAccessibleName(/10 steps/);
     await expect(page.getByText("the valley floor (OLS)")).toBeVisible();

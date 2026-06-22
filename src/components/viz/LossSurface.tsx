@@ -45,6 +45,7 @@ export function LossSurface({
   cursor,
   width = 880,
   height = 460,
+  bare = false,
 }: {
   points: Point[];
   trace: ReadonlyArray<DescentStep>;
@@ -52,6 +53,9 @@ export function LossSurface({
   cursor: number;
   width?: number;
   height?: number;
+  /** Portrait mode (the specimen hero): drop the axes and text labels, keep the
+   *  heat, the start/valley marks, and the descent path. */
+  bare?: boolean;
 }) {
   const grid = useMemo(() => lossSurfaceGrid(points), [points]);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -113,72 +117,78 @@ export function LossSurface({
         className="absolute inset-0 h-full w-full select-none"
       >
         <g aria-hidden>
-          {sx.ticks(6).map((t) => (
-            <g key={`x${t}`} transform={`translate(${sx(t)},${yBase})`}>
-              <line y2={5} stroke="var(--line)" />
+          {!bare && (
+            <>
+              {sx.ticks(6).map((t) => (
+                <g key={`x${t}`} transform={`translate(${sx(t)},${yBase})`}>
+                  <line y2={5} stroke="var(--line)" />
+                  <text
+                    y={20}
+                    textAnchor="middle"
+                    fontSize={11}
+                    fill="var(--ink-faint)"
+                    fontFamily="var(--font-mono)"
+                  >
+                    {t}
+                  </text>
+                </g>
+              ))}
+              {sy.ticks(5).map((t) => (
+                <g key={`y${t}`} transform={`translate(${MARGIN.left},${sy(t)})`}>
+                  <line x1={-5} stroke="var(--line)" />
+                  <text
+                    x={-9}
+                    dy="0.32em"
+                    textAnchor="end"
+                    fontSize={11}
+                    fill="var(--ink-faint)"
+                    fontFamily="var(--font-mono)"
+                  >
+                    {t}
+                  </text>
+                </g>
+              ))}
+              <rect
+                x={MARGIN.left}
+                y={MARGIN.top}
+                width={width - MARGIN.left - MARGIN.right}
+                height={height - MARGIN.top - MARGIN.bottom}
+                fill="none"
+                stroke="var(--line)"
+              />
               <text
-                y={20}
-                textAnchor="middle"
-                fontSize={11}
-                fill="var(--ink-faint)"
-                fontFamily="var(--font-mono)"
-              >
-                {t}
-              </text>
-            </g>
-          ))}
-          {sy.ticks(5).map((t) => (
-            <g key={`y${t}`} transform={`translate(${MARGIN.left},${sy(t)})`}>
-              <line x1={-5} stroke="var(--line)" />
-              <text
-                x={-9}
-                dy="0.32em"
+                x={width - MARGIN.right}
+                y={yBase + 32}
                 textAnchor="end"
                 fontSize={11}
                 fill="var(--ink-faint)"
-                fontFamily="var(--font-mono)"
               >
-                {t}
+                slope
               </text>
-            </g>
-          ))}
-          <rect
-            x={MARGIN.left}
-            y={MARGIN.top}
-            width={width - MARGIN.left - MARGIN.right}
-            height={height - MARGIN.top - MARGIN.bottom}
-            fill="none"
-            stroke="var(--line)"
-          />
-          <text
-            x={width - MARGIN.right}
-            y={yBase + 32}
-            textAnchor="end"
-            fontSize={11}
-            fill="var(--ink-faint)"
-          >
-            slope
-          </text>
-          <text x={MARGIN.left} y={MARGIN.top - 4} fontSize={11} fill="var(--ink-faint)">
-            intercept
-          </text>
+              <text x={MARGIN.left} y={MARGIN.top - 4} fontSize={11} fill="var(--ink-faint)">
+                intercept
+              </text>
+            </>
+          )}
 
           {/* Where the walk begins — labelled in the graphic, Distill-style. */}
           {trace[0] && (
             <g transform={`translate(${clampPx(sx(trace[0].params.slope))},${clampPx(sy(trace[0].params.intercept))})`}>
               <circle r={4} fill="none" stroke="var(--surface-bg)" strokeWidth={3} />
               <circle r={4} fill="none" stroke="var(--viz-param)" strokeWidth={1.75} />
-              <text
-                x={10}
-                y={4}
-                fontSize={12}
-                paintOrder="stroke"
-                stroke="var(--surface-bg)"
-                strokeWidth={3}
-                fill="var(--viz-param-ink)"
-              >
-                start
-              </text>
+              {!bare && (
+                <text
+                  x={10}
+                  y={4}
+                  fontSize={12}
+                  paintOrder="stroke"
+                  stroke="var(--surface-bg)"
+                  strokeWidth={3}
+                  fill="var(--viz-param-ink)"
+                >
+                  start
+                </text>
+              )}
             </g>
           )}
 
@@ -189,19 +199,21 @@ export function LossSurface({
             <line x1={-5} x2={5} y1={-5} y2={5} stroke="var(--ink)" strokeWidth={1.5} />
             <line x1={-5} x2={5} y1={5} y2={-5} stroke="var(--ink)" strokeWidth={1.5} />
             {/* Label sits below the mark, out of the descent path's way. */}
-            <text
-              x={0}
-              y={22}
-              textAnchor="middle"
-              fontSize={12}
-              fontStyle="italic"
-              paintOrder="stroke"
-              stroke="var(--surface-bg)"
-              strokeWidth={3}
-              fill="var(--ink)"
-            >
-              the valley floor (OLS)
-            </text>
+            {!bare && (
+              <text
+                x={0}
+                y={22}
+                textAnchor="middle"
+                fontSize={12}
+                fontStyle="italic"
+                paintOrder="stroke"
+                stroke="var(--surface-bg)"
+                strokeWidth={3}
+                fill="var(--ink)"
+              >
+                the valley floor (OLS)
+              </text>
+            )}
           </g>
 
           {trace.length > 1 && (
