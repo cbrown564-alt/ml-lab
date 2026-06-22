@@ -8,6 +8,7 @@ import type {
   ConceptCheck,
   ExperimentTaskItem,
   PredictItem,
+  TransferItem,
 } from "@/lib/assessment/schema";
 import { onTaskEvent } from "@/lib/assessment/task-events";
 import { useLearner, whenHydrated, type MasteryLevel } from "@/lib/learner/store";
@@ -81,6 +82,7 @@ const KIND_LABEL = {
   choice: "Recall",
   predict: "Predict & verify",
   "experiment-task": "Lab task",
+  transfer: "Transfer",
 } as const;
 
 /** The catalogue strip over each item: index · kind · difficulty · live status. */
@@ -138,7 +140,7 @@ function ChoiceItemView({
   itemCount,
   onStatus,
 }: {
-  item: ChoiceItem | PredictItem;
+  item: ChoiceItem | PredictItem | TransferItem;
   index: number;
   nodeId: string;
   itemCount: number;
@@ -159,17 +161,18 @@ function ChoiceItemView({
     chosen === null ? "unanswered" : chosen.correct ? "resolved" : "revisit";
   useEffect(() => onStatus(item.id, status), [status, item.id, onStatus]);
 
+  // Predict and transfer items open with a framing line — the state to set up,
+  // or the novel unseen case — before the prompt and options.
+  const preamble =
+    item.kind === "predict" ? item.setup : item.kind === "transfer" ? item.scenario : null;
+
   return (
     <li className="border-t border-line py-7 first:border-t-0">
       <ItemHeader index={index} kind={item.kind} difficulty={item.difficulty} status={status} />
-      {item.kind === "predict" && (
-        <p className="mt-4 max-w-[65ch] text-sm leading-relaxed text-ink-muted">
-          {item.setup}
-        </p>
+      {preamble && (
+        <p className="mt-4 max-w-[65ch] text-sm leading-relaxed text-ink-muted">{preamble}</p>
       )}
-      <p className={`max-w-[65ch] font-medium ${item.kind === "predict" ? "mt-3" : "mt-4"}`}>
-        {item.prompt}
-      </p>
+      <p className={`max-w-[65ch] font-medium ${preamble ? "mt-3" : "mt-4"}`}>{item.prompt}</p>
       <Options options={item.options} picked={picked} onPick={pick} />
       {chosen && <Feedback chosen={chosen} />}
       {chosen && item.kind === "predict" && (

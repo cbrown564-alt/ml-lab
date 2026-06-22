@@ -44,11 +44,24 @@ describe("concept checks", () => {
         }
       });
 
+      it("predict and transfer items pose a real setup", () => {
+        for (const item of check.items) {
+          if (item.kind === "predict") expect(item.setup.length, item.id).toBeGreaterThan(20);
+          if (item.kind === "transfer") expect(item.scenario.length, item.id).toBeGreaterThan(40);
+        }
+      });
+
       it("uses every assessment kind the exhibit has earned", () => {
-        // Both flagship exhibits carry all three kinds (docs/06, B5):
-        // retrieval, predict-then-verify, and assessment-as-play.
+        // Both flagship exhibits carry all four kinds (docs/06, B5 + success
+        // metrics): retrieval, predict-then-verify, assessment-as-play, and the
+        // north-star transfer item — application to a novel unseen case.
         const kinds = new Set(check.items.map((i) => i.kind));
-        expect([...kinds].sort()).toEqual(["choice", "experiment-task", "predict"]);
+        expect([...kinds].sort()).toEqual([
+          "choice",
+          "experiment-task",
+          "predict",
+          "transfer",
+        ]);
       });
 
       it("item ids are unique", () => {

@@ -8,6 +8,10 @@
  * - `experiment-task` — assessment inside the simulation ("make it
  *   diverge"): the experiment itself reports completion, so the check is
  *   continued play, not exam cosplay.
+ * - `transfer` — the north-star item (docs/06 success metrics): a novel,
+ *   *unseen* case the exhibit never walked through, written so it cannot be
+ *   passed by parroting the exhibit's wording. This is whiteboard transfer —
+ *   prediction + diagnosis + explanation applied somewhere new.
  */
 
 export type ChoiceOption = {
@@ -49,7 +53,19 @@ export type ExperimentTaskItem = ItemBase & {
   feedback: string;
 };
 
-export type AssessmentItem = ChoiceItem | PredictItem | ExperimentTaskItem;
+export type TransferItem = ItemBase & {
+  kind: "transfer";
+  /** The novel, unseen case — a situation the exhibit did not walk through. */
+  scenario: string;
+  prompt: string;
+  options: ChoiceOption[];
+};
+
+export type AssessmentItem =
+  | ChoiceItem
+  | PredictItem
+  | ExperimentTaskItem
+  | TransferItem;
 
 export type ConceptCheck = {
   nodeId: string;

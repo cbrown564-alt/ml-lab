@@ -45,8 +45,10 @@ test.describe("concept check + mastery", () => {
       .click();
     await check.getByRole("button", { name: /points uphill/ }).click();
     await check.getByRole("button", { name: /Astronomically worse/ }).click();
+    // The transfer item: apply the step-size intuition to a colleague's slow run.
+    await check.getByRole("button", { name: /raise it for bigger steps/ }).click();
 
-    // The fifth item is a lab task: mastery requires actually diverging — and the
+    // The lab task is the last gate: mastery requires actually diverging — and the
     // divergence happens over in the Experiment tab; the task bus carries it back.
     await expect(badge).not.toHaveText("mastered");
     await page.getByRole("tab", { name: "Experiment" }).click();
