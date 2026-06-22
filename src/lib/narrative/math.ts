@@ -38,10 +38,19 @@ export type StabilityConfig = {
   marks: StabilityMark[];
 };
 
+/** A draggable miss whose squared penalty grows as a visible area (r → r²). */
+export type PenaltyConfig = {
+  /** Right edge of the residual (miss) axis. */
+  maxResidual: number;
+  /** Where the draggable miss starts. */
+  defaultResidual: number;
+};
+
 export type MathBlock =
   | { kind: "prose"; text: string; highlights?: MathHighlight[] }
   | { kind: "equation"; lines: string[]; caption?: string; highlights?: MathHighlight[] }
-  | { kind: "widget"; widget: "stability"; config: StabilityConfig };
+  | { kind: "widget"; widget: "stability"; config: StabilityConfig }
+  | { kind: "widget"; widget: "penalty"; config: PenaltyConfig };
 
 export type MathDrawerSection = {
   id: string;

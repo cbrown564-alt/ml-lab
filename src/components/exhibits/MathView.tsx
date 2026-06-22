@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from "react";
 import { NodeChip } from "@/components/graph/NodeChip";
 import { StabilityScale } from "@/components/exhibits/StabilityScale";
+import { SquaredPenalty } from "@/components/exhibits/SquaredPenalty";
 import { HUE_INK } from "@/lib/narrative/hues";
 import type { MathBlock, MathDrawerContent, MathHighlight } from "@/lib/narrative/math";
 import { nodes } from "@content/graph/nodes";
@@ -53,7 +54,11 @@ function Block({ block }: { block: MathBlock }) {
   if (block.kind === "widget") {
     return (
       <div className="mt-6">
-        <StabilityScale config={block.config} />
+        {block.widget === "stability" ? (
+          <StabilityScale config={block.config} />
+        ) : (
+          <SquaredPenalty config={block.config} />
+        )}
       </div>
     );
   }
