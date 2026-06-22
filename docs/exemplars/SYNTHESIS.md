@@ -68,10 +68,10 @@ exhibits re-derived as the proof.
 | 2 sticky graphic + scrolling prose | ✅ `StoryScroller` + frame-via-context; object constancy across beats |
 | 3 colour vocabulary into prose | ✅ `Term` hues + `--viz-*-ink` tokens (AA), weight+underline so colour isn't alone |
 | 4 controls docked to the graphic | ✅ controls live in the sticky lab |
-| 5 math beside its consequence | ◑ key equation composed at the relevant beat; full drawer still below |
+| 5 math beside its consequence | ✅ Math view tints symbols to the canvas grammar and composes a live widget beside the claim (`StabilityScale`, `SquaredPenalty`); the collapsed drawer is gone (2026-06-22) |
 | 6 one composed peak visual | ✅ the lab is the page's face; GD line↔surface view swap |
 | 7 calm density | ◑ grid discipline in place; untested at a genuinely dense exhibit |
-| 8 warm one-action onboarding | ◑ "grab a point", "press play" beats; no persona/art yet |
+| 8 warm one-action onboarding | ◑ "grab a point", "press play" beats; the Check now closes on an earned-mastery payoff; no persona/art yet |
 
 **Deferred (not Stream 2):** the GD conditioning/eigen small-multiples from the
 Distill teardown; persona/character warmth; and the honest re-baseline + verdict,
@@ -81,3 +81,32 @@ an independent pass, not self-assessed here.
 **Follow-up owed:** narration audio was regenerated for the new prose; the
 Playwright screenshot baselines were regenerated for darwin only — the committed
 **win32/CI baselines are stale** and must be re-run on that platform.
+
+## Math / Experiment / Check brought up to the stepper's bar (2026-06-22)
+
+The story stepper was the only view composed as an instrument; the other three
+were document-first (the SYNTHESIS finding, applied recursively to our own page).
+This pass closed that gap, proven on gradient-descent then ported to
+linear-regression:
+
+- **Math** went from a plain reading column to *math beside its consequence*
+  (pattern 5, now ✅): symbols tinted to the canvas grammar via a shared
+  `HUE_INK`, and a live widget beside the claim — `StabilityScale` (the η
+  divergence cliff) and `SquaredPenalty` (r→r²). The superseded `MathDrawer`
+  was deleted.
+- **Check** became a graded instrument: a live resolved/total meter, per-item
+  catalogue headers (kind · difficulty · status), and a closing payoff tying the
+  earned mastery to the next journey stop — presentation worthy of the learning
+  loop that the benchmark set lacks (pattern 8 nudged forward).
+- **Experiment** kept its strong canvas-first lab; only its framing was lifted to
+  "the open bench", with the code-mode claim moved to a per-exhibit lede so GD
+  (no code panel) stops over-promising.
+
+Honesty pins extended: `math.test.ts` now fails the build if a tinted term
+matches no text in its block. The new widgets clear the math-tab axe bar. The
+darwin screenshot baselines were unaffected (the snapshots capture the default
+Story view); **win32/CI baselines remain stale** per the note above.
+
+**Still owed (unchanged):** an independent, non-circular review of these reworked
+views against the captured exemplars — this section is the author's account, not
+the verdict.

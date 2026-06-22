@@ -128,10 +128,28 @@ figure inside an article. The page grammar:
    its explanation co-visible and advance by choice, not scroll. The whole story
    fits ~one screen, and the stepper is the page's end — nothing scrolls below it
    but the journey strip.
-5. The deeper layers return to a single reading column (~68ch): math view and
-   concept checks. The page's only coda is the **journey strip** — a single
-   hairline-ruled line (mono position left, next-stop affordance right), kept thin
-   so the story stays the main event.
+5. The deeper layers are **switchable views**, each composed as its own act — not
+   a reading column with a figure pinned in it (the story stepper set this bar; the
+   others now meet it):
+   - **Math** is *math beside its consequence* (pattern 5). Equations are set
+     Unicode in the mono voice the readouts speak, with key symbols tinted to their
+     mark on the canvas (η in the param hue, the miss ŷ−y in error-red) through the
+     shared `HUE_INK`. Where a claim has a live consequence it earns a self-contained
+     widget in the lab's instrument voice: `StabilityScale` (drag a learning rate
+     across the divergence cliff) and `SquaredPenalty` (drag a miss and watch the
+     penalty grow as an area, r→r²). A widget is *explanatory*, never decorative —
+     it turns a stated number into one the reader can cross.
+   - **Experiment** is *the open bench* — the same instrument from the story with
+     the guardrails off. Its framing line names what the bench actually holds, so it
+     never promises a mode the lab lacks.
+   - **Check** is a *graded instrument*: a live "N of M resolved" meter, each item
+     carrying its kind / difficulty / status in the catalogue voice, and a closing
+     payoff panel that ties the mastery just earned to the next journey stop. The
+     learning loop is our edge over the benchmark set, so it earns real presentation.
+
+   Reading prose within these views stays ~65–68ch. The page's only coda is the
+   **journey strip** — a single hairline-ruled line (mono position left, next-stop
+   affordance right), kept thin so the story stays the main event.
 
 **Identity — museum catalogue meets lab instrument.** The placard and the live
 `StatGrid` readouts share one voice: precise mono uppercase micro-labels over
