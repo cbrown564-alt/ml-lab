@@ -29,7 +29,7 @@ export const gradientDescentNarrative: ExhibitNarrative = {
       heading: "Slope, step, repeat",
       paragraphs: [
         "One step is almost embarrassingly simple. The gradient points the way uphill, so the update walks the opposite way: the new parameters are the old ones minus the learning rate times the gradient. That single minus sign is the entire “descent” in gradient descent.",
-        "Notice the gift hidden in the rule. Where the surface is steep the gradient is large and the strides are long; near the valley floor it shrinks and the walk slows itself precisely where care is wanted. You can read that self-throttling in the purple path itself: long strides down the steep outer wall, dwindling to tiny shuffles as it settles into the floor.",
+        "Notice the gift hidden in the rule. The stride is the gradient scaled, so where the surface is steep the steps are long, and near the valley floor — where the gradient fades — they shrink to almost nothing. The walk slows itself precisely where care is wanted. But it rarely glides straight in: this valley is far steeper across than along, so each step overshoots the narrow walls, and the purple path zigzags down the trough, bouncing from side to side as those bounces dwindle into the floor.",
       ],
     },
     {
