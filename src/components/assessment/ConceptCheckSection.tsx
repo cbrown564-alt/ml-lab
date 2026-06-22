@@ -288,10 +288,12 @@ export function ConceptCheckSection({
     <section>
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
         <div className="max-w-[60ch]">
-          <h2 className="text-2xl font-semibold tracking-tight">Check what stuck</h2>
+          <h2 className="text-2xl font-semibold tracking-tight">Explain it</h2>
           <p className="mt-2 leading-relaxed text-ink-muted">
-            A few quick reckonings — recall, a prediction to go verify, and a thing
-            to break with your own hands. The latest answer is the one that counts.
+            The real test isn&apos;t recall — it&apos;s whether you could rebuild
+            this at a whiteboard. Work the checks (the latest answer counts), then
+            the closing transfer: a case you haven&apos;t seen, that only the
+            intuition can solve.
           </p>
         </div>
         {/* The live meter — the bench read as an instrument. */}
@@ -349,9 +351,10 @@ export function ConceptCheckSection({
         <p className="mt-3 max-w-[60ch] leading-relaxed text-ink-muted">
           {allResolved ? (
             <>
-              All {total} resolved — you&apos;ve worked
-              {nodeTitle ? ` ${nodeTitle}` : " this"} from intuition through the
-              math to the failure mode, and the mastery model has the receipts.
+              All {total} resolved — you could now reconstruct
+              {nodeTitle ? ` ${nodeTitle}` : " this"} at a whiteboard: what it does,
+              why, how it breaks, and where it transfers. The mastery model has the
+              receipts.
             </>
           ) : (
             <>

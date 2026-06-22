@@ -11,7 +11,7 @@ test.describe("concept check + mastery", () => {
   }) => {
     await page.goto("/exhibits/linear-regression");
     await expect(page.getByTestId("mastery-badge")).toHaveText("seen"); // hydration
-    await page.getByRole("tab", { name: "Check" }).click();
+    await page.getByRole("tab", { name: "Explain it" }).click();
     const check = page.getByRole("tabpanel", { includeHidden: false });
 
     await check
@@ -37,7 +37,7 @@ test.describe("concept check + mastery", () => {
     const badge = page.getByTestId("mastery-badge");
     await expect(badge).toHaveText("seen");
 
-    await page.getByRole("tab", { name: "Check" }).click();
+    await page.getByRole("tab", { name: "Explain it" }).click();
     const check = page.getByRole("tabpanel", { includeHidden: false });
     await check.getByRole("button", { name: /overshot the valley/ }).click();
     await check
@@ -51,12 +51,12 @@ test.describe("concept check + mastery", () => {
     // The lab task is the last gate: mastery requires actually diverging — and the
     // divergence happens over in the Experiment tab; the task bus carries it back.
     await expect(badge).not.toHaveText("mastered");
-    await page.getByRole("tab", { name: "Experiment" }).click();
+    await page.getByRole("tab", { name: "Run it" }).click();
     await page.getByRole("button", { name: /over the edge/i }).click();
     await page.getByRole("button", { name: "Play" }).click();
     await expect(page.getByText(/This is divergence/)).toBeVisible({ timeout: 15000 });
 
-    await page.getByRole("tab", { name: "Check" }).click();
+    await page.getByRole("tab", { name: "Explain it" }).click();
     await expect(check.getByText(/Done — the experiment felt it/)).toBeVisible();
 
     await expect(badge).toHaveText("mastered");

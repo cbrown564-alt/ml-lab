@@ -2,9 +2,9 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 /**
- * The Math view (docs/01 exhibit anatomy — the formal treatment is its own tab
- * now, not a collapsed drawer) and the small-screen notice (docs/01 experience
- * principles).
+ * The mechanism (the formal treatment) — now composed inside the Run it act as a
+ * coordinated representation of the same model, not a separate tab or a collapsed
+ * drawer — and the small-screen notice (docs/01 experience principles).
  */
 
 const EXHIBITS = [
@@ -19,16 +19,16 @@ const EXHIBITS = [
 ];
 
 for (const { route, equation } of EXHIBITS) {
-  test(`the Math view on ${route} presents the formal treatment`, async ({ page }) => {
+  test(`the mechanism on ${route} presents the formal treatment in Run it`, async ({ page }) => {
     await page.goto(route);
-    // Hydration sentinel: the tabs are client-side, so wait before switching.
+    // Hydration sentinel: the acts are client-side, so wait before switching.
     await expect(page.getByTestId("mastery-badge")).toHaveText("seen");
 
-    // A deliberate tab — intuition first, formalism on demand. Until it's
-    // opened, the formal equation isn't even mounted.
+    // Intuition first, formalism on demand: the maths sits inside Run it, so the
+    // formal equation isn't even mounted until that act is opened.
     await expect(page.getByText(equation)).toBeHidden();
 
-    await page.getByRole("tab", { name: "Math" }).click();
+    await page.getByRole("tab", { name: "Run it" }).click();
     const math = page.getByRole("tabpanel", { includeHidden: false });
     await expect(math.getByText(equation)).toBeVisible();
 

@@ -58,31 +58,51 @@ test.describe("linear-regression exhibit", () => {
   });
 
   test("the outlier failure scenario loads its dataset and prompt", async ({ page }) => {
-    await openTab(page, "Experiment");
+    await openTab(page, "Run it");
     await page.getByRole("button", { name: /tyranny of the outlier/i }).click();
     await expect(page.getByText(/Two rogue points have wandered in/)).toBeVisible();
     await expect(plot(page).locator("circle")).toHaveCount(30); // with-outliers fixture
     await expect(page).toHaveScreenshot("exhibit-outlier-scenario.png");
   });
 
-  test("the Break-it gallery renders structured failure cards", async ({ page }) => {
+  test("Break it is a live failure loop, backed by the field guide", async ({ page }) => {
     await openTab(page, "Break it");
-    await expect(panel(page).getByRole("heading", { name: "Break it", level: 2 })).toBeVisible();
-    // Both cards, tagged with their reusable taxonomy primitive.
+    // The interactive lab leads: a trigger to wreck the fit, a repair, a status.
+    await expect(panel(page).getByText(/break it on purpose/i)).toBeVisible();
+    await expect(panel(page).getByRole("button", { name: /snap it back/i })).toBeVisible();
+    await expect(panel(page).getByText("Honest fit", { exact: true })).toBeVisible();
+    // The field guide catalogues the failure modes beneath the loop.
     await expect(
-      panel(page).getByRole("heading", { name: /tyranny of the outlier/i, level: 3 }),
-    ).toBeVisible();
-    await expect(
-      panel(page).getByRole("heading", { name: /two features that move together/i, level: 3 }),
+      panel(page).getByRole("heading", { name: /every way it breaks/i }),
     ).toBeVisible();
     await expect(panel(page).getByText("Outliers", { exact: true })).toBeVisible();
     await expect(panel(page).getByText("Collinearity", { exact: true })).toBeVisible();
-    // The diagnostic prompt — the active-learning step — appears once per card.
+    // Each field-guide card poses the diagnostic step.
     await expect(panel(page).getByText("Diagnose", { exact: true })).toHaveCount(2);
   });
 
+  test("wrecking the fit by hand fires the diagnosis; repair recovers it", async ({ page }) => {
+    await openTab(page, "Break it");
+    const breakPlot = panel(page).getByRole("group", { name: /least-squares line/ });
+    const pt = breakPlot.locator("circle").nth(3);
+    await pt.scrollIntoViewIfNeeded();
+    const box = (await pt.boundingBox())!;
+    // Drag the point far off the trend — a big enough miss to wreck the fit.
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width / 2, box.y - 240, { steps: 12 });
+    await page.mouse.up();
+
+    await expect(panel(page).getByText("Fit wrecked", { exact: true })).toBeVisible();
+    await expect(panel(page).getByText(/it broke/i)).toBeVisible();
+
+    // Repair: snap the cloud back, and the loop reports recovery.
+    await panel(page).getByRole("button", { name: /snap it back/i }).click();
+    await expect(panel(page).getByText("Recovered", { exact: true })).toBeVisible();
+  });
+
   test("reset restores the original data", async ({ page }) => {
-    await openTab(page, "Experiment");
+    await openTab(page, "Run it");
     const before = await plot(page).getAttribute("aria-label");
 
     const point = plot(page).locator("circle").first();
@@ -99,7 +119,7 @@ test.describe("linear-regression exhibit", () => {
   });
 
   test("the dataset painter adds and removes points", async ({ page }) => {
-    await openTab(page, "Experiment");
+    await openTab(page, "Run it");
     await page.getByRole("button", { name: /paint your own data/i }).click();
     const svg = plot(page);
     await expect(svg.locator("circle")).toHaveCount(0);
@@ -129,13 +149,13 @@ test.describe("linear-regression exhibit", () => {
   });
 
   test("the mode preference persists across a reload", async ({ page }) => {
-    await openTab(page, "Experiment");
+    await openTab(page, "Run it");
     await page.getByRole("button", { name: /^code$/i }).click();
     await expect(page.getByLabel("Python code mirroring the experiment")).toBeVisible();
 
     await page.reload();
     await expect(page.getByTestId("mastery-badge")).toHaveText("seen");
-    await openTab(page, "Experiment");
+    await openTab(page, "Run it");
     // The persisted mode means the Experiment reopens straight into Code.
     await expect(page.getByLabel("Python code mirroring the experiment")).toBeVisible();
   });
@@ -145,12 +165,12 @@ test.describe("linear-regression exhibit", () => {
   });
 
   test("evicting the outliers completes the lab task", async ({ page }) => {
-    await openTab(page, "Check");
+    await openTab(page, "Explain it");
     const task = panel(page).locator("li", { hasText: "Make the tyranny stop" });
     await expect(task.getByText(/Waiting on the experiment/)).toBeVisible();
 
     // The manipulation lives in the Experiment tab; the task bus connects them.
-    await openTab(page, "Experiment");
+    await openTab(page, "Run it");
     await page.getByRole("button", { name: /tyranny of the outlier/i }).click();
     const svg = plot(page);
     await svg.scrollIntoViewIfNeeded();
@@ -176,13 +196,13 @@ test.describe("linear-regression exhibit", () => {
     await evictExtreme("min");
     await evictExtreme("max");
 
-    await openTab(page, "Check");
+    await openTab(page, "Explain it");
     await expect(task.getByText(/Done — the experiment felt it/)).toBeVisible();
     await expect(task.getByText(/snapped back to the crowd/)).toBeVisible();
   });
 
   test("the predict item reveals the verify step after answering", async ({ page }) => {
-    await openTab(page, "Check");
+    await openTab(page, "Explain it");
     const item = panel(page).locator("li", { hasText: "wanders twice as far" });
     await expect(item.getByText(/Now verify it/)).not.toBeVisible();
     await item.getByRole("button", { name: /four times as big/ }).click();
@@ -191,10 +211,13 @@ test.describe("linear-regression exhibit", () => {
   });
 
   test("the error view switches between hidden, lines, and squares", async ({ page }) => {
-    await openTab(page, "Experiment");
-    const dashed = panel(page).locator("svg line[stroke-dasharray]");
-    const squares = panel(page).locator("svg rect[stroke]");
-    // The Experiment opens on residual lines (its default error view).
+    await openTab(page, "Run it");
+    // Scope to the bench plot: Run it also holds the maths (a SquaredPenalty
+    // widget renders its own square), so the error-view marks must come from the
+    // fitted-line plot, not the whole act.
+    const dashed = plot(page).locator("line[stroke-dasharray]");
+    const squares = plot(page).locator("rect[stroke]");
+    // The bench opens on residual lines (its default error view).
     await expect(dashed).not.toHaveCount(0);
     await expect(squares).toHaveCount(0);
 
@@ -212,7 +235,7 @@ test.describe("linear-regression exhibit", () => {
   });
 
   test("the outlier scenario stages the squared-error punchline", async ({ page }) => {
-    await openTab(page, "Experiment");
+    await openTab(page, "Run it");
     await page.getByRole("button", { name: /tyranny of the outlier/i }).click();
     // The error view switches itself to squares: the outlier's giant square
     // dwarfing every other penalty is the lesson. (They appear after the

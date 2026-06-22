@@ -76,15 +76,40 @@ function Card({ card }: { card: FailureCard }) {
   );
 }
 
-export function FailureGallery({ gallery }: { gallery: Gallery }) {
+export function FailureGallery({
+  gallery,
+  asFieldGuide = false,
+}: {
+  gallery: Gallery;
+  /** When the interactive Break-it lab leads the act, the gallery is the
+   * reference catalogue beneath it — the field guide, not the headline. */
+  asFieldGuide?: boolean;
+}) {
   return (
     <section>
       <div className="max-w-[68ch]">
-        <h2 className="text-2xl font-semibold tracking-tight">Break it</h2>
-        <p className="mt-2 leading-relaxed text-ink-muted">
-          {gallery.intro ??
-            "The happy path is the easy part. A concept isn't understood until you know its operating envelope — how it breaks, what the symptom looks like, and which assumption gave way. Each card is a failure you can trigger, name, and repair."}
-        </p>
+        {asFieldGuide ? (
+          <>
+            <p className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
+              The field guide
+            </p>
+            <h3 className="mt-3 text-2xl font-semibold tracking-tight">
+              Every way it breaks
+            </h3>
+            <p className="mt-2 leading-relaxed text-ink-muted">
+              {gallery.intro ??
+                "The one you just drove, and the others worth recognising — each as the same drill: what triggers it, the symptom to spot, which assumption gave way, and the repair (and when the repair is itself the wrong move)."}
+            </p>
+          </>
+        ) : (
+          <>
+            <h2 className="text-2xl font-semibold tracking-tight">Break it</h2>
+            <p className="mt-2 leading-relaxed text-ink-muted">
+              {gallery.intro ??
+                "The happy path is the easy part. A concept isn't understood until you know its operating envelope — how it breaks, what the symptom looks like, and which assumption gave way. Each card is a failure you can trigger, name, and repair."}
+            </p>
+          </>
+        )}
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">

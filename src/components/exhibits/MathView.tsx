@@ -92,7 +92,10 @@ export function MathView({ math }: { math: MathDrawerContent }) {
 
   return (
     <section className="max-w-[72ch]">
-      <h2 className="text-3xl font-semibold tracking-tight">The math</h2>
+      <p className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
+        The mechanism · the same model, as maths
+      </p>
+      <h2 className="mt-3 text-2xl font-semibold tracking-tight">Read it as maths</h2>
       <p className="mt-4 text-lg leading-relaxed text-ink-muted">{math.invitation}</p>
 
       {math.sections.map((s) => (

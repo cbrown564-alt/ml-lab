@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ConceptCheckSection, type CheckNext } from "@/components/assessment/ConceptCheckSection";
-import { ExhibitShell, type ExhibitViewDef } from "@/components/exhibits/ExhibitShell";
+import { ExhibitSpine, type ExhibitAct } from "@/components/exhibits/ExhibitSpine";
 import { FailureGallery } from "@/components/exhibits/FailureGallery";
 import { MathView } from "@/components/exhibits/MathView";
 import { SpecimenPlacard } from "@/components/exhibits/SpecimenPlacard";
@@ -19,18 +19,29 @@ import { edges } from "@content/graph/edges";
 import { journeys } from "@content/journeys/foundations";
 
 /**
- * Exhibit page template (Stream 2, iteration 2). An exhibit is a set of distinct,
- * switchable views — never a hero that snaps into a narrow appendix:
+ * Exhibit page template. The page is organised around the product promise made
+ * structural — a guided four-act spine the learner advances through (the report's
+ * 20-minute choreography), not a pile of tabs:
  *
- *   Story       guided scrollytelling; the graphic is scroll-driven, the prose
- *               explains, interaction is minimal and direct.
- *   Math        the formal treatment, composed as its own act.
- *   Experiment  the open sandbox — every scenario, paint your own data, code.
- *   Check       the capstone.
+ *   ① See it      form the mental model — the guided visual story (StoryStepper).
+ *   ② Run it      inspect the implementation — the open bench + the same model's
+ *                 mechanism (the maths), coordinated representations of one state.
+ *   ③ Break it    learn the operating envelope — the structured failure gallery.
+ *   ④ Explain it  prove transfer — the concept check, closing on the whiteboard.
  *
- * The masthead and the graph coda frame all of them. The page supplies its lede,
- * its narrative + spine, its guided `story` graphic, and its full `experiment`.
+ * The specimen masthead orients (where this sits in the graph) and the journey
+ * coda advances; between them runs the spine. The page supplies its lede, its
+ * narrative + spine beats, its guided `story` graphic, and its full `experiment`.
  */
+
+/** The four modes' purpose lines — lab-wide, so the promise reads identically
+ * on every page. */
+const ACT_PURPOSE = {
+  see: "Form the mental model",
+  run: "Inspect the implementation",
+  break: "Learn the operating envelope",
+  explain: "Prove transfer",
+} as const;
 
 export function ExhibitFrame({
   nodeId,
@@ -45,6 +56,7 @@ export function ExhibitFrame({
   experiment,
   experimentLede,
   failures,
+  breakIt,
 }: {
   nodeId: string;
   /** The exhibit's opening prose — the one part of the chrome that is content. */
@@ -77,11 +89,17 @@ export function ExhibitFrame({
    */
   experimentLede?: ReactNode;
   /**
-   * The failure gallery: structured "Break it" cards (docs/07-failure-taxonomy).
-   * Optional — when present, the exhibit gains a Break-it view between the bench
-   * and the Check, completing the See/Run/Break/Explain arc.
+   * The failure gallery: structured failure cards (docs/07-failure-taxonomy) —
+   * the field guide that backs the Break-it act.
    */
   failures?: FailureGalleryContent;
+  /**
+   * The interactive Break-it lab: a live, guided failure loop the learner drives
+   * (trigger → symptom → diagnose → repair). It leads the Break-it act, with the
+   * `failures` cards as the field guide beneath. Optional — without it the act
+   * falls back to the cards alone. This is the report's differentiating surface.
+   */
+  breakIt?: ReactNode;
 }) {
   const node = nodes.find((n) => n.id === nodeId);
   if (!node) throw new Error(`ExhibitFrame: no graph node with id "${nodeId}"`);
@@ -141,21 +159,29 @@ export function ExhibitFrame({
     <StoryStepper beats={beats} graphic={story} fieldNotes={narrative.fieldNotes} />
   );
 
-  const experimentView = (
+  // Run it — inspect the implementation. The open bench leads (drive it, and read
+  // it back as code where the lab offers that), then the same model's mechanism in
+  // maths: coordinated representations of one canonical state, not separate views.
+  const runView = (
     <div>
       <div className="max-w-[68ch]">
-        <h2 className="text-2xl font-semibold tracking-tight">The open bench</h2>
-        <p className="mt-2 leading-relaxed text-ink-muted">
+        <p className="text-lg leading-relaxed text-ink-muted">
           {experimentLede ?? (
             <>
               Guardrails off. Switch scenarios, build your own data, and turn the
               knobs — the same instrument from the story, now yours to push past
-              where the walk-through stopped.
+              where the walk-through stopped. Then read the very same model as the
+              maths underneath it.
             </>
           )}
         </p>
       </div>
       <div className="mt-6">{experiment}</div>
+      {math && (
+        <div className="mt-14 border-t border-line pt-12">
+          <MathView math={math} />
+        </div>
+      )}
     </div>
   );
 
@@ -172,18 +198,44 @@ export function ExhibitFrame({
       : { title: "the map", href: undefined, live: false }
     : undefined;
 
-  const views: ExhibitViewDef[] = [
-    { id: "story", label: "Story", content: storyView },
-    ...(math ? [{ id: "math", label: "Math", content: <MathView math={math} /> }] : []),
-    { id: "experiment", label: "Experiment", content: experimentView },
-    ...(failures
-      ? [{ id: "break-it", label: "Break it", content: <FailureGallery gallery={failures} /> }]
+  // The four-act spine. See it and Run it are always present; Break it and Explain
+  // it appear when the exhibit carries a failure gallery / a concept check.
+  const acts: ExhibitAct[] = [
+    { id: "see", label: "See it", purpose: ACT_PURPOSE.see, content: storyView },
+    { id: "run", label: "Run it", purpose: ACT_PURPOSE.run, content: runView },
+    ...(breakIt || failures
+      ? [
+          {
+            id: "break",
+            label: "Break it",
+            purpose: ACT_PURPOSE.break,
+            content: (
+              <div>
+                <div className="max-w-[68ch]">
+                  <p className="text-lg leading-relaxed text-ink-muted">
+                    A concept isn&apos;t yours until you know its operating envelope.
+                    Drive it past the edge with your own hands, watch exactly how it
+                    breaks, name the cause, then repair it — the loop that turns a
+                    fact into intuition.
+                  </p>
+                </div>
+                {breakIt && <div className="mt-6">{breakIt}</div>}
+                {failures && (
+                  <div className={breakIt ? "mt-16 border-t border-line pt-12" : "mt-6"}>
+                    <FailureGallery gallery={failures} asFieldGuide={!!breakIt} />
+                  </div>
+                )}
+              </div>
+            ),
+          },
+        ]
       : []),
     ...(check
       ? [
           {
-            id: "check",
-            label: "Check",
+            id: "explain",
+            label: "Explain it",
+            purpose: ACT_PURPOSE.explain,
             content: (
               <div className="max-w-[68ch]">
                 <ConceptCheckSection
@@ -240,8 +292,15 @@ export function ExhibitFrame({
         />
       </header>
 
-      <div className="mt-12">
-        <ExhibitShell views={views} />
+      {/* The spine: the product promise made structural. The learner works the
+          exhibit in four passes — see it, run it, break it, explain it. */}
+      <div className="mt-14">
+        <p className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
+          Work it in four passes
+        </p>
+        <div className="mt-4">
+          <ExhibitSpine acts={acts} />
+        </div>
       </div>
 
       {/* The coda is the forward motion — where to go next, as one thin strip so

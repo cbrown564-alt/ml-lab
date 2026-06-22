@@ -8,9 +8,9 @@ import { expect, test } from "@playwright/test";
  */
 
 test.describe("code mode", () => {
-  // The Visual/Code toggle lives in the Experiment tab (the open sandbox).
+  // The Visual/Code toggle lives in the Run it act (the open bench).
   const openCode = async (page: import("@playwright/test").Page) => {
-    await page.getByRole("tab", { name: "Experiment" }).click();
+    await page.getByRole("tab", { name: "Run it" }).click();
     await page.getByRole("button", { name: "code", exact: true }).click();
   };
 
@@ -30,7 +30,7 @@ test.describe("code mode", () => {
     // First run downloads the Pyodide runtime from CDN.
     test.slow();
     await page.goto("/exhibits/linear-regression");
-    await page.getByRole("tab", { name: "Experiment" }).click();
+    await page.getByRole("tab", { name: "Run it" }).click();
 
     // The visual fit, read from the plot's accessible name (2 decimals).
     const plot = page

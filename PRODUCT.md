@@ -78,8 +78,8 @@ Learners can wander freely through the graph or follow curated journeys. Guidanc
 
 ## Product Surfaces
 
-- Home: orientation, live exhibits, knowledge map, and guided journey entry.
-- Exhibit page: graph-aware concept page with lede, hook, experiment island, story, checks, field notes, and onward links.
+- Home: orientation, live exhibits, knowledge map, guided journey entry, and the four-mode method made visible at the front door.
+- Exhibit page: a graph-aware concept page organised around the **four-act spine** — **See it** (the guided visual story), **Run it** (the open bench + the same model's mechanism in maths), **Break it** (a live, guided failure loop the learner drives — trigger → symptom → diagnose → repair — backed by a failure field guide), **Explain it** (the concept check, closing on a transfer case and the whiteboard) — framed by the specimen masthead (orientation) and the journey coda (forward motion). The spine *is* the navigation: the promise made structural.
 - Experiment visual mode: direct manipulation, scenarios, state readouts, steppable time where relevant.
 - Experiment code mode: Python via Pyodide, mirroring the same model and dataset where feasible.
 - Graph explorer: a map of open doors and future territory.

@@ -1,4 +1,5 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { GradientDescentBreakIt } from "@/components/exhibits/GradientDescentBreakIt";
 import { GradientDescentHero } from "@/components/exhibits/GradientDescentHero";
 import { GradientDescentLab } from "@/components/exhibits/GradientDescentLab";
 import { GradientDescentStory } from "@/components/exhibits/GradientDescentStory";
@@ -17,6 +18,7 @@ export default function GradientDescentExhibit() {
       spine={gradientDescentSpine}
       math={gradientDescentMath}
       failures={gradientDescentFailures}
+      breakIt={<GradientDescentBreakIt />}
       hero={<GradientDescentHero />}
       lede={
         <p>

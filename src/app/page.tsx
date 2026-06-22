@@ -138,6 +138,36 @@ export default function Home() {
           </svg>
         </section>
 
+        {/* The method, made visible at the front door: every exhibit is worked in
+            four passes. The product's promise, not a tagline. */}
+        <section className="border-t border-line py-12">
+          <p className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
+            How every exhibit works
+          </p>
+          <ol className="mt-6 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+            {(
+              [
+                ["See it", "Form the mental model — the visual intuition, before the math."],
+                ["Run it", "Inspect the implementation — drive the model, read it as code and maths."],
+                ["Break it", "Learn the operating envelope — trigger the failures and diagnose them."],
+                ["Explain it", "Prove transfer — reconstruct the idea on a fresh, unseen case."],
+              ] as const
+            ).map(([verb, gloss], i) => (
+              <li key={verb} className="flex gap-3">
+                <span className="mt-0.5 font-mono text-sm text-ink-faint tabular-nums">
+                  {`0${i + 1}`}
+                </span>
+                <span>
+                  <span className="block font-semibold tracking-tight">{verb}</span>
+                  <span className="mt-1 block text-sm leading-relaxed text-ink-muted">
+                    {gloss}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        </section>
+
         <NextStep />
 
         <section id="exhibits" className="scroll-mt-8 border-t border-line py-16">

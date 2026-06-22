@@ -12,7 +12,7 @@ import { expect, test, type Page } from "@playwright/test";
  */
 
 const openExperiment = async (page: Page) => {
-  await page.getByRole("tab", { name: "Experiment" }).click();
+  await page.getByRole("tab", { name: "Run it" }).click();
   await expect(page.getByRole("button", { name: "Step", exact: true })).toBeVisible();
 };
 
@@ -85,8 +85,9 @@ test.describe("gradient-descent exhibit", () => {
 
   test("the learning-rate knob is live", async ({ page }) => {
     await openExperiment(page);
-    // The slider moves through exponents; -3 on the track is 1e-3.
-    await page.getByLabel("Learning rate").fill("-3");
+    // The slider moves through exponents; -3 on the track is 1e-3. The bench knob
+    // is first — the maths below has its own η scale (StabilityScale).
+    await page.getByLabel("Learning rate").first().fill("-3");
     await expect(page.getByText("0.0010")).toBeVisible();
   });
 
@@ -130,5 +131,17 @@ test.describe("gradient-descent exhibit", () => {
     await page.getByRole("button", { name: /too timid/i }).click();
     await expect(page.getByRole("img", { name: /at step 0:/ })).toBeVisible();
     await expect(page.getByText("1e-6")).toBeVisible();
+  });
+
+  test("Break it: driving the rate over the edge diverges and fires the diagnosis", async ({ page }) => {
+    await page.getByRole("tab", { name: "Break it" }).click();
+    const panel = page.getByRole("tabpanel", { includeHidden: false });
+    // The learning-rate knob is the first slider in the act (the scrub is the other).
+    const lr = panel.getByRole("slider").first();
+    await lr.focus();
+    for (let i = 0; i < 40; i++) await page.keyboard.press("End"); // push to the max rate
+    await panel.getByRole("button", { name: /replay/i }).click();
+    await expect(panel.getByText("Diverged")).toBeVisible({ timeout: 15000 });
+    await expect(panel.getByText(/it broke/i)).toBeVisible();
   });
 });
