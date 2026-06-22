@@ -142,6 +142,13 @@ figure inside an article. The page grammar:
    - **Experiment** is *the open bench* — the same instrument from the story with
      the guardrails off. Its framing line names what the bench actually holds, so it
      never promises a mode the lab lacks.
+   - **Break it** is the failure gallery (optional, present when an exhibit carries
+     one): structured diagnostic cards — Trigger → Symptom → Diagnose → Repair →
+     Boundary — each bound to a reusable failure-taxonomy primitive (docs/07). It is
+     the "Break it" beat of the product promise (See it · Run it · Break it · Explain
+     it), and it makes failure diagnosis a recognisable, reusable surface rather than
+     a list of caveats. The error hue marks the symptom; the diagnosis is posed as a
+     question (the active-learning step).
    - **Check** is a *graded instrument*: a live "N of M resolved" meter, each item
      carrying its kind / difficulty / status in the catalogue voice, and a closing
      payoff panel that ties the mastery just earned to the next journey stop. The

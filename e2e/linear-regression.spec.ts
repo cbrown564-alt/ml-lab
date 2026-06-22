@@ -65,6 +65,22 @@ test.describe("linear-regression exhibit", () => {
     await expect(page).toHaveScreenshot("exhibit-outlier-scenario.png");
   });
 
+  test("the Break-it gallery renders structured failure cards", async ({ page }) => {
+    await openTab(page, "Break it");
+    await expect(panel(page).getByRole("heading", { name: "Break it", level: 2 })).toBeVisible();
+    // Both cards, tagged with their reusable taxonomy primitive.
+    await expect(
+      panel(page).getByRole("heading", { name: /tyranny of the outlier/i, level: 3 }),
+    ).toBeVisible();
+    await expect(
+      panel(page).getByRole("heading", { name: /two features that move together/i, level: 3 }),
+    ).toBeVisible();
+    await expect(panel(page).getByText("Outliers", { exact: true })).toBeVisible();
+    await expect(panel(page).getByText("Collinearity", { exact: true })).toBeVisible();
+    // The diagnostic prompt — the active-learning step — appears once per card.
+    await expect(panel(page).getByText("Diagnose", { exact: true })).toHaveCount(2);
+  });
+
   test("reset restores the original data", async ({ page }) => {
     await openTab(page, "Experiment");
     const before = await plot(page).getAttribute("aria-label");

@@ -3,6 +3,7 @@ import { LinearRegressionHero } from "@/components/exhibits/LinearRegressionHero
 import { LinearRegressionLab } from "@/components/exhibits/LinearRegressionLab";
 import { LinearRegressionStory } from "@/components/exhibits/LinearRegressionStory";
 import { linearRegressionCheck } from "@content/exhibits/linear-regression/concept-check";
+import { linearRegressionFailures } from "@content/exhibits/linear-regression/failures";
 import { linearRegressionMath } from "@content/exhibits/linear-regression/math";
 import { linearRegressionNarrative } from "@content/exhibits/linear-regression/narrative";
 import { linearRegressionSpine } from "@content/exhibits/linear-regression/spine";
@@ -15,6 +16,7 @@ export default function LinearRegressionExhibit() {
       narrative={linearRegressionNarrative}
       spine={linearRegressionSpine}
       math={linearRegressionMath}
+      failures={linearRegressionFailures}
       hero={<LinearRegressionHero />}
       lede={
         <p>

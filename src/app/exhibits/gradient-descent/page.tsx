@@ -3,6 +3,7 @@ import { GradientDescentHero } from "@/components/exhibits/GradientDescentHero";
 import { GradientDescentLab } from "@/components/exhibits/GradientDescentLab";
 import { GradientDescentStory } from "@/components/exhibits/GradientDescentStory";
 import { gradientDescentCheck } from "@content/exhibits/gradient-descent/concept-check";
+import { gradientDescentFailures } from "@content/exhibits/gradient-descent/failures";
 import { gradientDescentMath } from "@content/exhibits/gradient-descent/math";
 import { gradientDescentNarrative } from "@content/exhibits/gradient-descent/narrative";
 import { gradientDescentSpine } from "@content/exhibits/gradient-descent/spine";
@@ -15,6 +16,7 @@ export default function GradientDescentExhibit() {
       narrative={gradientDescentNarrative}
       spine={gradientDescentSpine}
       math={gradientDescentMath}
+      failures={gradientDescentFailures}
       hero={<GradientDescentHero />}
       lede={
         <p>

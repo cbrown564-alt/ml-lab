@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ConceptCheckSection, type CheckNext } from "@/components/assessment/ConceptCheckSection";
 import { ExhibitShell, type ExhibitViewDef } from "@/components/exhibits/ExhibitShell";
+import { FailureGallery } from "@/components/exhibits/FailureGallery";
 import { MathView } from "@/components/exhibits/MathView";
 import { SpecimenPlacard } from "@/components/exhibits/SpecimenPlacard";
 import { StoryStepper } from "@/components/exhibits/StoryStepper";
@@ -9,6 +10,7 @@ import { RecordVisit } from "@/components/learner/RecordVisit";
 import type { ConceptCheck } from "@/lib/assessment/schema";
 import type { Beat, BeatView } from "@/lib/exhibit/spine";
 import type { ExhibitNarrative } from "@/lib/narrative/schema";
+import type { FailureGallery as FailureGalleryContent } from "@/lib/failure/schema";
 import type { MathDrawerContent } from "@/lib/narrative/math";
 import { audioManifests } from "@content/exhibits/audio";
 import { isLive, liveExhibits } from "@content/exhibits";
@@ -42,6 +44,7 @@ export function ExhibitFrame({
   story,
   experiment,
   experimentLede,
+  failures,
 }: {
   nodeId: string;
   /** The exhibit's opening prose — the one part of the chrome that is content. */
@@ -73,6 +76,12 @@ export function ExhibitFrame({
    * Optional — defaults to the scenario/knobs framing every lab shares.
    */
   experimentLede?: ReactNode;
+  /**
+   * The failure gallery: structured "Break it" cards (docs/07-failure-taxonomy).
+   * Optional — when present, the exhibit gains a Break-it view between the bench
+   * and the Check, completing the See/Run/Break/Explain arc.
+   */
+  failures?: FailureGalleryContent;
 }) {
   const node = nodes.find((n) => n.id === nodeId);
   if (!node) throw new Error(`ExhibitFrame: no graph node with id "${nodeId}"`);
@@ -167,6 +176,9 @@ export function ExhibitFrame({
     { id: "story", label: "Story", content: storyView },
     ...(math ? [{ id: "math", label: "Math", content: <MathView math={math} /> }] : []),
     { id: "experiment", label: "Experiment", content: experimentView },
+    ...(failures
+      ? [{ id: "break-it", label: "Break it", content: <FailureGallery gallery={failures} /> }]
+      : []),
     ...(check
       ? [
           {
