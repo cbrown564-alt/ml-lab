@@ -124,7 +124,10 @@ export function ExhibitFrame({
       ) : (
         <StoryScroller beats={beats} graphic={story} />
       )}
-      {narrative.fieldNotes.length > 0 && (
+      {/* Field notes were the scroll's natural epilogue. The stepper is meant to
+          be the page's end — nothing scrolls below it — so they render only for
+          the scroll layout. (Re-homing them for the stepper is still open.) */}
+      {storyLayout === "scroll" && narrative.fieldNotes.length > 0 && (
         <section className="mt-20 max-w-[68ch] border-t border-line pt-8">
           <h2 className="text-sm font-medium tracking-wide text-ink-faint uppercase">
             Field notes
@@ -221,49 +224,49 @@ export function ExhibitFrame({
         <ExhibitShell views={views} />
       </div>
 
-      {/* The coda is the forward motion — where to go next. Where this sits in
-          the graph is the placard's job, up in the masthead. */}
-      <div className="mt-24 max-w-[68ch]">
-        {journey && (
-          <section className="rounded-xl border border-line bg-raised p-6">
-            <p className="font-mono text-xs tracking-widest text-ink-faint uppercase">
-              Journey · {journey.title} · stop {stopIndex + 1} of {journey.stops.length}
-            </p>
+      {/* The coda is the forward motion — where to go next, as one thin strip so
+          the story (above) stays the page's main event. Where this sits in the
+          graph is the placard's job, up in the masthead. */}
+      {journey && (
+        <section className="mt-16 flex flex-col gap-2 border-t border-line pt-5 text-sm sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+          <p className="font-mono text-xs tracking-widest text-ink-faint uppercase">
+            Journey · {journey.title} · stop {stopIndex + 1} of {journey.stops.length}
+          </p>
+          <p className="text-ink-muted">
             {nextStop ? (
               isLive(nextStop.id) ? (
-                <p className="mt-3">
-                  <Link
-                    href={liveExhibits[nextStop.id].href}
-                    className="font-medium text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2"
-                  >
-                    Continue the journey: {nextStop.title} →
-                  </Link>
-                  <span className="mt-1 block text-sm leading-relaxed text-ink-muted">
-                    {nextStop.oneLiner}
-                  </span>
-                </p>
+                <Link
+                  href={liveExhibits[nextStop.id].href}
+                  className="font-medium text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2"
+                >
+                  Continue: {nextStop.title} →
+                </Link>
               ) : (
-                <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-                  The next stop, <span className="font-medium text-ink">{nextStop.title}</span>,
-                  isn&apos;t open yet —{" "}
-                  <Link href="/#map" className="text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2">
-                    browse the map
-                  </Link>{" "}
-                  for an open door, or follow the connections in the record above.
-                </p>
+                <>
+                  Next: <span className="text-ink">{nextStop.title}</span>
+                  {" isn’t open yet — "}
+                  <Link
+                    href="/#map"
+                    className="text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2"
+                  >
+                    browse the map →
+                  </Link>
+                </>
               )
             ) : (
-              <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-                This is the journey&apos;s final stop.{" "}
-                <Link href="/#map" className="text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2">
-                  Back to the map
-                </Link>{" "}
-                to pick your next territory.
-              </p>
+              <>
+                Journey complete —{" "}
+                <Link
+                  href="/#map"
+                  className="text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2"
+                >
+                  back to the map →
+                </Link>
+              </>
             )}
-          </section>
-        )}
-      </div>
+          </p>
+        </section>
+      )}
     </main>
   );
 }
