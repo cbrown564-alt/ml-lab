@@ -57,6 +57,7 @@ export function ExhibitFrame({
   experimentLede,
   failures,
   breakIt,
+  checkCompanion,
 }: {
   nodeId: string;
   /** The exhibit's opening prose — the one part of the chrome that is content. */
@@ -100,6 +101,12 @@ export function ExhibitFrame({
    * falls back to the cards alone. This is the report's differentiating surface.
    */
   breakIt?: ReactNode;
+  /**
+   * A compact live instrument pinned beside the Explain-it checks, so the learner
+   * answers against the running model rather than from memory — and the act's
+   * canvas is composed, not a void. Optional; without it the checks fill one column.
+   */
+  checkCompanion?: ReactNode;
 }) {
   const node = nodes.find((n) => n.id === nodeId);
   if (!node) throw new Error(`ExhibitFrame: no graph node with id "${nodeId}"`);
@@ -236,13 +243,19 @@ export function ExhibitFrame({
             id: "explain",
             label: "Explain it",
             purpose: ACT_PURPOSE.explain,
-            content: (
+            content: checkCompanion ? (
+              // Composed onto the canvas: the checks hold the left column, a live
+              // instrument is pinned in the right so the learner answers against the
+              // running model — no dead canvas at the climax.
+              <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,400px)] lg:items-start lg:gap-12">
+                <div className="max-w-[64ch]">
+                  <ConceptCheckSection check={check} nodeTitle={node.title} next={checkNext} />
+                </div>
+                <div className="mt-10 lg:mt-0 lg:sticky lg:top-8">{checkCompanion}</div>
+              </div>
+            ) : (
               <div className="max-w-[68ch]">
-                <ConceptCheckSection
-                  check={check}
-                  nodeTitle={node.title}
-                  next={checkNext}
-                />
+                <ConceptCheckSection check={check} nodeTitle={node.title} next={checkNext} />
               </div>
             ),
           },

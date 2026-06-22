@@ -101,6 +101,30 @@ test.describe("linear-regression exhibit", () => {
     await expect(panel(page).getByText("Recovered", { exact: true })).toBeVisible();
   });
 
+  test("See it enforces a committed prediction before the reveal", async ({ page }) => {
+    // Beat 2 (the residuals) carries the predict-then-verify commit (template-level).
+    await panel(page).getByRole("button", { name: /Beat 2 of/ }).click();
+    await expect(panel(page).getByText(/Predict first/i)).toBeVisible();
+    await panel(page).getByRole("button", { name: /four times as much/i }).click();
+    await expect(panel(page).getByText(/You're right/)).toBeVisible();
+  });
+
+  test("Explain it pins a live companion model to answer against", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/Answer against the live model/i)).toBeVisible();
+    const companion = panel(page).getByRole("group", { name: /live least-squares model/i });
+    await expect(companion).toBeVisible();
+    // Dragging a companion point moves the live readout — it's a real instrument.
+    const before = await companion.getAttribute("aria-label");
+    const pt = companion.locator("circle").nth(3);
+    const box = (await pt.boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width / 2, box.y - 120, { steps: 8 });
+    await page.mouse.up();
+    expect(await companion.getAttribute("aria-label")).not.toBe(before);
+  });
+
   test("reset restores the original data", async ({ page }) => {
     await openTab(page, "Run it");
     const before = await plot(page).getAttribute("aria-label");

@@ -26,6 +26,17 @@ export type VizHue = "prediction" | "truth" | "error" | "param" | "neutral";
 export type Term = { phrase: string; hue: VizHue };
 
 /**
+ * A committed prediction for a See-it beat: the learner commits to an expectation
+ * before stepping on to the reveal. This is the choreography's predict-then-verify
+ * beat (0–2 min — activate prior beliefs, create tension), enforced in the template
+ * rather than narrated, so every exhibit gets it by construction.
+ */
+export type BeatPredict = {
+  prompt: string;
+  options: { label: string; correct?: boolean; feedback: string }[];
+};
+
+/**
  * One scroll beat. `Frame` is the exhibit-specific description of the canvas
  * state this beat asserts; the lab interprets it (e.g. which scenario to load,
  * which error view to show). It is opaque to the generic scroller and to the
@@ -40,6 +51,8 @@ export type Beat<Frame> = {
   frame: Frame;
   /** A single equation line composed beside the graphic at this beat (pattern 5). */
   equation?: string;
+  /** A committed prediction to make before stepping on — predict-then-verify in See it. */
+  predict?: BeatPredict;
 };
 
 export type Spine<Frame> = Beat<Frame>[];

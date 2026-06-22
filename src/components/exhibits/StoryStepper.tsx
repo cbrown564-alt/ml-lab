@@ -3,7 +3,7 @@
 import { useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { NarratedSection } from "@/components/narrative/NarratedSection";
 import { FrameContext } from "@/components/exhibits/story-frame";
-import type { BeatView } from "@/lib/exhibit/spine";
+import type { BeatPredict, BeatView } from "@/lib/exhibit/spine";
 
 /**
  * The guided story as a beat **stepper** (the Seeing-Theory / Distill model). One
@@ -176,6 +176,7 @@ export function StoryStepper<Frame>({
                   {step.beat.equation}
                 </div>
               )}
+              {step.beat.predict && <BeatPrediction predict={step.beat.predict} />}
             </>
           ) : (
             <>
@@ -194,6 +195,63 @@ export function StoryStepper<Frame>({
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * A committed prediction inside a See-it beat: the learner commits before stepping
+ * on to the reveal. This is the choreography's predict-then-verify opening beat made
+ * first-class in the template, so every exhibit enforces it rather than narrating it.
+ * State is per-beat (the step remounts on advance), so a prediction resets if revisited.
+ */
+function BeatPrediction({ predict }: { predict: BeatPredict }) {
+  const [picked, setPicked] = useState<number | null>(null);
+  const chosen = picked !== null ? predict.options[picked] : null;
+  return (
+    <div className="mt-6 rounded-lg border border-line bg-sunken p-5">
+      <p className="font-mono text-[11px] tracking-[0.16em] text-accent uppercase">
+        Predict first
+      </p>
+      <p className="mt-2 font-medium text-ink">{predict.prompt}</p>
+      <div className="mt-3 flex flex-col gap-2">
+        {predict.options.map((opt, i) => {
+          const isPicked = picked === i;
+          const state = !isPicked ? "idle" : opt.correct ? "correct" : "incorrect";
+          return (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setPicked(i)}
+              aria-pressed={isPicked}
+              className={`rounded-lg border px-4 py-2.5 text-left text-sm leading-relaxed transition-colors ${
+                state === "correct"
+                  ? "border-accent bg-raised"
+                  : state === "incorrect"
+                    ? "border-[var(--viz-error)] bg-raised"
+                    : "border-line bg-raised hover:border-ink-faint"
+              }`}
+            >
+              {opt.label}
+            </button>
+          );
+        })}
+      </div>
+      {chosen && (
+        <>
+          <p
+            className="mt-3 text-sm leading-relaxed"
+            role="status"
+            style={{ color: chosen.correct ? "var(--accent)" : "var(--viz-error)" }}
+          >
+            <span className="font-semibold">
+              {chosen.correct ? "You're right. " : "Commit noted — watch. "}
+            </span>
+            <span className="text-ink-muted">{chosen.feedback}</span>
+          </p>
+          <p className="mt-2 text-sm text-ink-faint">Now step on and see it happen.</p>
+        </>
+      )}
     </div>
   );
 }

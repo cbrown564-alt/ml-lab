@@ -43,6 +43,28 @@ export const gradientDescentSpine: Spine<GradientDescentFrame> = [
       { phrase: "the learning rate", hue: "param" },
       { phrase: "the loss curve", hue: "error" },
     ],
+    predict: {
+      prompt:
+        "Bigger steps cover ground faster. So if you double a learning rate that already converges, after a few hundred steps the loss will be…",
+      options: [
+        {
+          label: "Lower, sooner — twice the stride, half the time",
+          feedback:
+            "True right up until the stride crosses this surface's stability limit. Past it, every step overshoots more than it gains. Step on and meet both edges.",
+        },
+        {
+          label: "Either far better or far worse — there's a cliff, not a dial",
+          correct: true,
+          feedback:
+            "Right — below a critical step size it converges; above it, each step lands higher than the last and the loss explodes. You're predicting a threshold, not a slope.",
+        },
+        {
+          label: "About the same — it converges either way",
+          feedback:
+            "Not quite — there's a hard edge between converging and exploding. Step on and you'll cross it.",
+        },
+      ],
+    },
   },
   {
     sectionId: "too-timid",

@@ -29,6 +29,28 @@ export const linearRegressionSpine: Spine<LinearRegressionFrame> = [
       { phrase: "residual", hue: "error" },
       { phrase: "the line", hue: "prediction" },
     ],
+    predict: {
+      prompt:
+        "We're about to square each of those residuals. A point twice as far from the line will be penalised…",
+      options: [
+        {
+          label: "Twice as much — double the miss, double the penalty",
+          feedback:
+            "That's how it would work if the penalty were the plain distance. But we square it: double the miss and the area goes up fourfold. Step on and watch.",
+        },
+        {
+          label: "Four times as much — the penalty is the square of the miss",
+          correct: true,
+          feedback:
+            "Right — side doubles, area quadruples. That quadratic is the whole personality of least squares, and the reason one stray point can dominate.",
+        },
+        {
+          label: "The same — the line just refits to absorb it",
+          feedback:
+            "The line chases a little, but with the crowd anchoring it the square still roughly quadruples. Step on and see.",
+        },
+      ],
+    },
   },
   {
     sectionId: "squared-error",

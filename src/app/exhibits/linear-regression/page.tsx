@@ -1,5 +1,6 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { LinearRegressionBreakIt } from "@/components/exhibits/LinearRegressionBreakIt";
+import { LinearRegressionCheckLab } from "@/components/exhibits/LinearRegressionCheckLab";
 import { LinearRegressionHero } from "@/components/exhibits/LinearRegressionHero";
 import { LinearRegressionLab } from "@/components/exhibits/LinearRegressionLab";
 import { LinearRegressionStory } from "@/components/exhibits/LinearRegressionStory";
@@ -19,6 +20,7 @@ export default function LinearRegressionExhibit() {
       math={linearRegressionMath}
       failures={linearRegressionFailures}
       breakIt={<LinearRegressionBreakIt />}
+      checkCompanion={<LinearRegressionCheckLab />}
       hero={<LinearRegressionHero />}
       lede={
         <p>
