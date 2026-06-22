@@ -91,19 +91,31 @@ The product is canvas-first (Stream 2): the experiment is the protagonist, not a
 figure inside an article. The page grammar:
 
 1. Graph-aware back link.
-2. Domain and kind kicker.
-3. Title and mastery badge.
-4. Lede.
-5. **The story spine** — a full-width scrollytelling hero (`StoryScroller`): a
+2. **The masthead** — a two-column header. The title leads on the left (no
+   kicker; the title is the hero of the masthead) with the lede beneath it; the
+   **specimen placard** (`SpecimenPlacard`) sits on the right. The placard is the
+   exhibit's catalogue record — classification (domain · kind) and the learner's
+   standing in the header, then Builds on / Leads to graph chips and the journey
+   position — set in the same mono-label-over-data voice the live readouts speak.
+   It fills the masthead and **orients** the learner in the graph before the
+   interactive; the page's **forward** motion (continue the journey) lives at the
+   foot. Orient at the top, advance at the bottom.
+3. **The story spine** — a full-width scrollytelling hero (`StoryScroller`): a
    narrow rail of prose beats on the left, the live interactive sticky on the
    right. As each beat reaches the centre of the viewport it re-frames the one
    persistent graphic (object constancy); the same graphic transforms rather
    than being replaced. The hook is the first beat; the story sections are the
    rest. Once the learner touches the controls, the spine stops driving the
    graphic — the guided tour yields to manual exploration.
-6. The deeper layers return to a single reading column (~68ch): math drawer,
-   concept checks, field notes, Builds on / Leads to graph links, and an honest
-   construction/status note when needed.
+4. The deeper layers return to a single reading column (~68ch): math view,
+   concept checks, field notes, and (when relevant) the journey continuation /
+   an honest construction-status note.
+
+**Identity — museum catalogue meets lab instrument.** The placard and the live
+`StatGrid` readouts share one voice: precise mono uppercase micro-labels over
+sans/data values in hairline-ruled cells. The masthead record and the live
+estimates strip read as the same instrument. That precise, catalogued register —
+not warm-serif, not dark-acid, not broadsheet — is the lab's signature.
 
 The hero spans the full content width (`max-w-7xl`); prose elsewhere stays around
 65–68ch. Use generous vertical rhythm: `mt-14`, `mt-24`, `py-16` for major

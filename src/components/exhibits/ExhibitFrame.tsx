@@ -2,16 +2,14 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ConceptCheckSection } from "@/components/assessment/ConceptCheckSection";
 import { ExhibitShell, type ExhibitViewDef } from "@/components/exhibits/ExhibitShell";
-import { MasteryBadge } from "@/components/learner/MasteryBadge";
 import { MathView } from "@/components/exhibits/MathView";
+import { SpecimenPlacard } from "@/components/exhibits/SpecimenPlacard";
 import { StoryScroller } from "@/components/exhibits/StoryScroller";
-import { NodeChip } from "@/components/graph/NodeChip";
 import { RecordVisit } from "@/components/learner/RecordVisit";
 import type { ConceptCheck } from "@/lib/assessment/schema";
 import type { Beat, BeatView } from "@/lib/exhibit/spine";
 import type { ExhibitNarrative } from "@/lib/narrative/schema";
 import type { MathDrawerContent } from "@/lib/narrative/math";
-import { domainLabel, kindLabel } from "@/lib/graph/labels";
 import { audioManifests } from "@content/exhibits/audio";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
@@ -162,59 +160,36 @@ export function ExhibitFrame({
 
       <RecordVisit nodeId={nodeId} />
 
-      <header className="max-w-[65ch]">
-        <p className="font-mono text-sm tracking-widest text-ink-faint uppercase">
-          {domainLabel(node.domain)} · {kindLabel(node.kind)}
-        </p>
-        <div className="mt-3 flex flex-wrap items-center gap-4">
-          <h1 className="text-4xl font-semibold tracking-tight">{node.title}</h1>
-          <MasteryBadge nodeId={nodeId} />
+      {/* Masthead: the title block leads; the specimen placard fills the right
+          and orients the learner in the knowledge graph before the interactive. */}
+      <header className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)] lg:items-start lg:gap-12">
+        <div className="max-w-[58ch]">
+          <h1 className="text-4xl font-semibold tracking-tight text-balance">
+            {node.title}
+          </h1>
+          <div className="mt-5 text-lg leading-relaxed text-ink-muted">{lede}</div>
         </div>
-        <div className="mt-4 text-lg leading-relaxed text-ink-muted">{lede}</div>
+        <SpecimenPlacard
+          node={node}
+          buildsOn={buildsOn}
+          leadsTo={unlocks}
+          journey={
+            journey
+              ? { title: journey.title, stopIndex, count: journey.stops.length }
+              : undefined
+          }
+        />
       </header>
 
-      <div className="mt-10">
+      <div className="mt-12">
         <ExhibitShell views={views} />
       </div>
 
-      {/* The coda frames every view: where this sits in the graph, where next. */}
+      {/* The coda is the forward motion — where to go next. Where this sits in
+          the graph is the placard's job, up in the masthead. */}
       <div className="mt-24 max-w-[68ch]">
-        <section className="border-t border-line pt-8">
-          <h2 className="sr-only">This exhibit in the knowledge graph</h2>
-          <div className="flex flex-col gap-5 sm:flex-row sm:gap-16">
-            {buildsOn.length > 0 && (
-              <div>
-                <h3 className="text-sm font-medium tracking-wide text-ink-faint uppercase">
-                  Builds on
-                </h3>
-                <ul className="mt-3 flex flex-wrap gap-2">
-                  {buildsOn.map((n) => (
-                    <li key={n.id}>
-                      <NodeChip node={n} />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {unlocks.length > 0 && (
-              <div>
-                <h3 className="text-sm font-medium tracking-wide text-ink-faint uppercase">
-                  Leads to
-                </h3>
-                <ul className="mt-3 flex flex-wrap gap-2">
-                  {unlocks.map((n) => (
-                    <li key={n.id}>
-                      <NodeChip node={n} />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        </section>
-
         {journey && (
-          <section className="mt-12 rounded-xl border border-line bg-raised p-6">
+          <section className="rounded-xl border border-line bg-raised p-6">
             <p className="font-mono text-xs tracking-widest text-ink-faint uppercase">
               Journey · {journey.title} · stop {stopIndex + 1} of {journey.stops.length}
             </p>
@@ -238,7 +213,7 @@ export function ExhibitFrame({
                   <Link href="/#map" className="text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2">
                     browse the map
                   </Link>{" "}
-                  for an open door, or wander the connections above.
+                  for an open door, or follow the connections in the record above.
                 </p>
               )
             ) : (
