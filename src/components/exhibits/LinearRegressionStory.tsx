@@ -12,7 +12,7 @@ import {
   ResidualSquares,
 } from "@/components/viz/Plot";
 import { StatGrid } from "@/components/viz/StatGrid";
-import { useActiveFrame } from "@/components/exhibits/StoryScroller";
+import { useActiveFrame } from "@/components/exhibits/story-frame";
 import type { LinearRegressionFrame } from "@content/exhibits/linear-regression/spine";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { createExperimentStore } from "@/lib/experiment/store";

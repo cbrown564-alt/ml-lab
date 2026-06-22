@@ -32,7 +32,6 @@ export default function LinearRegressionExhibit() {
         </>
       }
       story={<LinearRegressionStory />}
-      storyLayout="stepper"
       experiment={<LinearRegressionLab />}
     />
   );

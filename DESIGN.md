@@ -112,16 +112,26 @@ figure inside an article. The page grammar:
    live readouts speak. The masthead **orients** the learner in the graph before
    the interactive; the page's **forward** motion (continue the journey) lives at
    the foot. Orient at the top, advance at the bottom.
-4. **The story spine** — a full-width scrollytelling hero (`StoryScroller`): a
-   narrow rail of prose beats on the left, the live interactive sticky on the
-   right. As each beat reaches the centre of the viewport it re-frames the one
-   persistent graphic (object constancy); the same graphic transforms rather
-   than being replaced. The hook is the first beat; the story sections are the
-   rest. Once the learner touches the controls, the spine stops driving the
-   graphic — the guided tour yields to manual exploration.
-5. The deeper layers return to a single reading column (~68ch): math view,
-   concept checks, field notes, and (when relevant) the journey continuation /
-   an honest construction-status note.
+4. **The story stepper** (`StoryStepper`) — the guided story as discrete beats you
+   *step* through, not a scroll spine. One persistent graphic holds the right; the
+   current beat's prose + controls + readouts hold the left; a beat rail with
+   Prev/Next (and arrow keys, scoped to the rail) advances. Object constancy
+   survives — stepping re-frames the one graphic through `FrameContext` (which the
+   lab reads with `useActiveFrame()`) rather than replacing it — but the two
+   gestures separate: **scroll reads, drag manipulates**, so manipulation never
+   fights a scroll-driver. The hook is the first beat; **field notes** (where the
+   concept lives in the wild) close the walk as a final step over the calm at-rest
+   graphic. Side-by-side holds down to 700px (half a wide monitor), so the graphic
+   and its beat stay co-visible — the scroll spine's half-screen failure (the
+   sticky graphic collapsing out of sight) is designed out. This is the
+   Seeing-Theory / Distill model: our two nearest exemplars keep the graphic and
+   its explanation co-visible and advance by choice, not scroll. The whole story
+   fits ~one screen, and the stepper is the page's end — nothing scrolls below it
+   but the journey strip.
+5. The deeper layers return to a single reading column (~68ch): math view and
+   concept checks. The page's only coda is the **journey strip** — a single
+   hairline-ruled line (mono position left, next-stop affordance right), kept thin
+   so the story stays the main event.
 
 **Identity — museum catalogue meets lab instrument.** The placard and the live
 `StatGrid` readouts share one voice: precise mono uppercase micro-labels over

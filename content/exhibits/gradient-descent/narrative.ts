@@ -1,12 +1,12 @@
 import type { ExhibitNarrative } from "@/lib/narrative/schema";
 
 /**
- * Gradient descent, told as a scroll spine (Stream 2). The hook walks in the
- * fog; the landscape beat lifts it to reveal the loss surface; the rule beat
- * names the one-line update; then two failure regimes — too timid, over the
- * edge — and a closing beat on the single knob behind all three. The sticky
- * graphic switches between the line view and the surface view per beat
- * (see spine.ts); the prose lives here so the narration has one source (C3).
+ * Gradient descent, told as a sequence of beats. The hook walks in the fog; the
+ * landscape beat lifts it to reveal the loss surface; the rule beat names the
+ * one-line update; then two failure regimes — too timid, over the edge — and a
+ * closing beat on the single knob behind all three. The graphic switches between
+ * the line view and the surface view per beat (see spine.ts); the prose lives
+ * here so the narration has one source (C3).
  */
 
 export const gradientDescentNarrative: ExhibitNarrative = {

@@ -2,37 +2,68 @@
 
 import { useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { NarratedSection } from "@/components/narrative/NarratedSection";
-import { FrameContext } from "@/components/exhibits/StoryScroller";
+import { FrameContext } from "@/components/exhibits/story-frame";
 import type { BeatView } from "@/lib/exhibit/spine";
 
 /**
- * The guided story as a beat **stepper**, not a scroll spine (the Seeing-Theory /
- * Distill presentation, replacing the R2D3 scroll-driver). One persistent graphic
- * holds the right; the *current* beat's prose + controls + readouts hold the left.
- * You advance by choosing — Prev/Next or the beat rail — never by scrolling, so:
+ * The guided story as a beat **stepper** (the Seeing-Theory / Distill model). One
+ * persistent graphic holds the right; the *current* beat's prose + controls +
+ * readouts hold the left. You advance by choosing — Prev/Next or the beat rail —
+ * never by scrolling, so:
  *
  *   - the graphic and its explanation stay co-visible at any width (no "the visual
  *     disappeared above me" on a half-screen);
  *   - scrolling stays free for reading, and dragging stays free for manipulating —
  *     the two no longer fight over the same gesture;
  *   - object constancy survives: stepping re-frames the one graphic (via
- *     `FrameContext`, the same channel the scroller used) rather than replacing it.
+ *     `FrameContext`) rather than replacing it.
  *
- * The lab reads the active beat's frame with `useActiveFrame()` exactly as before;
- * it neither knows nor cares that an index, not a scroll position, now chooses it.
+ * The lab reads the active beat's frame with `useActiveFrame()`; it neither knows
+ * nor cares that an index, not a scroll position, now chooses it.
+ *
+ * Field notes — where the concept lives once you leave the lab — close the walk as
+ * a final "In the wild" step over the calm at-rest graphic, so the story ends on
+ * its real-world payoff and nothing scrolls below it.
  */
+
+type Step<Frame> =
+  | { kind: "beat"; heading?: string; beat: BeatView<Frame>; frame: Frame }
+  | { kind: "notes"; heading: string; notes: string[]; frame: Frame };
 
 export function StoryStepper<Frame>({
   beats,
   graphic,
+  fieldNotes,
 }: {
   beats: BeatView<Frame>[];
   /** The persistent interactive. Reads its frame with useActiveFrame(). */
   graphic: ReactNode;
+  /** Real-world notes; rendered as the closing "In the wild" step when present. */
+  fieldNotes?: string[];
 }) {
+  const steps: Step<Frame>[] = [
+    ...beats.map((beat) => ({
+      kind: "beat" as const,
+      heading: beat.heading,
+      beat,
+      frame: beat.frame,
+    })),
+    ...(fieldNotes && fieldNotes.length > 0
+      ? [
+          {
+            kind: "notes" as const,
+            heading: "In the wild",
+            notes: fieldNotes,
+            // Rest the graphic on the last beat's frame — a calm closing image.
+            frame: beats[beats.length - 1].frame,
+          },
+        ]
+      : []),
+  ];
+
   const [active, setActive] = useState(0);
-  const count = beats.length;
-  const beat = beats[active];
+  const count = steps.length;
+  const step = steps[active];
   const segs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const go = (i: number, focusSeg = false) => {
@@ -59,35 +90,35 @@ export function StoryStepper<Frame>({
           stays side-by-side and pinned from 700px up — half a wide monitor — so
           the graphic and its current beat never lose sight of each other. */}
       <div className="min-[700px]:order-2 min-[700px]:col-start-2 min-[700px]:sticky min-[700px]:top-8">
-        <FrameContext.Provider value={beat.frame}>{graphic}</FrameContext.Provider>
+        <FrameContext.Provider value={step.frame}>{graphic}</FrameContext.Provider>
       </div>
 
-      {/* The beat panel: rail, then the current beat's prose. */}
+      {/* The beat panel: rail, then the current step. */}
       <div className="mt-8 min-[700px]:order-1 min-[700px]:col-start-1 min-[700px]:mt-0">
         <nav
           aria-label="Story beats"
           onKeyDown={onRailKey}
-          className="flex items-center justify-between gap-4 border-b border-line pb-5"
+          className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-line pb-5"
         >
-          <ol className="flex items-center gap-2">
-            {beats.map((b, i) => {
+          <ol className="flex min-w-0 flex-wrap items-center gap-1.5">
+            {steps.map((s, i) => {
               const state =
                 i === active ? "bg-accent" : i < active ? "bg-ink-faint" : "bg-line";
               return (
-                <li key={b.sectionId} className="flex">
+                <li key={i} className="flex">
                   <button
                     type="button"
                     ref={(el) => {
                       segs.current[i] = el;
                     }}
                     aria-current={i === active ? "step" : undefined}
-                    aria-label={`Beat ${i + 1} of ${count}${b.heading ? `: ${b.heading}` : ""}`}
+                    aria-label={`Beat ${i + 1} of ${count}${s.heading ? `: ${s.heading}` : ""}`}
                     tabIndex={i === active ? 0 : -1}
                     onClick={() => go(i)}
                     className="flex items-center py-2"
                   >
                     <span
-                      className={`h-1.5 w-9 rounded-full transition-colors ${state} ${
+                      className={`h-1.5 w-7 rounded-full transition-colors ${state} ${
                         i === active ? "" : "hover:bg-ink-muted"
                       }`}
                     />
@@ -97,8 +128,8 @@ export function StoryStepper<Frame>({
             })}
           </ol>
 
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-xs tracking-widest text-ink-faint uppercase tabular-nums">
+          <div className="flex shrink-0 items-center gap-3">
+            <span className="font-mono text-xs tracking-widest whitespace-nowrap text-ink-faint uppercase tabular-nums">
               {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
             </span>
             <div className="flex gap-1.5">
@@ -107,7 +138,7 @@ export function StoryStepper<Frame>({
                 aria-label="Previous beat"
                 disabled={active === 0}
                 onClick={() => go(active - 1)}
-                className="rounded-full border border-line px-3 py-1.5 text-sm text-ink-muted transition-colors hover:border-ink-faint hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-full border border-line px-3 py-1.5 text-sm whitespace-nowrap text-ink-muted transition-colors hover:border-ink-faint hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
               >
                 ← Back
               </button>
@@ -116,7 +147,7 @@ export function StoryStepper<Frame>({
                 aria-label="Next beat"
                 disabled={active === count - 1}
                 onClick={() => go(active + 1)}
-                className="rounded-full border border-line px-3 py-1.5 text-sm text-ink-muted transition-colors hover:border-ink-faint hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-full border border-line px-3 py-1.5 text-sm whitespace-nowrap text-ink-muted transition-colors hover:border-ink-faint hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Next →
               </button>
@@ -124,24 +155,42 @@ export function StoryStepper<Frame>({
           </div>
         </nav>
 
-        {/* The beat changes in place. Keying on the index remounts the prose so it
+        {/* The step changes in place. Keying on the index remounts it so it
             re-enters softly and any playing narration stops when you step away. */}
         <p className="sr-only" aria-live="polite">
           Beat {active + 1} of {count}
-          {beat.heading ? `: ${beat.heading}` : ""}
+          {step.heading ? `: ${step.heading}` : ""}
         </p>
         <div key={active} className="lift-fog mt-7 min-h-[16rem]">
-          <NarratedSection
-            tone={active === 0 ? "hook" : "story"}
-            heading={beat.heading}
-            paragraphs={beat.paragraphs}
-            audio={beat.audio}
-            terms={beat.terms}
-          />
-          {beat.equation && (
-            <div className="mt-5 overflow-x-auto rounded-lg bg-sunken px-5 py-3 font-mono text-[15px] leading-relaxed text-ink">
-              {beat.equation}
-            </div>
+          {step.kind === "beat" ? (
+            <>
+              <NarratedSection
+                tone={active === 0 ? "hook" : "story"}
+                heading={step.beat.heading}
+                paragraphs={step.beat.paragraphs}
+                audio={step.beat.audio}
+                terms={step.beat.terms}
+              />
+              {step.beat.equation && (
+                <div className="mt-5 overflow-x-auto rounded-lg bg-sunken px-5 py-3 font-mono text-[15px] leading-relaxed text-ink">
+                  {step.beat.equation}
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl font-semibold tracking-tight">{step.heading}</h2>
+              <ul className="mt-5">
+                {step.notes.map((note, i) => (
+                  <li
+                    key={i}
+                    className="mt-3 border-l-2 border-line pl-4 leading-relaxed text-ink-muted first:mt-0"
+                  >
+                    {note}
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
         </div>
       </div>

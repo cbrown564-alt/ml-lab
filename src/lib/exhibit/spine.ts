@@ -1,17 +1,17 @@
 import type { AudioSection } from "@/lib/narrative/audio";
 
 /**
- * The story spine (Stream 2, docs/exemplars/SYNTHESIS.md). An exhibit is no
- * longer a document with a figure pinned in it; it is one persistent graphic
- * that a sequence of prose beats re-frames as the learner scrolls (the R2D3
- * sticky-graphic pattern, pattern 2). The spine is that sequence.
+ * The story spine. An exhibit is not a document with a figure pinned in it; it
+ * is one persistent graphic that a sequence of prose beats re-frames as the
+ * learner *steps* through them (`StoryStepper` — the Seeing-Theory / Distill
+ * model that replaced the original R2D3 scroll spine). The spine is that
+ * sequence.
  *
  * Prose stays in `narrative.ts` so it remains the single source the narration
  * audio is generated from (C3); a beat references a narrative section by id and
  * adds the three things the canvas-first form needs: the framing the graphic
- * should take when this beat reaches centre, the key phrases coloured to match
- * their referents on the canvas (pattern 3), and any equation to compose beside
- * the graphic (pattern 5).
+ * should take at this beat, the key phrases coloured to match their referents on
+ * the canvas, and any equation to compose beside the graphic.
  */
 
 /**

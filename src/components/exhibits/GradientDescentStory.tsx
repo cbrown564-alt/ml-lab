@@ -5,7 +5,7 @@ import { Axes, DataPoints, FitLine, Plot, usePlot } from "@/components/viz/Plot"
 import { LossSurface } from "@/components/viz/LossSurface";
 import { TrainingCurve } from "@/components/viz/TrainingCurve";
 import { StatGrid } from "@/components/viz/StatGrid";
-import { useActiveFrame } from "@/components/exhibits/StoryScroller";
+import { useActiveFrame } from "@/components/exhibits/story-frame";
 import type { GradientDescentFrame } from "@content/exhibits/gradient-descent/spine";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { createExperimentStore } from "@/lib/experiment/store";

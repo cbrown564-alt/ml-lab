@@ -4,7 +4,6 @@ import { ConceptCheckSection } from "@/components/assessment/ConceptCheckSection
 import { ExhibitShell, type ExhibitViewDef } from "@/components/exhibits/ExhibitShell";
 import { MathView } from "@/components/exhibits/MathView";
 import { SpecimenPlacard } from "@/components/exhibits/SpecimenPlacard";
-import { StoryScroller } from "@/components/exhibits/StoryScroller";
 import { StoryStepper } from "@/components/exhibits/StoryStepper";
 import { RecordVisit } from "@/components/learner/RecordVisit";
 import type { ConceptCheck } from "@/lib/assessment/schema";
@@ -41,7 +40,6 @@ export function ExhibitFrame({
   math,
   check,
   story,
-  storyLayout = "scroll",
   experiment,
 }: {
   nodeId: string;
@@ -66,12 +64,6 @@ export function ExhibitFrame({
   check?: ConceptCheck;
   /** The guided graphic for the Story view (reads its per-beat frame). */
   story: ReactNode;
-  /**
-   * How the guided story is presented. `"scroll"` is the scroll-driven spine;
-   * `"stepper"` is the co-visible side-by-side with explicit beat navigation
-   * (the Seeing-Theory / Distill model). Defaults to `"scroll"`.
-   */
-  storyLayout?: "scroll" | "stepper";
   /** The full interactive sandbox for the Experiment view. */
   experiment: ReactNode;
 }) {
@@ -117,34 +109,10 @@ export function ExhibitFrame({
       ? lookup.get(journey.stops[stopIndex + 1].nodeId)
       : undefined;
 
+  // The stepper is the page's main event and its end; field notes close the walk
+  // as its final "In the wild" step rather than scrolling below it.
   const storyView = (
-    <div>
-      {storyLayout === "stepper" ? (
-        <StoryStepper beats={beats} graphic={story} />
-      ) : (
-        <StoryScroller beats={beats} graphic={story} />
-      )}
-      {/* Field notes were the scroll's natural epilogue. The stepper is meant to
-          be the page's end — nothing scrolls below it — so they render only for
-          the scroll layout. (Re-homing them for the stepper is still open.) */}
-      {storyLayout === "scroll" && narrative.fieldNotes.length > 0 && (
-        <section className="mt-20 max-w-[68ch] border-t border-line pt-8">
-          <h2 className="text-sm font-medium tracking-wide text-ink-faint uppercase">
-            Field notes
-          </h2>
-          <ul className="mt-4">
-            {narrative.fieldNotes.map((note, i) => (
-              <li
-                key={i}
-                className="mt-3 border-l-2 border-line pl-4 text-sm leading-relaxed text-ink-muted first:mt-0"
-              >
-                {note}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-    </div>
+    <StoryStepper beats={beats} graphic={story} fieldNotes={narrative.fieldNotes} />
   );
 
   const experimentView = (

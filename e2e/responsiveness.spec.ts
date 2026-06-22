@@ -110,13 +110,18 @@ test.describe("interaction latency", () => {
     await observeSlowEvents(page);
     await page.goto("/exhibits/gradient-descent");
 
-    // Build a real trace, reveal the surface (the heaviest synced view),
-    // then scrub through the whole run.
+    // The rich transport (Step ×10, the surface toggle) lives in the Experiment
+    // sandbox, not the guided Story. Build a real trace there, reveal the surface
+    // (the heaviest synced view), then scrub through the whole run.
+    await page.getByRole("tab", { name: "Experiment" }).click();
+    // The guided Story keeps its own scrub mounted (hidden), so scope to the
+    // visible Experiment panel.
+    const panel = page.getByRole("tabpanel", { includeHidden: false });
     for (let i = 0; i < 5; i++) {
-      await page.getByRole("button", { name: "Step ×10" }).click();
+      await panel.getByRole("button", { name: "Step ×10" }).click();
     }
-    await page.getByRole("button", { name: "The surface", exact: true }).click();
-    const scrub = page.getByLabel("Scrub through descent steps");
+    await panel.getByRole("button", { name: "The surface", exact: true }).click();
+    const scrub = panel.getByLabel("Scrub through descent steps");
     await scrub.scrollIntoViewIfNeeded();
     for (const v of ["0", "13", "25", "37", "50", "25", "0", "50"]) {
       await scrub.fill(v);

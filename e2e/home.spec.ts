@@ -54,18 +54,27 @@ test.describe("exhibit narrative", () => {
   test("hook, story sections, and field notes render on both exhibits", async ({
     page,
   }) => {
+    // The stepper shows one beat at a time; the rail jumps to a beat by heading.
     await page.goto("/exhibits/linear-regression");
-    await expect(page.getByText(/Francis Galton/)).toBeVisible();
+    // Hydration sentinel — the rail's onClick needs handlers attached.
+    await expect(page.getByTestId("mastery-badge")).toHaveText("seen");
+    await expect(page.getByText(/Francis Galton/)).toBeVisible(); // hook, beat 1
+    await page.getByRole("button", { name: /Why the errors get squared/ }).click();
     await expect(
       page.getByRole("heading", { name: "Why the errors get squared" }),
     ).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Field notes" })).toBeVisible();
+    await page.getByRole("button", { name: /In the wild/ }).click();
+    await expect(page.getByRole("heading", { name: "In the wild" })).toBeVisible();
+    await expect(page.getByText(/the baseline that fancier models/)).toBeVisible();
 
     await page.goto("/exhibits/gradient-descent");
-    await expect(page.getByText(/hillside in fog/)).toBeVisible();
+    await expect(page.getByTestId("mastery-badge")).toHaveText("seen");
+    await expect(page.getByText(/hillside in fog/)).toBeVisible(); // hook, beat 1
+    await page.getByRole("button", { name: /One knob behind it all/ }).click();
     await expect(
       page.getByRole("heading", { name: "One knob behind it all" }),
     ).toBeVisible();
+    await page.getByRole("button", { name: /In the wild/ }).click();
     await expect(page.getByText(/what's the learning rate\?/)).toBeVisible();
   });
 });

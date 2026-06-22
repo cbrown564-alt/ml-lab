@@ -1,9 +1,9 @@
 import type { Spine } from "@/lib/exhibit/spine";
 
 /**
- * Gradient descent's scroll spine: which scenario runs and whether the sticky
- * graphic shows the line learning (scatter + training curve) or the loss
- * surface it is crossing, beat by beat. The fog lifts at "the-landscape"; the
+ * Gradient descent's story spine: which scenario runs and whether the graphic
+ * shows the line learning (scatter + training curve) or the loss surface it is
+ * crossing, beat by beat. The fog lifts at "the-landscape"; the
  * two failure regimes each load their scenario and stay on the surface so the
  * crawl and the explosion are legible as paths on the map.
  */

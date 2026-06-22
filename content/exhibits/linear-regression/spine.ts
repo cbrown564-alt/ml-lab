@@ -1,9 +1,9 @@
 import type { Spine } from "@/lib/exhibit/spine";
 
 /**
- * Linear regression's scroll spine: which scenario and error view the sticky
- * graphic takes at each beat, the key terms coloured to match the canvas, and
- * the equation composed beside the figure when it is the point.
+ * Linear regression's story spine: which scenario and error view the graphic
+ * takes at each beat, the key terms coloured to match the canvas, and the
+ * equation composed beside the figure when it is the point.
  */
 
 export type LinearRegressionFrame = {

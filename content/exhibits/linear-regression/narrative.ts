@@ -1,11 +1,12 @@
 import type { ExhibitNarrative } from "@/lib/narrative/schema";
 
 /**
- * Linear regression, told as a scroll spine (Stream 2). Each story section is
- * one beat that re-frames the sticky graphic on the right: the hook meets the
- * line, then residuals, then squares, then the outlier's tyranny, then the
- * closed-form reward. The colour grammar and per-beat framing live in
- * `spine.ts`; the prose lives here so the narration audio has one source (C3).
+ * Linear regression, told as a sequence of beats. Each story section is one
+ * beat that re-frames the graphic beside it: the hook meets the line, then
+ * residuals, then squares, then the outlier's tyranny, then the closed-form
+ * reward (and field notes close the walk). The colour grammar and per-beat
+ * framing live in `spine.ts`; the prose lives here so the narration audio has
+ * one source (C3).
  */
 
 export const linearRegressionNarrative: ExhibitNarrative = {
