@@ -177,6 +177,11 @@ exhibits, confirmed by the critic agent against named frames, before scaling.
   the spine. Green: eslint 0 · validate 0 · 102 unit · build · 48 e2e · budgets.
   **This four-act spine (with a live Break-it lab per exhibit) is the template every
   scaled exhibit now builds on** — so the scaffolder and per-exhibit pipeline target it.
+  The non-circular panel (designer/teacher/tester) **cleared the gate** (2026-06-22) after
+  two template fixes — a committed See-it prediction (`BeatPredict`) and Explain-it composed
+  onto the canvas (a live companion beside the checks): register **3 across all four acts**
+  (Break it **4**), both flagships teach to the bar, integrity green. **Template verified
+  ready to scale** — see [../reviews/spine-review/FINDINGS.md](../reviews/spine-review/FINDINGS.md).
 
 ## Queue — scaling Phase 1 (template locked)
 

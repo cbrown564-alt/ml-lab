@@ -55,9 +55,29 @@ clear win — the differentiator earns its name on both flagships.
   "Explain-it" frames were scrollY≈0). Assert distinct frame hashes + the act heading
   in-frame, so a review can never be judged against duplicated heroes.
 
-## Standing decision
+## Re-review (2026-06-22) — GATE CLEARED ✓
 
-The template is **2 blockers fixed, 2 template-level blockers open**. Per the panel,
-do not scale until Explain-it is composed onto the canvas (#3) and the committed
-See-it prediction is baked into the template (#4) — both are once-and-for-all template
-changes that every scaled exhibit then inherits for free.
+Both template-level blockers were fixed and the panel re-judged the changed acts
+(non-circular, vs named frames):
+
+- **Explain it: 2 → 3.** Composed onto the canvas — two-column with a compact live
+  instrument pinned (sticky) beside the checks (`{LinearRegression,GradientDescent}CheckLab`),
+  so the learner answers against the running model. Designer: *"the dead-canvas/
+  document-first climax is resolved… it now commands like Break-it does,"* citing
+  `seeing-theory-regression/02` (the same calm two-column live-table composition).
+- **See-it committed prediction: gap closed by construction.** `BeatPredict` on a spine
+  beat → a "Predict first" commit UI gated before the reveal; teacher confirmed it hits
+  the 0–2 min choreography beat and that the See-it/Explain-it pairing is correct spaced
+  retrieval (commit early on the bare residuals / converging rate, re-test late in the
+  concrete scenario), not duplication.
+- axe + integrity already green (the two defects fixed pre-re-review).
+
+**Panel verdict: register 3 across all four acts (See 3 · Run 3 · Break 4 · Explain 3,
+spine 3); both flagships teach to the bar. The template is ready to scale the regression
+cluster.**
+
+Non-gating watch-items for the cluster build: (a) keep each Explain-it companion
+genuinely *driven by* its check items (a pinned plot the checks don't reference would
+re-open the void); (b) the committed prediction resets on beat-revisit (a persisted commit
+could let the late re-test reference the early one); (c) the Explain-it companion is
+desktop-only (stacks below on mobile); (d) gd route js at 691/700 — watch as exhibits grow.
