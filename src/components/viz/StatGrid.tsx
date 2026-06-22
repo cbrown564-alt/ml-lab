@@ -22,10 +22,13 @@ export type Stat = {
 export function StatGrid({
   stats,
   caption,
+  direction = "row",
 }: {
   stats: Stat[];
   /** Optional label for the whole strip, e.g. "Least-squares estimate". */
   caption?: string;
+  /** "row" = a horizontal strip (under a plot); "col" = a stacked table (a side rail). */
+  direction?: "row" | "col";
 }) {
   return (
     <div>
@@ -34,26 +37,52 @@ export function StatGrid({
           {caption}
         </p>
       )}
-      <dl className="grid grid-flow-col auto-cols-fr divide-x divide-line overflow-hidden rounded-lg border border-line">
-        {stats.map((s) => (
-          <div key={s.label} className="px-3 py-2.5">
-            <dt className="font-mono text-[10px] tracking-wider text-ink-faint uppercase">
-              {s.label}
-            </dt>
-            <dd
-              className="mt-1 font-mono text-[15px] tabular-nums"
-              style={{ color: s.hue ?? "var(--ink)" }}
-            >
-              {s.value}
-            </dd>
-            {s.note && (
-              <dd className="mt-0.5 text-[10px] leading-tight text-ink-faint">
-                {s.note}
+      {direction === "row" ? (
+        <dl className="grid grid-flow-col auto-cols-fr divide-x divide-line overflow-hidden rounded-lg border border-line">
+          {stats.map((s) => (
+            <div key={s.label} className="px-3 py-2.5">
+              <dt className="font-mono text-[10px] tracking-wider text-ink-faint uppercase">
+                {s.label}
+              </dt>
+              <dd
+                className="mt-1 font-mono text-[15px] tabular-nums"
+                style={{ color: s.hue ?? "var(--ink)" }}
+              >
+                {s.value}
               </dd>
-            )}
-          </div>
-        ))}
-      </dl>
+              {s.note && (
+                <dd className="mt-0.5 text-[10px] leading-tight text-ink-faint">
+                  {s.note}
+                </dd>
+              )}
+            </div>
+          ))}
+        </dl>
+      ) : (
+        <dl className="divide-y divide-line overflow-hidden rounded-lg border border-line">
+          {stats.map((s) => (
+            <div
+              key={s.label}
+              className="flex items-baseline justify-between gap-4 px-3 py-2"
+            >
+              <dt className="font-mono text-[11px] tracking-wider text-ink-faint uppercase">
+                {s.label}
+              </dt>
+              <dd
+                className="font-mono text-[15px] tabular-nums"
+                style={{ color: s.hue ?? "var(--ink)" }}
+              >
+                {s.value}
+                {s.note && (
+                  <span className="ml-2 font-sans text-[10px] text-ink-faint">
+                    {s.note}
+                  </span>
+                )}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
     </div>
   );
 }

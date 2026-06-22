@@ -5,6 +5,7 @@ import { Axes, DataPoints, FitLine, Plot, usePlot } from "@/components/viz/Plot"
 import { LossSurface } from "@/components/viz/LossSurface";
 import { ParamSlider } from "@/components/viz/ParamSlider";
 import { TrainingCurve } from "@/components/viz/TrainingCurve";
+import { StatGrid } from "@/components/viz/StatGrid";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { createExperimentStore } from "@/lib/experiment/store";
@@ -141,74 +142,9 @@ export function GradientDescentLab() {
 
   if (!viewing) return null;
 
-  return (
-    <div className="rounded-xl border border-line bg-raised p-6">
-      <ScenarioBar
-        scenarios={spec.scenarios}
-        activeId={scenario.id}
-        onSelect={loadScenario}
-        onReset={reset}
-        resetLabel="Restart descent"
-      />
-
-      <p className="mt-4 max-w-[70ch] leading-relaxed text-ink-muted">{scenario.prompt}</p>
-
-      <div
-        role="group"
-        aria-label="Which face of the graphic to show"
-        className="mt-6 inline-flex rounded-full border border-line p-0.5 text-sm"
-      >
-        {(
-          [
-            ["line", "The line"],
-            ["surface", "The surface"],
-          ] as const
-        ).map(([value, label]) => (
-          <button
-            key={value}
-            type="button"
-            aria-pressed={view === value}
-            onClick={() => setView(value)}
-            className={`rounded-full px-4 py-1 transition-colors ${
-              view === value
-                ? "bg-accent text-accent-ink"
-                : "text-ink-muted hover:text-ink"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {view === "line" ? (
-        <div className="mt-4 grid gap-6 lg:grid-cols-[3fr_2fr]">
-          <Plot
-            xDomain={xDomain}
-            yDomain={yDomain}
-            ariaLabel={`Scatter plot of ${points.length} data points. The line being learned by gradient descent is at step ${viewing.step}: slope ${viewing.params.slope.toFixed(2)}, intercept ${viewing.params.intercept.toFixed(2)}, loss ${formatLoss(viewing.loss)}. A dashed line marks the least-squares destination.`}
-          >
-            <Axes />
-            <TargetLine params={target} />
-            <FitLine params={viewing.params} />
-            <DataPoints points={points} />
-          </Plot>
-          <TrainingCurve trace={trace} cursor={cursor} />
-        </div>
-      ) : (
-        <div className="lift-fog mt-4">
-          <LossSurface points={points} trace={trace} cursor={cursor} />
-          <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-            Every point on this map is a candidate line — slope across, intercept
-            up — and the shading is how wrong that line is, in log bands. The{" "}
-            <span style={{ color: "var(--viz-param-ink)" }}>purple path</span> is
-            the walk so far; the dot is where the scrubber is standing. Step,
-            scrub, and switch scenarios — watch the careful walk curve into the
-            valley, and the reckless one rocket off the map.
-          </p>
-        </div>
-      )}
-
-      <div className="mt-4 flex flex-wrap items-center gap-3">
+  const transport = (
+    <div className="mt-4 flex flex-col gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <button
           type="button"
           onClick={() => {
@@ -236,58 +172,133 @@ export function GradientDescentLab() {
         >
           Step ×10
         </button>
-        <div className="ml-auto">
+      </div>
+      <input
+        type="range"
+        aria-label="Scrub through descent steps"
+        min={0}
+        max={Math.max(0, trace.length - 1)}
+        value={Math.min(cursor, trace.length - 1)}
+        onChange={(e) => {
+          setPlaying(false);
+          setCursor(Number(e.target.value));
+        }}
+        disabled={trace.length < 2}
+        className="w-full accent-[var(--accent)] disabled:opacity-40"
+      />
+    </div>
+  );
+
+  return (
+    <div className="rounded-xl border border-line bg-raised p-6">
+      <ScenarioBar
+        scenarios={spec.scenarios}
+        activeId={scenario.id}
+        onSelect={loadScenario}
+        onReset={reset}
+        resetLabel="Restart descent"
+      />
+
+      {/* Canvas-first (FINDINGS F6): the descent takes the dominant right column;
+          the scene's prompt, the one knob, and the live readout sit in a rail. */}
+      <div className="mt-5 lg:grid lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:items-start lg:gap-8">
+        <div className="flex flex-col gap-5">
+          <p className="leading-relaxed text-ink-muted">{scenario.prompt}</p>
+
+          <div
+            role="group"
+            aria-label="Which face of the graphic to show"
+            className="inline-flex self-start rounded-full border border-line p-0.5 text-sm"
+          >
+            {(
+              [
+                ["line", "The line"],
+                ["surface", "The surface"],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={view === value}
+                onClick={() => setView(value)}
+                className={`rounded-full px-4 py-1 transition-colors ${
+                  view === value ? "bg-accent text-accent-ink" : "text-ink-muted hover:text-ink"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
           <ParamSlider
             def={spec.params[0]}
             value={learningRate}
             onChange={(v) => setParam("learningRate", v)}
           />
+
+          <StatGrid
+            direction="col"
+            caption="Where the walk stands"
+            stats={[
+              {
+                label: "step",
+                value:
+                  viewing.step !== latest.step
+                    ? `${viewing.step} / ${latest.step}`
+                    : String(viewing.step),
+              },
+              { label: "slope ŵ", value: viewing.params.slope.toFixed(2), hue: "var(--viz-prediction)" },
+              { label: "intcpt b̂", value: viewing.params.intercept.toFixed(2), hue: "var(--viz-prediction)" },
+              { label: "loss", value: formatLoss(viewing.loss), hue: "var(--viz-error)", note: "lower is better" },
+            ]}
+          />
+
+          {diverged && (
+            <p className="text-sm leading-relaxed" style={{ color: "var(--viz-error)" }}>
+              The loss has left the chart — each step overshot the valley and
+              landed higher than the last. This is divergence. Scrub back to watch
+              the first overshoot, or lower the learning rate and restart.
+            </p>
+          )}
+          {exhausted && !diverged && (
+            <p className="text-sm leading-relaxed text-ink-muted">
+              Step budget reached ({MAX_STEPS} steps). Restart the descent to keep
+              experimenting.
+            </p>
+          )}
+        </div>
+
+        <div className="mt-6 lg:mt-0">
+          {view === "line" ? (
+            <div className="flex flex-col gap-2">
+              <Plot
+                width={640}
+                height={460}
+                xDomain={xDomain}
+                yDomain={yDomain}
+                ariaLabel={`Scatter plot of ${points.length} data points. The line being learned by gradient descent is at step ${viewing.step}: slope ${viewing.params.slope.toFixed(2)}, intercept ${viewing.params.intercept.toFixed(2)}, loss ${formatLoss(viewing.loss)}. A dashed line marks the least-squares destination.`}
+              >
+                <Axes />
+                <TargetLine params={target} />
+                <FitLine params={viewing.params} />
+                <DataPoints points={points} />
+              </Plot>
+              <TrainingCurve trace={trace} cursor={cursor} width={640} height={168} />
+            </div>
+          ) : (
+            <div className="lift-fog">
+              <LossSurface
+                points={points}
+                trace={trace}
+                cursor={cursor}
+                width={760}
+                height={560}
+              />
+            </div>
+          )}
+          {transport}
         </div>
       </div>
-
-      <div className="mt-3 flex items-center gap-3">
-        <input
-          type="range"
-          aria-label="Scrub through descent steps"
-          min={0}
-          max={Math.max(0, trace.length - 1)}
-          value={Math.min(cursor, trace.length - 1)}
-          onChange={(e) => {
-            setPlaying(false);
-            setCursor(Number(e.target.value));
-          }}
-          disabled={trace.length < 2}
-          className="w-full accent-[var(--accent)] disabled:opacity-40"
-        />
-      </div>
-
-      <div className="mt-3 flex flex-wrap items-center gap-x-8 gap-y-2 font-mono text-sm">
-        <span className="text-ink-muted">
-          step {viewing.step}
-          {viewing.step !== latest.step ? ` / ${latest.step}` : ""}
-        </span>
-        <span style={{ color: "var(--viz-prediction)" }}>
-          ŷ = {viewing.params.slope.toFixed(2)}·x{" "}
-          {viewing.params.intercept < 0 ? "−" : "+"}{" "}
-          {Math.abs(viewing.params.intercept).toFixed(2)}
-        </span>
-        <span style={{ color: "var(--viz-error)" }}>loss = {formatLoss(viewing.loss)}</span>
-      </div>
-
-      {diverged && (
-        <p className="mt-4 text-sm leading-relaxed" style={{ color: "var(--viz-error)" }}>
-          The loss has left the chart — each step overshot the valley and landed
-          higher than the last. This is divergence. Scrub back to watch the
-          first overshoot, or lower the learning rate and restart the descent.
-        </p>
-      )}
-
-      {exhausted && !diverged && (
-        <p className="mt-4 text-sm leading-relaxed text-ink-muted">
-          Step budget reached ({MAX_STEPS} steps). Restart the descent to keep
-          experimenting.
-        </p>
-      )}
     </div>
   );
 }

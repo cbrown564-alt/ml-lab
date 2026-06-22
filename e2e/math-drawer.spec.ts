@@ -2,9 +2,9 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 /**
- * The math drawer (docs/01 exhibit anatomy) and the small-screen notice
- * (docs/01 experience principles) — both landed by the Phase 0 exit
- * review's punch list.
+ * The Math view (docs/01 exhibit anatomy — the formal treatment is its own tab
+ * now, not a collapsed drawer) and the small-screen notice (docs/01 experience
+ * principles).
  */
 
 const EXHIBITS = [
@@ -19,23 +19,23 @@ const EXHIBITS = [
 ];
 
 for (const { route, equation } of EXHIBITS) {
-  test(`math drawer on ${route} opens to the formal treatment`, async ({ page }) => {
+  test(`the Math view on ${route} presents the formal treatment`, async ({ page }) => {
     await page.goto(route);
+    // Hydration sentinel: the tabs are client-side, so wait before switching.
+    await expect(page.getByTestId("mastery-badge")).toHaveText("seen");
 
-    const drawer = page.locator("details", { has: page.locator("summary") });
-    const summary = drawer.locator("summary");
-    await expect(summary).toHaveText(/Open the drawer/);
-
-    // Closed by default: intuition first, formalism on demand.
+    // A deliberate tab — intuition first, formalism on demand. Until it's
+    // opened, the formal equation isn't even mounted.
     await expect(page.getByText(equation)).toBeHidden();
 
-    await summary.click();
-    await expect(page.getByText(equation)).toBeVisible();
+    await page.getByRole("tab", { name: "Math" }).click();
+    const math = page.getByRole("tabpanel", { includeHidden: false });
+    await expect(math.getByText(equation)).toBeVisible();
 
-    // The drawer points into the math wing of the graph.
-    await expect(drawer.getByText("The Gradient", { exact: true })).toBeVisible();
+    // The view points into the math wing of the graph.
+    await expect(math.getByText("The Gradient", { exact: true })).toBeVisible();
 
-    // The opened drawer passes the same axe bar as everything else.
+    // The opened view passes the same axe bar as everything else.
     const results = await new AxeBuilder({ page }).analyze();
     const blocking = results.violations.filter(
       (v) => v.impact === "serious" || v.impact === "critical",

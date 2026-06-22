@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Axes, DataPoints, FitLine, Plot, usePlot } from "@/components/viz/Plot";
 import { LossSurface } from "@/components/viz/LossSurface";
 import { TrainingCurve } from "@/components/viz/TrainingCurve";
@@ -135,7 +135,7 @@ export function GradientDescentStory() {
         <div className="flex flex-col gap-2">
           <Plot
             width={640}
-            height={384}
+            height={344}
             xDomain={xDomain}
             yDomain={yDomain}
             ariaLabel={`Scatter plot of ${points.length} data points. The line being learned by gradient descent is at step ${viewing.step}: slope ${viewing.params.slope.toFixed(2)}, intercept ${viewing.params.intercept.toFixed(2)}, loss ${formatLoss(viewing.loss)}. A dashed line marks the least-squares destination.`}
@@ -145,7 +145,7 @@ export function GradientDescentStory() {
             <FitLine params={viewing.params} />
             <DataPoints points={points} />
           </Plot>
-          <TrainingCurve trace={trace} cursor={cursor} width={640} height={168} />
+          <TrainingCurve trace={trace} cursor={cursor} width={640} height={150} />
         </div>
       ) : (
         <div className="lift-fog">
@@ -154,7 +154,7 @@ export function GradientDescentStory() {
             trace={trace}
             cursor={cursor}
             width={760}
-            height={620}
+            height={600}
           />
         </div>
       )}

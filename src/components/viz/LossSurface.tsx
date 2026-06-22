@@ -17,7 +17,11 @@ import type { DescentStep, Point } from "@/lib/models/linear-regression";
  */
 
 const MARGIN = { top: 16, right: 16, bottom: 40, left: 56 };
-const BANDS = 9;
+// More bands + a deeper alpha ramp make the bowl read as a topographic map
+// rather than a flat pink wash (FINDINGS F11): the high-loss peaks darken hard,
+// the valley stays near the surface colour, and the contour steps are legible.
+const BANDS = 11;
+const PEAK_ALPHA = 0.82;
 
 const clampPx = (v: number) => Math.max(-2000, Math.min(2000, v));
 
@@ -62,7 +66,7 @@ export function LossSurface({
       for (let c = 0; c < cols; c++) {
         // Quantizing into bands turns the gradient into contour-like steps.
         const t = Math.round(values[r * cols + c] * BANDS) / BANDS;
-        ctx.globalAlpha = t * 0.62;
+        ctx.globalAlpha = t * PEAK_ALPHA;
         // Grid rows ascend in intercept; canvas y grows downward.
         ctx.fillRect(c, rows - 1 - r, 1, 1);
       }
@@ -172,23 +176,34 @@ export function LossSurface({
           </g>
 
           {trace.length > 1 && (
-            <polyline
-              points={path}
-              fill="none"
-              stroke="var(--viz-param)"
-              strokeWidth={1.75}
-              strokeLinejoin="round"
-              strokeOpacity={0.85}
-            />
+            <>
+              {/* A surface-coloured halo lifts the purple trail off the red
+                  bowl so the path reads at any band depth (FINDINGS F11). */}
+              <polyline
+                points={path}
+                fill="none"
+                stroke="var(--surface-bg)"
+                strokeWidth={4.5}
+                strokeLinejoin="round"
+                strokeOpacity={0.7}
+              />
+              <polyline
+                points={path}
+                fill="none"
+                stroke="var(--viz-param)"
+                strokeWidth={2.25}
+                strokeLinejoin="round"
+              />
+            </>
           )}
           {current && (
             <circle
               cx={clampPx(sx(current.params.slope))}
               cy={clampPx(sy(current.params.intercept))}
-              r={5}
+              r={5.5}
               fill="var(--viz-param)"
               stroke="var(--surface-bg)"
-              strokeWidth={1.5}
+              strokeWidth={2}
             />
           )}
         </g>

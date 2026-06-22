@@ -10,9 +10,9 @@ test.describe("concept check + mastery", () => {
     page,
   }) => {
     await page.goto("/exhibits/linear-regression");
-    const check = page.locator("section", {
-      hasText: "Check your understanding",
-    });
+    await expect(page.getByTestId("mastery-badge")).toHaveText("seen"); // hydration
+    await page.getByRole("tab", { name: "Check" }).click();
+    const check = page.getByRole("tabpanel", { includeHidden: false });
 
     await check
       .getByRole("button", { name: /passes through as many points/ })
@@ -37,9 +37,8 @@ test.describe("concept check + mastery", () => {
     const badge = page.getByTestId("mastery-badge");
     await expect(badge).toHaveText("seen");
 
-    const check = page.locator("section", {
-      hasText: "Check your understanding",
-    });
+    await page.getByRole("tab", { name: "Check" }).click();
+    const check = page.getByRole("tabpanel", { includeHidden: false });
     await check.getByRole("button", { name: /overshot the valley/ }).click();
     await check
       .getByRole("button", { name: /gradient gets smaller as the surface flattens/ })
@@ -47,11 +46,15 @@ test.describe("concept check + mastery", () => {
     await check.getByRole("button", { name: /points uphill/ }).click();
     await check.getByRole("button", { name: /Astronomically worse/ }).click();
 
-    // The fifth item is a lab task: mastery requires actually diverging.
+    // The fifth item is a lab task: mastery requires actually diverging — and the
+    // divergence happens over in the Experiment tab; the task bus carries it back.
     await expect(badge).not.toHaveText("mastered");
+    await page.getByRole("tab", { name: "Experiment" }).click();
     await page.getByRole("button", { name: /over the edge/i }).click();
     await page.getByRole("button", { name: "Play" }).click();
     await expect(page.getByText(/This is divergence/)).toBeVisible({ timeout: 15000 });
+
+    await page.getByRole("tab", { name: "Check" }).click();
     await expect(check.getByText(/Done — the experiment felt it/)).toBeVisible();
 
     await expect(badge).toHaveText("mastered");

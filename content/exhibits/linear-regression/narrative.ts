@@ -19,7 +19,7 @@ export const linearRegressionNarrative: ExhibitNarrative = {
       id: "the-residuals",
       heading: "How wrong is the line?",
       paragraphs: [
-        "“Best” needs a judge, and the judge is error. Turn on the dashed drops between the dots and the line: each one is a residual — how far the line missed that point, measured straight up and down, because we take x as given and put only the prediction of y on trial.",
+        "“Best” needs a judge, and the judge is error. The dashed drops between the dots and the line are now drawn: each one is a residual — how far the line missed that point, measured straight up and down, because we take x as given and put only the prediction of y on trial.",
         "Drag a point away from the crowd and watch its residual stretch. The line never honours any single point perfectly; it is the one line that keeps all of these misses, taken together, as small as it can.",
       ],
     },
@@ -36,6 +36,7 @@ export const linearRegressionNarrative: ExhibitNarrative = {
       heading: "The tyranny of one outlier",
       paragraphs: [
         "Two rogue points have crept into otherwise sensible data. Squared error does not merely notice them — it obsesses. The biggest square dwarfs every other penalty on the plot, and to shrink that one square the line abandons the honest crowd and lurches toward the outliers.",
+        "Try it with your own hand: drag that high rogue point further out and watch the MSE in the readout climb while the line tips away from the honest crowd to chase it. One point in thirty, dictating the line.",
         "This is not a bug. Squared error is doing exactly what it was told: make the largest miss small, whatever it costs the rest. Whether that is what you wanted is a different question — and it is the reason other loss functions exist.",
       ],
     },
@@ -43,7 +44,7 @@ export const linearRegressionNarrative: ExhibitNarrative = {
       id: "closed-form",
       heading: "What “best” actually buys you",
       paragraphs: [
-        "Notice what dragging never does: it never makes the line search. Move a point and the best line is simply there, on the next frame. Choosing squared error bought something rare — the optimal slope and intercept have a closed-form solution, evaluated in a single stroke, with no trial and error at all.",
+        "Notice what dragging never does: it never makes the line search. Move a point and the best line is simply there, on the next frame. Choosing squared error bought something rare — the optimal slope and intercept have a closed-form solution, evaluated in a single stroke, with no trial and error at all. Read plainly, the formula beside this beat says the slope is just how much x and y move together, divided by how much x moves on its own.",
         "Most models you meet after this one come with no such formula. Their best parameters must be hunted for, downhill, one step at a time. That hunt is its own exhibit — and this line, the one you can solve outright, is exactly where it begins.",
       ],
     },

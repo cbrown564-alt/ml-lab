@@ -31,7 +31,7 @@ import { linearRegressionExperiment } from "@content/exhibits/linear-regression/
 const useExperiment = createExperimentStore(linearRegressionExperiment);
 
 export function LinearRegressionStory() {
-  const { points, datasetId, scenarioId, spec, movePoint, addPoint, removePoint, loadScenario } =
+  const { points, datasetId, spec, movePoint, addPoint, removePoint, loadScenario } =
     useExperiment();
   const [errorView, setErrorView] = useState<"lines" | "squares" | "hidden">("hidden");
 
@@ -88,8 +88,9 @@ export function LinearRegressionStory() {
     return best && best.r > 3 ? best.p : null;
   }, [points, fit, errorView]);
 
+  // Cropped close to the data extent so the graphic reads full (FINDINGS F7).
   const xDomain: [number, number] = [-1, 11];
-  const yDomain: [number, number] = [-25, 50];
+  const yDomain: [number, number] = [-12, 40];
 
   return (
     <figure className="flex flex-col rounded-xl border border-line bg-raised p-5">
@@ -125,7 +126,7 @@ export function LinearRegressionStory() {
           points.length >= 2 &&
           (() => {
             const ly = fit.slope * 10.3 + fit.intercept;
-            return ly > -22 && ly < 46 ? (
+            return ly > yDomain[0] + 3 && ly < yDomain[1] - 4 ? (
               <Annotation
                 at={{ x: 10.3, y: ly }}
                 dx={-6}

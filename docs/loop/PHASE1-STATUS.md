@@ -41,6 +41,7 @@ mastery + graph, learner-controlled time.
 | Pass | Visual register (B2/B6) | Narrative integration (B1/B4) | Verdict source |
 | --- | --- | --- | --- |
 | Stream 2 baseline (pre-loop) | **2** — competent; graphic floats, dead space, reads as "blog + figure" | 2–3 | SYNTHESIS re-baseline + fresh captures (this loop, iter 0) |
+| After iter 1 (Story rework) | linreg Story **2.5**, GD Story **2.5**, Experiment **2** | linreg ~2.5, GD ~3 | Review panel (designer/teacher/tester) vs named exemplar frames |
 
 Target: visual register **3** ("matches the benchmark set") on both flagship
 exhibits, confirmed by the critic agent against named frames, before scaling.
@@ -66,13 +67,43 @@ exhibits, confirmed by the critic agent against named frames, before scaling.
   Dead space below the panel (F1) eliminated. validate + 89 unit green. Awaiting
   the review panel before claiming any register movement.
 
+- **Iter 2 (2026-06-22) — act on the panel verdict.** Highest-leverage fixes from
+  the review:
+  - **Experiment view → canvas-first two-column** (F6, the worst regression): both
+    labs now put the plot in the dominant right column, above the fold, with a
+    left rail of controls + a vertical `StatGrid` live readout. The "Experiment
+    freely" preamble trimmed so the canvas leads.
+  - **Cropped linreg axes to the data extent** (F7): yDomain [−25,50] → [−12,40];
+    the cloud now fills the frame instead of a diagonal third.
+  - **GD loss-surface contrast** (F11): 11 bands + a deeper alpha ramp read as a
+    topographic bowl; the descent path gets a surface-coloured halo so the purple
+    trail lifts off the red surface at any depth.
+  - **Fixed the GD line-view clip at 1440×800** (bug B-iter1-1): trimmed the
+    line-view figure so the tallest composition fits a short laptop.
+  - **Copy (teacher F9/F10):** linreg `the-residuals` made declarative; a
+    predict-then-verify *drag the rogue point* invite pulled into the outlier peak
+    beat; `closed-form` formula glossed in plain words; GD `slope-step-repeat`
+    now names the surface path's self-throttling, not an off-screen curve.
+  - Narration audio regenerated for the 4 edited sections (same Roger voice;
+    staleness gate green). build + 89 unit + validate green.
+  - **Repaired an inherited-red e2e suite.** The exhibit specs were already
+    failing on `main` (the prior tabs commit made Story the default but the specs
+    drove Experiment-lab controls without clicking the Experiment tab; a garbled
+    parallel `list`-reporter run hid it). Rewrote linreg + GD + code-mode + mastery
+    + math-drawer specs against the tabbed structure: an `openExperiment`/tab-click
+    step, assertions on the stable Plot `aria-label` rather than the restyled
+    readout strings, locators scoped to the *visible* tabpanel, the cross-tab
+    assessment flow (drive Experiment → read Check), and the Math view as a tab.
+    Regenerated the three darwin screenshot baselines. **40/40 chromium e2e green.**
+
 ## Queue
 
 1. ~~Iter 1 — canvas-first scale & composition.~~ Done.
-2. Review panel pass (designer/critic, teacher, tester) vs exemplars — **next**.
-3. Iterate template to register 3 on both flagships.
-4. Lock the template; scale Phase 1 regression cluster, then trees, unsupervised,
-   deep-learning clusters.
+2. ~~Review panel pass (designer/critic, teacher, tester) vs exemplars.~~ Done.
+3. ~~Iter 2 — act on the verdict (F6/F7/F11 + bug + copy) + repair e2e.~~ Done.
+4. Re-review (designer/critic) vs exemplars; confirm register movement.
+5. Iterate template to register 3 on both flagships, then lock the template and
+   scale Phase 1 (regression cluster, then trees, unsupervised, deep-learning).
 
 ## Standing rules
 

@@ -123,14 +123,13 @@ export function ExhibitFrame({
   const experimentView = (
     <div>
       <div className="max-w-[68ch]">
-        <h2 className="text-3xl font-semibold tracking-tight">Experiment freely</h2>
-        <p className="mt-4 text-lg leading-relaxed text-ink-muted">
-          The guardrails are off. Switch scenarios, build your own data, turn the
-          knobs — and when you want the real thing, run it as code. The same
-          implementation our tests verify against scikit-learn.
+        <h2 className="text-xl font-semibold tracking-tight">Experiment freely</h2>
+        <p className="mt-2 leading-relaxed text-ink-muted">
+          Guardrails off — switch scenarios, build your own data, turn the knobs,
+          or run the verified model as code.
         </p>
       </div>
-      <div className="mt-8">{experiment}</div>
+      <div className="mt-6">{experiment}</div>
     </div>
   );
 

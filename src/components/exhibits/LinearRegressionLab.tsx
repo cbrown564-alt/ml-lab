@@ -11,6 +11,7 @@ import {
   ResidualLines,
   ResidualSquares,
 } from "@/components/viz/Plot";
+import { StatGrid } from "@/components/viz/StatGrid";
 import { CodePanel } from "@/components/code/CodePanel";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
@@ -104,8 +105,37 @@ export function LinearRegressionLab() {
 
   // Fixed domains so dragging a point never reshapes the axes under the
   // learner's pointer (and outliers visibly leave the trend, not the frame).
+  // Cropped close to the data extent (clean 0.8–26.4, outliers −9–34.4) so the
+  // graphic reads full rather than half-empty (FINDINGS F7).
   const xDomain: [number, number] = [-1, 11];
-  const yDomain: [number, number] = [-25, 50];
+  const yDomain: [number, number] = [-12, 40];
+
+  const errorToggle = (
+    <div role="group" aria-label="How to show the errors" className="flex items-center gap-2">
+      <span className="text-sm text-ink-muted">Errors:</span>
+      <div className="inline-flex rounded-full border border-line p-0.5 text-sm">
+        {(
+          [
+            ["lines", "Lines"],
+            ["squares", "Squares"],
+            ["hidden", "Hide"],
+          ] as const
+        ).map(([value, label]) => (
+          <button
+            key={value}
+            type="button"
+            aria-pressed={errorView === value}
+            onClick={() => setErrorView(value)}
+            className={`rounded-full px-3 py-0.5 transition-colors ${
+              errorView === value ? "bg-sunken text-ink" : "text-ink-muted hover:text-ink"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <div className="rounded-xl border border-line bg-raised p-6">
@@ -116,158 +146,141 @@ export function LinearRegressionLab() {
         onReset={handleReset}
       />
 
-      <p className="mt-4 max-w-[70ch] leading-relaxed text-ink-muted">{scenario.prompt}</p>
+      {/* Canvas-first (FINDINGS F6): the plot takes the dominant right column and
+          reaches above the fold; controls + the live readout sit in a left rail. */}
+      <div className="mt-5 lg:grid lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:items-start lg:gap-8">
+        <div className="flex flex-col gap-5">
+          <p className="leading-relaxed text-ink-muted">{scenario.prompt}</p>
 
-      <div
-        role="group"
-        aria-label="Experiment mode"
-        className="mt-6 inline-flex rounded-full border border-line p-0.5 text-sm"
-      >
-        {(["visual", "code"] as const).map((m) => (
-          <button
-            key={m}
-            type="button"
-            aria-pressed={mode === m}
-            onClick={() => setMode(m)}
-            className={`rounded-full px-4 py-1 capitalize transition-colors ${
-              mode === m ? "bg-accent text-accent-ink" : "text-ink-muted hover:text-ink"
-            }`}
-          >
-            {m}
-          </button>
-        ))}
-      </div>
-
-      {mode === "code" ? (
-        <div className="mt-4">
-          <CodePanel
-            template={linearRegressionPython(points)}
-            onRan={practiced}
-          />
-        </div>
-      ) : (
-      <div className="mt-4">
-        <Plot
-          xDomain={xDomain}
-          yDomain={yDomain}
-          interactive
-          ariaLabel={`Scatter plot of ${points.length} data points with the least-squares line fitted live. Slope ${fit.slope.toFixed(2)}, intercept ${fit.intercept.toFixed(2)}, mean squared error ${loss.toFixed(2)}. Dragging points refits the line.${editable ? " Clicking empty space adds a point; double-clicking a point removes it." : ""}`}
-        >
-          <Axes />
-          {editable && (
-            <PaintLayer
-              onAdd={(p) => {
-                practiced();
-                addPoint(p);
-              }}
-            />
-          )}
-          {/* Error layers and annotations sit out the morph: points fly,
-              the line sweeps, and the penalties snap back in on the new
-              configuration — the staging IS the reveal. */}
-          {!easing && errorView === "lines" && (
-            <ResidualLines points={points} params={fit} />
-          )}
-          {!easing && errorView === "squares" && (
-            <ResidualSquares points={points} params={fit} />
-          )}
-          <FitLine params={fit} ease={easing} />
-          {!easing &&
-            points.length >= 2 &&
-            (() => {
-              const ly = fit.slope * 10.3 + fit.intercept;
-              // Skip the label while the line is steep enough to put it
-              // outside the frame — mid-drag chaos needs no caption.
-              return ly > -22 && ly < 46 ? (
-                <Annotation
-                  at={{ x: 10.3, y: ly }}
-                  dx={-6}
-                  dy={-18}
-                  label="ŷ — the model's line"
-                  color="var(--viz-prediction)"
-                />
-              ) : null;
-            })()}
-          {!easing && worst && (
-            <Annotation
-              at={worst}
-              dx={worst.x > 8 ? -16 : 16}
-              dy={-16}
-              label="area = the penalty it pays here"
-              color="var(--viz-error)"
-            />
-          )}
-          <DataPoints
-            points={points}
-            ease={easing}
-            onChange={(i, p) => {
-              // Manipulating the data is the moment "seen" becomes "practiced".
-              practiced();
-              movePoint(i, p);
-            }}
-            onRemove={(i) => {
-              practiced();
-              removePoint(i);
-            }}
-          />
-        </Plot>
-
-        <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-2 font-mono text-sm">
-          <span style={{ color: "var(--viz-prediction)" }}>
-            ŷ = {fit.slope.toFixed(2)}·x {fit.intercept < 0 ? "−" : "+"}{" "}
-            {Math.abs(fit.intercept).toFixed(2)}
-          </span>
-          <span style={{ color: "var(--viz-error)" }}>MSE = {loss.toFixed(2)}</span>
-          {editable && (
-            <button
-              type="button"
-              onClick={() => {
-                practiced();
-                // Keyboard-accessible alternative to painting (docs/06, A6):
-                // the new point lands mid-plot, ready to be arrow-keyed.
-                addPoint({
-                  x: (xDomain[0] + xDomain[1]) / 2,
-                  y: (yDomain[0] + yDomain[1]) / 2,
-                });
-              }}
-              className="rounded-full border border-line px-4 py-1 font-sans text-sm text-ink-muted hover:border-ink-faint"
-            >
-              Add point
-            </button>
-          )}
           <div
             role="group"
-            aria-label="How to show the errors"
-            className="ml-auto flex items-center gap-2 font-sans"
+            aria-label="Experiment mode"
+            className="inline-flex self-start rounded-full border border-line p-0.5 text-sm"
           >
-            <span className="text-sm text-ink-muted">Errors:</span>
-            <div className="inline-flex rounded-full border border-line p-0.5 text-sm">
-              {(
-                [
-                  ["lines", "Lines"],
-                  ["squares", "Squares"],
-                  ["hidden", "Hide"],
-                ] as const
-              ).map(([value, label]) => (
-                <button
-                  key={value}
-                  type="button"
-                  aria-pressed={errorView === value}
-                  onClick={() => setErrorView(value)}
-                  className={`rounded-full px-3 py-0.5 transition-colors ${
-                    errorView === value
-                      ? "bg-sunken text-ink"
-                      : "text-ink-muted hover:text-ink"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+            {(["visual", "code"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                aria-pressed={mode === m}
+                onClick={() => setMode(m)}
+                className={`rounded-full px-4 py-1 capitalize transition-colors ${
+                  mode === m ? "bg-accent text-accent-ink" : "text-ink-muted hover:text-ink"
+                }`}
+              >
+                {m}
+              </button>
+            ))}
           </div>
+
+          {mode === "visual" && (
+            <>
+              {errorToggle}
+              {editable && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    practiced();
+                    // Keyboard-accessible alternative to painting (docs/06, A6):
+                    // the new point lands mid-plot, ready to be arrow-keyed.
+                    addPoint({
+                      x: (xDomain[0] + xDomain[1]) / 2,
+                      y: (yDomain[0] + yDomain[1]) / 2,
+                    });
+                  }}
+                  className="self-start rounded-full border border-line px-4 py-1 text-sm text-ink-muted hover:border-ink-faint"
+                >
+                  Add point
+                </button>
+              )}
+              <StatGrid
+                direction="col"
+                caption="The fit, live"
+                stats={[
+                  { label: "slope ŵ", value: fit.slope.toFixed(2), hue: "var(--viz-prediction)" },
+                  { label: "intcpt b̂", value: fit.intercept.toFixed(2), hue: "var(--viz-prediction)" },
+                  { label: "MSE", value: loss.toFixed(2), hue: "var(--viz-error)", note: "avg squared miss" },
+                  { label: "n points", value: String(points.length) },
+                ]}
+              />
+            </>
+          )}
         </div>
+
+        {mode === "code" ? (
+          <div className="mt-6 lg:mt-0">
+            <CodePanel template={linearRegressionPython(points)} onRan={practiced} />
+          </div>
+        ) : (
+          <div className="mt-6 lg:mt-0">
+            <Plot
+              width={640}
+              height={520}
+              xDomain={xDomain}
+              yDomain={yDomain}
+              interactive
+              ariaLabel={`Scatter plot of ${points.length} data points with the least-squares line fitted live. Slope ${fit.slope.toFixed(2)}, intercept ${fit.intercept.toFixed(2)}, mean squared error ${loss.toFixed(2)}. Dragging points refits the line.${editable ? " Clicking empty space adds a point; double-clicking a point removes it." : ""}`}
+            >
+              <Axes />
+              {editable && (
+                <PaintLayer
+                  onAdd={(p) => {
+                    practiced();
+                    addPoint(p);
+                  }}
+                />
+              )}
+              {/* Error layers and annotations sit out the morph: points fly,
+                  the line sweeps, and the penalties snap back in on the new
+                  configuration — the staging IS the reveal. */}
+              {!easing && errorView === "lines" && (
+                <ResidualLines points={points} params={fit} />
+              )}
+              {!easing && errorView === "squares" && (
+                <ResidualSquares points={points} params={fit} />
+              )}
+              <FitLine params={fit} ease={easing} />
+              {!easing &&
+                points.length >= 2 &&
+                (() => {
+                  const ly = fit.slope * 10.3 + fit.intercept;
+                  // Skip the label while the line is steep enough to put it
+                  // outside the frame — mid-drag chaos needs no caption.
+                  return ly > yDomain[0] + 3 && ly < yDomain[1] - 4 ? (
+                    <Annotation
+                      at={{ x: 10.3, y: ly }}
+                      dx={-6}
+                      dy={-18}
+                      label="ŷ — the model's line"
+                      color="var(--viz-prediction)"
+                    />
+                  ) : null;
+                })()}
+              {!easing && worst && (
+                <Annotation
+                  at={worst}
+                  dx={worst.x > 8 ? -16 : 16}
+                  dy={-16}
+                  label="area = the penalty it pays here"
+                  color="var(--viz-error)"
+                />
+              )}
+              <DataPoints
+                points={points}
+                ease={easing}
+                onChange={(i, p) => {
+                  // Manipulating the data is the moment "seen" becomes "practiced".
+                  practiced();
+                  movePoint(i, p);
+                }}
+                onRemove={(i) => {
+                  practiced();
+                  removePoint(i);
+                }}
+              />
+            </Plot>
+          </div>
+        )}
       </div>
-      )}
     </div>
   );
 }
