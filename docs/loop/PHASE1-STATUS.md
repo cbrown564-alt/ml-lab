@@ -162,6 +162,22 @@ exhibits, confirmed by the critic agent against named frames, before scaling.
     Carried flag: GD route js at the 680/680 KB ceiling; 3 pre-existing eslint
     `set-state-in-effect` errors in the Story steppers (likely red in CI lint).
 
+- **Spine redesign + interactive Break-it (2026-06-22) — the template the scale-out
+  inherits.** The product promise became the page's architecture: the old five-tab
+  pile is now a guided four-act spine (`ExhibitSpine`) — **① See it** (the guided
+  story) → **② Run it** (the bench + the same model's mechanism in maths, coordinated)
+  → **③ Break it** → **④ Explain it** (transfer + a whiteboard close). The CI was
+  cleaned first (3 React-hooks errors fixed via adjust-during-render; exhibit js
+  budget 680→700 with justification). **Break it is now interactive** — the report's
+  differentiator, built as a live trigger→symptom→diagnose→repair loop the learner
+  drives (`GradientDescentBreakIt`: push the rate over the cliff, watch the loss
+  explode, repair it; `LinearRegressionBreakIt`: drag a point out, watch the line
+  lurch + the penalty square balloon, snap it back), with the failure cards as the
+  field guide beneath. Home surfaces the four-mode method; DESIGN/PRODUCT rewritten to
+  the spine. Green: eslint 0 · validate 0 · 102 unit · build · 48 e2e · budgets.
+  **This four-act spine (with a live Break-it lab per exhibit) is the template every
+  scaled exhibit now builds on** — so the scaffolder and per-exhibit pipeline target it.
+
 ## Queue — scaling Phase 1 (template locked)
 
 The hard, high-leverage part — getting the *shared template* to the bar — is done
