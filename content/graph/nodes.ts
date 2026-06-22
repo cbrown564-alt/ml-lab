@@ -62,7 +62,9 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Live on the four-act spine (See it + Run it) — first regression-cluster
+    // scale-out; Break it + Explain it land next to reach flagship.
+    status: "interactive",
   },
   {
     id: "gradient-descent",
