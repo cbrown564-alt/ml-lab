@@ -24,7 +24,8 @@ import type { BeatView } from "@/lib/exhibit/spine";
  * still drives.
  */
 
-const FrameContext = createContext<unknown>(null);
+/** Exported so the stepper presentation can drive the same frame the lab reads. */
+export const FrameContext = createContext<unknown>(null);
 
 /** Read the frame asserted by the beat currently at centre. Null outside a spine. */
 export function useActiveFrame<Frame>(): Frame | null {

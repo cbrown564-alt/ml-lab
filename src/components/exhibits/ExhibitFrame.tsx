@@ -5,6 +5,7 @@ import { ExhibitShell, type ExhibitViewDef } from "@/components/exhibits/Exhibit
 import { MathView } from "@/components/exhibits/MathView";
 import { SpecimenPlacard } from "@/components/exhibits/SpecimenPlacard";
 import { StoryScroller } from "@/components/exhibits/StoryScroller";
+import { StoryStepper } from "@/components/exhibits/StoryStepper";
 import { RecordVisit } from "@/components/learner/RecordVisit";
 import type { ConceptCheck } from "@/lib/assessment/schema";
 import type { Beat, BeatView } from "@/lib/exhibit/spine";
@@ -40,6 +41,7 @@ export function ExhibitFrame({
   math,
   check,
   story,
+  storyLayout = "scroll",
   experiment,
 }: {
   nodeId: string;
@@ -64,6 +66,12 @@ export function ExhibitFrame({
   check?: ConceptCheck;
   /** The guided graphic for the Story view (reads its per-beat frame). */
   story: ReactNode;
+  /**
+   * How the guided story is presented. `"scroll"` is the scroll-driven spine;
+   * `"stepper"` is the co-visible side-by-side with explicit beat navigation
+   * (the Seeing-Theory / Distill model). Defaults to `"scroll"`.
+   */
+  storyLayout?: "scroll" | "stepper";
   /** The full interactive sandbox for the Experiment view. */
   experiment: ReactNode;
 }) {
@@ -111,7 +119,11 @@ export function ExhibitFrame({
 
   const storyView = (
     <div>
-      <StoryScroller beats={beats} graphic={story} />
+      {storyLayout === "stepper" ? (
+        <StoryStepper beats={beats} graphic={story} />
+      ) : (
+        <StoryScroller beats={beats} graphic={story} />
+      )}
       {narrative.fieldNotes.length > 0 && (
         <section className="mt-20 max-w-[68ch] border-t border-line pt-8">
           <h2 className="text-sm font-medium tracking-wide text-ink-faint uppercase">
