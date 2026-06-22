@@ -39,6 +39,7 @@ A one-page exhibit brief: the single *aha* this exhibit delivers, the core metap
 - One consistent narrator voice for the lab; optional character voices for character lines (distinct, also consistent).
 - Word-level timing JSON generated alongside (forced alignment) to power the synced transcript player — the mathland mechanic, kept.
 - Regeneration policy: audio regenerates whenever its source section's `version` bumps; stale audio is flagged by a build check comparing content hash to the hash recorded at generation time.
+- **Deferred — voice quality (parked 2026-06-22).** The current narrator (ElevenLabs default fallback, "Roger") reads flat and underpowered. Do **not** iterate on voice selection or delivery yet: written narrative across the exhibits isn't finished, and voice is a *global* choice best made once, in a single pass, after all prose is locked — otherwise we re-audition voices every time a paragraph changes. For now keep regenerating with the current voice so the synced-transcript mechanic stays wired and the staleness check stays green; treat the audio as placeholder. Revisit as one dedicated pass (voice audition + per-section reading direction) once the written narrative is complete.
 
 ### 6. Assembly & QA
 
