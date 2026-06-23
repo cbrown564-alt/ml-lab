@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { crossValR2, type HeldOut, type Matrix } from "@/lib/models/leakage";
 import fixtures from "@/lib/models/fixtures/leakage.json";
 
@@ -39,41 +39,87 @@ const W = 460;
 const H = 380;
 const M = 36;
 const EXT = 2.8;
+// The "truth lane": predictions within ±BAND of the actual value land on the
+// diagonal. Points that stray outside it are wrong by more than the tolerance —
+// drawn in error-red, so each dot's distance from the diagonal IS its error.
+const BAND = 1.0;
 const sx = (v: number) => M + ((v + EXT) / (2 * EXT)) * (W - 2 * M);
 const sy = (v: number) => H - M - ((v + EXT) / (2 * EXT)) * (H - 2 * M);
 const clamp = (v: number) => Math.max(-EXT, Math.min(EXT, v));
 
-function HeroScatter({ points, reveal }: { points: HeldOut[]; reveal: number }) {
+function HeroScatter({
+  points,
+  reveal,
+  verdict,
+}: {
+  points: HeldOut[];
+  reveal: number;
+  /** Short in-graphic read on the trend's orientation (mechanism, not just prose). */
+  verdict: string;
+}) {
+  const clipId = useId();
   // The line through predicted-vs-actual: it tilts up where the (fake) skill is and
   // lies flat where there's only noise — so "skill vs nothing" reads, not just the R².
   const trend = leastSquares(points.map((p) => ({ x: p.actual, y: p.predicted })));
   const ty = (x: number) => clamp(trend.slope * x + trend.intercept);
+  // The lane as a band around y = x, ±BAND in the predicted direction.
+  const lane = [
+    [sx(-EXT), sy(-EXT + BAND)],
+    [sx(EXT), sy(EXT + BAND)],
+    [sx(EXT), sy(EXT - BAND)],
+    [sx(-EXT), sy(-EXT - BAND)],
+  ]
+    .map((p) => p.join(","))
+    .join(" ");
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
       role="img"
-      aria-label="Predicted versus actual for held-out points; a real model hugs the diagonal, pure noise scatters off it."
+      aria-label="Predicted versus actual for held-out points; a real model's points track up the diagonal lane, pure noise scatters off it into error."
       className="h-auto w-full"
     >
+      <defs>
+        <clipPath id={clipId}>
+          <rect x={M} y={M} width={W - 2 * M} height={H - 2 * M} />
+        </clipPath>
+      </defs>
       <rect x={M} y={M} width={W - 2 * M} height={H - 2 * M} fill="none" stroke="var(--line)" />
+      {/* the truth lane — where prediction ≈ actual */}
+      <polygon points={lane} fill="var(--viz-truth)" fillOpacity={0.12} clipPath={`url(#${clipId})`} />
       <line x1={sx(-EXT)} y1={sy(-EXT)} x2={sx(EXT)} y2={sy(EXT)} stroke="var(--ink-faint)" strokeDasharray="4 4" />
       <text x={sx(EXT) - 4} y={sy(EXT) + 14} textAnchor="end" fontSize={11} fill="var(--ink-faint)" fontStyle="italic">
         predicted = actual
       </text>
-      <g style={{ opacity: reveal, transition: "opacity 500ms ease" }}>
-        {points.map((p, i) => (
-          <circle key={i} cx={sx(p.actual)} cy={sy(clamp(p.predicted))} r={4} fill="var(--viz-prediction)" fillOpacity={0.7} />
-        ))}
-        {/* the held-out trend: tilted = apparent skill, flat = noise */}
-        <line
-          x1={sx(-EXT)}
-          y1={sy(ty(-EXT))}
-          x2={sx(EXT)}
-          y2={sy(ty(EXT))}
-          stroke="var(--viz-prediction)"
-          strokeWidth={2.5}
-        />
+      <g clipPath={`url(#${clipId})`} style={{ opacity: reveal, transition: "opacity 500ms ease" }}>
+        {points.map((p, i) => {
+          const stray = Math.abs(p.predicted - p.actual) > BAND;
+          return (
+            <circle
+              key={i}
+              cx={sx(p.actual)}
+              cy={sy(clamp(p.predicted))}
+              r={stray ? 4.6 : 4}
+              fill={stray ? "var(--viz-error)" : "var(--viz-prediction)"}
+              fillOpacity={stray ? 0.85 : 0.62}
+            />
+          );
+        })}
+        {/* the held-out trend, on a surface-coloured halo so it reads over the dots:
+            tilted = apparent skill tracking the truth, flat = noise ignoring it. */}
+        <line x1={sx(-EXT)} y1={sy(ty(-EXT))} x2={sx(EXT)} y2={sy(ty(EXT))} stroke="var(--surface)" strokeWidth={6.5} strokeLinecap="round" />
+        <line x1={sx(-EXT)} y1={sy(ty(-EXT))} x2={sx(EXT)} y2={sy(ty(EXT))} stroke="var(--viz-prediction)" strokeWidth={3.25} strokeLinecap="round" />
       </g>
+      <text
+        x={sx(EXT) - 6}
+        y={sy(ty(EXT)) - 8}
+        textAnchor="end"
+        fontSize={11}
+        fontStyle="italic"
+        fill="var(--viz-prediction)"
+        style={{ opacity: reveal, transition: "opacity 500ms ease" }}
+      >
+        {verdict}
+      </text>
       <text x={W / 2} y={H - 8} textAnchor="middle" fontSize={11} fill="var(--ink-faint)" fontFamily="var(--font-mono)">
         actual target →
       </text>
@@ -88,6 +134,7 @@ function Panel({
   r2hue,
   points,
   reveal,
+  verdict,
 }: {
   kicker: string;
   r2: number;
@@ -95,6 +142,7 @@ function Panel({
   r2hue: string;
   points: HeldOut[];
   reveal: number;
+  verdict: string;
 }) {
   return (
     <div className="min-w-0 flex-1">
@@ -104,7 +152,7 @@ function Panel({
           R² {r2.toFixed(2)}
         </span>
       </div>
-      <HeroScatter points={points} reveal={reveal} />
+      <HeroScatter points={points} reveal={reveal} verdict={verdict} />
       <p className="px-1 pt-1 text-xs leading-snug text-ink-muted">{note}</p>
     </div>
   );
@@ -141,6 +189,7 @@ export function DataLeakageHero() {
           note="The held-out points line up — skill that looks real, but it leaked from peeking at the test rows."
           points={LEAKED.points}
           reveal={reveal}
+          verdict="rises with actual"
         />
         <Panel
           kicker="picked inside each fold — honest"
@@ -149,6 +198,7 @@ export function DataLeakageHero() {
           note="Same data, leak closed: a shapeless cloud at R² ≈ 0. The honest truth — there was never any signal."
           points={HONEST.points}
           reveal={reveal}
+          verdict="flat — ignores actual"
         />
       </div>
     </figure>
