@@ -88,8 +88,9 @@ export const nodes: ConceptNode[] = [
     kind: "practice",
     phase: 1,
     depth: "core",
-    // Live on the four-act spine (See it + Run it); Break it + Explain it land next.
-    status: "interactive",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green) after a two-round review.
+    status: "flagship",
   },
   {
     id: "overfitting-regularization",

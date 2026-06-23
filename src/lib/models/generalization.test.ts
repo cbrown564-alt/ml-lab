@@ -55,24 +55,25 @@ describe("train/test generalisation", () => {
     expect(r.meanErr).toBeGreaterThan(0);
   });
 
-  it("the test-error spread shrinks as the holdout grows (the Break-it lesson)", () => {
+  it("the test-error spread collapses as the holdout grows (the Break-it lesson)", () => {
     // On the exhibit's actual 60-point pool with its stable, lightly-ridged model, a
     // bigger holdout is a less noisy measurement — so the robust (P10–P90) spread of
-    // test errors across 28 random splits must DECREASE monotonically as the holdout
-    // grows. (Without the ridge a starved fit explodes and this inverts — the panel bug.)
+    // test errors across 28 random splits falls sharply as the holdout grows.
+    // (Without the ridge a starved fit explodes and this inverts — the panel bug.) The
+    // trend has sub-perceptual wiggles, so we assert the decisive *collapse* across the
+    // slider's range rather than strict point-by-point monotonicity.
     const n = pooledPoints.length;
     const seeds = Array.from({ length: 28 }, (_, i) => i + 1);
     const spreadAt = (testSize: number) =>
       p10p90Spread(
         seeds.map((s) => scoreSplit(splitPoints(pooledPoints, testSize / n, s), TT_DEGREE, TT_LAMBDA).testErr),
       );
-    // Over the holdout range the Break-it slider exposes (3–20), the spread falls
-    // cleanly; we don't sweep past ~⅓ held out, where the shrinking training set would
-    // start to destabilise the fit and the spread would turn back up.
     const s4 = spreadAt(4);
     const s12 = spreadAt(12);
     const s18 = spreadAt(18);
     expect(s12).toBeLessThan(s4);
     expect(s18).toBeLessThan(s12);
+    // and the overall shrink is decisive (a real collapse, not a marginal drift)
+    expect(s18).toBeLessThan(s4 * 0.6);
   });
 });

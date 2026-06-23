@@ -27,7 +27,7 @@ export function ErrorSpreadStrip({
   width?: number;
   height?: number;
 }) {
-  const m = { l: 16, r: 16, t: 22, b: 22 };
+  const m = { l: 16, r: 16, t: 34, b: 22 };
   const plotW = width - m.l - m.r;
   const plotH = height - m.t - m.b;
   const x = (e: number) => m.l + (Math.min(e, axisMax) / axisMax) * plotW;
@@ -56,17 +56,26 @@ export function ErrorSpreadStrip({
           />
         ),
       )}
-      {marks.map((mk, i) => {
-        const mx = x(mk.value);
-        const near = mx < m.l + 34 ? "start" : mx > width - m.r - 34 ? "end" : "middle";
-        const lx = near === "start" ? mx + 3 : near === "end" ? mx - 3 : mx;
-        return (
-          <g key={i}>
-            <line x1={mx} x2={mx} y1={m.t - 4} y2={height - m.b} stroke={mk.color} strokeWidth={2} />
-            <text x={lx} y={m.t - 8} textAnchor={near} fontSize={11} fontWeight={600} fill={mk.color}>{mk.label}</text>
-          </g>
-        );
-      })}
+      {(() => {
+        // Place labels so they never collide: edge marks anchor inward, and a mark
+        // whose label would overprint a nearer one is bumped up a row.
+        const placed: { lx: number; row: number }[] = [];
+        return marks.map((mk, i) => {
+          const mx = x(mk.value);
+          const near = mx < m.l + 34 ? "start" : mx > width - m.r - 34 ? "end" : "middle";
+          const lx = near === "start" ? mx + 3 : near === "end" ? mx - 3 : mx;
+          let row = 0;
+          while (placed.some((p) => p.row === row && Math.abs(p.lx - lx) < 50)) row++;
+          placed.push({ lx, row });
+          const ly = m.t - 8 - row * 12;
+          return (
+            <g key={i}>
+              <line x1={mx} x2={mx} y1={ly + 3} y2={height - m.b} stroke={mk.color} strokeWidth={2} />
+              <text x={lx} y={ly} textAnchor={near} fontSize={11} fontWeight={600} fill={mk.color}>{mk.label}</text>
+            </g>
+          );
+        });
+      })()}
       <text x={m.l} y={height - 6} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">0</text>
       <text x={width - m.r} y={height - 6} textAnchor="end" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">higher error →</text>
     </svg>
