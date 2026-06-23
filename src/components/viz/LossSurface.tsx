@@ -17,25 +17,36 @@ import type { DescentStep, Point } from "@/lib/models/linear-regression";
  */
 
 const MARGIN = { top: 16, right: 16, bottom: 40, left: 56 };
-// A perceptual cream → red → maroon ramp makes the bowl read as a topographic
-// map rather than a flat pink wash (FINDINGS F11 + the re-review): low loss
-// blends into the surface, high loss darkens and saturates hard, and quantizing
-// into bands draws contour-like steps. Still "loss = red" (grammar), now with a
-// real value+chroma ramp. sRGB lerp between three anchors — universal, no oklch
-// canvas dependency.
-const BANDS = 11;
+// Loss stays in the red family (grammar: error = red), but rendered as a
+// TOPOGRAPHIC MAP, not a flood. The old ramp hit full error-red at the midpoint,
+// so the whole bowl read as a saturated crimson wash that drained red's "error"
+// meaning. This ramp keeps a wide, calm cream→dusty-rose low/mid ground (so the
+// basin reads as soft terrain) and reserves saturated maroon for the true
+// high-loss peaks; a gamma ease pushes most of the field toward the calm end, and
+// contour LINES at each band boundary (the ramp darkened) draw the bowl as a map
+// rather than a posterized wash — the move that cleared GradientField. sRGB lerp
+// between three anchors — universal, no oklch canvas dependency.
+const BANDS = 12;
 const RAMP: [number, number, number][] = [
-  [250, 247, 240], // t=0   low loss — the surface colour (valley blends in)
-  [202, 78, 96], //  t=0.5 the error hue, mid loss
-  [86, 18, 33], //   t=1   deep maroon, the bright peaks
+  [250, 247, 240], // t=0   low loss — cream valley (blends into the surface)
+  [224, 168, 162], // t=0.5 dusty rose — the calm mid ground
+  [122, 26, 38], //   t=1   deep maroon — the high-loss peaks (error punches here)
 ];
+// Most of a bowl's window is mid-to-high loss, so without easing the field
+// saturates everywhere. Gamma>1 widens the calm cream/rose basin and keeps the
+// deep maroon for genuine peaks only.
+const ease = (v: number) => Math.pow(Math.max(0, Math.min(1, v)), 1.35);
 
 const lerp = (a: number, b: number, u: number) => Math.round(a + (b - a) * u);
-const rampColor = (t: number) => {
+const rampRGB = (t: number): [number, number, number] => {
   const u = t <= 0.5 ? t * 2 : (t - 0.5) * 2;
   const [c0, c1] = t <= 0.5 ? [RAMP[0], RAMP[1]] : [RAMP[1], RAMP[2]];
-  return `rgb(${lerp(c0[0], c1[0], u)}, ${lerp(c0[1], c1[1], u)}, ${lerp(c0[2], c1[2], u)})`;
+  return [lerp(c0[0], c1[0], u), lerp(c0[1], c1[1], u), lerp(c0[2], c1[2], u)];
 };
+const rampColor = (t: number) => `rgb(${rampRGB(t).join(", ")})`;
+// A contour line at a band boundary: the ramp colour darkened, so the field
+// reads as a drawn topographic map rather than a stepped wash.
+const contourColor = (t: number) => `rgb(${rampRGB(t).map((c) => Math.round(c * 0.7)).join(", ")})`;
 
 const clampPx = (v: number) => Math.max(-2000, Math.min(2000, v));
 
@@ -57,7 +68,10 @@ export function LossSurface({
    *  heat, the start/valley marks, and the descent path. */
   bare?: boolean;
 }) {
-  const grid = useMemo(() => lossSurfaceGrid(points), [points]);
+  // A much finer grid than the default keeps the upscaled field and its contour
+  // lines crisp instead of blocky (the old 110×80 read as stair-stepped at full
+  // width). Memoized per dataset, so the extra samples are paid once.
+  const grid = useMemo(() => lossSurfaceGrid(points, 300, 200), [points]);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const sx = linearScale(grid.slopeRange, [MARGIN.left, width - MARGIN.right]);
@@ -74,11 +88,18 @@ export function LossSurface({
     const { cols, rows, values } = grid;
     canvas.width = cols;
     canvas.height = rows;
+    // Band index per cell, on the gamma-eased value so the contour levels are
+    // evenly spaced over the calm range. A cell whose lower-left neighbour sits in
+    // a different band becomes a contour line — the bowl reads as a drawn map.
+    const bandAt = (i: number) => Math.round(ease(values[i]) * BANDS);
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
-        // Quantizing into bands turns the gradient into contour-like steps.
-        const t = Math.round(values[r * cols + c] * BANDS) / BANDS;
-        ctx.fillStyle = rampColor(t);
+        const i = r * cols + c;
+        const b = bandAt(i);
+        const t = b / BANDS;
+        const onContour =
+          (c > 0 && bandAt(i - 1) !== b) || (r > 0 && bandAt(i - cols) !== b);
+        ctx.fillStyle = onContour ? contourColor(t) : rampColor(t);
         // Grid rows ascend in intercept; canvas y grows downward.
         ctx.fillRect(c, rows - 1 - r, 1, 1);
       }
