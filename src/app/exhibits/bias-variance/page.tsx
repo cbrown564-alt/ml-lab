@@ -1,6 +1,10 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { BiasVarianceBreakIt } from "@/components/exhibits/BiasVarianceBreakIt";
+import { BiasVarianceCheckLab } from "@/components/exhibits/BiasVarianceCheckLab";
 import { BiasVarianceLab } from "@/components/exhibits/BiasVarianceLab";
 import { BiasVarianceStory } from "@/components/exhibits/BiasVarianceStory";
+import { biasVarianceCheck } from "@content/exhibits/bias-variance/concept-check";
+import { biasVarianceFailures } from "@content/exhibits/bias-variance/failures";
 import { biasVarianceMath } from "@content/exhibits/bias-variance/math";
 import { biasVarianceNarrative } from "@content/exhibits/bias-variance/narrative";
 import { biasVarianceSpine } from "@content/exhibits/bias-variance/spine";
@@ -12,6 +16,10 @@ export default function BiasVarianceExhibit() {
       narrative={biasVarianceNarrative}
       spine={biasVarianceSpine}
       math={biasVarianceMath}
+      check={biasVarianceCheck}
+      failures={biasVarianceFailures}
+      breakIt={<BiasVarianceBreakIt />}
+      checkCompanion={<BiasVarianceCheckLab />}
       story={<BiasVarianceStory />}
       experiment={<BiasVarianceLab />}
       lede={
