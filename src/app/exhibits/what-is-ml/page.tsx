@@ -1,6 +1,7 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { WhatIsMlBreakIt } from "@/components/exhibits/WhatIsMlBreakIt";
 import { WhatIsMlCheckLab } from "@/components/exhibits/WhatIsMlCheckLab";
+import { WhatIsMlHero } from "@/components/exhibits/WhatIsMlHero";
 import { WhatIsMlLab } from "@/components/exhibits/WhatIsMlLab";
 import { WhatIsMlStory } from "@/components/exhibits/WhatIsMlStory";
 import { whatIsMlCheck } from "@content/exhibits/what-is-ml/concept-check";
@@ -20,6 +21,7 @@ export default function WhatIsMlExhibit() {
       failures={whatIsMlFailures}
       breakIt={<WhatIsMlBreakIt />}
       checkCompanion={<WhatIsMlCheckLab />}
+      hero={<WhatIsMlHero />}
       story={<WhatIsMlStory />}
       experiment={<WhatIsMlLab />}
       lede={

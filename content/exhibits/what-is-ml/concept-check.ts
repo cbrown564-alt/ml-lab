@@ -100,26 +100,14 @@ export const whatIsMlCheck: ConceptCheck = {
       kind: "transfer",
       scenario:
         "A company trains a résumé-screening model on a decade of its own hiring decisions to predict who to interview. The model is accurate on held-out historical résumés, but in use it systematically rejects qualified candidates from one group.",
-      prompt: "From what you've learned, what's the most likely cause, and what would actually address it?",
-      options: [
-        {
-          label:
-            "The historical decisions encoded human bias; the model faithfully learned it. High historical accuracy just means it reproduced the biased labels — the fix is the data/labels and the objective, not a bigger model",
-          correct: true,
-          feedback:
-            "That's the transfer: the model is a mirror of its examples. Trained on biased decisions, it learns the bias and scores well on more biased examples. Auditing and correcting the data and target is the real work.",
-        },
-        {
-          label: "The model overfit the historical résumés — add regularisation and it will be fair",
-          feedback:
-            "Regularisation curbs memorising noise, not systematic bias in the labels. A perfectly-generalising model trained on biased decisions still learns the bias. The problem is the data, not the fit.",
-        },
-        {
-          label: "The held-out accuracy proves the model is fine; the rejected candidates must be genuinely weaker",
-          feedback:
-            "Held-out accuracy only measures agreement with the (biased) historical labels — so a biased model scores well by reproducing the bias. That number can't certify fairness; the labels themselves are the issue.",
-        },
-      ],
+      prompt:
+        "From what you've learned about where a model's rule comes from: what's the most likely cause, and what would actually address it (and what would not)? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. the model learned its rule from… so the high accuracy means… the real fix is…",
+        answer:
+          "The model writes its rule from its examples — and the examples are a decade of biased human decisions, so it learned the bias. High held-out accuracy is no defence: it only measures agreement with those same biased labels, so a biased model scores well by reproducing the bias. A bigger model or regularisation won't help — those fix how well it fits, not what it was taught. The real work is upstream: audit and correct the labels and the objective (what counts as a 'good' hire), because the model is a mirror of the data it's shown.",
+      },
       difficulty: 3,
       targets: ["wml:transfer-bias"],
     },
