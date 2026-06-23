@@ -10,6 +10,12 @@ import path from "node:path";
 import { nodes } from "../content/graph/nodes";
 import { edges } from "../content/graph/edges";
 import { journeys } from "../content/journeys/foundations";
+import { registerBreaches } from "../content/quality/rubric";
+import {
+  contentHash,
+  readScorecard,
+  readTextDoc,
+} from "../src/app/review/_lib/store";
 
 const id = process.argv[2];
 const node = nodes.find((n) => n.id === id);
@@ -28,6 +34,40 @@ p(`> ${node.oneLiner}`);
 p();
 p(`- Domain: ${node.domain} · Kind: ${node.kind} · Phase: ${node.phase} · Depth: ${node.depth} · Status: ${node.status}`);
 p(`- Tags: ${node.tags.join(", ") || "—"}`);
+
+// Human review feedback is GROUND TRUTH: the panel proposes and predicts; the
+// human disposes on taste; the filesystem remembers (docs/08 Part 4). A stored
+// verdict overrides the agent panel for the same dimension, and a rejected
+// direction in decisions.md must never be re-proposed.
+p();
+p(`## Human review verdict (ground truth — overrides the agent panel)`);
+const card = readScorecard(id);
+if (!card) {
+  p(`_No human verdict on file yet. Once this exhibit is judged in \`/review\`, its scorecard, blocking items, and this-not-that decisions land here as ground truth. Until then, the agent panel's prediction stands._`);
+} else {
+  const stale = card.contentHash !== contentHash(id);
+  p(`- Verdict: **${card.verdict.decision}** (${card.reviewer}, ${card.date})${stale ? " — ⚠ STALE: content changed since this verdict; re-judge before trusting it" : ""}`);
+  if (card.verdict.summary) p(`- Summary: ${card.verdict.summary}`);
+  const breaches = registerBreaches(card);
+  if (breaches.length) {
+    p(`- Below floor (do not regress, fix these): ${breaches.map((b) => `${b.dimension} ${b.score}/<${b.floor}`).join(", ")}`);
+  }
+  if (card.verdict.blocking.length) {
+    p(`- Blocking:`);
+    for (const b of card.verdict.blocking) p(`  - ${b}`);
+  }
+  const notes = readTextDoc(id, "notes.md").trim();
+  if (notes) {
+    p(`- Notes (what's wrong, pinned to frames):`);
+    for (const line of notes.split("\n")) p(`  > ${line}`);
+  }
+}
+const decisions = readTextDoc(id, "decisions.md").trim();
+if (decisions) {
+  p();
+  p(`### This-not-that decisions (never re-propose a rejected direction)`);
+  for (const line of decisions.split("\n")) p(line);
+}
 
 p();
 p(`## Graph neighborhood`);

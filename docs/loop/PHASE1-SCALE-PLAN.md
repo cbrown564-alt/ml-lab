@@ -51,6 +51,27 @@ never moves without one (the non-circularity contract from `SYNTHESIS.md` Stream
 
 The orchestrator (main thread) **builds**; the panel **judges**.
 
+### Amendment (2026-06-23): the human disposes on taste (docs/08)
+
+The panel inflates against exemplars held in its prompt (`SYNTHESIS.md`), so the
+panel's verdict is now a **prediction**, not the gate. The gate is the human
+review surface ([docs/08](../08-quality-loop-and-review-system.md)):
+
+- Before re-touching an exhibit, the orchestrator runs `npm run brief -- <id>`,
+  which injects `docs/reviews/feedback/<id>/` — the human scorecard (rubric v2),
+  the below-floor dimensions, the blocking items, and the `decisions.md`
+  this-not-that record — as **ground truth that overrides the panel** for the same
+  dimension. A rejected direction is never re-proposed.
+- `npm run check:rubric` is the mechanizable half of the gate (hero §1b,
+  assessment form §1c, verdict freshness / red line #6). A flagship claim with a
+  missing hero or a stale/absent human verdict is mechanically false.
+- The "genuine taste fork the non-circular method can't resolve" escalation now
+  **resolves on `/review`** and the resolution is captured, instead of stalling.
+
+Net: the panel proposes and predicts; the human disposes on taste; the filesystem
+remembers. Resume scale-out only once Foundations is re-judged through `/review`
+(`docs/reviews/foundations-rejudge.md`).
+
 ## Per-exhibit pipeline (orchestrator)
 
 1. `npm run new:exhibit -- <id>` (scaffolds schema-valid stubs; node must be in graph).

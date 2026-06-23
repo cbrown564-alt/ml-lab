@@ -1,9 +1,13 @@
 # Quality Loop & Human-in-the-Loop Review System
 
-**Status:** plan (2026-06-23). The bridge between "Foundations is built to a good
-standard" and "Foundations clears the Distill/3B1B bar" — and the precondition for
-scaling the loop ([PHASE1-SCALE-PLAN.md](loop/PHASE1-SCALE-PLAN.md)) to the rest of
-the graph without compounding a 2-not-3 register across 30 nodes.
+**Status:** implemented (2026-06-23) — the machinery for all six parts ships; the
+human-judgment pass over Foundations (Part 5, step 4) is the remaining human work,
+queued in [foundations-rejudge.md](reviews/foundations-rejudge.md). See
+[Implemented](#implemented-2026-06-23) at the foot of this doc. The bridge between
+"Foundations is built to a good standard" and "Foundations clears the Distill/3B1B
+bar" — and the precondition for scaling the loop
+([PHASE1-SCALE-PLAN.md](loop/PHASE1-SCALE-PLAN.md)) to the rest of the graph
+without compounding a 2-not-3 register across 30 nodes.
 
 ## Why this exists — the diagnosis
 
@@ -213,3 +217,35 @@ human disposes on taste; the filesystem remembers.**
 - **Where the rubric floor sits** — this plan sets flagship floors at ≥3 per
   sub-dimension (matching `docs/06`'s "no criterion below 3"). Confirm, or set the
   delight-bearing dimensions (hero, atmosphere, assessment-form) higher.
+
+### Decisions taken (2026-06-23, the recommendations)
+
+All three were built per the plan's own recommendation, each kept cheap to revisit:
+
+- **`/review` route, not a standalone tool** — an in-app route group under
+  `src/app/review/` that reuses the design system but is **dev-only** (the layout
+  `notFound()`s in production; the build marks every `/review` route `ƒ` dynamic
+  while the 16 learner pages stay `○` static — gated out of the learner build).
+- **Captures + live link** — the UI renders the pinned contact sheet for offline,
+  artifact-to-artifact judging, with an "open live page ↗" link to the running
+  exhibit for the act under review (the recommended split).
+- **Floor ≥3 across the board**, with the delight dimensions (`hero-as-protagonist`,
+  `atmosphere-finish`) tagged `delight: true`. Floors live as **data** in
+  `REGISTER_DIMENSIONS` — raising a delight dimension to 4 is a one-line change.
+
+---
+
+## Implemented (2026-06-23)
+
+| Part | Shipped |
+| --- | --- |
+| 1 — Rubric v2 | `content/quality/rubric.ts` — zod scorecard: register §1a (6 failable dims, each naming an exemplar frame §1e), hero spec §1b, assessment form §1c, cluster consistency §1d; floors-as-data + `flagshipBlockers`/`scorecardComplete`/`meetsFlagship`. Pinned by `rubric.test.ts`. Mechanizable detectors in `content/quality/checks.ts`. |
+| 2 — Capture pipeline | `scripts/capture-review.mjs` (`npm run capture:review`) — per-act contact sheet at 1440px (hero · See/Run/Break/Explain · home), each frame paired with its exemplar in a `manifest.json`, to `docs/reviews/captures/<exhibit>/<date>/` (gitignored — regenerable). |
+| 3 — `/review` UI v1 | `src/app/review/` — roster + per-exhibit surface: captured↔exemplar side-by-side, the v2 scoring form rendered straight off the schema (live flagship-blocker preview), writing `scorecard.json` + `notes.md`. Route handlers stream frames (path-sandboxed) and persist verdicts. Dev-only. |
+| 4 — Re-judge | `npm run check:rubric` (the machine half) + the capture run produced the honest re-baseline in `docs/reviews/foundations-rejudge.md`: **13/15 flagship nodes carry no hero (§1b)**; all 15 lack a human verdict. The human pass is queued there. |
+| 5 — Loop read-back | `npm run brief` injects `feedback/<id>/` (scorecard verdict + below-floor dims + blocking + notes + this-not-that decisions) as **ground truth that overrides the agent panel**. Amendment recorded in PHASE1-SCALE-PLAN.md. |
+| 6 — Alternatives + rationale | `decisions.md` this-not-that surface in `/review` (variant frames rendered adjacent from `<capture>/variants/`; chosen/rejected/why/refs persisted), read back by the brief. |
+
+**The remaining human work:** open `/review/<exhibit>` and render verdicts —
+several nodes will drop below flagship (13 already fail §1b mechanically). Then wire
+`check:rubric --strict` into `prebuild` so "flagship" can no longer lie.
