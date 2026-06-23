@@ -1,6 +1,7 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { RegressionTaskBreakIt } from "@/components/exhibits/RegressionTaskBreakIt";
 import { RegressionTaskCheckLab } from "@/components/exhibits/RegressionTaskCheckLab";
+import { RegressionTaskHero } from "@/components/exhibits/RegressionTaskHero";
 import { RegressionTaskLab } from "@/components/exhibits/RegressionTaskLab";
 import { RegressionTaskStory } from "@/components/exhibits/RegressionTaskStory";
 import { regressionTaskCheck } from "@content/exhibits/regression-task/concept-check";
@@ -20,6 +21,7 @@ export default function RegressionTaskExhibit() {
       failures={regressionTaskFailures}
       breakIt={<RegressionTaskBreakIt />}
       checkCompanion={<RegressionTaskCheckLab />}
+      hero={<RegressionTaskHero />}
       story={<RegressionTaskStory />}
       experiment={<RegressionTaskLab />}
       lede={

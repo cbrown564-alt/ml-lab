@@ -100,26 +100,14 @@ export const regressionTaskCheck: ConceptCheck = {
       kind: "transfer",
       scenario:
         "A house-price model is reported as “3% accurate”. Digging in, that means 3% of predictions were within $1,000 of the sale price; by average error it's off by about $9,000 on $400,000 homes.",
-      prompt: "What's gone wrong with how this model is being judged, and what would you report instead?",
-      options: [
-        {
-          label:
-            "Accuracy-within-a-threshold is the wrong metric for a continuous price — the 3% is an artefact of a tight band; report the average error (and as a % of price) instead",
-          correct: true,
-          feedback:
-            "That's the transfer: on a continuous target, accuracy-within-±k is arbitrary and misleading. The honest summary is a distance — mean absolute error, ideally relative to the price scale.",
-        },
-        {
-          label: "The model is broken — 3% accuracy means it's almost always wrong, so retrain it",
-          feedback:
-            "By distance it's ~$9k off on $400k homes — about 2% error, which may be fine. The 3% “accuracy” is a metric artefact of an arbitrary $1,000 band, not a broken model.",
-        },
-        {
-          label: "They should widen the band to $20,000 so the accuracy looks higher",
-          feedback:
-            "That just games the artefact — any accuracy you like is available by choosing the band. The fix is to stop using a threshold metric and report distance.",
-        },
-      ],
+      prompt:
+        "What's gone wrong with how this model is being judged, and what would you report instead? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. price is continuous, so 'accuracy within $1,000' is… the honest number is…",
+        answer:
+          "Price is a continuous target, so judging it right-or-wrong against a $1,000 band is the wrong frame entirely — the '3% accurate' figure is an artefact of an arbitrarily tight threshold (widen the band and you can report any 'accuracy' you like). Regression is judged on distance, not a verdict. The honest summary is the average miss — mean absolute error, ~$9,000, ideally as a percentage of price (~2% on $400k homes) — which here suggests the model is fine and only the metric was broken.",
+      },
       difficulty: 3,
       targets: ["rt:transfer-metric"],
     },
