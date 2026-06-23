@@ -239,24 +239,28 @@ export function LossSurface({
           )}
 
           {/* The loss legend — what the shading means. Bare mode drops the axes,
-              so this is what keeps "darker = higher loss" in the picture. */}
+              so this is what keeps "darker = higher loss" in the picture. Sits on
+              its own surface panel so the label stays crisp (a heavy per-glyph halo
+              over a contour field blobs small mono text). */}
           {bare && (
-            <g transform={`translate(${MARGIN.left + 8},${MARGIN.top + 10})`}>
+            <g transform={`translate(${MARGIN.left + 10},${MARGIN.top + 10})`}>
+              <rect
+                x={-8}
+                y={-8}
+                width={14 * 7 + 16}
+                height={40}
+                rx={6}
+                fill="var(--surface-bg)"
+                fillOpacity={0.9}
+                stroke="var(--line)"
+                strokeWidth={1}
+              />
               {Array.from({ length: 14 }).map((_, k) => {
                 const [r, g, b] = rampRGB(k / 13);
                 return <rect key={k} x={k * 7} y={0} width={7} height={8} fill={`rgb(${r},${g},${b})`} />;
               })}
-              <rect x={0} y={0} width={14 * 7} height={8} fill="none" stroke="var(--surface-bg)" strokeWidth={1.25} />
-              <text
-                x={0}
-                y={22}
-                fontSize={11}
-                fontFamily="var(--font-mono)"
-                paintOrder="stroke"
-                stroke="var(--surface-bg)"
-                strokeWidth={3}
-                fill="var(--ink-muted)"
-              >
+              <rect x={0} y={0} width={14 * 7} height={8} fill="none" stroke="var(--ink-faint)" strokeWidth={0.75} />
+              <text x={0} y={24} fontSize={12} fontFamily="var(--font-mono)" fill="var(--ink-muted)">
                 loss: low → high
               </text>
             </g>
@@ -268,13 +272,14 @@ export function LossSurface({
             <g transform={`translate(${clampPx(sx(trace[0].params.slope))},${clampPx(sy(trace[0].params.intercept))})`}>
               <circle r={4} fill="none" stroke="var(--surface-bg)" strokeWidth={3} />
               <circle r={4} fill="none" stroke="var(--viz-param)" strokeWidth={1.75} />
+              {/* Above-right of the ring, clear of the descent path's first stride. */}
               <text
-                x={10}
-                y={4}
+                x={9}
+                y={-8}
                 fontSize={12}
                 paintOrder="stroke"
                 stroke="var(--surface-bg)"
-                strokeWidth={3}
+                strokeWidth={2.5}
                 fill="var(--viz-param-ink)"
               >
                 start
