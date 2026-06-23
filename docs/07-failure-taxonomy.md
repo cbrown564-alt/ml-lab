@@ -16,7 +16,7 @@ Every entry is structured, and the structure is the pedagogy:
 
 ## The primitive ids (`FailurePrimitive`)
 
-`small-samples` · `outliers` · `feature-scaling` · `collinearity` · `overfitting` · `data-leakage` · `class-imbalance` · `threshold-choice` · `distribution-shift` · `spurious-features` · `bad-initialisation` · `vanishing-exploding-gradients` · `seed-sensitivity` · `miscalibration` · `metric-gaming`
+`small-samples` · `outliers` · `feature-scaling` · `collinearity` · `overfitting` · `underfitting` · `data-leakage` · `class-imbalance` · `threshold-choice` · `distribution-shift` · `spurious-features` · `bad-initialisation` · `vanishing-exploding-gradients` · `seed-sensitivity` · `miscalibration` · `metric-gaming`
 
 Ids are kebab-case and stable forever (like node ids). Add a new primitive here before referencing it from an exhibit.
 
@@ -49,6 +49,13 @@ Ids are kebab-case and stable forever (like node ids). Add a new primitive here 
 - **Diagnosis**: the model is fitting noise as if it were structure — which error (train vs held-out) is the honest one?
 - **Repair**: regularisation, more data, fewer parameters, early stopping.
 - **Boundary**: under-capacity is the opposite failure; "simpler is always better" is wrong when the true function is complex.
+
+### `underfitting` — the model is too stiff to see the shape
+- **Trigger**: cut capacity below the signal (a straight line for a curved truth, an over-strong penalty).
+- **Symptom**: training and validation error are both high and roughly equal — the model misses the shape on seen and unseen data alike.
+- **Diagnosis**: high bias — the model can't represent the truth, and unlike variance, no amount of extra data fixes it. Is the model too rigid, or over-penalised?
+- **Repair**: raise capacity (richer model, higher degree) or relax the penalty, up to the held-out error's floor.
+- **Boundary**: if the truth really is simple, the stiff model is correct — bias is only a failure relative to a shape the model can't reach. The opposite failure is `overfitting`.
 
 ### `data-leakage` — information from the answer sneaks into the features
 - **Trigger**: scale/impute using the whole dataset, or include a feature computed from the target.

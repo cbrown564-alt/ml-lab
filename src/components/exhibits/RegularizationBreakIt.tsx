@@ -36,6 +36,33 @@ function TestPoints({ points }: { points: Point[] }) {
   );
 }
 
+// Reference scale: the largest coefficient magnitude at near-zero penalty (the
+// overfit). Every bar is drawn against this, so raising λ visibly crushes them.
+const REF_W = Math.max(...ridgeFitCheb(TRAIN, REG_DEGREE, 1e-4).weights.slice(1).map(Math.abs));
+
+/** The penalty's signature, made visible: the magnitudes of the fitted coefficients.
+ * As λ rises the bars are crushed toward zero — the shrinkage that distinguishes
+ * regularisation from simply cutting the degree. */
+function CoefficientBars({ weights }: { weights: number[] }) {
+  const coefs = weights.slice(1).map(Math.abs); // drop the unpenalised intercept
+  const W = 300;
+  const H = 130;
+  const m = { l: 10, r: 10, t: 22, b: 16 };
+  const bw = (W - m.l - m.r) / coefs.length;
+  const bh = (v: number) => Math.min(1, v / (REF_W || 1)) * (H - m.t - m.b);
+  return (
+    <figure className="rounded-xl border border-line bg-raised p-3">
+      <figcaption className="mb-1 font-mono text-[11px] tracking-widest text-ink-faint uppercase">Coefficient magnitudes |wⱼ|</figcaption>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="The magnitudes of the fitted coefficients; raising the penalty shrinks them toward zero." className="h-auto w-full">
+        <line x1={m.l} x2={W - m.r} y1={H - m.b} y2={H - m.b} stroke="var(--line)" />
+        {coefs.map((v, i) => (
+          <rect key={i} x={m.l + i * bw + bw * 0.18} y={H - m.b - bh(v)} width={bw * 0.64} height={bh(v)} fill="var(--viz-param)" fillOpacity={0.85} />
+        ))}
+      </svg>
+    </figure>
+  );
+}
+
 type Phase = "arming" | "broken" | "repaired";
 
 export function RegularizationBreakIt() {
@@ -84,13 +111,15 @@ export function RegularizationBreakIt() {
             </span>
           </div>
 
-          <RegularizationCurves train={TRAIN} test={TEST} degree={REG_DEGREE} lambda={lambda} />
+          {/* The shrinkage made visible — the beat that's unique to regularisation
+              (not the degree lever next door). */}
+          <CoefficientBars weights={m.weights} />
         </div>
 
         <div className="mt-6 lg:mt-0">
           <Plot
             width={640}
-            height={460}
+            height={420}
             xDomain={[-0.02, 1.02]}
             yDomain={[-1.8, 1.8]}
             ariaLabel={`A degree-${REG_DEGREE} polynomial with penalty λ = ${lambda.toExponential(1)}; training error ${trainErr.toFixed(3)}, test error ${testErr.toFixed(3)}. ${overPenalised ? "The penalty has crushed the weights — the curve is limp and underfits." : "The penalised fit tracks the shape."}`}
@@ -100,6 +129,10 @@ export function RegularizationBreakIt() {
             <PolyCurve predict={(xv) => predictCheb(m, xv)} />
             <DataPoints points={TRAIN} />
           </Plot>
+          {/* The error-vs-λ U promoted to a co-hero beside the fit (panel register fix). */}
+          <div className="mt-4">
+            <RegularizationCurves train={TRAIN} test={TEST} degree={REG_DEGREE} lambda={lambda} width={640} height={210} />
+          </div>
         </div>
       </div>
     </div>

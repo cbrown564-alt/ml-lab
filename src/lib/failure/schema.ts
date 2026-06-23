@@ -19,6 +19,7 @@ export const FAILURE_PRIMITIVES = [
   "feature-scaling",
   "collinearity",
   "overfitting",
+  "underfitting",
   "data-leakage",
   "class-imbalance",
   "threshold-choice",

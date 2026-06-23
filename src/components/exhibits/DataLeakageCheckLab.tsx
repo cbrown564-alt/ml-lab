@@ -25,7 +25,7 @@ function Scatter({ points }: { points: HeldOut[] }) {
       <rect x={m} y={m} width={W - 2 * m} height={H - 2 * m} fill="none" stroke="var(--line)" />
       <line x1={sx(-ext)} y1={sy(-ext)} x2={sx(ext)} y2={sy(ext)} stroke="var(--ink-faint)" strokeDasharray="4 4" />
       {points.map((p, i) => (
-        <circle key={i} cx={sx(p.actual)} cy={sy(Math.max(-ext, Math.min(ext, p.predicted)))} r={3.5} fill="var(--viz-param)" fillOpacity={0.65} />
+        <circle key={i} cx={sx(p.actual)} cy={sy(Math.max(-ext, Math.min(ext, p.predicted)))} r={3.5} fill="var(--viz-prediction)" fillOpacity={0.7} />
       ))}
     </svg>
   );

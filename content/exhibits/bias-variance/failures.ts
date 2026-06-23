@@ -19,7 +19,7 @@ export const biasVarianceFailures: FailureGallery = {
     },
     {
       id: "too-stiff",
-      primitive: "overfitting",
+      primitive: "underfitting",
       title: "Too stiff to see the shape",
       trigger: "Drop the degree to 1 — a straight line — on data that genuinely curves.",
       symptom: "Training and test error are both high, and roughly equal: the model misses the shape everywhere, on seen and unseen data alike.",

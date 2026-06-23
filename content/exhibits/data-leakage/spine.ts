@@ -39,7 +39,7 @@ export const dataLeakageSpine: Spine<DataLeakageFrame> = [
         {
           label: "It goes hugely negative — honest CV always undershoots",
           feedback:
-            "It lands around zero, not far below — honest CV is unbiased here, it just reports the real (absent) signal. Step on and see.",
+            "It lands scattered around zero — some folds dip negative, others poke just positive, and the average is near nil. Honest CV isn't biased here; it simply reports the real (absent) signal. Step on and see.",
         },
       ],
     },

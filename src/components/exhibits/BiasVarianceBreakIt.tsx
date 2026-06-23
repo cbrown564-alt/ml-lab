@@ -81,14 +81,12 @@ export function BiasVarianceBreakIt() {
               train {trainErr.toFixed(3)} · test {testErr.toFixed(3)}
             </span>
           </div>
-
-          <ErrorCurves train={TRAIN} test={TEST} degree={degree} maxDegree={DEG.max} />
         </div>
 
         <div className="mt-6 lg:mt-0">
           <Plot
             width={640}
-            height={460}
+            height={420}
             xDomain={[-0.02, 1.02]}
             yDomain={[-1.8, 1.8]}
             ariaLabel={`A degree-${degree} polynomial; training error ${trainErr.toFixed(3)}, test error ${testErr.toFixed(3)}. ${overfit ? "It threads the training points but misses the held-out rings — overfitting." : "The fit tracks the underlying shape."}`}
@@ -98,6 +96,11 @@ export function BiasVarianceBreakIt() {
             <PolyCurve predict={(xv) => predictPoly(w, xv)} />
             <DataPoints points={TRAIN} />
           </Plot>
+          {/* The error-U is the concept's punchline — a co-hero beside the fit, not a
+              control-strip thumbnail (panel register fix). */}
+          <div className="mt-4">
+            <ErrorCurves train={TRAIN} test={TEST} degree={degree} maxDegree={DEG.max} width={640} height={210} />
+          </div>
         </div>
       </div>
     </div>

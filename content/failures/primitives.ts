@@ -28,6 +28,10 @@ export const failurePrimitives: Record<FailurePrimitive, { title: string; gist: 
     title: "Overfitting",
     gist: "The model memorises noise as if it were signal.",
   },
+  underfitting: {
+    title: "Underfitting",
+    gist: "The model is too stiff to represent the truth — high bias, both errors high.",
+  },
   "data-leakage": {
     title: "Data leakage",
     gist: "Information from the answer sneaks into the features.",

@@ -46,5 +46,6 @@ export const dataLeakageNarrative: ExhibitNarrative = {
   fieldNotes: [
     "The discipline that prevents nearly all of it: split first, then fit every learned transform on the training split alone and apply it to the rest. In scikit-learn, put preprocessing and the estimator in a single Pipeline and cross-validate the Pipeline — the fold boundaries are respected automatically.",
     "Keep one final test set sealed until the very end, used exactly once. If the sealed-set score is far worse than your cross-validation score, you have a leak — that gap is the most reliable leak detector there is.",
+    "About these numbers: this noise dataset was seeded so the leak is vivid (leaky R² ≈ 0.41, honest ≈ 0). The exact magnitude shifts with the data — a different draw might leak 0.3 or 0.5 — but the direction never does: peeking selection inflates the score, in-fold selection reports the truth. The mechanism is the lesson, not the decimal.",
   ],
 };
