@@ -42,6 +42,8 @@ export function GradientField({
   interactive = true,
   path,
   domain = [-3.4, 3.4],
+  xDomain,
+  yDomain,
   width = 520,
   height = 520,
 }: {
@@ -54,18 +56,26 @@ export function GradientField({
   /** An ascent trajectory to draw as a trail, with a hollow start marker — used by the
    * Break-it to show a greedy run climbing to whichever peak it started under. */
   path?: Vec2[];
+  /** Square window for both axes (default). */
   domain?: [number, number];
+  /** Per-axis windows — override `domain` to render a wide, undistorted landscape
+   * (equal pixels-per-unit) for a full-bleed hero. Default to `domain`. */
+  xDomain?: [number, number];
+  yDomain?: [number, number];
   width?: number;
   height?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
-  const cols = 130;
-  const rows = 130;
-  const [d0, d1] = domain;
+  // Scale the grid with the rendered size (~3px/cell) so contours stay crisp
+  // instead of stair-stepping when the field is rendered wide (e.g. the hero).
+  const cols = Math.min(420, Math.max(130, Math.round((width - MARGIN.left - MARGIN.right) / 3)));
+  const rows = Math.min(360, Math.max(130, Math.round((height - MARGIN.top - MARGIN.bottom) / 3)));
+  const [xd0, xd1] = xDomain ?? domain;
+  const [yd0, yd1] = yDomain ?? domain;
 
-  const sx = linearScale(domain, [MARGIN.left, width - MARGIN.right]);
-  const sy = linearScale(domain, [height - MARGIN.bottom, MARGIN.top]);
+  const sx = linearScale(xDomain ?? domain, [MARGIN.left, width - MARGIN.right]);
+  const sy = linearScale(yDomain ?? domain, [height - MARGIN.bottom, MARGIN.top]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -75,8 +85,8 @@ export function GradientField({
     canvas.height = rows;
     // First the integer band index of every cell, so we can find where bands meet.
     const band = (cc: number, rr: number) => {
-      const xv = d0 + ((d1 - d0) * (cc + 0.5)) / cols;
-      const yv = d0 + ((d1 - d0) * (rr + 0.5)) / rows;
+      const xv = xd0 + ((xd1 - xd0) * (cc + 0.5)) / cols;
+      const yv = yd0 + ((yd1 - yd0) * (rr + 0.5)) / rows;
       return Math.round((Math.min(MAX_F, surface(xv, yv)) / MAX_F) * BANDS);
     };
     const bands: number[][] = Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => band(c, r)));
@@ -90,7 +100,7 @@ export function GradientField({
         ctx.fillRect(c, rows - 1 - r, 1, 1);
       }
     }
-  }, [d0, d1]);
+  }, [xd0, xd1, yd0, yd1, cols, rows]);
 
   const grad = useMemo(() => gradient(point.x, point.y), [point]);
   const mag = magnitude(grad);
@@ -106,8 +116,8 @@ export function GradientField({
     const rect = svg.getBoundingClientRect();
     const px = ((clientX - rect.left) / rect.width) * width;
     const py = ((clientY - rect.top) / rect.height) * height;
-    const x = Math.max(d0, Math.min(d1, sx.invert(px)));
-    const y = Math.max(d0, Math.min(d1, sy.invert(py)));
+    const x = Math.max(xd0, Math.min(xd1, sx.invert(px)));
+    const y = Math.max(yd0, Math.min(yd1, sy.invert(py)));
     return { x: Math.round(x * 100) / 100, y: Math.round(y * 100) / 100 };
   };
 

@@ -28,26 +28,26 @@ export function TheGradientHero() {
           the arrow of steepest ascent
         </span>
       </figcaption>
-      <div className="flex flex-col gap-3 px-3 py-3 sm:flex-row sm:items-center">
-        <div className="min-w-0 sm:flex-[1.4]">
-          <GradientField point={POINT} descent={false} interactive={false} width={620} height={460} />
-        </div>
-        <div className="flex min-w-0 flex-col gap-2 px-3 pb-3 sm:flex-1 sm:pb-0">
-          <span
-            className="font-mono text-[11px] tracking-widest uppercase"
-            style={{ color: "var(--viz-prediction-ink)" }}
-          >
-            straight uphill, fastest
-          </span>
-          <p className="max-w-[34ch] text-sm leading-relaxed text-ink-muted">
-            The gradient points up the steepest slope — perpendicular to the contour lines,
-            and longer where the hill is steeper. Flip its sign and you have the direction
-            gradient descent walks.
-          </p>
-          <span className="font-mono text-[11px] text-ink-faint tabular-nums">
-            slope here ≈ {SLOPE.toFixed(2)} · ⟂ to the contours
-          </span>
-        </div>
+      <div className="px-3 py-2">
+        {/* Full-bleed wide landscape: a per-axis window keeps pixels square so the
+            contours stay round and the arrow reads truly perpendicular. */}
+        <GradientField
+          point={POINT}
+          descent={false}
+          interactive={false}
+          xDomain={[-5.7, 5.7]}
+          yDomain={[-2, 2]}
+          width={1200}
+          height={420}
+        />
+        <p className="max-w-[78ch] px-1 pt-1 text-sm leading-relaxed text-ink-muted">
+          <span className="font-medium" style={{ color: "var(--viz-prediction-ink)" }}>
+            The gradient points straight uphill, fastest.
+          </span>{" "}
+          It crosses the contour lines at right angles and stretches where the hill is steeper
+          (slope ≈ {SLOPE.toFixed(2)} here) — flip its sign and you have the direction gradient
+          descent walks.
+        </p>
       </div>
     </figure>
   );
