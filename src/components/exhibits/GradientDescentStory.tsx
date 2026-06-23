@@ -54,6 +54,56 @@ function TargetLine({ params }: { params: LinearParams }) {
   );
 }
 
+/**
+ * In-graphic mark labels so the chart narrates itself (Distill titles every curve
+ * on the canvas, not just the axes). Bound to the marks: the data cloud, the OLS
+ * target (right end of the dashed line), and the line being learned (its left end,
+ * which it tracks as it tilts up). Each label has a surface-coloured halo so it
+ * reads over any mark, in that mark's ink hue.
+ */
+function MarkLabels({
+  points,
+  target,
+  fit,
+}: {
+  points: ReadonlyArray<{ x: number; y: number }>;
+  target: LinearParams;
+  fit: LinearParams;
+}) {
+  const { x, y } = usePlot();
+  const [d0, d1] = x.domain;
+  // A representative point low-left in the cloud, so "data" sits clear of the
+  // top-right target label and the bottom fit-line label.
+  const dp = [...points].sort((a, b) => a.x - b.x)[Math.floor(points.length * 0.25)];
+  const label = (
+    tx: number,
+    ty: number,
+    text: string,
+    fill: string,
+    anchor: "start" | "end" = "start",
+  ) => (
+    <text
+      x={tx}
+      y={ty}
+      textAnchor={anchor}
+      fontSize={12}
+      paintOrder="stroke"
+      stroke="var(--surface-bg)"
+      strokeWidth={3.5}
+      fill={fill}
+    >
+      {text}
+    </text>
+  );
+  return (
+    <g aria-hidden>
+      {label(x(d1) - 6, y(target.slope * d1 + target.intercept) - 7, "least-squares fit", "var(--ink-muted)", "end")}
+      {dp && label(x(dp.x) - 10, y(dp.y) - 9, "data", "var(--viz-truth-ink)", "end")}
+      {label(x(d0) + 8, y(fit.slope * d0 + fit.intercept) - 9, "the line", "var(--viz-prediction-ink)")}
+    </g>
+  );
+}
+
 export function GradientDescentStory() {
   const { points, params, scenarioId, spec, loadScenario } = useExperiment();
   const learningRate = params.learningRate;
@@ -148,6 +198,7 @@ export function GradientDescentStory() {
             <TargetLine params={target} />
             <FitLine params={viewing.params} />
             <DataPoints points={points} />
+            <MarkLabels points={points} target={target} fit={viewing.params} />
           </Plot>
           <TrainingCurve trace={trace} cursor={cursor} width={640} height={150} />
         </div>
