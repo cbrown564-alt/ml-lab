@@ -26,7 +26,7 @@ function Graphic({ stage }: { stage: WhatIsMlFrame["stage"] }) {
       {whatIsMlData.map((p, i) => {
         const wrong = showHand && (p.x1 > BEST.t ? 1 : 0) !== p.y;
         return (
-          <circle key={i} cx={x(p.x1)} cy={y(p.x2)} r={5} fill={p.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"} stroke={wrong ? "var(--viz-error)" : "var(--surface-bg)"} strokeWidth={wrong ? 2 : 1} />
+          <circle key={i} cx={x(p.x1)} cy={y(p.x2)} r={5} fill={p.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"} stroke={wrong ? "var(--viz-error)" : "var(--surface-bg)"} strokeWidth={wrong ? 2.5 : 1} />
         );
       })}
       {showHand && (
@@ -59,7 +59,7 @@ export function WhatIsMlStory() {
         <span>{caption}</span>
         {acc !== null && <span className={stage === "hand" ? "text-[var(--viz-neutral-ink)]" : "text-accent"}>{Math.round(acc * 100)}%</span>}
       </figcaption>
-      <Plot width={520} height={420} xDomain={[-3.2, 3.2]} yDomain={[-3.2, 3.2]} ariaLabel={`Two classes in a plane, framed as ${stage}. ${caption}.`}>
+      <Plot width={520} height={420} xDomain={[-2.9, 2.9]} yDomain={[-2.9, 2.9]} ariaLabel={`Two classes in a plane, framed as ${stage}. ${caption}.`}>
         <Axes />
         <Graphic stage={stage} />
       </Plot>

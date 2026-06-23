@@ -25,7 +25,7 @@ function Graphic({ learned }: { learned: LogisticParams }) {
     <g>
       {whatIsMlData.map((p, i) => {
         const wrong = (learned.b + learned.w1 * p.x1 + learned.w2 * p.x2 > 0 ? 1 : 0) !== p.y;
-        return <circle key={i} cx={x(p.x1)} cy={y(p.x2)} r={5} fill={p.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"} stroke={wrong ? "var(--viz-error)" : "var(--surface-bg)"} strokeWidth={wrong ? 2 : 1} />;
+        return <circle key={i} cx={x(p.x1)} cy={y(p.x2)} r={5} fill={p.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"} stroke={wrong ? "var(--viz-error)" : "var(--surface-bg)"} strokeWidth={wrong ? 2.5 : 1} />;
       })}
       <line x1={x(DOMAIN[0])} y1={y(clampD(boundaryX2(learned, DOMAIN[0])))} x2={x(DOMAIN[1])} y2={y(clampD(boundaryX2(learned, DOMAIN[1])))} stroke="var(--accent)" strokeWidth={3} />
     </g>
@@ -70,7 +70,7 @@ export function WhatIsMlBreakIt() {
               <p className="mt-2 leading-relaxed text-ink">
                 The upper examples were mislabelled, and the machine <span className="font-medium text-[var(--viz-error-ink)]">learned the bias</span>:
                 its boundary drifts up, away from the truth. It still scores{" "}
-                <span className="font-mono">{Math.round(trainAcc * 100)}%</span> on its own biased data — but on the real population
+                <span className="font-mono">{Math.round(trainAcc * 100)}%</span>{" "}on its own biased data — but on the real population
                 it&apos;s down to <span className="font-mono text-[var(--viz-error-ink)]">{Math.round(trueAcc * 100)}%</span>.
               </p>
               <p className="mt-3 leading-relaxed text-ink-muted">
@@ -120,7 +120,7 @@ export function WhatIsMlBreakIt() {
         </div>
 
         <div className="mt-6 lg:mt-0">
-          <Plot width={520} height={440} xDomain={[-3.2, 3.2]} yDomain={[-3.2, 3.2]} ariaLabel={`The true population coloured by real class, with the rule the machine learned from biased data. It scores ${Math.round(trueAcc * 100)}% on the true population; red-ringed points are the ones it now gets wrong.`}>
+          <Plot width={520} height={440} xDomain={[-2.9, 2.9]} yDomain={[-2.9, 2.9]} ariaLabel={`The true population coloured by real class, with the rule the machine learned from biased data. It scores ${Math.round(trueAcc * 100)}% on the true population; red-ringed points are the ones it now gets wrong.`}>
             <Axes />
             <Graphic learned={learned} />
           </Plot>

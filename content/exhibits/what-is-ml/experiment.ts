@@ -1,11 +1,11 @@
 import type { LabeledPoint } from "@/lib/models/logistic";
 
 /**
- * A two-class dataset whose true boundary is a tilted line — it depends on BOTH features
- * together (class 1 where x1 + 1.3·x2 clears a threshold). A hand-written rule that
- * watches a single feature (a vertical cut on x1) can only do so well; learning from the
- * labelled examples discovers how to weigh both features and does far better. That gap is
- * the whole point: the machine finds a rule you wouldn't have hand-tuned.
+ * A two-class dataset whose true boundary is a steeply tilted line — it leans hard on
+ * x2 (class 1 where 0.75·x1 + 2.1·x2 clears a threshold), so a hand-written rule that
+ * watches only x1 genuinely fails (a vertical cut tops out around 70%). Learning from the
+ * labelled examples discovers how to weigh both features and reaches ~95%. That gap is
+ * the whole point: a rule no single threshold could ever match, found from the data.
  */
 function mulberry32(seed: number): () => number {
   return () => {
@@ -23,8 +23,8 @@ export const whatIsMlData: LabeledPoint[] = (() => {
   return Array.from({ length: 64 }, () => {
     const x1 = round2((rng() - 0.5) * 5.2);
     const x2 = round2((rng() - 0.5) * 5.2);
-    const margin = x1 + 1.3 * x2 + (rng() - 0.5) * 1.6; // true rule + noise
-    return { x1, x2, y: (margin > 0.4 ? 1 : 0) as 0 | 1 };
+    const margin = 0.75 * x1 + 2.1 * x2 + (rng() - 0.5) * 2.0; // true rule + noise
+    return { x1, x2, y: (margin > 0.25 ? 1 : 0) as 0 | 1 };
   });
 })();
 

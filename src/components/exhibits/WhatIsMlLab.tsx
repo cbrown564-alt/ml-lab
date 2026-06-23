@@ -5,7 +5,7 @@ import { Axes, Plot, usePlot } from "@/components/viz/Plot";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import { accuracy, boundaryX2, fitLogistic, type LogisticParams } from "@/lib/models/logistic";
-import { ruleAccuracy, whatIsMlData, whatIsMlScenario } from "@content/exhibits/what-is-ml/experiment";
+import { bestRuleAccuracy, ruleAccuracy, whatIsMlData, whatIsMlScenario } from "@content/exhibits/what-is-ml/experiment";
 
 /**
  * "Write the rule, or learn it." The learner first hand-writes a rule — a draggable
@@ -15,6 +15,7 @@ import { ruleAccuracy, whatIsMlData, whatIsMlScenario } from "@content/exhibits/
  * That gap is the definition of machine learning.
  */
 const DOMAIN: [number, number] = [-3, 3];
+const BEST_T = bestRuleAccuracy(whatIsMlData).t; // start at the best hand rule, so the ceiling is felt at once
 
 function ClassPoints({ t }: { t: number }) {
   const { x, y } = usePlot();
@@ -30,7 +31,7 @@ function ClassPoints({ t }: { t: number }) {
             r={5}
             fill={p.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"}
             stroke={wrong ? "var(--viz-error)" : "var(--surface-bg)"}
-            strokeWidth={wrong ? 2 : 1}
+            strokeWidth={wrong ? 2.5 : 1}
           />
         );
       })}
@@ -84,7 +85,7 @@ function Rules({ t, learned, onDragT }: { t: number; learned: LogisticParams | n
 }
 
 export function WhatIsMlLab() {
-  const [t, setT] = useState(0);
+  const [t, setT] = useState(BEST_T);
   const [learned, setLearned] = useState<LogisticParams | null>(null);
 
   const ruleAcc = ruleAccuracy(whatIsMlData, t);
@@ -118,7 +119,7 @@ export function WhatIsMlLab() {
             <p className="text-sm leading-relaxed text-ink-faint">
               The machine never saw your rule. It read the labelled examples and found how to
               weigh <em>both</em> features — the tilted line — beating your best single cut by{" "}
-              <span className="font-mono text-accent">{Math.round((learnedAcc - ruleAcc) * 100)}</span> points. That&apos;s machine
+              <span className="font-mono text-accent">{Math.round((learnedAcc - ruleAcc) * 100)}</span>{" "}points. That&apos;s machine
               learning: the rule comes from the data, not from you.
             </p>
           )}
@@ -128,8 +129,8 @@ export function WhatIsMlLab() {
           <Plot
             width={560}
             height={460}
-            xDomain={[-3.2, 3.2]}
-            yDomain={[-3.2, 3.2]}
+            xDomain={[-2.9, 2.9]}
+            yDomain={[-2.9, 2.9]}
             ariaLabel={`Two classes in a 2-D plane. Your hand-written vertical-threshold rule scores ${Math.round(ruleAcc * 100)}%${learnedAcc !== null ? `; the learned tilted rule scores ${Math.round(learnedAcc * 100)}%` : ""}. Red-ringed points are the ones your rule gets wrong.`}
             interactive
           >

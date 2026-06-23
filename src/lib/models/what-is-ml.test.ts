@@ -10,7 +10,7 @@ import { biasedTrainingSet, bestRuleAccuracy, whatIsMlData } from "@content/exhi
 describe("what-is-ml: hand rule vs learned rule", () => {
   it("the best single-feature threshold rule is limited", () => {
     const best = bestRuleAccuracy(whatIsMlData);
-    expect(best.acc).toBeLessThan(0.85); // one feature can't capture a tilted boundary
+    expect(best.acc).toBeLessThan(0.75); // one feature genuinely fails a steeply tilted boundary
     expect(best.acc).toBeGreaterThan(0.6); // but it's better than a coin flip
   });
 

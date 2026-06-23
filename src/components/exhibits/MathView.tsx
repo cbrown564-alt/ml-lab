@@ -2,7 +2,9 @@ import { Fragment, type ReactNode } from "react";
 import { NodeChip } from "@/components/graph/NodeChip";
 import { StabilityScale } from "@/components/exhibits/StabilityScale";
 import { SquaredPenalty } from "@/components/exhibits/SquaredPenalty";
-import { NonlinearityToggle } from "@/components/exhibits/NonlinearityToggle";
+// Lazy client boundary: keeps the widget's DecisionField + neural-net deps off every
+// other route's shared MathView bundle (see LazyNonlinearity).
+import { LazyNonlinearity } from "@/components/exhibits/LazyNonlinearity";
 import { HUE_INK } from "@/lib/narrative/hues";
 import type { MathBlock, MathDrawerContent, MathHighlight } from "@/lib/narrative/math";
 import { nodes } from "@content/graph/nodes";
@@ -60,7 +62,7 @@ function Block({ block }: { block: MathBlock }) {
         ) : block.widget === "penalty" ? (
           <SquaredPenalty config={block.config} />
         ) : (
-          <NonlinearityToggle />
+          <LazyNonlinearity />
         )}
       </div>
     );
