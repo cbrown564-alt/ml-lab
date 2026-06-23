@@ -3,67 +3,64 @@
   "exhibit": "feature-scaling",
   "reviewer": "agent-panel",
   "date": "2026-06-23",
-  "contentHash": "7e969654f7018610",
+  "contentHash": "32cdd0ddf51deca2",
   "register": [
     {
       "dimension": "hero-as-protagonist",
-      "score": 0,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/00-viewport.png",
-      "note": "No opening visual — the top of the page is a text masthead plus metadata card, where ciechanowski-watch/00 anchors with a full-width watch render."
+      "note": "Full content-width before/after diptych, framed with kicker captions, legend and 101-vs-23 step counts — poster-worthy and thumbnail-legible, though two panels rather than one singular object."
     },
     {
       "dimension": "mechanism-in-the-picture",
-      "score": 0,
+      "score": 4,
       "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
-      "note": "No hero to carry the mechanism, unlike seeing-theory/01 whose opening plot shows the residual squares themselves."
+      "note": "Goes past Anscombe's error-rectangles: draws both loss surfaces (stretched valley vs round bowl) AND the optimizer's path across each (zig-zag fan vs near-straight fall) — cause and consequence in one frame, exemplar-grade."
     },
     {
       "dimension": "annotation-integration",
       "score": 3,
       "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
-      "note": "The See-it surface self-signals (axis labels, '@ start', 'the valley floor (OLS)', the labeled metric strip) like distill-momentum/02, short of 4 because its captions are less tightly bound per-figure."
+      "note": "The see-view graphic carries its own axis labels, a labeled 'valley floor (OLS)' target, a labeled 'start', an in-canvas legend, and a tinted 'WALK SO FAR' readout — meaning lives in the graphic."
     },
     {
       "dimension": "atmosphere-finish",
       "score": 3,
       "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
-      "note": "The prior aliasing is fixed — continuous ~1.5px anti-aliased contours and smooth band boundaries on a Distill-soft red bowl with dead air closed by the metric strip; below 4 only on two-column (not single-protagonist) composition and a label/tick micro-nit vs ciechanowski-watch/02."
+      "note": "Anti-aliased warm-red contour field, Distill-soft, with the white valley floor pulling the eye to the minimum — clean focal hierarchy matching the watch's restraint."
     },
     {
       "dimension": "motion",
       "score": 3,
       "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
-      "note": "The descent renders as discrete steppable iterates with a learning-rate control, explanatory not decorative like 3b1b-gradient-descent/02; held at 3 since easing/smoothness can't be confirmed from stills."
+      "note": "A single explanatory load-in descent (path draws itself, reduced-motion renders pre-walked) plus scrub/step transport on run/break — explanatory not decorative."
     },
     {
       "dimension": "colour-discipline",
       "score": 3,
       "exemplarFrame": "r2d3-trees/00-viewport.png",
-      "note": "Grammar holds — red = error/height (not an alarm wash), periwinkle = descent agent, blue = steps, AA prose — as disciplined as r2d3-trees/00; below 4 because the steepest red corner nears flattening."
+      "note": "Grammar held like R2D3's class hues: purple=descent/path, teal=action, the red field is loss-magnitude with a legend (encoded, not draining 'error'), prose terms tinted and AA-legible."
     }
   ],
   "hero": {
-    "present": false,
-    "fullWidth": false,
-    "labeledAnnotation": false,
-    "depictsMechanism": false,
-    "thumbnailLegible": false,
-    "atMostOneLoadMotion": false,
-    "note": "A hero would need the now-clean See-it bowl promoted to a full-bleed, thumbnail-legible opening that shows the OLS valley and one descent path."
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Before/after hero: same-data diptych, in-figure legend and step counts, both loss surfaces with descents drawn in, one load-in animation; panel height trimmed so the capture no longer clips the bottoms."
   },
   "assessment": {
     "playableExperimentTask": true,
-    "transferIsInteractiveOrOpen": false,
+    "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
     "notPureMcqStack": true,
-    "note": "Explain shows a recall MCQ stack with a persistent Raw/Standardised bowl, but the closing transfer item is not visibly an open/interactive prompt."
+    "note": "The transfer item (transfer-knn) is an open free-text prompt — 'write it in your own words' — not another MCQ."
   },
   "verdict": {
-    "decision": "hold",
-    "blocking": [
-      "Add a full-width hero specimen (the See-it bowl) so hero-as-protagonist and mechanism-in-the-picture stop being forced 0.",
-      "Make the closing transfer item interactive or open rather than a fifth recall MCQ."
-    ],
-    "summary": "Atmosphere-finish now clears its floor at 3 (render aliasing genuinely fixed, dead air closed); the exhibit holds only on the absent hero, which forces two register dimensions to 0."
+    "decision": "advance",
+    "blocking": [],
+    "summary": "New hero clears hero-as-protagonist (3) and is exemplar-grade on mechanism-in-the-picture (4); all six hero booleans pass and every register dim is at floor 3 — clears register 3 across the board."
   }
 }

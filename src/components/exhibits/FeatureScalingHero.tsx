@@ -61,7 +61,7 @@ function Panel({
         trace={trace.slice(0, cursor + 1)}
         cursor={cursor}
         width={560}
-        height={400}
+        height={360}
         bare
         legend={legend}
       />
