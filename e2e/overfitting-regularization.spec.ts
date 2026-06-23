@@ -34,4 +34,19 @@ test.describe("overfitting-regularization exhibit", () => {
     await panel(page).getByRole("button", { name: /relaxes toward the smooth shape/i }).click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
   });
+
+  test("Break it: over-penalising underfits, then dialling back rescues it", async ({ page }) => {
+    await openTab(page, "Break it");
+    const slider = panel(page).getByRole("slider").first();
+    await slider.fill("1.7"); // log10 λ ≈ 1.7 → λ ≈ 50, far past the window
+    await expect(panel(page).getByRole("status")).toHaveText("Over-penalised");
+    await slider.fill("-0.5"); // λ ≈ 0.3, back in the window
+    await expect(panel(page).getByRole("status")).toHaveText("Reined in");
+  });
+
+  test("Explain it pairs the check with a live companion", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/Answer against the dial/i)).toBeVisible();
+    await expect(panel(page).getByText(/What is the penalty actually doing/i)).toBeVisible();
+  });
 });

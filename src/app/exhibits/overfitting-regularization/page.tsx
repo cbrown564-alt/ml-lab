@@ -1,6 +1,10 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { RegularizationBreakIt } from "@/components/exhibits/RegularizationBreakIt";
+import { RegularizationCheckLab } from "@/components/exhibits/RegularizationCheckLab";
 import { RegularizationLab } from "@/components/exhibits/RegularizationLab";
 import { RegularizationStory } from "@/components/exhibits/RegularizationStory";
+import { overfittingRegularizationCheck } from "@content/exhibits/overfitting-regularization/concept-check";
+import { overfittingRegularizationFailures } from "@content/exhibits/overfitting-regularization/failures";
 import { overfittingRegularizationMath } from "@content/exhibits/overfitting-regularization/math";
 import { overfittingRegularizationNarrative } from "@content/exhibits/overfitting-regularization/narrative";
 import { overfittingRegularizationSpine } from "@content/exhibits/overfitting-regularization/spine";
@@ -12,6 +16,10 @@ export default function OverfittingRegularizationExhibit() {
       narrative={overfittingRegularizationNarrative}
       spine={overfittingRegularizationSpine}
       math={overfittingRegularizationMath}
+      check={overfittingRegularizationCheck}
+      failures={overfittingRegularizationFailures}
+      breakIt={<RegularizationBreakIt />}
+      checkCompanion={<RegularizationCheckLab />}
       story={<RegularizationStory />}
       experiment={<RegularizationLab />}
       lede={
