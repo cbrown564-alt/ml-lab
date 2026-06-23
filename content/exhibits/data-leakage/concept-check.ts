@@ -100,26 +100,14 @@ export const dataLeakageCheck: ConceptCheck = {
       kind: "transfer",
       scenario:
         "A teammate standardises every feature using the full dataset's mean and variance, then splits into train and test and reports a strong validation score. The model later underperforms on new data.",
-      prompt: "From what the leak taught you, what went wrong, and how should they fix it?",
-      options: [
-        {
-          label:
-            "The scaler saw the test rows, leaking their statistics — fit the scaler on the training split only (e.g. inside a Pipeline) and re-evaluate",
-          correct: true,
-          feedback:
-            "That's the transfer: preprocessing fit on all the data is the same leak as selection on all the data. The validation score was optimistic; fitting the scaler on train alone gives the honest one.",
-        },
-        {
-          label: "Standardisation is the problem — remove it and the model will generalise",
-          feedback:
-            "Scaling isn't the issue; doing it before the split is. Fit the scaler on training rows only and keep it — the transform is fine, its timing was the leak.",
-        },
-        {
-          label: "The validation score is correct; the new data must just be different",
-          feedback:
-            "The gap is the leak's signature, not distribution shift. The full-data scaler made validation optimistic; a train-only scaler closes the gap honestly.",
-        },
-      ],
+      prompt:
+        "From what the leak taught you: what went wrong, how should they fix it, and why isn't the fix to drop standardisation? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. fitting the scaler on all the data let it see … so the validation score … the fix is … and dropping scaling is wrong because …",
+        answer:
+          "Fitting the scaler on the full dataset before splitting let it see the test rows' statistics (their mean and variance) — the same leak as selecting features on all the data — so the validation score was optimistic and didn't hold up on truly unseen data. The fix isn't to drop standardisation; the transform is fine, its timing was the leak. Fit the scaler on the training split only (e.g. inside a Pipeline so it's re-fit on each fold) and re-evaluate. The deployment gap is the leak's signature, not distribution shift.",
+      },
       difficulty: 3,
       targets: ["leak:transfer-scaling"],
     },

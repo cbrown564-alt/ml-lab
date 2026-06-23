@@ -1,6 +1,7 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { DataLeakageBreakIt } from "@/components/exhibits/DataLeakageBreakIt";
 import { DataLeakageCheckLab } from "@/components/exhibits/DataLeakageCheckLab";
+import { DataLeakageHero } from "@/components/exhibits/DataLeakageHero";
 import { DataLeakageLab } from "@/components/exhibits/DataLeakageLab";
 import { DataLeakageStory } from "@/components/exhibits/DataLeakageStory";
 import { dataLeakageCheck } from "@content/exhibits/data-leakage/concept-check";
@@ -20,6 +21,7 @@ export default function DataLeakageExhibit() {
       failures={dataLeakageFailures}
       breakIt={<DataLeakageBreakIt />}
       checkCompanion={<DataLeakageCheckLab />}
+      hero={<DataLeakageHero />}
       story={<DataLeakageStory />}
       experiment={<DataLeakageLab />}
       lede={
