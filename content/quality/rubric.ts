@@ -232,7 +232,7 @@ export const ASSESSMENT_CHECKS = [
   {
     key: "transferIsInteractiveOrOpen",
     label: "transfer rendered as interaction / open prompt where the concept allows",
-    mechanizable: false,
+    mechanizable: true,
   },
   {
     key: "processFeedbackEveryOption",

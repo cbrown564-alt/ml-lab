@@ -45,6 +45,7 @@ function evaluate(id: string): Row {
     if (!assess.playableExperimentTask) contentBlockers.push("no playable experiment-task (§1c)");
     if (!assess.processFeedbackEveryOption) contentBlockers.push("option without process feedback (§1c)");
     if (!assess.notPureMcqStack) contentBlockers.push("pure MCQ stack (§1c)");
+    if (!assess.transferIsInteractiveOrOpen) contentBlockers.push("transfer item is a closed MCQ, not open/interactive (§1c)");
   }
 
   const verdict: VerdictState = !card

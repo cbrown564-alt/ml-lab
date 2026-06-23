@@ -132,26 +132,13 @@ export const gradientDescentCheck: ConceptCheck = {
       scenario:
         "A colleague is training a model on a dataset you've never seen. They report the loss is falling — but agonisingly slowly, barely halving over thousands of steps — and they've triple-checked the code for bugs.",
       prompt:
-        "From what the walk taught you, what's the most likely cause, and the one risk in fixing it?",
-      options: [
-        {
-          label:
-            "The learning rate is too small — raise it for bigger steps, but not past the surface's stability ceiling, or the loss will diverge instead",
-          correct: true,
-          feedback:
-            "That's the transfer: a slow-but-steady fall is the “too timid” regime, and the fix is a larger step — right up to, but not over, the stability cliff you crossed in “over the edge.”",
-        },
-        {
-          label: "The learning rate is too large — lower it so each step is more careful",
-          feedback:
-            "Lowering it makes the crawl worse. Exploding loss is the too-large failure; a slow, steady decrease is the opposite problem — steps that are too small.",
-        },
-        {
-          label: "Nothing is wrong — just extend the step budget and let it finish",
-          feedback:
-            "It would arrive eventually, but that treats the symptom. The slowness is a step-size problem; a bigger (but sub-critical) learning rate fixes the cause, not the clock.",
-        },
-      ],
+        "From what the walk taught you: what's the most likely cause, what would you change, and what's the one risk in that fix? Write it as you'd say it at their desk.",
+      open: {
+        placeholder:
+          "e.g. the step size is probably… I'd… but the risk is…",
+        answer:
+          "A slow-but-steady fall is the “too timid” regime — the learning rate is too small, so every step inches downhill. The fix is a larger learning rate for bigger strides. The one risk: push it past the surface's stability ceiling and the steps overshoot the valley, so the loss climbs by powers of ten instead — the exact divergence you triggered in “over the edge.” So raise it, but stay under that cliff (and if unsure, raise it gradually and watch the loss curve).",
+      },
       difficulty: 3,
       targets: ["gd:transfer-step-size"],
     },

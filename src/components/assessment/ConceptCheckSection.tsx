@@ -149,15 +149,18 @@ function ChoiceItemView({
 }) {
   const [picked, setPicked] = useState<number | null>(null);
   const recordAnswer = useLearner((s) => s.recordAnswer);
+  // choice/predict always carry options; a legacy MCQ transfer does too (open
+  // transfers route to OpenTransferView and never reach here).
+  const options = item.options ?? [];
 
   const pick = (i: number) => {
     setPicked(i);
     whenHydrated(() =>
-      recordAnswer(nodeId, item.id, item.options[i].correct === true, itemCount),
+      recordAnswer(nodeId, item.id, options[i].correct === true, itemCount),
     );
   };
 
-  const chosen = picked !== null ? item.options[picked] : null;
+  const chosen = picked !== null ? options[picked] : null;
   const status: ItemStatus =
     chosen === null ? "unanswered" : chosen.correct ? "resolved" : "revisit";
   useEffect(() => onStatus(item.id, status), [status, item.id, onStatus]);
@@ -174,7 +177,7 @@ function ChoiceItemView({
         <p className="mt-4 max-w-[65ch] text-sm leading-relaxed text-ink-muted">{preamble}</p>
       )}
       <p className={`max-w-[65ch] font-medium ${preamble ? "mt-3" : "mt-4"}`}>{item.prompt}</p>
-      <Options options={item.options} picked={picked} onPick={pick} />
+      <Options options={options} picked={picked} onPick={pick} />
       {chosen && <Feedback chosen={chosen} />}
       {chosen && item.kind === "predict" && (
         <p className="mt-2 max-w-[65ch] text-sm leading-relaxed text-ink-muted">
@@ -237,6 +240,75 @@ function ExperimentTaskView({
           Waiting on the experiment above — this one is completed with your
           hands, not a click here.
         </p>
+      )}
+    </li>
+  );
+}
+
+/**
+ * The open transfer (rubric v2 §1c, the flagship form): the learner writes their
+ * own answer to a novel case, then reveals the model answer to check against —
+ * recognition of one-of-three is not transfer. Resolution is committing + revealing
+ * (self-assessed, like the experiment-task's "the experiment felt it"); the mastery
+ * model logs the engagement.
+ */
+function OpenTransferView({
+  item,
+  index,
+  nodeId,
+  itemCount,
+  onStatus,
+}: {
+  item: TransferItem;
+  index: number;
+  nodeId: string;
+  itemCount: number;
+  onStatus: (id: string, status: ItemStatus) => void;
+}) {
+  const open = item.open!;
+  const [answer, setAnswer] = useState("");
+  const [revealed, setRevealed] = useState(false);
+  const recordAnswer = useLearner((s) => s.recordAnswer);
+
+  const reveal = () => {
+    setRevealed(true);
+    whenHydrated(() => recordAnswer(nodeId, item.id, true, itemCount));
+  };
+  const status: ItemStatus = revealed ? "resolved" : "unanswered";
+  useEffect(() => onStatus(item.id, status), [status, item.id, onStatus]);
+
+  return (
+    <li className="border-t border-line py-7 first:border-t-0">
+      <ItemHeader index={index} kind={item.kind} difficulty={item.difficulty} status={status} />
+      <p className="mt-4 max-w-[65ch] text-sm leading-relaxed text-ink-muted">{item.scenario}</p>
+      <p className="mt-3 max-w-[65ch] font-medium">{item.prompt}</p>
+      <textarea
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
+        rows={4}
+        placeholder={open.placeholder ?? "Answer in your own words — diagnosis, then the one risk in the fix…"}
+        className="mt-4 w-full max-w-[70ch] rounded-lg border border-line bg-raised px-4 py-3 text-sm leading-relaxed text-ink placeholder:text-ink-faint focus:border-ink-faint focus:outline-none"
+      />
+      <div className="mt-3 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={reveal}
+          disabled={answer.trim().length < 12}
+          className="rounded-full border border-accent px-5 py-1.5 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-accent-ink disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {revealed ? "Model answer shown" : "Commit & reveal model answer"}
+        </button>
+        {!revealed && (
+          <span className="font-mono text-[11px] tracking-wide text-ink-faint">
+            commit your own first — there is no list to recognise
+          </span>
+        )}
+      </div>
+      {revealed && (
+        <div className="mt-4 max-w-[68ch] rounded-lg border border-accent/40 bg-raised p-4">
+          <p className="font-mono text-[11px] tracking-widest text-accent uppercase">Model answer</p>
+          <p className="mt-2 text-sm leading-relaxed text-ink-muted">{open.answer}</p>
+        </div>
       )}
     </li>
   );
@@ -321,6 +393,15 @@ export function ConceptCheckSection({
         {check.items.map((item, i) =>
           item.kind === "experiment-task" ? (
             <ExperimentTaskView
+              key={item.id}
+              item={item}
+              index={i}
+              nodeId={check.nodeId}
+              itemCount={total}
+              onStatus={onStatus}
+            />
+          ) : item.kind === "transfer" && item.open ? (
+            <OpenTransferView
               key={item.id}
               item={item}
               index={i}

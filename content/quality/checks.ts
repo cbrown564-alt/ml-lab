@@ -4,9 +4,10 @@ import type { AssessmentForm } from "./rubric";
 /**
  * Mechanizable detectors for rubric v2 (docs/08 §1c) — pure functions over a
  * `ConceptCheck`, shared by the `/review` form (to pre-fill what the machine can
- * decide) and the `check:rubric` linter (to gate the build). Only the
- * machine-decidable sub-checks live here; `transferIsInteractiveOrOpen` is a
- * taste call left blank for the human.
+ * decide) and the `check:rubric` linter (to gate the build). Once the policy
+ * became "the transfer item must itself be open or interactive", that check is
+ * structural too — a transfer item carrying an `open` prompt (or wired to the
+ * experiment) — so it is now decided here, not left to the human.
  */
 
 const hasOptions = (
@@ -23,10 +24,16 @@ const hasOptions = (
  * - `notPureMcqStack` — the act is not only choice/transfer cards: a pure MCQ
  *   stack is an automatic B5 fail (docs/08 §1c). The presence of an
  *   `experiment-task` or a `predict`-then-verify beat is what redeems it.
+ * - `transferIsInteractiveOrOpen` — the `transfer` item is an OPEN prompt (carries
+ *   `open`) rather than a closed MCQ (`options`). An exhibit with no transfer item
+ *   has nothing to satisfy, so it reads false.
  */
 export function detectAssessmentForm(
   check: ConceptCheck,
-): Pick<AssessmentForm, "playableExperimentTask" | "processFeedbackEveryOption" | "notPureMcqStack"> {
+): Pick<
+  AssessmentForm,
+  "playableExperimentTask" | "processFeedbackEveryOption" | "notPureMcqStack" | "transferIsInteractiveOrOpen"
+> {
   const playableExperimentTask = check.items.some(
     (i) => i.kind === "experiment-task" && i.taskEvent.length > 0,
   );
@@ -41,5 +48,13 @@ export function detectAssessmentForm(
   );
   const notPureMcqStack = interactiveKinds;
 
-  return { playableExperimentTask, processFeedbackEveryOption, notPureMcqStack };
+  const transfer = check.items.find((i) => i.kind === "transfer");
+  const transferIsInteractiveOrOpen = transfer ? Boolean(transfer.open) : false;
+
+  return {
+    playableExperimentTask,
+    processFeedbackEveryOption,
+    notPureMcqStack,
+    transferIsInteractiveOrOpen,
+  };
 }

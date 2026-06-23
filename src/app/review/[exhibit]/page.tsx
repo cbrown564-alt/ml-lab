@@ -96,7 +96,7 @@ export default async function ReviewExhibitPage({
     },
     assessment: seed?.assessment ?? {
       playableExperimentTask: assessment?.playableExperimentTask ?? false,
-      transferIsInteractiveOrOpen: false,
+      transferIsInteractiveOrOpen: assessment?.transferIsInteractiveOrOpen ?? false,
       processFeedbackEveryOption: assessment?.processFeedbackEveryOption ?? false,
       notPureMcqStack: assessment?.notPureMcqStack ?? false,
     },

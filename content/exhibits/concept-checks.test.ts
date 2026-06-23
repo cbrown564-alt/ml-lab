@@ -17,11 +17,22 @@ describe("concept checks", () => {
       it("every option-bearing item has exactly one correct option and feedback on all of them", () => {
         for (const item of check.items) {
           if (item.kind === "experiment-task") continue;
-          const correct = item.options.filter((o) => o.correct === true);
+          // Open transfer items carry a model answer, not options — skip them.
+          if (item.kind === "transfer" && item.open) continue;
+          const options = item.options ?? [];
+          const correct = options.filter((o) => o.correct === true);
           expect(correct, item.id).toHaveLength(1);
-          for (const o of item.options) {
+          for (const o of options) {
             expect(o.feedback.length, `${item.id}: "${o.label}"`).toBeGreaterThan(20);
           }
+        }
+      });
+
+      it("open transfer items pose a model answer to reveal", () => {
+        for (const item of check.items) {
+          if (item.kind !== "transfer" || !item.open) continue;
+          expect(item.open.answer.length, item.id).toBeGreaterThan(40);
+          expect(item.options, `${item.id} must not also carry MCQ options`).toBeUndefined();
         }
       });
 
