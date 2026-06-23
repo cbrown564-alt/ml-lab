@@ -3,68 +3,64 @@
   "exhibit": "the-dataset",
   "reviewer": "agent-panel",
   "date": "2026-06-23",
-  "contentHash": "374270f66dab0d1a",
+  "contentHash": "a361f9931d415130",
   "register": [
     {
       "dimension": "hero-as-protagonist",
-      "score": 0,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/00-viewport.png",
-      "note": "Forced 0: hero.png opens document-first (title, prose, a metadata card, four-pass nav) with no composed full-width visual, where ciechanowski-watch/00-viewport.png leads with a rendered watch as the page's face."
+      "note": "New hero is full-width, thumbnail-legible (two diverging lines + scatter) with mono figcaptions; the mistyped point now ties to the line with a dotted leader. Off 4 only on the top-band composition."
     },
     {
       "dimension": "mechanism-in-the-picture",
-      "score": 0,
+      "score": 3,
       "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
-      "note": "Forced 0 (no hero): nothing at the top depicts residuals/leverage the way seeing-theory-regression/01 draws the squared-error boxes around each point on the OLS line."
+      "note": "The honest dashed trend vs the dragged flat blue fit, the 'SLOPE 2.1 -> 0.4' readout, and the dotted leader from the line to the mistyped row depict leverage — the cause now on-canvas, not just asserted."
     },
     {
       "dimension": "annotation-integration",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
-      "note": "The See scatter self-labels (title chip, axis units, table headers, a linked highlighted row->point) but never names the residual/leverage mechanism in-canvas, so unlike distill-momentum/02 which captions each small-multiple with its governing math inline, the 'why a point matters' meaning still lives in the left prose — competent, not exemplar."
+      "note": "The see-frame carries its own caption, axis labels, and an in-figure teal row-to-point binding; short of Distill's every-segment labelling because the blue line/axes stay barer."
     },
     {
       "dimension": "atmosphere-finish",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
-      "note": "Cream ground, soft borders and AA type are calm, but the See viewport floats the canvas with a large empty gap below the title chip and a tall void under the short left column, where ciechanowski-watch/02 keeps figure, sliders and prose in tight deliberate vertical rhythm."
+      "note": "Warm cream, soft lines, AA-tinted underlined terms; the prior page-opening dead air is resolved by the hero. Off 4 by residual in-panel voids (hero top band, see lower-left)."
     },
     {
       "dimension": "motion",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
-      "note": "Interaction-driven changes (row<->point hover link, the mistyped-row toggle recomputing slope/estimate, the trend tipping) read purposeful, but no stepped/cinematic explanatory transition on the order of 3b1b-gradient-descent/02's ball descending the cost surface is evidenced in the static frames."
+      "note": "Conservatively from stills: a single explanatory load motion (line drags flat), an object-constant stepper, and a live break-it toggle (slope/estimate snap) — explanatory, not decorative."
     },
     {
       "dimension": "colour-discipline",
-      "score": 3,
+      "score": 4,
       "exemplarFrame": "r2d3-trees/00-viewport.png",
-      "note": "The semantic grammar holds without dilution across canvas, prose Term links and the experiment panel (blue=prediction line, amber=target points, crimson reserved for the single error: 'flattens the whole trend' and the wrecked £230k estimate), matching r2d3-trees/00's disciplined two-hue semantic split and extending it into prose."
+      "note": "Exemplar-grade: amber=truth, blue=prediction, crimson=error rationed to only the one bad row and its wrong estimate (no all-red field), teal=active, carried identically across canvas, controls, and AA -ink prose terms."
     }
   ],
   "hero": {
-    "present": false,
-    "fullWidth": false,
-    "labeledAnnotation": false,
-    "depictsMechanism": false,
-    "thumbnailLegible": false,
-    "atMostOneLoadMotion": false,
-    "note": "A hero would need a full-width scatter with the fitted line and one labeled high-leverage outlier visibly tilting it, composed and legible as a thumbnail, replacing the current title-plus-nav header."
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Hero clears both DELIGHT floors; the mistyped row is drawn at its real position with a dotted leader to the line it drags, so the leverage cause lives in the picture."
   },
   "assessment": {
     "playableExperimentTask": true,
-    "transferIsInteractiveOrOpen": false,
+    "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
     "notPureMcqStack": true,
-    "note": "The closing '05 TRANSFER' (sensor -9999 scenario) is a three-option multiple-choice card stack, not an interactive or open prompt, though the per-option feedback and the upstream experiment-task keep the Check from being a pure MCQ stack."
+    "note": "The closing transfer (transfer-sensor) is a genuine open write-your-own prompt with a revealed model answer, not an MCQ."
   },
   "verdict": {
-    "decision": "hold",
-    "blocking": [
-      "No hero: promote the See scatter into a full-width opening specimen that depicts the mechanism (the fitted line through the scatter with one labeled high-leverage outlier tilting it), replacing the document-first title-plus-nav header.",
-      "Add at least one in-canvas annotation naming the residual/leverage mechanism so the graphic carries its own 'why', lifting annotation-integration off 2.",
-      "Tighten the See viewport's vertical composition — close the empty gap below the canvas title chip and the void under the short left column — to reach atmosphere parity with the exemplars."
-    ],
-    "summary": "Strong colour discipline (3) and honest interactivity, but document-first with no hero forces two 0s and caps the rest at 2 — holds below register 3."
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Clears register 3 across the board (colour 4); the hero resolves the opening dead air and depicts the leverage mechanism with the mistyped row tied to the line it drags."
   }
 }

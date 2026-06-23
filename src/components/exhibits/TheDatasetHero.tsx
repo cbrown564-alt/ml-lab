@@ -74,8 +74,19 @@ function HeroGraphic({ t }: { t: number }) {
         stroke="var(--viz-prediction)"
         strokeWidth={3}
       />
-      {/* The one mistyped row — high leverage at the left edge. */}
+      {/* The one mistyped row — high leverage at the left edge. A dotted leader
+          ties it to the line it pulls, so it reads as the cause, not a stray dot. */}
       <g opacity={t}>
+        <line
+          x1={x(OUTLIER.size)}
+          y1={y(at(dragged, OUTLIER.size))}
+          x2={x(OUTLIER.size)}
+          y2={y(OUTLIER.price)}
+          stroke="var(--viz-error)"
+          strokeWidth={1.5}
+          strokeDasharray="3 3"
+          opacity={0.6}
+        />
         <circle
           cx={x(OUTLIER.size)}
           cy={y(OUTLIER.price)}
