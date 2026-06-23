@@ -1,6 +1,10 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { FeatureScalingBreakIt } from "@/components/exhibits/FeatureScalingBreakIt";
+import { FeatureScalingCheckLab } from "@/components/exhibits/FeatureScalingCheckLab";
 import { FeatureScalingLab } from "@/components/exhibits/FeatureScalingLab";
 import { FeatureScalingStory } from "@/components/exhibits/FeatureScalingStory";
+import { featureScalingCheck } from "@content/exhibits/feature-scaling/concept-check";
+import { featureScalingFailures } from "@content/exhibits/feature-scaling/failures";
 import { featureScalingMath } from "@content/exhibits/feature-scaling/math";
 import { featureScalingNarrative } from "@content/exhibits/feature-scaling/narrative";
 import { featureScalingSpine } from "@content/exhibits/feature-scaling/spine";
@@ -12,6 +16,10 @@ export default function FeatureScalingExhibit() {
       narrative={featureScalingNarrative}
       spine={featureScalingSpine}
       math={featureScalingMath}
+      check={featureScalingCheck}
+      failures={featureScalingFailures}
+      breakIt={<FeatureScalingBreakIt />}
+      checkCompanion={<FeatureScalingCheckLab />}
       story={<FeatureScalingStory />}
       experiment={<FeatureScalingLab />}
       lede={
