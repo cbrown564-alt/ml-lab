@@ -11,7 +11,7 @@ import {
   type LabeledPoint,
   type LogisticParams,
 } from "@/lib/models/logistic";
-import { expandedRow, rawRow, xorPoints } from "@content/exhibits/logistic-regression/xor";
+import { curvePoints, expandedRow, rawRow } from "@content/exhibits/logistic-regression/curve";
 import fixtures from "@/lib/models/fixtures/logistic.json";
 
 /**
@@ -62,17 +62,19 @@ describe("logistic regression", () => {
   });
 });
 
-describe("logistic regression — the linear boundary fails XOR, one feature fixes it", () => {
-  const y = xorPoints.map((p) => p.y);
+describe("logistic regression — the straight line fails a curved boundary, x² fixes it", () => {
+  const y = curvePoints.map((p) => p.y);
 
-  it("a straight line can't separate XOR (≈ chance)", () => {
-    const rows = xorPoints.map(rawRow);
+  it("a straight line is confidently wrong on the parabola's arms", () => {
+    const rows = curvePoints.map(rawRow);
     const w = fitLogisticVec(rows, y, { steps: 4000, lr: 0.3 });
-    expect(accuracyVec(rows, y, w)).toBeLessThan(0.65); // no better than guessing
+    const acc = accuracyVec(rows, y, w);
+    expect(acc).toBeGreaterThan(0.6); // it finds *some* signal (not chance)…
+    expect(acc).toBeLessThan(0.88); // …but can't follow the curve
   });
 
-  it("adding the x₁·x₂ interaction separates it almost perfectly", () => {
-    const rows = xorPoints.map(expandedRow);
+  it("adding the x₁² feature bends the boundary into the parabola", () => {
+    const rows = curvePoints.map(expandedRow);
     const w = fitLogisticVec(rows, y, { steps: 4000, lr: 0.3 });
     expect(accuracyVec(rows, y, w)).toBeGreaterThan(0.9); // the curve the line couldn't draw
   });

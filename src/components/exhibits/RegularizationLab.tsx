@@ -62,7 +62,7 @@ export function RegularizationLab() {
             direction="col"
             caption={`Degree ${REG_DEGREE}, λ = ${lambda < 0.01 ? lambda.toExponential(0) : lambda.toFixed(2)} — ${regime}`}
             stats={[
-              { label: "training error", value: trainErr.toFixed(3), hue: "var(--viz-neutral)", note: "rises as λ bites" },
+              { label: "training error", value: trainErr.toFixed(3), hue: "var(--viz-neutral-ink)", note: "rises as λ bites" },
               { label: "test error", value: testErr.toFixed(3), hue: "var(--viz-error)", note: "the honest one" },
             ]}
           />

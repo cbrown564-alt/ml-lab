@@ -34,11 +34,11 @@ test.describe("logistic-regression exhibit", () => {
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
   });
 
-  test("Break it: a straight line fails XOR, one feature fixes it", async ({ page }) => {
+  test("Break it: a straight line miscuts the curve, one feature fixes it", async ({ page }) => {
     await openTab(page, "Break it");
-    await expect(panel(page).getByRole("status")).toHaveText("A straight line, lost");
-    await panel(page).getByRole("button", { name: "Add x₁·x₂", exact: true }).click();
-    await expect(panel(page).getByRole("status")).toHaveText("The curve separates");
+    await expect(panel(page).getByRole("status")).toHaveText("A straight line, miscut");
+    await panel(page).getByRole("button", { name: "Add x₁²", exact: true }).click();
+    await expect(panel(page).getByRole("status")).toHaveText("The curve fits");
   });
 
   test("Explain it pairs the check with a live companion", async ({ page }) => {

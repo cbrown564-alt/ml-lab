@@ -75,7 +75,7 @@ export function ClassificationTaskBreakIt() {
             direction="col"
             caption="3 positives hide among 57 negatives"
             stats={[
-              { label: "accuracy", value: `${Math.round(acc * 100)}%`, hue: "var(--viz-neutral)", note: "flatters the all-negative model" },
+              { label: "accuracy", value: `${Math.round(acc * 100)}%`, hue: "var(--viz-neutral-ink)", note: "flatters the all-negative model" },
               { label: "recall", value: rec.toFixed(2), hue: "var(--viz-error)", note: "of 3 real positives, how many caught" },
               { label: "precision", value: precision(cm).toFixed(2), hue: "var(--viz-prediction)" },
             ]}

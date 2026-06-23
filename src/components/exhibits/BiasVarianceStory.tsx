@@ -59,7 +59,7 @@ export function BiasVarianceStory() {
         <StatGrid
           caption="The two scores"
           stats={[
-            { label: "training error", value: trainErr.toFixed(3), hue: "var(--viz-neutral)", note: "seen" },
+            { label: "training error", value: trainErr.toFixed(3), hue: "var(--viz-neutral-ink)", note: "seen" },
             { label: "test error", value: testErr.toFixed(3), hue: "var(--viz-error)", note: "unseen — honest" },
           ]}
         />

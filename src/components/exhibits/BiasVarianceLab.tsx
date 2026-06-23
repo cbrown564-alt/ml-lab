@@ -63,7 +63,7 @@ export function BiasVarianceLab() {
             direction="col"
             caption={`Degree ${degree} — ${regime}`}
             stats={[
-              { label: "training error", value: trainErr.toFixed(3), hue: "var(--viz-neutral)", note: "on data it has seen" },
+              { label: "training error", value: trainErr.toFixed(3), hue: "var(--viz-neutral-ink)", note: "on data it has seen" },
               { label: "test error", value: testErr.toFixed(3), hue: "var(--viz-error)", note: "on data it hasn't — the honest one" },
             ]}
           />

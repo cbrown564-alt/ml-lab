@@ -9,50 +9,50 @@ export const logisticRegressionCheck: ConceptCheck = {
   nodeId: "logistic-regression",
   items: [
     {
-      id: "why-line-fails-xor",
+      id: "why-line-fails-curve",
       kind: "choice",
-      prompt: "On XOR, logistic regression lands at chance. Why can't more training rescue it?",
+      prompt: "On the parabola-split data, logistic regression plateaus around 78% and can't do better. Why can't more training rescue it?",
       options: [
         {
-          label: "The model draws one straight line, and no straight line separates XOR — it's a shape limit, not an optimiser one",
+          label: "The model draws one straight line, and no straight line follows a curve — it's a shape limit, not an optimiser one",
           correct: true,
           feedback:
-            "Right. The score b + w·x is linear, so the boundary is always straight. XOR needs a curve; gradient descent finds the best straight line, which is no good.",
+            "Right. The score b + w·x is linear, so the boundary is always straight. The true split is a parabola; gradient descent finds the best straight line, which miscuts the arms.",
         },
         {
-          label: "The learning rate is too low for XOR; a bigger step would converge to the right boundary",
+          label: "The learning rate is too low; a bigger step would converge to the right boundary",
           feedback:
-            "There is no right straight boundary to converge to. Any learning rate finds the best line, and the best line still splits two corners wrongly.",
+            "There is no right straight boundary to converge to. Any learning rate finds the best line, and the best line still cuts straight across a curved split.",
         },
         {
-          label: "XOR needs more data; with enough points the line would separate it",
+          label: "It needs more data; with enough points the line would follow the curve",
           feedback:
-            "More XOR data makes the impossibility clearer, not better — a straight line can't separate the four corners no matter how many points you add.",
+            "More data makes the impossibility clearer, not better — a straight line can't bend into a parabola no matter how many points you add.",
         },
       ],
       difficulty: 2,
       targets: ["logreg:linear"],
     },
     {
-      id: "what-x1x2-does",
+      id: "what-x2-does",
       kind: "choice",
-      prompt: "Adding the single feature x₁·x₂ lets the model solve XOR. What did that change?",
+      prompt: "Adding the single feature x₁² lets the model fit the parabola. What did that change?",
       options: [
         {
-          label: "A straight line in the expanded space (x₁, x₂, x₁x₂) is a curved boundary in the original — the model is still linear, the features bent",
+          label: "A straight line in the expanded space (x₁, x₂, x₁²) is a curved boundary in the original — the model is still linear, the features bent",
           correct: true,
           feedback:
-            "Exactly. x₁x₂ is positive in the class-1 corners and negative in the class-0 ones, so a threshold on it is the XOR. The classifier stays linear; the feature map did the bending.",
+            "Exactly. The parabola x₂ = a·x₁² + c is linear in (x₁², x₂), so a flat boundary in the expanded space is the parabola back in the plane. The classifier stays linear; the feature map did the bending.",
         },
         {
           label: "It made logistic regression a nonlinear model",
           feedback:
-            "The model is still linear — in the new features. The nonlinearity lives in the feature map x→(x₁,x₂,x₁x₂), not in the classifier, which still draws a flat boundary in the expanded space.",
+            "The model is still linear — in the new features. The nonlinearity lives in the feature map x→(x₁,x₂,x₁²), not in the classifier, which still draws a flat boundary in the expanded space.",
         },
         {
-          label: "It added a second line, and two lines can box in the corners",
+          label: "It added a second line, and two lines can bracket the curve",
           feedback:
-            "It added a feature, not a line. The boundary is still a single surface — but now curved, because x₁x₂ bends it. One well-chosen feature, not two lines.",
+            "It added a feature, not a line. The boundary is still a single surface — but now curved, because x₁² bends it. One well-chosen feature, not two lines.",
         },
       ],
       difficulty: 3,
@@ -84,10 +84,10 @@ export const logisticRegressionCheck: ConceptCheck = {
       targets: ["logreg:log-loss"],
     },
     {
-      id: "break-xor",
+      id: "break-curve",
       kind: "experiment-task",
-      prompt: "Break it on purpose: train logistic regression on XOR with the raw coordinates and watch it fail at chance.",
-      taskEvent: "logistic-regression:linear-fails-xor",
+      prompt: "Break it on purpose: on the curved-boundary data, work the Raw ↔ Add-x₁² toggle and watch the straight line miscut the parabola before the feature fixes it.",
+      taskEvent: "logistic-regression:linear-fails-curve",
       feedback:
         "You've met the linear classifier's hard limit — a straight line on a curved problem. The fix isn't a better optimiser; it's a feature (or a model) that can bend.",
       difficulty: 1,
@@ -97,29 +97,29 @@ export const logisticRegressionCheck: ConceptCheck = {
       id: "transfer-curved",
       kind: "transfer",
       scenario:
-        "A colleague's logistic-regression spam filter does well overall but completely fails on one cluster of emails that are spam only when two features co-occur (a certain sender *and* a certain link), though neither feature alone is suspicious.",
-      prompt: "From what XOR taught you, what's happening, and what's the cheapest fix to try first?",
+        "A colleague's logistic-regression model predicts equipment failure from operating temperature. It does poorly, because failures actually happen at BOTH very low temperatures (brittle) and very high ones (overheating) — but not in the comfortable middle.",
+      prompt: "From what the parabola taught you, what's happening, and what's the cheapest fix to try first?",
       options: [
         {
           label:
-            "It's an interaction the linear model can't capture — add the product of those two features (or an interaction term) so the boundary can bend",
+            "Failure is a U-shaped (curved) function of temperature that a straight boundary can't capture — add a temperature² feature so the boundary can bend",
           correct: true,
           feedback:
-            "That's the transfer: 'spam only when both' is an XOR-like interaction, invisible to a model that's linear in each feature alone. The cheap fix is exactly the x₁·x₂ move — an interaction feature.",
+            "That's the transfer: 'fails at both extremes' is a curved relationship, invisible to a model linear in temperature alone. The cheap fix is exactly the x₁² move — a squared feature.",
         },
         {
           label: "The model is underpowered — replace it with a deep neural network",
           feedback:
-            "A network would work, but it's overkill for a known two-feature interaction. The cheap, interpretable fix is to add that one interaction feature and keep the logistic model.",
+            "A network would work, but it's overkill for a known one-feature curve. The cheap, interpretable fix is to add the squared feature and keep the logistic model.",
         },
         {
-          label: "It needs more spam examples of that cluster to learn the pattern",
+          label: "It needs more failure examples to learn the pattern",
           feedback:
-            "More data won't help a model that's structurally linear in each feature — it can't represent 'both but not either' at any sample size. An interaction feature can.",
+            "More data won't help a model that's structurally linear in temperature — it can't represent 'high at both ends, low in the middle' at any sample size. A squared feature can.",
         },
       ],
       difficulty: 3,
-      targets: ["logreg:transfer-interaction"],
+      targets: ["logreg:transfer-curve"],
     },
   ],
 };

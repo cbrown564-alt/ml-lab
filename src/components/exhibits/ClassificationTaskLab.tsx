@@ -65,7 +65,7 @@ export function ClassificationTaskLab() {
             stats={[
               { label: "precision", value: precision(cm).toFixed(2), hue: "var(--viz-prediction)", note: "of called-positive, how many were" },
               { label: "recall", value: recall(cm).toFixed(2), hue: "var(--viz-param)", note: "of actual positives, how many caught" },
-              { label: "accuracy", value: accuracyOf(cm).toFixed(2), hue: "var(--viz-neutral)", note: "share correct overall" },
+              { label: "accuracy", value: accuracyOf(cm).toFixed(2), hue: "var(--viz-neutral-ink)", note: "share correct overall" },
               { label: "F1", value: f1(cm).toFixed(2), hue: "var(--viz-truth)", note: "the precision/recall balance" },
             ]}
           />
