@@ -35,4 +35,19 @@ test.describe("regression-task exhibit", () => {
     await panel(page).getByRole("button", { name: /Right or wrong/i }).click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
   });
+
+  test("Break it: accuracy is arbitrary, distance is honest", async ({ page }) => {
+    await openTab(page, "Break it");
+    await expect(panel(page).getByText(/accuracy \d+%/i)).toBeVisible();
+    await panel(page).getByRole("slider").first().fill("16");
+    await expect(panel(page).getByText(/accuracy 100%/i)).toBeVisible();
+    await panel(page).getByRole("button", { name: /distance \(MAE\)/i }).click();
+    await expect(panel(page).getByText(/MAE .* points/i)).toBeVisible();
+  });
+
+  test("Explain it pairs the check with a live companion", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/One model, two rulers/i)).toBeVisible();
+    await expect(panel(page).getByText(/fixed & honest/i)).toBeVisible();
+  });
 });

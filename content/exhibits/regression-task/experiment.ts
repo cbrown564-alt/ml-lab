@@ -19,7 +19,9 @@ function mulberry32(seed: number): () => number {
   };
 }
 
-const TRUE = (x: number) => 36 + 6 * x; // score ≈ 36 + 6·hours, clamped to [0, 100]
+/** The underlying trend a good model would learn — score ≈ 36 + 6·hours. */
+export const regressionTrend = (x: number) => 36 + 6 * x;
+const TRUE = regressionTrend;
 const clamp = (v: number) => Math.max(0, Math.min(100, v));
 const round1 = (v: number) => Math.round(v * 10) / 10;
 
@@ -38,6 +40,7 @@ const { shown, queries } = build();
 
 export const shownExamples: Example[] = shown;
 export const queryPoints: Example[] = queries;
+export const allExamples: Example[] = [...shown, ...queries].sort((a, b) => a.x - b.x);
 
 /** The median score across all examples — the split that turns this into a yes/no
  * classification task ("did they pass?"). */

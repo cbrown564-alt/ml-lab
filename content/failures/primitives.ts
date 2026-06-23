@@ -72,4 +72,8 @@ export const failurePrimitives: Record<FailurePrimitive, { title: string; gist: 
     title: "Metric gaming",
     gist: "Optimising the proxy until it stops tracking the goal.",
   },
+  "metric-mismatch": {
+    title: "Metric mismatch",
+    gist: "Scoring with a metric that doesn't fit the target's type — accuracy on a continuous answer, distance on a label.",
+  },
 };

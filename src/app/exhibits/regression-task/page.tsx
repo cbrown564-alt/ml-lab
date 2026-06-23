@@ -1,6 +1,10 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { RegressionTaskBreakIt } from "@/components/exhibits/RegressionTaskBreakIt";
+import { RegressionTaskCheckLab } from "@/components/exhibits/RegressionTaskCheckLab";
 import { RegressionTaskLab } from "@/components/exhibits/RegressionTaskLab";
 import { RegressionTaskStory } from "@/components/exhibits/RegressionTaskStory";
+import { regressionTaskCheck } from "@content/exhibits/regression-task/concept-check";
+import { regressionTaskFailures } from "@content/exhibits/regression-task/failures";
 import { regressionTaskMath } from "@content/exhibits/regression-task/math";
 import { regressionTaskNarrative } from "@content/exhibits/regression-task/narrative";
 import { regressionTaskSpine } from "@content/exhibits/regression-task/spine";
@@ -12,6 +16,10 @@ export default function RegressionTaskExhibit() {
       narrative={regressionTaskNarrative}
       spine={regressionTaskSpine}
       math={regressionTaskMath}
+      check={regressionTaskCheck}
+      failures={regressionTaskFailures}
+      breakIt={<RegressionTaskBreakIt />}
+      checkCompanion={<RegressionTaskCheckLab />}
       story={<RegressionTaskStory />}
       experiment={<RegressionTaskLab />}
       lede={

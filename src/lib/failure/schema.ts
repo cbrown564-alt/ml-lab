@@ -30,6 +30,7 @@ export const FAILURE_PRIMITIVES = [
   "seed-sensitivity",
   "miscalibration",
   "metric-gaming",
+  "metric-mismatch",
 ] as const;
 
 export type FailurePrimitive = (typeof FAILURE_PRIMITIVES)[number];
