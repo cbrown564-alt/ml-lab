@@ -142,8 +142,9 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    // Live on the four-act spine (See it + Run it); Break it + Explain it land next.
-    status: "interactive",
+    // Flagship: all four acts, cleared the non-circular panel after a two-round review
+    // (the live XOR trainer + capacity/overfitting, the W₂W₁x→line widget). The capstone.
+    status: "flagship",
   },
   {
     id: "feature-scaling",
