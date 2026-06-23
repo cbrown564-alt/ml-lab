@@ -120,7 +120,8 @@ async function captureExhibit(page, exhibit, log) {
 
   // The opening frame — the masthead/hero, the "opening grammar" the lineup judges.
   const hero = path.join(dir, "hero.png");
-  await page.screenshot({ path: hero, clip: { x: 0, y: 0, width: VIEWPORT.width, height: 560 } });
+  // Tall enough that a two-panel before/after hero isn't clipped at the bottom.
+  await page.screenshot({ path: hero, clip: { x: 0, y: 0, width: VIEWPORT.width, height: 700 } });
   push(hero, "hero", "Opening frame (masthead / hero)");
 
   for (const act of ACTS) {

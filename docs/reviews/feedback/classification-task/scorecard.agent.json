@@ -3,69 +3,64 @@
   "exhibit": "classification-task",
   "reviewer": "agent-panel",
   "date": "2026-06-23",
-  "contentHash": "4b42125ebc863f76",
+  "contentHash": "4614cb34df6f44e4",
   "register": [
     {
       "dimension": "hero-as-protagonist",
-      "score": 0,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/00-viewport.png",
-      "note": "Forced 0 — hero.png opens on H1 + prose + metadata card + stepper with no graphic, where ciechanowski-watch/00 makes a rendered watch the page's face."
+      "note": "Full-width composed strip with the dashed t=0.50 line as a dead-center focal anchor — poster-worthy and the page's face, just busier than the exemplar's single-object calm."
     },
     {
       "dimension": "mechanism-in-the-picture",
-      "score": 0,
+      "score": 3,
       "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
-      "note": "Forced 0 — no hero exists to depict the threshold/boundary, whereas seeing-theory-regression/01 puts the residual squares (the mechanism) directly in the picture."
+      "note": "Shows the whole classification mechanism in one frame — threshold rule splitting decision regions, points by predicted probability, red-ringed misclassifications, plus confusion matrix and precision/recall."
     },
     {
       "dimension": "annotation-integration",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
-      "note": "see-viewport's strip self-labels (t=0.50, predict 0/1, TP/FP/FN/TN, the precision/recall panel), but it is one static state and the 'why' still lives in left prose, where distill-momentum/02 writes the governing condition into every small-multiple."
+      "note": "Self-labels (t=0.50 BALANCED, predict 0/1, READING THE DECISION, ACTUAL/PRED TP/FP/FN/TN with plain-English glosses)."
     },
     {
       "dimension": "atmosphere-finish",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
-      "note": "Palette and soft cards are Distill-soft, but see-spine shows a large dead band with the matrix scattered to the lower-right and weak focal hierarchy, where ciechanowski-watch/02 holds one tight composed column."
+      "note": "Distill-soft warm surface, soft borders, crisp anti-aliased marks; held off 4 by a flat field below the strip and a dead gutter right of the Run matrix."
     },
     {
       "dimension": "motion",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
-      "note": "run-viewport shows a draggable threshold driving a live matrix re-count (explanatory, the lab's edge), but steppability/easing are not verifiable from a static frame so no polish credit vs 3b1b-gradient-descent/02."
+      "note": "A docked decision-threshold slider live re-counts the matrix and moves precision/recall/accuracy/F1, plus the single hero load-motion."
     },
     {
       "dimension": "colour-discipline",
       "score": 3,
       "exemplarFrame": "r2d3-trees/00-viewport.png",
-      "note": "Class hues (blue=1, amber=0) hold across strip and cells and error semantics carry into prose ('95% accuracy' tinted rose under 'SYMPTOM · IT BROKE'), matching r2d3-trees/00's disciplined binding; only the pale-on-pale confusion-cell numerals are borderline AA."
+      "note": "prediction=blue, truth=gold, error=red used only as misclassification rings and FP/FN tints (no all-red dilution), AA-tinted prose terms."
     }
   ],
   "hero": {
-    "present": false,
-    "fullWidth": false,
-    "labeledAnnotation": false,
-    "depictsMechanism": false,
-    "thumbnailLegible": false,
-    "atMostOneLoadMotion": false,
-    "note": "A hero would need the threshold strip + visible boundary + live confusion matrix promoted to full width above the prose, self-labeled and thumbnail-legible."
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Full-width probability strip + threshold split + confusion matrix/precision-recall — the full mechanism in one frame, legible as a thumbnail via the centered t=0.50 line."
   },
   "assessment": {
     "playableExperimentTask": true,
-    "transferIsInteractiveOrOpen": false,
+    "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
     "notPureMcqStack": true,
-    "note": "The closing transfer-metric item is kind:transfer but is answered by three MCQ options, so the transfer is not an interaction or open prompt."
+    "note": "Closing transfer is an open prompt ('a case you haven't seen'), not another MCQ."
   },
   "verdict": {
-    "decision": "hold",
-    "blocking": [
-      "Add a full-width composed hero (threshold strip with visible boundary + live confusion matrix), self-labeled and thumbnail-legible, to clear the two forced-0 hero dimensions.",
-      "Consolidate the see-spine layout to remove the empty lower-right dead band that holds atmosphere at 2.",
-      "Convert the closing transfer item from a 3-option MCQ to an interaction or open prompt.",
-      "Raise confusion-cell numeral contrast (blue-on-pale-blue, rose-on-pale-rose) to AA."
-    ],
-    "summary": "Real interactivity, in-graphic labels, and color grammar (colour=3), but the missing composed hero forces two dimensions to 0 and the page reads as a clean blog post with a figure — does not clear register 3."
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Clears register 3 across all six dimensions with a genuine mechanism-bearing hero."
   }
 }

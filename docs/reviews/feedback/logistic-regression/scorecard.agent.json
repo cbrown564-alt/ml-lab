@@ -3,68 +3,64 @@
   "exhibit": "logistic-regression",
   "reviewer": "agent-panel",
   "date": "2026-06-23",
-  "contentHash": "369e0f837ad6e080",
+  "contentHash": "85e91ff86e344ee8",
   "register": [
     {
       "dimension": "hero-as-protagonist",
-      "score": 0,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/00-viewport.png",
-      "note": "Forced 0 and earned it: hero.png is a text-only title+lede+meta card with no specimen, whereas ciechanowski-watch/00-viewport.png lands a poster-worthy rendered watch and invites manipulation right under the fold."
+      "note": "Full-width before/after diptych, poster-worthy and thumbnail-legible; the bare left 'no opinion' scatter is quieter than the right gradient, holding it at 3."
     },
     {
       "dimension": "mechanism-in-the-picture",
-      "score": 0,
+      "score": 3,
       "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
-      "note": "Forced 0: there is no hero specimen at all, so unlike seeing-theory-regression/01 which shows the OLS line plus the squared-residual squares as the mechanism, nothing above the spine depicts the boundary or probability field."
+      "note": "Trained panel draws the probability gradient AND the dashed boundary plus red-ring residuals — mechanism, not just data."
     },
     {
       "dimension": "annotation-integration",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
-      "note": "The plot carries axis labels, a TRAINED caption, and an in-figure accuracy/log-loss/class-hue strip, but the boundary line and probability gradient stay unlabeled (P=0.5, sure-vs-guessing live only in prose) — distill-momentum/02 instead writes its labels onto the artifact itself with per-mode captions tied to the inequality."
+      "note": "In-graphic header, axis labels and the classifier's-verdict accuracy/log-loss/class-hue strip carry meaning; the P=0.5 boundary line is untagged."
     },
     {
       "dimension": "atmosphere-finish",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
-      "note": "Soft continuous gold-to-blue field, clean ringed points, calm focal hierarchy on warm ground — Distill-soft and competent, but a plain d3 scatter on a rectangle with a utilitarian verdict strip, well short of the hand-drawn coil and dual-slider craft of ciechanowski-watch/02."
+      "note": "Warm paper, soft gradient, AA prose, quiet chrome read Distill-soft; mild dead air below the see prose column."
     },
     {
       "dimension": "motion",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
-      "note": "A Train button plus a visible step slider (step 0) scrubs the descent re-tracing the boundary and a probability-field toggle is explanatory scaffolding, but from static frames I cannot confirm it reads as cleanly as the staged cost/classification reveals in 3b1b-gradient-descent/02, so it holds at competent."
+      "note": "Train, scrub-descent, probability-field toggle, raw+x1^2 toggle and act stepper are explanatory controls clearing the floor."
     },
     {
       "dimension": "colour-discipline",
       "score": 3,
       "exemplarFrame": "r2d3-trees/00-viewport.png",
-      "note": "Lab grammar is held throughout — amber=class0/truth, blue=class1/prediction, red reserved for misclassified points and 'wrong side'/log-loss, teal=active control — and the big field is a two-hue class gradient (no error wash); like r2d3-trees/00 the encoding stays consistent, and ours extends it into AA-tinted prose terms that R2D3 does not."
+      "note": "amber=truth, blue=prediction, red=error reserved to point rings (no all-red field); matches r2d3's disciplined palette."
     }
   ],
   "hero": {
-    "present": false,
-    "fullWidth": false,
-    "labeledAnnotation": false,
-    "depictsMechanism": false,
-    "thumbnailLegible": false,
-    "atMostOneLoadMotion": false,
-    "note": "A hero would need the trained boundary plot rendered full-width above the spine — gold/blue field, dashed line, a few ringed misclassified points, one in-graphic label — composed as a portrait legible as a thumbnail."
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Before/after diptych untrained(50%, flat field) vs trained(93%, gold/blue boundary); to reach 4, a flat 50% wash on the left and a P=0.5 tag."
   },
   "assessment": {
     "playableExperimentTask": true,
     "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
     "notPureMcqStack": true,
-    "note": "Item 04 is a hands-on lab task (work the Raw to Add-x1-squared toggle, completed with your hands) and item 05 is an open applied transfer about equipment-failure prediction at both temperature extremes, so the stack is not pure MCQ."
+    "note": "Explain closes on an open free-text transfer (commit/reveal); right panel has a live raw+x1^2 toggle."
   },
   "verdict": {
-    "decision": "hold",
-    "blocking": [
-      "No hero specimen above the spine — add the trained decision-boundary plot as a full-width composed portrait so the two forced-0 DELIGHT dimensions can clear their floor of 3.",
-      "Annotation lives beside the figure, not on it — label the boundary as the decision boundary and mark P=0.5 / sure vs guessing in-canvas to lift annotation-integration off 2.",
-      "Atmosphere is clean but plain — add depth/finish to the scatter (softer field edges, a more crafted verdict strip) to move past competent toward the watch bar."
-    ],
-    "summary": "Disciplined colour and a solid in-canvas plot, but with no hero the two DELIGHT floors fail and annotation/atmosphere/motion sit at competent — holds short of register 3."
+    "decision": "advance",
+    "blocking": [],
+    "summary": "New before/after hero depicts the mechanism and clears floor 3 on both gated dimensions; every register dimension a solid 3."
   }
 }
