@@ -3,7 +3,7 @@
   "exhibit": "gradient-descent",
   "reviewer": "agent-panel",
   "date": "2026-06-23",
-  "contentHash": "bb28500031ad3495",
+  "contentHash": "3307740f46bd3ded",
   "register": [
     {
       "dimension": "hero-as-protagonist",
@@ -53,14 +53,14 @@
   },
   "assessment": {
     "playableExperimentTask": true,
-    "transferIsInteractiveOrOpen": false,
+    "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
     "notPureMcqStack": true,
-    "note": "The act carries a playable experiment-task ('go over the edge') and a predict-then-verify, but the item literally labelled 'transfer' (transfer-slow-training) is a closed 3-option MCQ with the live descent panel unwired to its scenario, so the transfer payoff itself is neither interactive nor open."
+    "note": "The transfer item (transfer-slow-training) is now an OPEN prompt — the learner writes their own diagnosis + the one risk in the fix, then reveals a model answer — alongside the playable 'go over the edge' experiment-task and a predict-then-verify. No closed MCQ transfer."
   },
   "verdict": {
     "decision": "advance",
     "blocking": [],
-    "summary": "All six register dimensions clear floor 3 after the hero + annotation fixes; remaining work (the literal transfer item is a closed MCQ; minor hero polish toward 4) is above the floor. Register clears the benchmark; the transfer-item interactivity is the open assessment-gate / taste call."
+    "summary": "Clears the bar: all six register dimensions at floor 3, the hero spec passes, and the assessment form is fully open/interactive (open transfer). Remaining items are polish toward 4 (hero tactile depth)."
   }
 }
