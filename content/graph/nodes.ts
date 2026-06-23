@@ -29,8 +29,10 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    // Live on the four-act spine (See it + Run it); Break it + Explain it land next.
-    status: "interactive",
+    // Flagship: all four acts, cleared the non-circular panel (the coordinated
+    // table↔scatter, the one-bad-row Break-it). The last node to land — the journey is
+    // complete: all 15 Foundations nodes are flagship.
+    status: "flagship",
   },
   {
     id: "regression-task",
