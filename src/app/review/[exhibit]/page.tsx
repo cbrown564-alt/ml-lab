@@ -1,9 +1,7 @@
-/* eslint-disable @next/next/no-img-element -- dev-only review tool streaming local
-   capture/exemplar PNGs of arbitrary size; next/image optimization is wrong here. */
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { nodes } from "@content/graph/nodes";
 import { REGISTER_DIMENSIONS, type RegisterDimensionKey } from "@content/quality/rubric";
-import { exemplarUrl, frameUrl } from "../_lib/frame-url";
 import {
   DEFAULT_DIMENSION_EXEMPLAR,
   contentHash,
@@ -16,14 +14,16 @@ import {
   readManifest,
   readScorecard,
   readTextDoc,
-  type CaptureFrame,
+  reviewExhibits,
 } from "../_lib/store";
-import { ReviewForm, type ReviewFormInitial } from "../_components/ReviewForm";
+import {
+  ReviewWorkbench,
+  type CaptureFrameView,
+  type ReviewWorkbenchInitial,
+} from "../_components/ReviewWorkbench";
 import { DecisionsPanel } from "../_components/DecisionsPanel";
 
 export const dynamic = "force-dynamic";
-
-const SURFACE_ORDER = ["hero", "see", "run", "break", "explain"] as const;
 
 export default async function ReviewExhibitPage({
   params,
@@ -39,15 +39,22 @@ export default async function ReviewExhibitPage({
   const scorecard = readScorecard(exhibit);
   const heroPresent = detectHeroPresent(exhibit);
   const assessment = detectAssessment(exhibit);
-  const hash = contentHash(exhibit);
-  const stale = scorecard ? scorecard.contentHash !== hash : false;
+  const stale = scorecard ? scorecard.contentHash !== contentHash(exhibit) : false;
   const exemplars = listExemplarFrames();
   const variants = date ? listVariantFrames(exhibit, date) : [];
+
+  // Roster nav + progress — so a 15-exhibit batch is one keyboard-light flow, not
+  // a return trip to the index between every node.
+  const roster = reviewExhibits();
+  const idx = roster.findIndex((r) => r.id === exhibit);
+  const prev = idx > 0 ? roster[idx - 1] : null;
+  const next = idx >= 0 && idx < roster.length - 1 ? roster[idx + 1] : null;
+  const reviewed = roster.filter((r) => r.hasScorecard && !r.scorecardStale).length;
 
   // Seed the form: a stored verdict is authoritative; otherwise pre-fill what the
   // machine already knows (hero presence, the assessment booleans) and the default
   // benchmark frame per dimension, leaving the taste calls to the human.
-  const initial: ReviewFormInitial = {
+  const initial: ReviewWorkbenchInitial = {
     register: REGISTER_DIMENSIONS.map((d) => {
       const existing = scorecard?.register.find((s) => s.dimension === d.key);
       const defaultScore = d.key === "hero-as-protagonist" && !heroPresent ? 0 : 3;
@@ -74,22 +81,21 @@ export default async function ReviewExhibitPage({
     },
     verdict: scorecard?.verdict ?? { decision: "hold", blocking: [] },
     notes: readTextDoc(exhibit, "notes.md"),
-    decisions: readTextDoc(exhibit, "decisions.md"),
   };
 
-  const framesBySurface = new Map<string, CaptureFrame[]>();
-  for (const f of manifest?.frames ?? []) {
-    const arr = framesBySurface.get(f.surface) ?? [];
-    arr.push(f);
-    framesBySurface.set(f.surface, arr);
-  }
+  const frames: CaptureFrameView[] = (manifest?.frames ?? []).map((f) => ({
+    file: f.file,
+    surface: f.surface,
+    label: f.label,
+    exemplar: f.exemplar,
+  }));
 
   return (
     <main>
-      <header className="flex flex-wrap items-baseline justify-between gap-4">
+      <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">{node?.title ?? exhibit}</h1>
-          <p className="mt-2 text-sm text-ink-muted">
+          <h1 className="text-2xl font-semibold tracking-tight">{node?.title ?? exhibit}</h1>
+          <p className="mt-1 text-sm text-ink-muted">
             <span className="font-mono text-ink-faint">{exhibit}</span> · status{" "}
             <span className="text-ink">{node?.status}</span> · hero{" "}
             <span className={heroPresent ? "text-truth" : "text-error-viz"}>
@@ -97,79 +103,69 @@ export default async function ReviewExhibitPage({
             </span>
           </p>
         </div>
-        <div className="text-right text-sm">
+        <div className="flex items-center gap-3 text-sm">
           {date ? (
-            <p className="text-ink-muted">
-              Captured <span className="font-mono tabular-nums text-ink">{date}</span>
-            </p>
+            <span className="text-ink-faint">
+              captured <span className="font-mono tabular-nums text-ink-muted">{date}</span>
+              {scorecard && (
+                <span className={stale ? "text-error-viz" : "text-truth"}>
+                  {" · "}
+                  {stale ? "verdict STALE" : "verdict in-date"}
+                </span>
+              )}
+            </span>
           ) : (
-            <p className="text-error-viz">
-              No capture — run{" "}
-              <code className="font-mono">npm run capture:review -- {exhibit}</code>
-            </p>
-          )}
-          {scorecard && (
-            <p className={stale ? "text-error-viz" : "text-truth"}>
-              Verdict {scorecard.date} · {stale ? "STALE (content changed)" : "in-date"}
-            </p>
+            <span className="text-error-viz">no capture</span>
           )}
           <a
             href={`/exhibits/${exhibit}`}
             target="_blank"
             rel="noreferrer"
-            className="mt-1 inline-block text-accent underline decoration-1 underline-offset-4 hover:decoration-2"
+            className="text-accent underline decoration-1 underline-offset-4 hover:decoration-2"
           >
-            open live page ↗
+            live page ↗
           </a>
         </div>
       </header>
 
-      {/* The contact sheet — each captured surface beside its pinned exemplar
-          frame, so every comparison is on stored pixels, never memory (§1e). */}
-      <section className="mt-10">
-        <h2 className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
-          Contact sheet · captured ↔ pinned exemplar
-        </h2>
-        {manifest ? (
-          <div className="mt-5 space-y-10">
-            {SURFACE_ORDER.filter((s) => framesBySurface.has(s)).map((surface) => (
-              <div key={surface}>
-                <h3 className="mb-3 text-sm font-semibold text-ink capitalize">{surface}</h3>
-                <div className="space-y-6">
-                  {framesBySurface.get(surface)!.map((f) => (
-                    <div key={f.file} className="grid gap-4 lg:grid-cols-2">
-                      <figure className="overflow-hidden rounded-lg border border-line bg-sunken">
-                        <img src={frameUrl(f.file)} alt={f.label} className="w-full" />
-                        <figcaption className="border-t border-line px-3 py-2 text-xs text-ink-muted">
-                          {f.label}
-                        </figcaption>
-                      </figure>
-                      <figure className="overflow-hidden rounded-lg border border-dashed border-line bg-sunken">
-                        <img
-                          src={exemplarUrl(f.exemplar)}
-                          alt={f.exemplar}
-                          className="w-full"
-                        />
-                        <figcaption className="border-t border-line px-3 py-2 font-mono text-xs text-ink-faint">
-                          benchmark · {f.exemplar}
-                        </figcaption>
-                      </figure>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Roster nav: where you are, where the finish line is, one click either way */}
+      <nav className="mt-4 flex items-center justify-between border-y border-line py-2 text-sm">
+        {prev ? (
+          <Link href={`/review/${prev.id}`} className="text-ink-muted transition-colors hover:text-ink">
+            ‹ {prev.title}
+          </Link>
         ) : (
-          <p className="mt-4 text-sm text-ink-faint">
-            Capture this exhibit to populate the side-by-side.
-          </p>
+          <span className="text-line">‹ start of roster</span>
         )}
-      </section>
+        <span className="font-mono text-xs text-ink-faint tabular-nums">
+          {idx + 1} / {roster.length} · {reviewed} in-date
+        </span>
+        {next ? (
+          <Link href={`/review/${next.id}`} className="text-ink-muted transition-colors hover:text-ink">
+            {next.title} ›
+          </Link>
+        ) : (
+          <span className="text-line">end of roster ›</span>
+        )}
+      </nav>
 
-      <ReviewForm exhibit={exhibit} initial={initial} exemplars={exemplars} />
+      <ReviewWorkbench exhibit={exhibit} frames={frames} exemplars={exemplars} initial={initial} />
 
-      <DecisionsPanel exhibit={exhibit} variants={variants} initialDecisions={initial.decisions} />
+      {/* "This, not that" is a secondary surface — present, but not in the way of
+          the core scoring flow. Collapsed until a composition decision is being made. */}
+      <details className="mt-12 border-t border-line pt-6">
+        <summary className="cursor-pointer text-sm font-medium text-ink-muted transition-colors hover:text-ink">
+          Decisions — this, not that
+          {variants.length > 0 && (
+            <span className="ml-2 font-mono text-xs text-ink-faint">{variants.length} candidate frame(s)</span>
+          )}
+        </summary>
+        <DecisionsPanel
+          exhibit={exhibit}
+          variants={variants}
+          initialDecisions={readTextDoc(exhibit, "decisions.md")}
+        />
+      </details>
     </main>
   );
 }

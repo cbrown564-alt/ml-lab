@@ -12,10 +12,16 @@ export default function ReviewIndex() {
   const rows = reviewExhibits();
   const verdictLabel = (r: (typeof rows)[number]) =>
     !r.hasScorecard ? "none" : r.scorecardStale ? "stale" : "in-date";
+  const reviewed = rows.filter((r) => r.hasScorecard && !r.scorecardStale).length;
 
   return (
     <main>
-      <h1 className="text-3xl font-semibold tracking-tight">Foundations review</h1>
+      <div className="flex flex-wrap items-baseline justify-between gap-4">
+        <h1 className="text-3xl font-semibold tracking-tight">Foundations review</h1>
+        <span className="font-mono text-sm text-ink-faint tabular-nums">
+          {reviewed} / {rows.length} in-date verdicts
+        </span>
+      </div>
       <p className="mt-3 max-w-[68ch] text-lg leading-relaxed text-ink-muted">
         The human judges taste; the machine judges everything mechanizable. Pick an exhibit to
         score its captured frames against the pinned exemplars (rubric v2,{" "}
