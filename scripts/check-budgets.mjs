@@ -46,6 +46,7 @@ const BUDGETS = [
   { route: "/exhibits/classification-task", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/train-test-generalization", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/the-gradient", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/regression-task", jsKb: 700, htmlKb: 110 },
 ];
 
 const server =

@@ -38,7 +38,8 @@ export const nodes: ConceptNode[] = [
     kind: "task",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Live on the four-act spine (See it + Run it); Break it + Explain it land next.
+    status: "interactive",
   },
   {
     id: "linear-regression",
