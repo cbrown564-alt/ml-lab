@@ -2,7 +2,7 @@ import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { DataLeakageBreakIt } from "@/components/exhibits/DataLeakageBreakIt";
 import { DataLeakageCheckLab } from "@/components/exhibits/DataLeakageCheckLab";
 import { DataLeakageHero } from "@/components/exhibits/DataLeakageHero";
-import { DataLeakageLab } from "@/components/exhibits/DataLeakageLab";
+import { DataLeakageLabLazy } from "@/components/exhibits/DataLeakageLabLazy";
 import { DataLeakageStory } from "@/components/exhibits/DataLeakageStory";
 import { dataLeakageCheck } from "@content/exhibits/data-leakage/concept-check";
 import { dataLeakageFailures } from "@content/exhibits/data-leakage/failures";
@@ -23,7 +23,7 @@ export default function DataLeakageExhibit() {
       checkCompanion={<DataLeakageCheckLab />}
       hero={<DataLeakageHero />}
       story={<DataLeakageStory />}
-      experiment={<DataLeakageLab />}
+      experiment={<DataLeakageLabLazy />}
       lede={
         <p>
           The most dangerous number in machine learning is a validation score that

@@ -2,8 +2,23 @@
 
 import { useEffect, useState } from "react";
 import { crossValR2, type HeldOut, type Matrix } from "@/lib/models/leakage";
-import { olsFit } from "@/lib/models/linear-regression";
 import fixtures from "@/lib/models/fixtures/leakage.json";
+
+/** Least-squares line through (x, y) points — inlined so the hero doesn't pull the
+ * whole linear-regression model into this route's bundle (keeps it under budget). */
+function leastSquares(pts: { x: number; y: number }[]) {
+  const n = pts.length || 1;
+  const mx = pts.reduce((s, p) => s + p.x, 0) / n;
+  const my = pts.reduce((s, p) => s + p.y, 0) / n;
+  let num = 0;
+  let den = 0;
+  for (const p of pts) {
+    num += (p.x - mx) * (p.y - my);
+    den += (p.x - mx) ** 2;
+  }
+  const slope = den === 0 ? 0 : num / den;
+  return { slope, intercept: my - slope * mx };
+}
 
 /**
  * The specimen hero — how leakage manufactures fake skill. The data is pure noise.
@@ -31,7 +46,7 @@ const clamp = (v: number) => Math.max(-EXT, Math.min(EXT, v));
 function HeroScatter({ points, reveal }: { points: HeldOut[]; reveal: number }) {
   // The line through predicted-vs-actual: it tilts up where the (fake) skill is and
   // lies flat where there's only noise — so "skill vs nothing" reads, not just the R².
-  const trend = olsFit(points.map((p) => ({ x: p.actual, y: p.predicted })));
+  const trend = leastSquares(points.map((p) => ({ x: p.actual, y: p.predicted })));
   const ty = (x: number) => clamp(trend.slope * x + trend.intercept);
   return (
     <svg
