@@ -99,27 +99,15 @@ export const trainTestGeneralizationCheck: ConceptCheck = {
       id: "transfer-deployment-gap",
       kind: "transfer",
       scenario:
-        "A team validates a model with 90% cross-validation accuracy and ships it. In production it scores 71%, and the gap is stable — it isn't drifting over time.",
-      prompt: "Cross-validation was done correctly. From what you've learned, what's the most likely explanation, and the fix?",
-      options: [
-        {
-          label:
-            "The production data differs from the training distribution — CV only estimates performance on data like the training set, so collect representative data and re-evaluate",
-          correct: true,
-          feedback:
-            "That's the transfer: honest CV estimates error on data drawn like your training set. A stable gap (not drift) means production is a different distribution from the start — the fix is representative data, not more folds.",
-        },
-        {
-          label: "The cross-validation was too optimistic — use more folds to get a lower estimate",
-          feedback:
-            "More folds won't close a distribution gap. CV was honest for the training distribution; the problem is production isn't that distribution. The estimate was right about the wrong population.",
-        },
-        {
-          label: "The model overfit — add regularisation and the production score will match CV",
-          feedback:
-            "Overfitting would show as a train–CV gap, but here CV itself was high and honest. A CV–production gap that's stable points to distribution shift, not overfitting.",
-        },
-      ],
+        "A team validates a model with 90% cross-validation accuracy and ships it. In production it scores 71%, and the gap is stable — it isn't drifting over time. Cross-validation was done correctly.",
+      prompt:
+        "From what you've learned about what CV does and doesn't promise: what's the most likely explanation, what's the fix, and why won't more folds or regularisation help? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. CV only estimates error on data like… a stable gap means… so the fix is… more folds won't help because…",
+        answer:
+          "Honest cross-validation only estimates performance on data drawn like the training set — it can't see a population it was never shown. A stable gap (not drift) means production is a different distribution from the start, so the 90% was a correct estimate about the wrong population. The fix is representative data: collect production-like examples and re-evaluate (and retrain) on them. More folds won't help — they'd just pin down the same training-distribution estimate more tightly — and regularisation won't either: overfitting shows as a train–CV gap, but here CV itself was high and honest, so the problem is distribution shift, not capacity.",
+      },
       difficulty: 3,
       targets: ["tt:transfer-shift"],
     },

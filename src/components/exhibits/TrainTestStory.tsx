@@ -45,7 +45,7 @@ export function TrainTestStory() {
                 ]
               : [
                   { label: "test error range", value: `${Math.min(...TEST_ERRS).toFixed(2)}–${Math.max(...TEST_ERRS).toFixed(2)}`, hue: "var(--viz-error)", note: "single-split lottery" },
-                  { label: "5-fold CV", value: CV.toFixed(3), hue: "var(--viz-truth-ink)", note: "stable estimate" },
+                  { label: "5-fold CV", value: CV.toFixed(3), hue: "var(--accent)", note: "stable estimate" },
                 ]
           }
         />
