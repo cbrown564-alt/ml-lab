@@ -185,7 +185,7 @@ test.describe("linear-regression exhibit", () => {
   });
 
   test("the journey continuation offers the next stop", async ({ page }) => {
-    await expect(page.getByText(/Journey · Foundations · stop 4 of 11/)).toBeVisible();
+    await expect(page.getByText(/Journey · Foundations · stop 4 of 14/)).toBeVisible();
   });
 
   test("evicting the outliers completes the lab task", async ({ page }) => {

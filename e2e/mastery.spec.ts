@@ -45,8 +45,12 @@ test.describe("concept check + mastery", () => {
       .click();
     await check.getByRole("button", { name: /points uphill/ }).click();
     await check.getByRole("button", { name: /Astronomically worse/ }).click();
-    // The transfer item: apply the step-size intuition to a colleague's slow run.
-    await check.getByRole("button", { name: /raise it for bigger steps/ }).click();
+    // The transfer item is the open form (rubric v2 §1c): write the diagnosis in
+    // your own words, then commit to resolve it (commit + reveal, not recognition).
+    await check
+      .getByRole("textbox")
+      .fill("Their steps are tiny, so raise the learning rate to cover more ground each step.");
+    await check.getByRole("button", { name: /Commit & reveal model answer/ }).click();
 
     // The lab task is the last gate: mastery requires actually diverging — and the
     // divergence happens over in the Experiment tab; the task bus carries it back.

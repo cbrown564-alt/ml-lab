@@ -32,8 +32,8 @@ for (const { route, equation } of EXHIBITS) {
     const math = page.getByRole("tabpanel", { includeHidden: false });
     await expect(math.getByText(equation)).toBeVisible();
 
-    // The view points into the math wing of the graph.
-    await expect(math.getByText("The Gradient", { exact: true })).toBeVisible();
+    // The view points into the math wing of the graph (the cross-link carries a → arrow).
+    await expect(math.getByRole("link", { name: /The Gradient/ })).toBeVisible();
 
     // The opened view passes the same axe bar as everything else.
     const results = await new AxeBuilder({ page }).analyze();
