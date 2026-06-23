@@ -112,7 +112,9 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Live on the four-act spine (See it + Run it) — opens the classification cluster;
+    // Break it + Explain it land next to reach flagship.
+    status: "interactive",
   },
   {
     id: "classification-task",
