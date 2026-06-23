@@ -99,26 +99,14 @@ export const neuralNetworkFundamentalsCheck: ConceptCheck = {
       kind: "transfer",
       scenario:
         "A team's network underperforms. They double its size; training loss drops to near zero but the validation score gets worse. Someone proposes doubling the size again.",
-      prompt: "From what you've learned, what's happening and what should they do instead?",
-      options: [
-        {
-          label:
-            "Near-zero training loss with worse validation is overfitting — more capacity will deepen it; instead reduce size or add regularisation, and judge by the held-out score",
-          correct: true,
-          feedback:
-            "That's the transfer: training loss going to zero is the warning, not the goal. The validation gap means it's memorising. Bigger makes it worse; regularisation or less capacity, chosen on validation, is the fix.",
-        },
-        {
-          label: "The model is still too small — doubling again will finally fit the data",
-          feedback:
-            "It already fits the training data (loss near zero); the problem is it fits it too well. More capacity memorises more noise and widens the validation gap. Size isn't the lever here.",
-        },
-        {
-          label: "Training loss near zero proves it's working — the validation metric must be miscomputed",
-          feedback:
-            "Near-zero training loss with rising validation loss is the textbook signature of overfitting, not a metric bug. The model generalises worse precisely because it nailed the training set.",
-        },
-      ],
+      prompt:
+        "From what you've learned: what's happening, what should they do instead, and why does doubling the size again make it worse? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. training loss near zero but worse validation means … so more capacity … the fix is …",
+        answer:
+          "Near-zero training loss with a worsening validation score is overfitting — the network has enough capacity to memorise the training set, including its noise, so it fits what it has seen too well and generalises worse. Doubling the size again gives it even more room to memorise, widening the gap. The fix is the opposite move: reduce capacity or add regularisation, and judge every change by the held-out score, not the training loss — training loss hitting zero is the warning, not the goal.",
+      },
       difficulty: 3,
       targets: ["nn:transfer-capacity"],
     },

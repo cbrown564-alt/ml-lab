@@ -2,6 +2,7 @@ import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { ClassificationTaskBreakIt } from "@/components/exhibits/ClassificationTaskBreakIt";
 import { ClassificationTaskCheckLab } from "@/components/exhibits/ClassificationTaskCheckLab";
 import { ClassificationTaskLab } from "@/components/exhibits/ClassificationTaskLab";
+import { ClassificationTaskHero } from "@/components/exhibits/ClassificationTaskHero";
 import { ClassificationTaskStory } from "@/components/exhibits/ClassificationTaskStory";
 import { classificationTaskCheck } from "@content/exhibits/classification-task/concept-check";
 import { classificationTaskFailures } from "@content/exhibits/classification-task/failures";
@@ -20,6 +21,7 @@ export default function ClassificationTaskExhibit() {
       failures={classificationTaskFailures}
       breakIt={<ClassificationTaskBreakIt />}
       checkCompanion={<ClassificationTaskCheckLab />}
+      hero={<ClassificationTaskHero />}
       story={<ClassificationTaskStory />}
       experiment={<ClassificationTaskLab />}
       lede={

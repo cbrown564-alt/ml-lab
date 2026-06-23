@@ -98,26 +98,14 @@ export const logisticRegressionCheck: ConceptCheck = {
       kind: "transfer",
       scenario:
         "A colleague's logistic-regression model predicts equipment failure from operating temperature. It does poorly, because failures actually happen at BOTH very low temperatures (brittle) and very high ones (overheating) — but not in the comfortable middle.",
-      prompt: "From what the parabola taught you, what's happening, and what's the cheapest fix to try first?",
-      options: [
-        {
-          label:
-            "Failure is a U-shaped (curved) function of temperature that a straight boundary can't capture — add a temperature² feature so the boundary can bend",
-          correct: true,
-          feedback:
-            "That's the transfer: 'fails at both extremes' is a curved relationship, invisible to a model linear in temperature alone. The cheap fix is exactly the x₁² move — a squared feature.",
-        },
-        {
-          label: "The model is underpowered — replace it with a deep neural network",
-          feedback:
-            "A network would work, but it's overkill for a known one-feature curve. The cheap, interpretable fix is to add the squared feature and keep the logistic model.",
-        },
-        {
-          label: "It needs more failure examples to learn the pattern",
-          feedback:
-            "More data won't help a model that's structurally linear in temperature — it can't represent 'high at both ends, low in the middle' at any sample size. A squared feature can.",
-        },
-      ],
+      prompt:
+        "From what the parabola taught you: what's happening, what's the cheapest fix to try first, and why won't more data or a bigger model help? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. failure vs temperature is … so a straight boundary … the cheap fix is … more data won't help because …",
+        answer:
+          "Failure is a U-shaped (curved) function of temperature — high at both extremes, low in the comfortable middle — and a model linear in temperature alone can only draw a straight boundary, so it can't separate 'middle' from 'both ends'. The cheapest fix is the x₁² move from the parabola: add a temperature-squared feature so the boundary can bend, and keep the interpretable logistic model. A deep network would work but is overkill for one known curve, and more failure examples won't help — a structurally linear model can't represent 'high at both ends' at any sample size.",
+      },
       difficulty: 3,
       targets: ["logreg:transfer-curve"],
     },

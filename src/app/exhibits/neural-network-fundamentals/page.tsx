@@ -2,6 +2,7 @@ import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { NeuralNetBreakIt } from "@/components/exhibits/NeuralNetBreakIt";
 import { NeuralNetCheckLab } from "@/components/exhibits/NeuralNetCheckLab";
 import { NeuralNetLab } from "@/components/exhibits/NeuralNetLab";
+import { NeuralNetHero } from "@/components/exhibits/NeuralNetHero";
 import { NeuralNetStory } from "@/components/exhibits/NeuralNetStory";
 import { neuralNetworkFundamentalsCheck } from "@content/exhibits/neural-network-fundamentals/concept-check";
 import { neuralNetworkFundamentalsFailures } from "@content/exhibits/neural-network-fundamentals/failures";
@@ -20,6 +21,7 @@ export default function NeuralNetworkFundamentalsExhibit() {
       failures={neuralNetworkFundamentalsFailures}
       breakIt={<NeuralNetBreakIt />}
       checkCompanion={<NeuralNetCheckLab />}
+      hero={<NeuralNetHero />}
       story={<NeuralNetStory />}
       experiment={<NeuralNetLab />}
       lede={

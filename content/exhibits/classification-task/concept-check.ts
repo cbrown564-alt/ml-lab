@@ -100,26 +100,14 @@ export const classificationTaskCheck: ConceptCheck = {
       kind: "transfer",
       scenario:
         "A team ships a model to flag defective parts on an assembly line. 2% of parts are defective. They report 97% accuracy and call it a success; QA later finds defective parts are still shipping at the old rate.",
-      prompt: "From the imbalance trap, what's wrong, and what should they have reported?",
-      options: [
-        {
-          label:
-            "97% accuracy just reflects the 98% good parts — they should report recall on defects (and precision), which is likely near zero",
-          correct: true,
-          feedback:
-            "That's the transfer: with 2% defective, predicting 'good' always scores 98%. The headline accuracy hid that the model catches almost no defects — recall on the defective class is the number that matters.",
-        },
-        {
-          label: "The model needs higher accuracy — retrain until it exceeds 99%",
-          feedback:
-            "Chasing accuracy chases the majority. They could hit 99% by flagging nothing and still ship every defect. Recall on defects, not accuracy, is the target.",
-        },
-        {
-          label: "Accuracy is fine; the real issue is the 2% defect rate being too high",
-          feedback:
-            "The defect rate is the problem to detect, not the metric's flaw. The reporting error is using accuracy on imbalanced classes — recall would have exposed the failure before shipping.",
-        },
-      ],
+      prompt:
+        "From the imbalance trap: what's wrong with '97% accuracy', what should they have reported, and why won't 'just get higher accuracy' fix it? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. with 2% defective, predicting 'good' always scores … so accuracy hides … they should report …",
+        answer:
+          "With only 2% of parts defective, a model that predicts 'good' every time already scores 98% — so 97% accuracy reflects the majority class, not skill at the job that matters, and it hid that the model catches almost no defects. They should report recall on the defective class (of the actual defects, how many were caught — here likely near zero) alongside precision. 'Get higher accuracy' won't help: chasing accuracy chases the majority, and you can hit 99% by flagging nothing while still shipping every defect. The defect rate isn't the metric's flaw — using accuracy on imbalanced classes is.",
+      },
       difficulty: 3,
       targets: ["cls:transfer-imbalance"],
     },

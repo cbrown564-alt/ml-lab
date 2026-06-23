@@ -100,26 +100,14 @@ export const overfittingRegularizationCheck: ConceptCheck = {
       kind: "transfer",
       scenario:
         "A teammate adds L2 regularisation to a model that was overfitting, sets the strength to a very large value to be safe, and reports the model is now underperforming on both training and validation data.",
-      prompt: "From what the dial taught you, what's happening, and what should they do?",
-      options: [
-        {
-          label:
-            "They over-penalised — the model now underfits. They should tune λ down to the value that minimises validation error, not max it out",
-          correct: true,
-          feedback:
-            "That's the transfer: high error on both train and validation is underfitting, and an enormous penalty causes it. Regularisation strength is a hyperparameter to tune by validation, not to set as large as possible.",
-        },
-        {
-          label: "Regularisation was the wrong choice; remove it entirely",
-          feedback:
-            "Removing it brings the overfit back. The fix isn't none or maximum — it's the right amount, found by tuning λ to the validation-error floor.",
-        },
-        {
-          label: "The model needs more capacity to overcome the penalty — make it bigger",
-          feedback:
-            "A bigger model fighting a huge penalty is wasteful and still underfits. The direct fix is lowering λ to the window where validation error bottoms out.",
-        },
-      ],
+      prompt:
+        "From what the dial taught you: what's happening, what should they do, and why are both 'remove it' and 'bigger model' wrong? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. high error on BOTH train and validation means … an enormous λ causes … so they should …",
+        answer:
+          "High error on both training and validation is underfitting, and cranking λ to a very large value caused it — too much penalty pulls the model too smooth, the opposite end of the dial from overfitting. The fix is to tune λ to the value that minimises validation error (the bottom of the U), not to max it out. Removing regularisation entirely just brings the overfit back, and making the model bigger to fight a huge penalty is wasteful and still underfits — λ is a hyperparameter to set by validation, neither none nor maximum.",
+      },
       difficulty: 3,
       targets: ["reg:transfer-tune"],
     },

@@ -2,6 +2,7 @@ import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { RegularizationBreakIt } from "@/components/exhibits/RegularizationBreakIt";
 import { RegularizationCheckLab } from "@/components/exhibits/RegularizationCheckLab";
 import { RegularizationLab } from "@/components/exhibits/RegularizationLab";
+import { RegularizationHero } from "@/components/exhibits/RegularizationHero";
 import { RegularizationStory } from "@/components/exhibits/RegularizationStory";
 import { overfittingRegularizationCheck } from "@content/exhibits/overfitting-regularization/concept-check";
 import { overfittingRegularizationFailures } from "@content/exhibits/overfitting-regularization/failures";
@@ -20,6 +21,7 @@ export default function OverfittingRegularizationExhibit() {
       failures={overfittingRegularizationFailures}
       breakIt={<RegularizationBreakIt />}
       checkCompanion={<RegularizationCheckLab />}
+      hero={<RegularizationHero />}
       story={<RegularizationStory />}
       experiment={<RegularizationLab />}
       lede={
