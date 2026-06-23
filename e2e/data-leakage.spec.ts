@@ -33,4 +33,18 @@ test.describe("data-leakage exhibit", () => {
     await panel(page).getByRole("button", { name: /collapses to about zero/i }).click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
   });
+
+  test("Break it: selecting on all data manufactures skill, then the fix collapses it", async ({ page }) => {
+    await openTab(page, "Break it");
+    await panel(page).getByRole("button", { name: "Select on all data", exact: true }).click();
+    await expect(panel(page).getByRole("status")).toHaveText("Skill from nowhere");
+    await panel(page).getByRole("button", { name: "Select inside each fold", exact: true }).click();
+    await expect(panel(page).getByRole("status")).toHaveText("The honest nothing");
+  });
+
+  test("Explain it pairs the check with a live companion", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/Answer against the score/i)).toBeVisible();
+    await expect(panel(page).getByText(/gave R² ≈ 0.41 on pure noise/i)).toBeVisible();
+  });
 });
