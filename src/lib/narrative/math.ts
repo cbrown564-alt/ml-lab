@@ -50,7 +50,8 @@ export type MathBlock =
   | { kind: "prose"; text: string; highlights?: MathHighlight[] }
   | { kind: "equation"; lines: string[]; caption?: string; highlights?: MathHighlight[] }
   | { kind: "widget"; widget: "stability"; config: StabilityConfig }
-  | { kind: "widget"; widget: "penalty"; config: PenaltyConfig };
+  | { kind: "widget"; widget: "penalty"; config: PenaltyConfig }
+  | { kind: "widget"; widget: "nonlinearity" };
 
 export type MathDrawerSection = {
   id: string;

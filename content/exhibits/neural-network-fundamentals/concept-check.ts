@@ -21,7 +21,7 @@ export const neuralNetworkFundamentalsCheck: ConceptCheck = {
         {
           label: "It speeds up training but the network is equally expressive without it",
           feedback:
-            "It's not about speed — it's about what the network *can represent*. Strip the nonlinearity and the whole stack is algebraically one linear layer, unable to fit XOR at all.",
+            "It's not about speed — it's about what the network can represent. Strip the nonlinearity and the whole stack is algebraically one linear layer, unable to fit XOR at all.",
         },
         {
           label: "It keeps the outputs between 0 and 1 for probabilities",
@@ -72,12 +72,12 @@ export const neuralNetworkFundamentalsCheck: ConceptCheck = {
         {
           label: "100% — one hidden unit is still a full network, so it can learn anything",
           feedback:
-            "Being a network isn't enough — XOR needs at least two hidden units to carve the X. One unit lacks the *capacity* and tops out around 75%, a coin flip better than chance.",
+            "Being a network isn't enough — XOR needs more than one hidden unit to carve the X (a few train it reliably). One unit lacks the capacity and tops out around 75%, a coin flip better than chance.",
         },
         {
           label: "50% — one hidden unit is no better than guessing",
           feedback:
-            "It does a bit better than chance — one bend can get one pair of quadrants right (~75%). But it can't reach the X. Two or more units can.",
+            "It does a bit better than chance — one bend can get one pair of quadrants right (~75%). But it can't reach the X. A few units do.",
         },
       ],
       verify: "One hidden unit ≈ one bend — it stalls near 75% on XOR, a capacity limit.",
@@ -111,7 +111,7 @@ export const neuralNetworkFundamentalsCheck: ConceptCheck = {
         {
           label: "The model is still too small — doubling again will finally fit the data",
           feedback:
-            "It already fits the *training* data (loss near zero); the problem is it fits it too well. More capacity memorises more noise and widens the validation gap. Size isn't the lever here.",
+            "It already fits the training data (loss near zero); the problem is it fits it too well. More capacity memorises more noise and widens the validation gap. Size isn't the lever here.",
         },
         {
           label: "Training loss near zero proves it's working — the validation metric must be miscomputed",

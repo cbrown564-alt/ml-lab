@@ -38,12 +38,12 @@ export const neuralNetworkFundamentalsSpine: Spine<NeuralNetFrame> = [
         {
           label: "Yes — any hidden layer, even one unit, solves XOR",
           feedback:
-            "Not quite. It's the hidden layer's *width* that buys shape: one unit is one bend, which can't make the X. Two or more can. Try hidden = 1 in Run it and watch it stall.",
+            "Not quite. It's the hidden layer's width that buys shape: one unit is one bend, which can't make the X. A few units carve it reliably. Try hidden = 1 in Run it and watch it stall, then 4.",
         },
         {
           label: "Yes, but only with far more training data",
           feedback:
-            "More data won't help — one hidden unit lacks the *capacity* to represent the X at all, no matter how much data. It's a shape problem, not a data problem. See it: hidden = 1 stalls.",
+            "More data won't help — one hidden unit lacks the capacity to represent the X at all, no matter how much data. It's a shape problem, not a data problem. See it: hidden = 1 stalls.",
         },
       ],
     },

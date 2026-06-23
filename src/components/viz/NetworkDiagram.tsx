@@ -30,6 +30,8 @@ export function NetworkDiagram({ net, width = 300, height = 260 }: { net: Net; w
   const inY = [col(2, 0), col(2, 1)];
   const hidY = net.W2.map((_, j) => col(H, j));
   const outY = col(1, 0);
+  // shrink the hidden nodes as the layer grows so they never overlap (up to 16 units)
+  const hr = Math.max(4, Math.min(11, (height - 2 * pad) / (H * 2.4)));
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`A neural network: 2 inputs, ${H} hidden ${H === 1 ? "unit" : "units"}, 1 output. Edge thickness is each weight's size, colour its sign.`} className="h-auto w-full">
@@ -53,7 +55,7 @@ export function NetworkDiagram({ net, width = 300, height = 260 }: { net: Net; w
         </g>
       ))}
       {hidY.map((y, j) => (
-        <circle key={`h${j}`} cx={colX[1]} cy={y} r={11} fill="var(--surface-raised)" stroke="var(--viz-param)" strokeWidth={1.5} />
+        <circle key={`h${j}`} cx={colX[1]} cy={y} r={hr} fill="var(--surface-raised)" stroke="var(--viz-param)" strokeWidth={1.5} />
       ))}
       <g>
         <circle cx={colX[2]} cy={outY} r={13} fill="var(--surface-bg)" stroke="var(--viz-truth-ink)" strokeWidth={1.5} />

@@ -36,7 +36,10 @@ export const xorData: Sample[] = (() => {
 })();
 
 export const NN_LR = 0.4;
-export const HIDDEN_CHOICES = [1, 2, 4, 8] as const;
+// 1 always stalls at ~75% (one bend can't carve XOR); 4/8/16 solve it reliably on every
+// seed. 2 and 3 are the theoretical minimum but train into local minima on many seeds —
+// excluded so the live instrument never refutes the lesson at the moment of discovery.
+export const HIDDEN_CHOICES = [1, 4, 8, 16] as const;
 export const DEFAULT_HIDDEN = 4;
 
 /**

@@ -101,7 +101,7 @@ export function NeuralNetLab() {
             caption={`${epoch} training steps`}
             stats={[
               { label: "loss", value: loss.toFixed(3), hue: "var(--viz-error-ink)", note: "cross-entropy, falling as it learns" },
-              { label: "accuracy on XOR", value: `${Math.round(acc * 100)}%`, hue: "var(--viz-truth-ink)", note: hidden === 1 ? "a line tops out ~75%" : "a hidden layer reaches ~100%" },
+              { label: "accuracy on XOR", value: `${Math.round(acc * 100)}%`, hue: "var(--viz-truth-ink)", note: hidden === 1 ? "one unit tops out ~75%" : acc >= 0.9 ? "a hidden layer reaches the X" : "training — the boundary is bending" },
               { label: "weights", value: `${hidden * 2 + hidden + hidden + 1}`, hue: "var(--viz-param)", note: "numbers backprop tunes" },
             ]}
           />

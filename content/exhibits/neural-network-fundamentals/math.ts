@@ -38,6 +38,7 @@ export const neuralNetworkFundamentalsMath: MathDrawerContent = {
           text: "Why the tanh matters: drop it and ŷ = σ(W₂W₁x + …) = σ(Wx + …) — a stack of linear maps is one linear map, still a line. The nonlinearity is the entire reason a deep network is more expressive than a shallow one.",
           highlights: [{ text: "still a line", hue: "error" }],
         },
+        { kind: "widget", widget: "nonlinearity" },
       ],
     },
     {
