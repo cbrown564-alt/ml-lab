@@ -139,6 +139,26 @@ Remaining blockers after this pass are now per-node: `gradient-descent` holds on
 `mechanism-in-the-picture 2` (the hero descent wanders off the bright minimum);
 the 13 hero-less nodes hold on the missing hero. That is the hero phase.
 
+## Hero phase (2026-06-23, in progress)
+
+The per-node arc off `hold`, panel-gated. **Transfer-item policy (decided): the
+transfer item must itself be open or interactive — an MCQ never satisfies §1c.**
+Implemented as a reusable `open` form on `TransferItem` (write your own answer →
+reveal the model answer; `OpenTransferView`), made *mechanizable*
+(`transferIsInteractiveOrOpen` now detects the `open` form) and wired into
+`check:rubric` as a content blocker — so the gate flags every node still on an MCQ
+transfer (11 remaining).
+
+- **gradient-descent — DONE (clears the mechanical gate).** Hero: the descent now
+  starts low, traverses the full frame, and **lands on the labelled minimum**
+  (mechanism 2→3; all hero-spec booleans pass; `start`/`the minimum`/loss-legend in
+  bare mode). See-it chart marks labelled in-graphic (annotation 2→3). Transfer
+  converted to the open form. Panel verdict: **advance**. The human's prior verdict
+  is now *stale* (content changed) — re-judge on `/review` to refresh it.
+
+Remaining: 13 hero-less nodes need a composed hero, and 11 nodes need their transfer
+converted to the open form (the gate now lists both).
+
 ## Turning the gate on
 
 `npm run check:rubric -- --strict` already fails on the 13 hero blockers. It is
