@@ -110,26 +110,14 @@ export const theGradientCheck: ConceptCheck = {
       kind: "transfer",
       scenario:
         "A team trains the same neural network from five different random initialisations. The runs settle at noticeably different final training losses, and each one's loss stops improving while its gradient norm goes to nearly zero.",
-      prompt: "From what you've learned about the gradient, what's happening, and what does it justify?",
-      options: [
-        {
-          label:
-            "The loss landscape is non-convex with many stationary points; each run is captured by a different basin — which justifies trying multiple initialisations and keeping the best",
-          correct: true,
-          feedback:
-            "That's the transfer: a near-zero gradient is a stationary point, not necessarily the global minimum. Different seeds land in different basins, so running several and keeping the best is the standard response.",
-        },
-        {
-          label: "The learning rate is too high, so every run overshoots the same minimum",
-          feedback:
-            "Overshooting would show as unstable or rising loss, not runs that settle with vanishing gradients. Settling at different low points with ∇≈0 is the signature of different local optima, not overshoot.",
-        },
-        {
-          label: "There isn't enough training data, so the model can't find the minimum",
-          feedback:
-            "More data changes the landscape's shape but not the core fact that a non-convex surface has many stationary points. Different seeds settling differently is an optimisation (initialisation) effect, not a data-volume one.",
-        },
-      ],
+      prompt:
+        "From what you've learned about the gradient: what does a near-zero gradient at a different final loss each time tell you about the landscape, and what does that justify doing? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. gradient ≈ 0 means … the different final losses mean … so the team should …",
+        answer:
+          "A near-zero gradient means each run reached a stationary point — flat ground where there's no downhill step to take — but a stationary point is not necessarily the global minimum. That the five runs settle at different final losses says the loss landscape is non-convex, with many basins, and each random start was captured by a different one. That justifies the standard response: run several initialisations and keep the best. It isn't a learning-rate problem (overshoot shows as unstable or rising loss, not a vanishing gradient) and it isn't a data-volume problem (more data reshapes the landscape but doesn't remove its many stationary points).",
+      },
       difficulty: 3,
       targets: ["grad:transfer-nonconvex"],
     },

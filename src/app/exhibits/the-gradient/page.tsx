@@ -3,6 +3,7 @@ import { GradientBreakIt } from "@/components/exhibits/GradientBreakIt";
 import { GradientCheckLab } from "@/components/exhibits/GradientCheckLab";
 import { GradientLab } from "@/components/exhibits/GradientLab";
 import { GradientStory } from "@/components/exhibits/GradientStory";
+import { TheGradientHero } from "@/components/exhibits/TheGradientHero";
 import { theGradientCheck } from "@content/exhibits/the-gradient/concept-check";
 import { theGradientFailures } from "@content/exhibits/the-gradient/failures";
 import { theGradientMath } from "@content/exhibits/the-gradient/math";
@@ -20,6 +21,7 @@ export default function TheGradientExhibit() {
       failures={theGradientFailures}
       breakIt={<GradientBreakIt />}
       checkCompanion={<GradientCheckLab />}
+      hero={<TheGradientHero />}
       story={<GradientStory />}
       experiment={<GradientLab />}
       lede={
