@@ -3,68 +3,64 @@
   "exhibit": "what-is-ml",
   "reviewer": "agent-panel",
   "date": "2026-06-23",
-  "contentHash": "4d868549d6a08a85",
+  "contentHash": "25958a8d9256b9bf",
   "register": [
     {
       "dimension": "hero-as-protagonist",
-      "score": 0,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/00-viewport.png",
-      "note": "Forced 0 — no specimen: hero.png opens with title+prose+placard+rail on bare cream, where even document-first ciechanowski-watch/00 lands its render in the opening viewport."
+      "note": "The new hero is full content-width and poster-legible — labelled scatter with hand vs machine rules and the 70%/97% contrast flanking it carries the whole thesis in one frame, matching Ciechanowski's iconic opening even if its dots-on-cream read slightly busier."
     },
     {
       "dimension": "mechanism-in-the-picture",
-      "score": 0,
+      "score": 3,
       "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
-      "note": "Forced 0 — no hero to carry the cut; seeing-theory-regression/01 shows residual squares (the mechanism) in its first frame while here the threshold only appears far below the fold."
+      "note": "Like Seeing-Theory drawing the residual squares, the hero puts the mechanism on the canvas — both decision boundaries plus red-ringed misclassified points as the visible error, with the 70%/97% numbers quantifying the consequence in-graphic."
     },
     {
       "dimension": "annotation-integration",
       "score": 3,
       "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
-      "note": "The spine graphic self-labels (mono title, in-canvas 'your rule' tag on the boundary, axis ticks, 70% readout) at parity with distill-momentum/02, short of 4 only because the readout '70%' is unlabelled."
+      "note": "The See-it plot self-labels ('your rule', titled 'THE RULE YOU WRITE — ONE FEATURE, ONE CUT · 70%', axes) at Distill's bar, though the 'tops out short' claim still lives in adjacent prose rather than an on-graphic caption."
     },
     {
       "dimension": "atmosphere-finish",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
-      "note": "Restrained but focal hierarchy fails — see-viewport's top ~60% is repeated masthead/placard/rail with the scatter pushed ~640px down and clipped, where ciechanowski-watch/02 lets one render own the frame."
+      "note": "Distill-soft cream surface, restrained chrome, clean focal hierarchy; the prior opening dead air is resolved by the hero+masthead balance, with only a moderate lower-left void in the See-it column remaining."
     },
     {
       "dimension": "motion",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
-      "note": "StoryStepper beats and the Break-it failure loop are explanatory and learner-controlled (clears intent), but nothing shows motion carrying explanation the way 3b1b-gradient-descent/02 does, and no earned on-load specimen motion exists."
+      "note": "Conservatively from statics, the motions are explanatory — the hero's single line-ease load, the 'Learn from the examples' boundary tilt, and the live Break-it slider — though steppability can't be fully verified from a frame."
     },
     {
       "dimension": "colour-discipline",
       "score": 3,
       "exemplarFrame": "r2d3-trees/00-viewport.png",
-      "note": "Semantic grammar holds without dilution — break-viewport keeps pink=error/bias, blue=prediction, orange=truth distinct (no all-red drain), and prose Terms pair hue+underline+weight, matching r2d3-trees/00's discipline."
+      "note": "Semantic grammar held cleanly like R2D3 — truth dots by class, error reserved for mislabel rings and the 64% true-population drop, accent/teal for the learned rule and live state, neutral param slider, AA mono labels, no all-red dilution."
     }
   ],
   "hero": {
-    "present": false,
-    "fullWidth": false,
-    "labeledAnnotation": false,
-    "depictsMechanism": false,
-    "thumbnailLegible": false,
-    "atMostOneLoadMotion": false,
-    "note": "A hero would need a wide, ambient portrait of the threshold-cut scatter in truth/prediction hues above the masthead, with one explanatory on-load motion (the rule line easing into its cut)."
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "The doorway thesis as a specimen: hand rule (70%, mistakes ringed) vs machine rule (97%, eased in), accuracy contrast flanking. To push toward 4: heavier dot/ring weight at thumbnail scale and de-collide the 'machine's rule' label."
   },
   "assessment": {
     "playableExperimentTask": true,
-    "transferIsInteractiveOrOpen": false,
+    "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
     "notPureMcqStack": true,
-    "note": "The transfer item (transfer-hiring) is a third multiple-choice question with options, not an interaction or open prompt; the genuine interaction (break-bias) is an earlier experiment-task, not the transfer."
+    "note": "Item 05 is a genuine open transfer prompt (free-text résumé-screening case, commit-then-reveal) and item 04 is a hands-on lab task, so the Explain act is not an MCQ stack."
   },
   "verdict": {
-    "decision": "hold",
-    "blocking": [
-      "Add the specimen hero specified in DESIGN.md so the threshold-cut scatter (truth/prediction hues, no chrome) is visible in the opening viewport before the rail — this is the journey's first node and currently has the weakest opening in the cluster (§1d).",
-      "Compress the masthead/placard/rail stack so the See-it scatter clears the fold at 1440x900 instead of starting ~640px down.",
-      "Make the transfer item (transfer-hiring) an interaction or open prompt rather than a third MCQ."
-    ],
-    "summary": "Interior acts match the bar (annotation 3, colour 3) but the title-led, specimen-less doorway forces two delight dims to 0 and a chrome-heavy atmosphere 2 — the journey's first node reads as the weakest opening, does not clear register 3."
+    "decision": "advance",
+    "blocking": [],
+    "summary": "The new doorway hero clears hero-as-protagonist and mechanism-in-the-picture at floor 3, every register dimension matches the benchmark, the prior opening dead air is resolved, and the transfer is open — advance. Push-to-4 polish: heavier hero dots, an in-canvas 'tops out' annotation, See-it lower-left dead air."
   }
 }
