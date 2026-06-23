@@ -100,26 +100,14 @@ export const biasVarianceCheck: ConceptCheck = {
       kind: "transfer",
       scenario:
         "A teammate's model scores 0.99 on the training set but 0.62 on held-out data. They're about to make the model bigger and train it harder to close the gap.",
-      prompt: "From what the U taught you, what's actually happening, and what should they do instead?",
-      options: [
-        {
-          label:
-            "It's overfitting (high variance) — they should reduce capacity, regularise, or get more data, not make it bigger",
-          correct: true,
-          feedback:
-            "That's the transfer: a large train–test gap is the variance side of the U. More capacity moves them further up the wrong arm; the fix is less effective capacity or more data.",
-        },
-        {
-          label: "It's underfitting — a bigger model is exactly right",
-          feedback:
-            "Underfitting shows high error on both train and test. Here training is near-perfect and test lags badly — that's overfitting, and a bigger model makes it worse.",
-        },
-        {
-          label: "Nothing is wrong — a gap between train and test is always expected",
-          feedback:
-            "Some gap is normal, but 0.99 vs 0.62 is a chasm — the signature of overfitting. Ignoring it ships a model that won't hold up in production.",
-        },
-      ],
+      prompt:
+        "From what the U taught you: which arm are they on, what should they do instead, and why would a bigger model make it worse? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. a near-perfect train score with a much lower test score is the … arm, so they should … not …",
+        answer:
+          "A near-perfect training score with a much lower held-out score is a huge train–test gap — the variance (overfitting) arm of the U, where the model has memorised the training noise. Making it bigger and training harder moves them further up the wrong arm, widening the gap. The fix is to reduce effective capacity (a simpler model, or regularisation) or get more data, so the fit captures the shape instead of the noise. Underfitting would look different — high error on both train and test — which isn't the case here.",
+      },
       difficulty: 3,
       targets: ["bv:transfer"],
     },

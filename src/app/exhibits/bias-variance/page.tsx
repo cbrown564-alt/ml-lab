@@ -1,6 +1,7 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { BiasVarianceBreakIt } from "@/components/exhibits/BiasVarianceBreakIt";
 import { BiasVarianceCheckLab } from "@/components/exhibits/BiasVarianceCheckLab";
+import { BiasVarianceHero } from "@/components/exhibits/BiasVarianceHero";
 import { BiasVarianceLab } from "@/components/exhibits/BiasVarianceLab";
 import { BiasVarianceStory } from "@/components/exhibits/BiasVarianceStory";
 import { biasVarianceCheck } from "@content/exhibits/bias-variance/concept-check";
@@ -20,6 +21,7 @@ export default function BiasVarianceExhibit() {
       failures={biasVarianceFailures}
       breakIt={<BiasVarianceBreakIt />}
       checkCompanion={<BiasVarianceCheckLab />}
+      hero={<BiasVarianceHero />}
       story={<BiasVarianceStory />}
       experiment={<BiasVarianceLab />}
       lede={
