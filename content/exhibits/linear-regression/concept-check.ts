@@ -132,26 +132,13 @@ export const linearRegressionCheck: ConceptCheck = {
       scenario:
         "You're predicting house prices. Most homes cluster around the median, but the dataset includes a handful of mansions that sold for fifty times that. Your least-squares line predicts the ordinary homes noticeably too high.",
       prompt:
-        "Why does a few mansions pull the whole line up, and what's the cleanest fix that keeps the ordinary homes well-predicted?",
-      options: [
-        {
-          label:
-            "The mansions' huge squared residuals dominate the loss; a robust loss (or modelling the extremes separately) stops a few points from dictating the line",
-          correct: true,
-          feedback:
-            "That's the transfer: it's the same tyranny-of-the-outlier mechanism in the wild. Squared error lets the mansions' enormous residuals outvote the crowd, so robustifying — or segmenting them out — restores the fit on ordinary homes.",
-        },
-        {
-          label: "The model needs more features to explain the mansions",
-          feedback:
-            "More features won't stop squared error from over-weighting the mansions' extreme residuals — the line would still trade the crowd's accuracy to appease them. The issue is the loss, not the feature set.",
-        },
-        {
-          label: "Collect more mansion sales so the model learns them properly",
-          feedback:
-            "That amplifies the problem: more high-value extremes pull even harder on a squared-error fit. The fix is to stop the extremes from dominating the loss, not to add more of them.",
-        },
-      ],
+        "Why does a handful of mansions pull the whole line up, and what's the cleanest fix that keeps the ordinary homes well-predicted (and what won't help)? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. squared error makes the mansions' misses… so the line… the fix is… more features/data won't help because…",
+        answer:
+          "It's the residual-square mechanism from the hero, in the wild: squared error scores a miss by its area, so each mansion's enormous residual dwarfs the ordinary homes' and outvotes the crowd — the line tilts up to appease a few extremes. The cleanest fix is to stop those extremes from dominating the loss: a robust loss (Huber / absolute), or model the mansions as a separate segment. More features won't help — squared error still over-weights the mansions' residuals — and collecting more mansion sales makes it worse, pulling the fit even harder toward the extremes.",
+      },
       difficulty: 3,
       targets: ["linreg:transfer-robustness"],
     },
