@@ -70,7 +70,13 @@ function PredictionLayer({
         </>
       )}
 
-      {/* the learner's prediction marker */}
+      {/* the learner's prediction marker — with a grab affordance before the reveal */}
+      {!revealed && (
+        <>
+          <circle cx={x(query.x)} cy={y(pred)} r={13} fill="none" stroke="var(--viz-prediction)" strokeWidth={1.5} strokeDasharray="3 3" opacity={0.55} />
+          <text x={x(query.x) + 34} y={y(pred) + 4} fontSize={11} fontFamily="var(--font-mono)" fill="var(--viz-prediction-ink)" opacity={0.8}>drag ↕</text>
+        </>
+      )}
       <line x1={x(query.x) - 26} x2={x(query.x) + 26} y1={y(pred)} y2={y(pred)} stroke="var(--viz-prediction)" strokeWidth={3} strokeLinecap="round" />
       <circle cx={x(query.x)} cy={y(pred)} r={6} fill="var(--viz-prediction)" stroke="var(--surface-bg)" strokeWidth={1.5} />
 
