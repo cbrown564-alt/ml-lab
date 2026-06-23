@@ -61,16 +61,14 @@ export type ReviewSurface = (typeof REVIEW_SURFACES)[number];
  * "send it to a friend" load (docs/08 Part 6, decision 3): the floor is data, so
  * raising a delight dimension to 4 is a one-line change here — the plan's stated
  * default is ≥3 across the board, which is what ships.
+ *
+ * Order follows the **reading experience** — the hero first, then the four-act
+ * spine (See → Run → Break) — so the review form walks the page top-to-bottom the
+ * way a learner meets it, not in an arbitrary order. (The `/review` stage pins
+ * each dimension to the screenshot it's judged on, so stepping the list also steps
+ * the frames in order.)
  */
 export const REGISTER_DIMENSIONS = [
-  {
-    key: "annotation-integration",
-    label: "Annotation-integration",
-    question:
-      "Does the graphic carry its own labels/explanation (signaling), or does meaning live only in adjacent prose?",
-    floor: 3,
-    delight: false,
-  },
   {
     key: "hero-as-protagonist",
     label: "Hero as protagonist",
@@ -88,10 +86,10 @@ export const REGISTER_DIMENSIONS = [
     delight: false,
   },
   {
-    key: "colour-discipline",
-    label: "Colour discipline",
+    key: "annotation-integration",
+    label: "Annotation-integration",
     question:
-      "Is the semantic grammar held, with no dilution (an all-red field draining 'error'), and AA in prose?",
+      "Does the graphic carry its own labels/explanation (signaling), or does meaning live only in adjacent prose?",
     floor: 3,
     delight: false,
   },
@@ -107,6 +105,14 @@ export const REGISTER_DIMENSIONS = [
     label: "Motion",
     question:
       "Is each animation explanatory/transitional (not decorative), and steppable where complex?",
+    floor: 3,
+    delight: false,
+  },
+  {
+    key: "colour-discipline",
+    label: "Colour discipline",
+    question:
+      "Is the semantic grammar held, with no dilution (an all-red field draining 'error'), and AA in prose?",
     floor: 3,
     delight: false,
   },
