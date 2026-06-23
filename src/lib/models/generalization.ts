@@ -47,10 +47,22 @@ export function splitPoints(points: Point[], testFrac: number, seed: number): Sp
 
 export type SplitScore = { fit: Poly; trainErr: number; testErr: number };
 
-/** Fit on the split's training points, score both train and held-out test error. */
-export function scoreSplit(split: Split, degree: number): SplitScore {
-  const fit = ridgeFit(split.train, degree, 0);
+/** Fit on the split's training points, score both train and held-out test error. A
+ * small ridge λ keeps the fit stable even when the training set is small (a big
+ * holdout), so the test-error spread is driven by the test-set size — the lesson —
+ * rather than by the model occasionally exploding. */
+export function scoreSplit(split: Split, degree: number, lambda = 0): SplitScore {
+  const fit = ridgeFit(split.train, degree, lambda);
   return { fit, trainErr: polyMSE(split.train, fit), testErr: polyMSE(split.test, fit) };
+}
+
+/** A robust measure of spread — the 10th-to-90th-percentile range — so a rare
+ * exploding fit can't dominate the way max−min would. */
+export function p10p90Spread(xs: number[]): number {
+  if (xs.length === 0) return 0;
+  const s = [...xs].sort((a, b) => a - b);
+  const at = (q: number) => s[Math.min(s.length - 1, Math.max(0, Math.round(q * (s.length - 1))))];
+  return at(0.9) - at(0.1);
 }
 
 export type CvResult = { foldErr: number[]; meanErr: number; sd: number };
@@ -58,7 +70,7 @@ export type CvResult = { foldErr: number[]; meanErr: number; sd: number };
 /** k-fold cross-validation error: shuffle once, split into k folds, and for each fold
  * fit on the rest and score the held-out fold. Returns the per-fold errors, their mean
  * (the CV estimate), and their spread. */
-export function kFoldCV(points: Point[], degree: number, k: number, seed: number): CvResult {
+export function kFoldCV(points: Point[], degree: number, k: number, seed: number, lambda = 0): CvResult {
   const order = shuffledIndices(points.length, seed);
   const n = points.length;
   const foldErr: number[] = [];
@@ -69,7 +81,7 @@ export function kFoldCV(points: Point[], degree: number, k: number, seed: number
     const train: Point[] = [];
     const test: Point[] = [];
     order.forEach((origIdx, pos) => (testPos.has(pos) ? test : train).push(points[origIdx]));
-    const fit = ridgeFit(train, degree, 0);
+    const fit = ridgeFit(train, degree, lambda);
     foldErr.push(polyMSE(test, fit));
   }
   const meanErr = foldErr.reduce((s, v) => s + v, 0) / k;

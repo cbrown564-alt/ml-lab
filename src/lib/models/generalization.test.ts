@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Point } from "@/lib/models/linear-regression";
-import { kFoldCV, scoreSplit, splitPoints, shuffledIndices } from "@/lib/models/generalization";
+import { kFoldCV, p10p90Spread, scoreSplit, splitPoints, shuffledIndices } from "@/lib/models/generalization";
+import { pooledPoints, TT_DEGREE, TT_LAMBDA } from "@content/exhibits/train-test-generalization/experiment";
 import fixtures from "@/lib/models/fixtures/polynomial.json";
 
 /**
@@ -52,5 +53,26 @@ describe("train/test generalisation", () => {
     const r = kFoldCV(POOL, 5, 5, 3);
     expect(r.foldErr).toHaveLength(5);
     expect(r.meanErr).toBeGreaterThan(0);
+  });
+
+  it("the test-error spread shrinks as the holdout grows (the Break-it lesson)", () => {
+    // On the exhibit's actual 60-point pool with its stable, lightly-ridged model, a
+    // bigger holdout is a less noisy measurement — so the robust (P10–P90) spread of
+    // test errors across 28 random splits must DECREASE monotonically as the holdout
+    // grows. (Without the ridge a starved fit explodes and this inverts — the panel bug.)
+    const n = pooledPoints.length;
+    const seeds = Array.from({ length: 28 }, (_, i) => i + 1);
+    const spreadAt = (testSize: number) =>
+      p10p90Spread(
+        seeds.map((s) => scoreSplit(splitPoints(pooledPoints, testSize / n, s), TT_DEGREE, TT_LAMBDA).testErr),
+      );
+    // Over the holdout range the Break-it slider exposes (3–20), the spread falls
+    // cleanly; we don't sweep past ~⅓ held out, where the shrinking training set would
+    // start to destabilise the fit and the spread would turn back up.
+    const s4 = spreadAt(4);
+    const s12 = spreadAt(12);
+    const s18 = spreadAt(18);
+    expect(s12).toBeLessThan(s4);
+    expect(s18).toBeLessThan(s12);
   });
 });

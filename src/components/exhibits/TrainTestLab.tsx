@@ -4,11 +4,12 @@ import { useMemo, useState } from "react";
 import { Axes, DataPoints, Plot, usePlot } from "@/components/viz/Plot";
 import { PolyCurve } from "@/components/viz/PolyCurve";
 import { StatGrid } from "@/components/viz/StatGrid";
+import { ErrorSpreadStrip } from "@/components/exhibits/ErrorSpreadStrip";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import type { Point } from "@/lib/models/linear-regression";
 import { predictPoly } from "@/lib/models/polynomial";
 import { kFoldCV, scoreSplit, splitPoints } from "@/lib/models/generalization";
-import { pooledPoints, TT_DEGREE, trainTestScenario } from "@content/exhibits/train-test-generalization/experiment";
+import { pooledPoints, TT_DEGREE, TT_LAMBDA, trainTestScenario } from "@content/exhibits/train-test-generalization/experiment";
 
 /**
  * Train/test bench: one pool of points, split live. The model is fit on the gold
@@ -17,7 +18,7 @@ import { pooledPoints, TT_DEGREE, trainTestScenario } from "@content/exhibits/tr
  * 5-fold cross-validation score averages over every fold to pin the estimate down.
  */
 const TEST_FRAC = 0.3;
-const CV = kFoldCV(pooledPoints, TT_DEGREE, 5, 1).meanErr;
+const CV = kFoldCV(pooledPoints, TT_DEGREE, 5, 1, TT_LAMBDA).meanErr;
 
 /** The held-out test points, hollow, so "scored on what it hasn't seen" is visible. */
 function TestPoints({ points }: { points: Point[] }) {
@@ -31,41 +32,11 @@ function TestPoints({ points }: { points: Point[] }) {
   );
 }
 
-/** The test errors seen across reshuffles, on one error axis, against the stable
- * training error and the cross-validation estimate. */
-function SpreadStrip({ history, trainErr }: { history: number[]; trainErr: number }) {
-  const W = 600;
-  const H = 84;
-  const m = { l: 12, r: 12, t: 26, b: 22 };
-  // Adaptive axis so the lottery spread fills the strip (clean data has small errors).
-  const hi = (Math.max(0.05, ...history, CV, trainErr) * 1.25) || 0.1;
-  const x = (e: number) => m.l + (Math.min(e, hi) / hi) * (W - m.l - m.r);
-  return (
-    <figure className="mt-4 rounded-xl border border-line bg-raised p-3">
-      <figcaption className="mb-1 font-mono text-[11px] tracking-widest text-ink-faint uppercase">Test error across splits</figcaption>
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Test error from ${history.length} random splits, spread across the axis; the training error and the cross-validation estimate are marked.`} className="h-auto w-full">
-        <line x1={m.l} x2={W - m.r} y1={H - m.b} y2={H - m.b} stroke="var(--line)" />
-        {history.map((e, i) => (
-          <circle key={i} cx={x(e)} cy={H - m.b - 10} r={4} fill="var(--viz-prediction)" fillOpacity={i === history.length - 1 ? 0.95 : 0.32} />
-        ))}
-        {/* training error — the flattering, stable number */}
-        <line x1={x(trainErr)} x2={x(trainErr)} y1={m.t - 4} y2={H - m.b} stroke="var(--viz-neutral)" strokeWidth={1.5} strokeDasharray="3 2" />
-        <text x={x(trainErr)} y={m.t - 8} textAnchor="middle" fontSize={9} fill="var(--viz-neutral-ink)">train</text>
-        {/* cross-validation estimate — the stable honest one */}
-        <line x1={x(CV)} x2={x(CV)} y1={m.t - 4} y2={H - m.b} stroke="var(--accent)" strokeWidth={2} />
-        <text x={x(CV)} y={m.t - 8} textAnchor="middle" fontSize={9} fill="var(--accent)">CV</text>
-        <text x={m.l} y={H - 6} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">0</text>
-        <text x={W - m.r} y={H - 6} textAnchor="end" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">higher error →</text>
-      </svg>
-    </figure>
-  );
-}
-
 export function TrainTestLab() {
   const [seed, setSeed] = useState(1);
   const [history, setHistory] = useState<number[]>([]);
   const split = useMemo(() => splitPoints(pooledPoints, TEST_FRAC, seed), [seed]);
-  const score = useMemo(() => scoreSplit(split, TT_DEGREE), [split]);
+  const score = useMemo(() => scoreSplit(split, TT_DEGREE, TT_LAMBDA), [split]);
 
   // Seed the history with the first split (adjust during render, no effect needed).
   const [seenSeed, setSeenSeed] = useState<number | null>(null);
@@ -99,13 +70,14 @@ export function TrainTestLab() {
             stats={[
               { label: "training error", value: score.trainErr.toFixed(3), hue: "var(--viz-neutral-ink)", note: "on data it has seen — flatters" },
               { label: "test error (this split)", value: score.testErr.toFixed(3), hue: "var(--viz-prediction)", note: "honest, but jumps every reshuffle" },
-              { label: "5-fold CV error", value: CV.toFixed(3), hue: "var(--viz-truth)", note: "averaged over folds — stable" },
+              { label: "5-fold CV error", value: CV.toFixed(3), hue: "var(--viz-truth-ink)", note: "averaged over folds — stable" },
             ]}
           />
 
           <p className="text-sm leading-relaxed text-ink-faint">
-            Keep reshuffling: the blue test-error dots scatter widely, but the cross-validation
-            mark barely moves. That spread is why you never trust a single split.
+            Keep reshuffling: the blue test-error histogram spreads as the splits disagree,
+            but the cross-validation mark barely moves. That spread is why you never trust a
+            single split.
           </p>
         </div>
 
@@ -122,7 +94,19 @@ export function TrainTestLab() {
             <PolyCurve predict={(xv) => predictPoly(score.fit, xv)} />
             <DataPoints points={split.train} />
           </Plot>
-          <SpreadStrip history={history} trainErr={score.trainErr} />
+          <figure className="mt-4 rounded-xl border border-line bg-raised p-3">
+            <figcaption className="mb-1 font-mono text-[11px] tracking-widest text-ink-faint uppercase">Test error across splits</figcaption>
+            <ErrorSpreadStrip
+              errs={history}
+              axisMax={0.2}
+              marks={[
+                { value: score.trainErr, label: "train", color: "var(--viz-neutral)" },
+                { value: CV, label: "CV", color: "var(--accent)" },
+              ]}
+              width={620}
+              height={150}
+            />
+          </figure>
         </div>
       </div>
     </div>

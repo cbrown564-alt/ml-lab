@@ -11,7 +11,7 @@ export const trainTestGeneralizationCheck: ConceptCheck = {
     {
       id: "why-single-split-noisy",
       kind: "choice",
-      prompt: "With a tiny holdout, the same model's test error swung from near-zero to large across reshuffles. Why?",
+      prompt: "With a tiny holdout, the same model's test error swung from near-zero to large across random splits. Why?",
       options: [
         {
           label: "A small test set is a tiny, noisy sample — which few points land in it dominates the score",
@@ -88,7 +88,7 @@ export const trainTestGeneralizationCheck: ConceptCheck = {
     {
       id: "break-lottery",
       kind: "experiment-task",
-      prompt: "Break it on purpose: shrink the holdout to just a few points and watch a single split's test error become a coin flip across reshuffles.",
+      prompt: "Break it on purpose: shrink the holdout to just a few points and watch a single split's test error become a coin flip across random splits.",
       taskEvent: "train-test:single-split-lottery",
       feedback:
         "You've seen why one split — especially a small one — can't be trusted. The cross-validation mark that didn't budge is the number to report instead.",

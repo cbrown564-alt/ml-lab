@@ -28,7 +28,7 @@ test.describe("train-test-generalization exhibit", () => {
     await reshuffle.click();
     // three splits drawn now (the initial + two reshuffles) — the spread strip is live
     await expect(panel(page).getByText(/3 splits drawn/i)).toBeVisible();
-    await expect(panel(page).getByRole("img", { name: /Test error from .* random splits/i })).toBeVisible();
+    await expect(panel(page).getByRole("img", { name: /Distribution of test error across .* random splits/i })).toBeVisible();
   });
 
   test("See it enforces a committed prediction before the reveal", async ({ page }) => {
@@ -41,7 +41,7 @@ test.describe("train-test-generalization exhibit", () => {
   test("Break it: a tiny holdout is a coin flip, a larger one is stable", async ({ page }) => {
     await openTab(page, "Break it");
     await expect(panel(page).getByRole("status")).toHaveText("A coin-flip score");
-    await panel(page).getByRole("slider").first().fill("14");
+    await panel(page).getByRole("slider").first().fill("18");
     await expect(panel(page).getByRole("status")).toHaveText("Stable enough to trust");
   });
 
