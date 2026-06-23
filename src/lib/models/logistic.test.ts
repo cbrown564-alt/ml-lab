@@ -1,14 +1,17 @@
 import { describe, expect, it } from "vitest";
 import {
   accuracy,
+  accuracyVec,
   boundaryX2,
   createLogisticDescent,
   fitLogistic,
+  fitLogisticVec,
   logLoss,
   sigmoid,
   type LabeledPoint,
   type LogisticParams,
 } from "@/lib/models/logistic";
+import { expandedRow, rawRow, xorPoints } from "@content/exhibits/logistic-regression/xor";
 import fixtures from "@/lib/models/fixtures/logistic.json";
 
 /**
@@ -56,5 +59,21 @@ describe("logistic regression", () => {
     const x1 = 0.3;
     const x2 = boundaryX2(refParams, x1);
     expect(sigmoid(refParams.b + refParams.w1 * x1 + refParams.w2 * x2)).toBeCloseTo(0.5, 9);
+  });
+});
+
+describe("logistic regression — the linear boundary fails XOR, one feature fixes it", () => {
+  const y = xorPoints.map((p) => p.y);
+
+  it("a straight line can't separate XOR (≈ chance)", () => {
+    const rows = xorPoints.map(rawRow);
+    const w = fitLogisticVec(rows, y, { steps: 4000, lr: 0.3 });
+    expect(accuracyVec(rows, y, w)).toBeLessThan(0.65); // no better than guessing
+  });
+
+  it("adding the x₁·x₂ interaction separates it almost perfectly", () => {
+    const rows = xorPoints.map(expandedRow);
+    const w = fitLogisticVec(rows, y, { steps: 4000, lr: 0.3 });
+    expect(accuracyVec(rows, y, w)).toBeGreaterThan(0.9); // the curve the line couldn't draw
   });
 });

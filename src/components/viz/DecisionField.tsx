@@ -35,18 +35,28 @@ const clampPx = (v: number) => Math.max(-2000, Math.min(2000, v));
 export function DecisionField({
   points,
   params,
+  predictProba,
   domain = [-3.6, 3.6],
   width = 560,
   height = 460,
   showProb = true,
 }: {
   points: LabeledPoint[];
-  params: LogisticParams;
+  /** The linear classifier — used for the field and the straight boundary line. */
+  params?: LogisticParams;
+  /** An override probability function (e.g. a feature-expanded model with a curved
+   * boundary); when given, the field uses it and the boundary is read off the field's
+   * colour transition rather than drawn as a straight line. */
+  predictProba?: (x1: number, x2: number) => number;
   domain?: [number, number];
   width?: number;
   height?: number;
   showProb?: boolean;
 }) {
+  const predict = useMemo(
+    () => predictProba ?? ((x1: number, x2: number) => proba(params!, x1, x2)),
+    [predictProba, params],
+  );
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const cols = 120;
   const rows = 100;
@@ -69,21 +79,23 @@ export function DecisionField({
       const x2 = d0 + ((d1 - d0) * (r + 0.5)) / rows;
       for (let c = 0; c < cols; c++) {
         const x1 = d0 + ((d1 - d0) * (c + 0.5)) / cols;
-        ctx.fillStyle = fieldColor(proba(params, x1, x2));
+        ctx.fillStyle = fieldColor(predictProba ? predictProba(x1, x2) : proba(params!, x1, x2));
         ctx.fillRect(c, rows - 1 - r, 1, 1);
       }
     }
-  }, [params, domain, showProb]);
+  }, [params, predictProba, domain, showProb]);
 
   const acc = useMemo(
-    () => points.reduce((n, p) => n + ((proba(params, p.x1, p.x2) >= 0.5 ? 1 : 0) === p.y ? 1 : 0), 0),
-    [points, params],
+    () => points.reduce((n, p) => n + ((predict(p.x1, p.x2) >= 0.5 ? 1 : 0) === p.y ? 1 : 0), 0),
+    [points, predict],
   );
 
-  // Boundary endpoints across the visible x1 range.
+  // Boundary endpoints across the visible x1 range — only for the straight (linear)
+  // case; a feature-expanded model's curved boundary reads off the colour field.
   const [d0, d1] = domain;
-  const by0 = boundaryX2(params, d0);
-  const by1 = boundaryX2(params, d1);
+  const linear = !predictProba && !!params;
+  const by0 = linear ? boundaryX2(params!, d0) : NaN;
+  const by1 = linear ? boundaryX2(params!, d1) : NaN;
 
   return (
     <div className="relative" style={{ aspectRatio: `${width} / ${height}` }}>
@@ -128,7 +140,7 @@ export function DecisionField({
         )}
 
         {points.map((p, i) => {
-          const correct = (proba(params, p.x1, p.x2) >= 0.5 ? 1 : 0) === p.y;
+          const correct = (predict(p.x1, p.x2) >= 0.5 ? 1 : 0) === p.y;
           return (
             <circle
               key={i}

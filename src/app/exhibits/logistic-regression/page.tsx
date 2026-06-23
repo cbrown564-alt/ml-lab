@@ -1,6 +1,10 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { LogisticRegressionBreakIt } from "@/components/exhibits/LogisticRegressionBreakIt";
+import { LogisticRegressionCheckLab } from "@/components/exhibits/LogisticRegressionCheckLab";
 import { LogisticRegressionLab } from "@/components/exhibits/LogisticRegressionLab";
 import { LogisticRegressionStory } from "@/components/exhibits/LogisticRegressionStory";
+import { logisticRegressionCheck } from "@content/exhibits/logistic-regression/concept-check";
+import { logisticRegressionFailures } from "@content/exhibits/logistic-regression/failures";
 import { logisticRegressionMath } from "@content/exhibits/logistic-regression/math";
 import { logisticRegressionNarrative } from "@content/exhibits/logistic-regression/narrative";
 import { logisticRegressionSpine } from "@content/exhibits/logistic-regression/spine";
@@ -12,6 +16,10 @@ export default function LogisticRegressionExhibit() {
       narrative={logisticRegressionNarrative}
       spine={logisticRegressionSpine}
       math={logisticRegressionMath}
+      check={logisticRegressionCheck}
+      failures={logisticRegressionFailures}
+      breakIt={<LogisticRegressionBreakIt />}
+      checkCompanion={<LogisticRegressionCheckLab />}
       story={<LogisticRegressionStory />}
       experiment={<LogisticRegressionLab />}
       lede={

@@ -33,4 +33,17 @@ test.describe("logistic-regression exhibit", () => {
     await panel(page).getByRole("button", { name: /no straight line can separate/i }).click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
   });
+
+  test("Break it: a straight line fails XOR, one feature fixes it", async ({ page }) => {
+    await openTab(page, "Break it");
+    await expect(panel(page).getByRole("status")).toHaveText("A straight line, lost");
+    await panel(page).getByRole("button", { name: "Add x₁·x₂", exact: true }).click();
+    await expect(panel(page).getByRole("status")).toHaveText("The curve separates");
+  });
+
+  test("Explain it pairs the check with a live companion", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/Answer against the boundary/i)).toBeVisible();
+    await expect(panel(page).getByText(/why can't more training rescue it/i)).toBeVisible();
+  });
 });
