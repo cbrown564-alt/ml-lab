@@ -43,10 +43,8 @@ const rampRGB = (t: number): [number, number, number] => {
   const [c0, c1] = t <= 0.5 ? [RAMP[0], RAMP[1]] : [RAMP[1], RAMP[2]];
   return [lerp(c0[0], c1[0], u), lerp(c0[1], c1[1], u), lerp(c0[2], c1[2], u)];
 };
-const rampColor = (t: number) => `rgb(${rampRGB(t).join(", ")})`;
-// A contour line at a band boundary: the ramp colour darkened, so the field
-// reads as a drawn topographic map rather than a stepped wash.
-const contourColor = (t: number) => `rgb(${rampRGB(t).map((c) => Math.round(c * 0.7)).join(", ")})`;
+// Contour lines reuse rampRGB darkened ×0.7, computed per output pixel in the
+// canvas paint below (so the boundary feathers into a clean anti-aliased curve).
 
 const clampPx = (v: number) => Math.max(-2000, Math.min(2000, v));
 
@@ -86,24 +84,72 @@ export function LossSurface({
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
     const { cols, rows, values } = grid;
-    canvas.width = cols;
-    canvas.height = rows;
-    // Band index per cell, on the gamma-eased value so the contour levels are
-    // evenly spaced over the calm range. A cell whose lower-left neighbour sits in
-    // a different band becomes a contour line — the bowl reads as a drawn map.
-    const bandAt = (i: number) => Math.round(ease(values[i]) * BANDS);
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const i = r * cols + c;
-        const b = bandAt(i);
-        const t = b / BANDS;
-        const onContour =
-          (c > 0 && bandAt(i - 1) !== b) || (r > 0 && bandAt(i - cols) !== b);
-        ctx.fillStyle = onContour ? contourColor(t) : rampColor(t);
-        // Grid rows ascend in intercept; canvas y grows downward.
-        ctx.fillRect(c, rows - 1 - r, 1, 1);
+
+    // Paint at the canvas's DEVICE-pixel resolution, not the grid's: each output
+    // pixel bilinearly samples the (slope,intercept) field and computes its own
+    // band, so the band boundaries are smooth curves instead of the diagonal
+    // staircase a hard-upscaled fillRect grid produced. Capped so a full-width
+    // hero stays a one-time paint.
+    const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
+    const cssW = canvas.clientWidth || 800;
+    const cssH = canvas.clientHeight || 420;
+    const W = Math.min(1600, Math.round(cssW * dpr));
+    const H = Math.min(1000, Math.round(cssH * dpr));
+    canvas.width = W;
+    canvas.height = H;
+
+    // Bilinear sample of the normalized loss at fractional grid coords.
+    const sample = (gx: number, gy: number) => {
+      const x0 = Math.floor(gx);
+      const x1 = Math.min(cols - 1, x0 + 1);
+      const y0 = Math.floor(gy);
+      const y1 = Math.min(rows - 1, y0 + 1);
+      const fx = gx - x0;
+      const fy = gy - y0;
+      const v00 = values[y0 * cols + x0];
+      const v10 = values[y0 * cols + x1];
+      const v01 = values[y1 * cols + x0];
+      const v11 = values[y1 * cols + x1];
+      return (
+        (v00 * (1 - fx) + v10 * fx) * (1 - fy) + (v01 * (1 - fx) + v11 * fx) * fy
+      );
+    };
+
+    // Pass 1: the continuous band coordinate at every output pixel.
+    const bBuf = new Float32Array(W * H);
+    for (let py = 0; py < H; py++) {
+      const gy = (1 - py / (H - 1)) * (rows - 1); // canvas y is top-down
+      for (let px = 0; px < W; px++) {
+        const gx = (px / (W - 1)) * (cols - 1);
+        bBuf[py * W + px] = ease(sample(gx, gy)) * BANDS;
       }
     }
+
+    // Pass 2: band fill + contour lines. The line width is measured in SCREEN
+    // pixels (distance-to-boundary ÷ local gradient, the fwidth trick) so a
+    // contour is a constant ~1.5px curve everywhere and correctly thins out on the
+    // flat valley floor instead of smearing into a smudge.
+    const img = ctx.createImageData(W, H);
+    const data = img.data;
+    const HALF = 0.9; // half line width in px
+    for (let py = 0; py < H; py++) {
+      for (let px = 0; px < W; px++) {
+        const i = py * W + px;
+        const b = bBuf[i];
+        const [r, g, bl] = rampRGB(Math.round(b) / BANDS);
+        const bx = bBuf[py * W + Math.min(W - 1, px + 1)] - b;
+        const by = bBuf[Math.min(H - 1, py + 1) * W + px] - b;
+        const grad = Math.hypot(bx, by) || 1e-6; // band-units per pixel
+        const distPx = Math.abs(b - Math.round(b)) / grad;
+        const k = distPx < HALF ? 1 - distPx / HALF : 0;
+        const o = i * 4;
+        data[o] = r + (r * 0.7 - r) * k;
+        data[o + 1] = g + (g * 0.7 - g) * k;
+        data[o + 2] = bl + (bl * 0.7 - bl) * k;
+        data[o + 3] = 255;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
   }, [grid]);
 
   const current = trace[Math.min(cursor, Math.max(0, trace.length - 1))];
