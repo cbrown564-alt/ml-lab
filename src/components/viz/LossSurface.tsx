@@ -238,24 +238,47 @@ export function LossSurface({
             </>
           )}
 
-          {/* Where the walk begins — labelled in the graphic, Distill-style. */}
+          {/* The loss legend — what the shading means. Bare mode drops the axes,
+              so this is what keeps "darker = higher loss" in the picture. */}
+          {bare && (
+            <g transform={`translate(${MARGIN.left + 8},${MARGIN.top + 10})`}>
+              {Array.from({ length: 14 }).map((_, k) => {
+                const [r, g, b] = rampRGB(k / 13);
+                return <rect key={k} x={k * 7} y={0} width={7} height={8} fill={`rgb(${r},${g},${b})`} />;
+              })}
+              <rect x={0} y={0} width={14 * 7} height={8} fill="none" stroke="var(--surface-bg)" strokeWidth={1.25} />
+              <text
+                x={0}
+                y={22}
+                fontSize={11}
+                fontFamily="var(--font-mono)"
+                paintOrder="stroke"
+                stroke="var(--surface-bg)"
+                strokeWidth={3}
+                fill="var(--ink-muted)"
+              >
+                loss: low → high
+              </text>
+            </g>
+          )}
+
+          {/* Where the walk begins — labelled in the graphic, Distill-style (in
+              bare/hero mode too, so the mechanism reads without adjacent prose). */}
           {trace[0] && (
             <g transform={`translate(${clampPx(sx(trace[0].params.slope))},${clampPx(sy(trace[0].params.intercept))})`}>
               <circle r={4} fill="none" stroke="var(--surface-bg)" strokeWidth={3} />
               <circle r={4} fill="none" stroke="var(--viz-param)" strokeWidth={1.75} />
-              {!bare && (
-                <text
-                  x={10}
-                  y={4}
-                  fontSize={12}
-                  paintOrder="stroke"
-                  stroke="var(--surface-bg)"
-                  strokeWidth={3}
-                  fill="var(--viz-param-ink)"
-                >
-                  start
-                </text>
-              )}
+              <text
+                x={10}
+                y={4}
+                fontSize={12}
+                paintOrder="stroke"
+                stroke="var(--surface-bg)"
+                strokeWidth={3}
+                fill="var(--viz-param-ink)"
+              >
+                start
+              </text>
             </g>
           )}
 
@@ -265,22 +288,21 @@ export function LossSurface({
           >
             <line x1={-5} x2={5} y1={-5} y2={5} stroke="var(--ink)" strokeWidth={1.5} />
             <line x1={-5} x2={5} y1={5} y2={-5} stroke="var(--ink)" strokeWidth={1.5} />
-            {/* Label sits below the mark, out of the descent path's way. */}
-            {!bare && (
-              <text
-                x={0}
-                y={22}
-                textAnchor="middle"
-                fontSize={12}
-                fontStyle="italic"
-                paintOrder="stroke"
-                stroke="var(--surface-bg)"
-                strokeWidth={3}
-                fill="var(--ink)"
-              >
-                the valley floor (OLS)
-              </text>
-            )}
+            {/* Label sits below the mark, out of the descent path's way. Shown in
+                bare/hero mode too — shortened so the poster stays legible. */}
+            <text
+              x={0}
+              y={22}
+              textAnchor="middle"
+              fontSize={12}
+              fontStyle="italic"
+              paintOrder="stroke"
+              stroke="var(--surface-bg)"
+              strokeWidth={3}
+              fill="var(--ink)"
+            >
+              {bare ? "the minimum" : "the valley floor (OLS)"}
+            </text>
           </g>
 
           {trace.length > 1 && (

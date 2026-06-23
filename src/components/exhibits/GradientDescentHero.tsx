@@ -9,25 +9,30 @@ import { gradientDescentExperiment } from "@content/exhibits/gradient-descent/ex
  * The specimen hero — the first frame of the Gradient Descent exhibit. The loss
  * surface is the specimen: a topographic map where every point is a candidate
  * line and the shade is its loss. On load the purple descent path draws itself
- * from the flat line that knows nothing — overshooting on the first stride and
- * zigzagging across the valley as it homes onto the floor (the elongated bowl's
- * signature, and the self-throttling the walk is named for). Reduced motion
- * renders it already at rest. A portrait: the working axes and labels are
- * stripped, so the learner meets the territory before reading its catalogue tag.
+ * from the flat line that knows nothing (slope 0, intercept 0 — high on the bowl
+ * wall), zigzagging up the elongated valley and **settling exactly on the bright
+ * minimum (the ×)**. So the mechanism is the picture: "downhill until you hit the
+ * floor." Reduced motion renders it already at rest. A portrait: the working axes
+ * are stripped, but the start / minimum / loss-legend stay, so the learner reads
+ * the walk without the surrounding prose.
  */
 
 const SPECIMEN = gradientDescentExperiment.datasets.find(
   (d) => d.id === "gd-zigzag",
 )!.points;
 
-// The flat line (slope 0, intercept 0) — the exhibit's own start. Enough steps to
-// settle onto the valley floor; short enough that no path dots get subsampled.
-const STEPS = 60;
-const DURATION = 1300;
+// The flat line (slope 0, intercept 0) — the exhibit's own start, low on the
+// surface. LR + steps tuned against the model so the walk traverses the full frame
+// and the final iterate lands ON the minimum (~0.02 away) rather than stalling
+// short of it (the old 60 steps stopped ~0.8 out — the descent looked like it
+// missed). Dots subsample to ~64 for the trail; the bunching near the floor is the
+// self-throttling the walk is named for.
+const STEPS = 220;
+const DURATION = 1400;
 
 export function GradientDescentHero() {
   const trace = useMemo(() => {
-    const run = createGradientDescent(SPECIMEN, { learningRate: 0.06 });
+    const run = createGradientDescent(SPECIMEN, { learningRate: 0.05 });
     run.run(STEPS);
     return [...run.trace];
   }, []);

@@ -113,7 +113,10 @@ async function captureExhibit(page, exhibit, log) {
     frames.push({ file: docsRel(file), surface, label, exemplar: SURFACE_PAIRING[surface] });
 
   await page.goto(`${BASE}/exhibits/${exhibit}`, { waitUntil: "networkidle" });
-  await page.waitForTimeout(700);
+  // Long enough for a hero's one explanatory load motion to settle (e.g. the
+  // gradient-descent path eases in over ~1.3s), so the still is the at-rest poster
+  // the rubric judges, not a mid-animation frame.
+  await page.waitForTimeout(1600);
 
   // The opening frame — the masthead/hero, the "opening grammar" the lineup judges.
   const hero = path.join(dir, "hero.png");
