@@ -112,6 +112,33 @@ frames are duplicates of the hero — the capture script didn't navigate the act
 Both agents re-captured the real acts with Playwright and judged on those, so the
 scores stand, but `scripts/capture-review.mjs` needs a fix before the next run.
 
+## Cross-cutting fixes applied + re-gated (2026-06-23)
+
+The first remediation pass took the systematic, shared findings (the user's call:
+cross-cutting fixes before per-node hero work), each re-judged by the panel:
+
+- **Capture bug — FIXED.** `frameAct()` now scrolls the act `[role=tablist]` to
+  just under the top so the viewport frames the act panel, not the hero. Verified:
+  `linear-regression` + `gradient-descent` yield 4 distinct act viewports.
+- **The two all-red loss surfaces — FIXED (shared `LossSurface`).** Re-graded to a
+  topographic contour map: a calm cream→dusty-rose ground with maroon reserved for
+  high-loss peaks (loss stays red-family per grammar, no longer a flood), contour
+  lines at each band, painted per output pixel at device resolution with
+  anti-aliased (fwidth) lines so band boundaries are smooth curves, not a
+  staircase. **Panel re-judge: `feature-scaling` colour 2→3, atmosphere 2→3;
+  `gradient-descent` atmosphere 2→3** (colour held 3). Both nodes now have every
+  *judgeable* register dim at 3.
+- **Atmosphere "wall of 2s" — partly structural, mostly hero-coupled.** The one
+  genuinely cross-cutting atmosphere cause (the loss-surface render) is fixed
+  above. The rest of the uniform-2 atmosphere is **not** an independent shared
+  pass: it is the document-first *opening dead air* (same root as the §1b missing
+  hero) plus per-graphic finish — both resolve during the per-node hero builds, not
+  a template sweep.
+
+Remaining blockers after this pass are now per-node: `gradient-descent` holds on
+`mechanism-in-the-picture 2` (the hero descent wanders off the bright minimum);
+the 13 hero-less nodes hold on the missing hero. That is the hero phase.
+
 ## Turning the gate on
 
 `npm run check:rubric -- --strict` already fails on the 13 hero blockers. It is

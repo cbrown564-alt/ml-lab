@@ -9,62 +9,61 @@
       "dimension": "hero-as-protagonist",
       "score": 3,
       "exemplarFrame": "ciechanowski-watch/00-viewport.png",
-      "note": "Full-width (max-w-7xl) loss-surface portrait in the sanctioned panel with a mono figcaption — far more canvas-first than Ciechanowski's small floating watch under prose — but it loses a point because at thumbnail scale it collapses to an abstract red gradient with a faint line, so it is not yet poster-legible in isolation."
+      "note": "Full-width max-w-7xl loss-surface portrait with a mono figcaption is far more canvas-first than Ciechanowski's small floating watch, but at thumbnail scale it collapses to a red gradient with a faint line, so it is not yet poster-legible in isolation."
     },
     {
       "dimension": "mechanism-in-the-picture",
       "score": 2,
       "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
-      "note": "The bowl + zigzag trajectory is a real mechanism, but unlike Seeing-Theory's unambiguous residual squares the descent visibly converges into a dark lower-left (high-loss) corner rather than settling at the bright 'x' minimum, so 'the walk descends to the floor' is not legible from the pixels — held below floor."
+      "note": "Unlike Seeing-Theory's squares visibly shrinking onto the line, the hero's start dot sits beside the bright minimum and the path then travels into darker high-loss terrain ending at an off-floor open ring, so 'the walk descends to the minimum' misreads from the pixels — held below floor on the trajectory, not the render."
     },
     {
       "dimension": "annotation-integration",
       "score": 2,
       "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
-      "note": "Distill captions every regime inside the graphic (Ripples/Monotonic Decrease/Divergence + inline math); our hero is bare by design with start/end/minimum unlabeled and meaning living in adjacent prose, and even the working canvases carry less in-graphic signaling than Distill's labeled small-multiples."
+      "note": "Distill captions every regime inside the graphic; our hero stays bare (start/end/minimum unlabeled) with meaning in adjacent prose, though the experiment's surface view does carry in-graphic 'x valley floor (OLS)' and 'start' labels."
     },
     {
       "dimension": "atmosphere-finish",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
-      "note": "The page is calm and Distill-soft, but the protagonist loss surface renders as coarse quantized bands upscaled with hard stair-stepped edges (canvas drawn at 1px/cell then CSS-scaled) — aliased and harsh next to Ciechanowski's buttery anti-aliased strokes — so the hero, the page's face, is the finish weak point."
+      "note": "The staircase is fixed — the hero shows smooth continuous contour ellipses and constant ~1.5px anti-aliased lines that thin on the valley floor, putting the surface in the same buttery finish class as Ciechanowski's spring strokes; the See-it left-column dead air and floating 'N' avatar remain but are not point-costing."
     },
     {
       "dimension": "motion",
       "score": 3,
       "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
-      "note": "Judged conservatively from statics: the hero performs exactly one explanatory ease-out path-draw (reduced-motion rests at the valley) and every training loop is learner-controlled with Play/Step/Step×10/scrub on a log-loss axis, so motion is transitional and steppable-where-complex, exceeding 3B1B's non-interactive frame on control."
+      "note": "From statics: one explanatory ease-out hero path-draw and a fully learner-controlled training loop (Play/scrub on a log-loss axis), so motion is transitional and steppable, exceeding 3B1B's non-interactive frame on control."
     },
     {
       "dimension": "colour-discipline",
       "score": 3,
       "exemplarFrame": "r2d3-trees/00-viewport.png",
-      "note": "The semantic grammar holds lab-wide and into AA-tinted prose (truth-gold data, prediction-blue line, param-purple eta/slider/path, error-red reserved for loss/'climb'/bullets, weight+underline so hue isn't alone); docked from 4 because the all-red hero band field uses error-red as ambient terrain, mildly diluting red's 'error' meaning."
+      "note": "Semantic grammar holds lab-wide and into AA-tinted, underlined prose (gold data, blue prediction, purple eta/path, red reserved for loss/'climb'); docked from 4 because the all-red hero band field uses error-red as ambient terrain, mildly diluting red's 'error' meaning."
     }
   ],
   "hero": {
     "present": true,
     "fullWidth": true,
     "labeledAnnotation": false,
-    "depictsMechanism": true,
+    "depictsMechanism": false,
     "thumbnailLegible": false,
     "atMostOneLoadMotion": true,
-    "note": "Full-width loss-surface specimen with a single ease-out load motion and a mono figcaption, but it carries no in-graphic labels (start/end/minimum unmarked), the path converges into a dark high-loss corner instead of the bright 'x', and it does not survive thumbnail scale."
+    "note": "Full-width smooth-rendered loss surface with one ease-out load motion and a mono figcaption, but it carries no in-graphic labels and the descent visibly wanders off the bright minimum into higher-loss terrain, so the mechanism does not read at hero or thumbnail scale."
   },
   "assessment": {
     "playableExperimentTask": true,
     "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
     "notPureMcqStack": true,
-    "note": "The Explain act is a graded instrument with a live coordinated descent widget; transfer work is genuinely interactive (item 04 PREDICT & VERIFY sets eta=0.12 against the live walk, item 05 LAB TASK is hands-completed) — though the explicitly-labelled item 06 'TRANSFER' is itself a 3-option MCQ."
+    "note": "Explain is a graded instrument with a live coordinated descent widget the learner answers against, plus interactive predict-and-verify items, though the explicitly-labelled transfer item is itself a 3-option MCQ."
   },
   "verdict": {
     "decision": "hold",
     "blocking": [
-      "Re-render the loss surface as a smooth/anti-aliased (higher-resolution or true contour-line) field instead of 1px-per-cell hard-upscaled bands, to clear atmosphere-finish.",
-      "Make the hero descent visibly terminate at the bright minimum ('x') with the path moving from high to low loss, so mechanism-in-the-picture reads without prior knowledge.",
-      "Add minimal in-graphic annotation to the hero (start dot, 'minimum' at the x, a 'loss' legend) so meaning does not live only in adjacent prose."
+      "Make the hero descent visibly terminate AT the bright minimum/x — start the path in a dark high-loss corner and have it converge onto the valley floor, so 'descends to the minimum' reads without prior knowledge.",
+      "Carry the experiment's in-graphic labels ('x the valley floor', 'start') into the bare hero, plus a small loss legend, so meaning stops living only in adjacent prose."
     ],
-    "summary": "Strong canvas-first structure, disciplined colour, and explanatory motion, but the hero's harsh banded render and illegible descent endpoint hold mechanism, annotation, and atmosphere below floor 3 — fix the hero surface and it advances."
+    "summary": "Atmosphere-finish now clears floor 3 — the loss-surface staircase is genuinely fixed and the render is Distill-soft — but mechanism-in-the-picture stays at 2 because the hero descent wanders off the minimum into higher-loss terrain, so the exhibit holds."
   }
 }
