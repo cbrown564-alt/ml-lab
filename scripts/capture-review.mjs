@@ -106,6 +106,50 @@ async function frameAct(page) {
   if (!anchored) await page.evaluate(() => window.scrollTo(0, 0));
 }
 
+/**
+ * Anchor the guided story's beat rail just under the top of the viewport, so a
+ * beat frame shows the chip's prose + the live graphic — not the masthead/tabs
+ * above it. Falls back to the act framing when there is no story stepper.
+ */
+async function frameStory(page) {
+  const anchored = await page.evaluate(() => {
+    const nav = document.querySelector('nav[aria-label="Story beats"]');
+    if (!nav) return false;
+    const top = nav.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, Math.max(0, Math.round(top - 24)));
+    return true;
+  });
+  if (!anchored) await frameAct(page);
+}
+
+/**
+ * The See-it act is a beat **stepper** (StoryStepper) — one "chip" at a time over
+ * one persistent graphic (object constancy). A single frame only shows the opening
+ * beat, so the reviewer can't judge the spine. Step through the first `max` beats,
+ * capturing each, then rewind to the opening so the later full-page frame is the
+ * at-rest poster. Stops early if the walk runs out of beats.
+ */
+async function captureStoryBeats(page, dir, push, max = 3) {
+  const next = page.getByRole("button", { name: "Next beat" });
+  for (let i = 1; i <= max; i++) {
+    await frameStory(page);
+    await page.waitForTimeout(150);
+    const file = path.join(dir, `see-beat-${i}.png`);
+    await page.screenshot({ path: file });
+    push(file, "see", `See it — beat ${i}`);
+    if (i === max) break;
+    if (!(await next.count()) || (await next.first().isDisabled())) break;
+    await next.first().click();
+    await page.waitForTimeout(550); // beat remounts with a soft lift-fog enter
+  }
+  // Rewind to the opening beat so see-full.png rests on the at-rest first chip.
+  const prev = page.getByRole("button", { name: "Previous beat" });
+  while ((await prev.count()) && !(await prev.first().isDisabled())) {
+    await prev.first().click();
+    await page.waitForTimeout(120);
+  }
+}
+
 async function captureExhibit(page, exhibit, log) {
   const dir = outDir(exhibit);
   const frames = [];
@@ -142,12 +186,9 @@ async function captureExhibit(page, exhibit, log) {
     push(vp, act.id, `${act.id} — viewport`);
 
     if (act.id === "see") {
-      // The spine is the See-it main event; scroll it under the masthead.
-      await page.evaluate(() => window.scrollTo(0, Math.round(document.body.scrollHeight * 0.45)));
-      await page.waitForTimeout(400);
-      const spine = path.join(dir, "see-spine.png");
-      await page.screenshot({ path: spine });
-      push(spine, "see", "See it — the spine");
+      // The See-it main event is a guided beat stepper — capture its first three
+      // chips, not just the opening one, so the spine can actually be judged.
+      await captureStoryBeats(page, dir, push);
     }
 
     const full = path.join(dir, `${act.id}-full.png`);
