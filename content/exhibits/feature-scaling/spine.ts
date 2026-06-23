@@ -14,7 +14,7 @@ export const featureScalingSpine: Spine<FeatureScalingFrame> = [
   {
     sectionId: "hook",
     frame: { scaling: "raw" },
-    terms: [{ phrase: "the *surface*", hue: "error" }],
+    terms: [{ phrase: "the surface", hue: "error" }],
   },
   {
     sectionId: "the-bowl",

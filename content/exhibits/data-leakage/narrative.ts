@@ -25,7 +25,7 @@ export const dataLeakageNarrative: ExhibitNarrative = {
       heading: "A score from nowhere",
       paragraphs: [
         "Now the usual pipeline: with so many features, keep only the promising ten — the ten most correlated with the target. Then cross-validate a regression on those. The score comes back R² ≈ 0.41: the model appears to explain almost half the variance. On noise. The held-out points line up along the diagonal as if the model could really predict them.",
-        "The leak is the *order* of operations. The ten features were chosen using the whole dataset — including the rows that would later serve as each test fold. The selection peeked at the answers, so 'held-out' points weren't really held out at all.",
+        "The leak is the order of operations. The ten features were chosen using the whole dataset — including the rows that would later serve as each test fold. The selection peeked at the answers, so 'held-out' points weren't really held out at all.",
       ],
     },
     {

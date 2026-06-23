@@ -42,7 +42,7 @@ export const theGradientSpine: Spine<GradientFrame> = [
         {
           label: "Along it — following the contour line",
           feedback:
-            "Along the contour the height is constant — that's the direction of *zero* slope, the opposite of steepest. The gradient runs across it, not along it. Step on and see.",
+            "Along the contour the height is constant — that's the direction of zero slope, the opposite of steepest. The gradient runs across it, not along it. Step on and see.",
         },
         {
           label: "At 45° to it — splitting the difference",

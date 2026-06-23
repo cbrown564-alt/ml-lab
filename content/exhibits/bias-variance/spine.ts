@@ -3,7 +3,7 @@ import type { Spine } from "@/lib/exhibit/spine";
 /**
  * Bias–variance spine: the degree the fit takes at each beat — stiff line (1),
  * frantic wiggle (12), the sweet spot (4). The committed prediction sits on the
- * underfit beat: training error only falls, so commit what the *test* error does
+ * underfit beat: training error only falls, so commit what the test error does
  * before stepping on to watch the U appear.
  */
 export type BiasVarianceFrame = { degree: number };

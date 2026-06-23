@@ -2,7 +2,7 @@ import type { ExhibitNarrative } from "@/lib/narrative/schema";
 
 /**
  * Overfitting & regularisation: a too-flexible model memorises noise, and instead
- * of cutting its capacity you *penalise* it — push its weights toward zero until the
+ * of cutting its capacity you penalise it — push its weights toward zero until the
  * wiggle relaxes onto the smooth truth. The bias regularisation buys, and the L2/L1
  * flavours, arrive in Run it. Companion to bias–variance (the other lever).
  */

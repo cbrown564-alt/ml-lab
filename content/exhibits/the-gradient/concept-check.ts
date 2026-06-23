@@ -17,17 +17,17 @@ export const theGradientCheck: ConceptCheck = {
           label: "You're at a stationary point — a peak, a valley, or a saddle — not necessarily the global best",
           correct: true,
           feedback:
-            "Right. ∇f = 0 means no direction is uphill *locally*. That's true at the global summit, but equally at a lower local peak or a saddle — the gradient can't tell them apart.",
+            "Right. ∇f = 0 means no direction is uphill locally. That's true at the global summit, but equally at a lower local peak or a saddle — the gradient can't tell them apart.",
         },
         {
           label: "You've reached the highest point on the whole surface",
           feedback:
-            "Only on a single-hill (convex) landscape. Here the climb stopped on the shorter hill — a zero gradient marks a *local* stationary point, not the global best.",
+            "Only on a single-hill (convex) landscape. Here the climb stopped on the shorter hill — a zero gradient marks a local stationary point, not the global best.",
         },
         {
           label: "The function is flat everywhere",
           feedback:
-            "The gradient is zero only *at that point*, not everywhere — the surface still rises toward the taller hill across the valley. The gradient just can't see that far.",
+            "The gradient is zero only at that point, not everywhere — the surface still rises toward the taller hill across the valley. The gradient just can't see that far.",
         },
       ],
       difficulty: 2,
@@ -47,7 +47,7 @@ export const theGradientCheck: ConceptCheck = {
         {
           label: "Parallel to it — it runs along the contour",
           feedback:
-            "Along the contour the height doesn't change at all — that's the direction of *zero* slope. The gradient is the steepest direction, which runs across the contour, not along it.",
+            "Along the contour the height doesn't change at all — that's the direction of zero slope. The gradient is the steepest direction, which runs across the contour, not along it.",
         },
         {
           label: "It depends on the surface — sometimes along, sometimes across",
@@ -73,7 +73,7 @@ export const theGradientCheck: ConceptCheck = {
         {
           label: "It grows longer — you're getting closer to the important point",
           feedback:
-            "The arrow's length is the steepness, not the importance. Near a peak the surface flattens, so the gradient gets *shorter*, reaching zero at the top.",
+            "The arrow's length is the steepness, not the importance. Near a peak the surface flattens, so the gradient gets shorter, reaching zero at the top.",
         },
         {
           label: "It stays the same length the whole way",
@@ -122,12 +122,12 @@ export const theGradientCheck: ConceptCheck = {
         {
           label: "The learning rate is too high, so every run overshoots the same minimum",
           feedback:
-            "Overshooting would show as unstable or rising loss, not runs that *settle* with vanishing gradients. Settling at different low points with ∇≈0 is the signature of different local optima, not overshoot.",
+            "Overshooting would show as unstable or rising loss, not runs that settle with vanishing gradients. Settling at different low points with ∇≈0 is the signature of different local optima, not overshoot.",
         },
         {
           label: "There isn't enough training data, so the model can't find the minimum",
           feedback:
-            "More data changes the landscape's shape but not the core fact that a non-convex surface has many stationary points. Different seeds settling differently is an *optimisation* (initialisation) effect, not a data-volume one.",
+            "More data changes the landscape's shape but not the core fact that a non-convex surface has many stationary points. Different seeds settling differently is an optimisation (initialisation) effect, not a data-volume one.",
         },
       ],
       difficulty: 3,

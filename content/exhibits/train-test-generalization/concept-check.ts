@@ -22,7 +22,7 @@ export const trainTestGeneralizationCheck: ConceptCheck = {
         {
           label: "The model is being retrained differently each reshuffle, so it really changes",
           feedback:
-            "It's refit on each split's training points, but the swing is far larger than that — it's the *measurement* on a tiny test set that's noisy, not the model.",
+            "It's refit on each split's training points, but the swing is far larger than that — it's the measurement on a tiny test set that's noisy, not the model.",
         },
         {
           label: "Reshuffling corrupts the data, inflating the error randomly",
@@ -47,7 +47,7 @@ export const trainTestGeneralizationCheck: ConceptCheck = {
         {
           label: "It trains the model k times, so the model itself ends up better",
           feedback:
-            "CV is about *estimating* error, not improving the model — you usually refit on all the data afterward. Its value is the stable estimate, from averaging k held-out scores.",
+            "CV is about estimating error, not improving the model — you usually refit on all the data afterward. Its value is the stable estimate, from averaging k held-out scores.",
         },
         {
           label: "It uses a bigger test set than a single split does",
@@ -73,7 +73,7 @@ export const trainTestGeneralizationCheck: ConceptCheck = {
         {
           label: "Yes — you only looked at the test set, you never trained on it",
           feedback:
-            "Looking is enough to leak when you *select* on it. Choosing the best of twenty by test score bakes that set's quirks into your choice, inflating the reported number.",
+            "Looking is enough to leak when you select on it. Choosing the best of twenty by test score bakes that set's quirks into your choice, inflating the reported number.",
         },
         {
           label: "Yes, as long as the test set is large enough",
@@ -112,7 +112,7 @@ export const trainTestGeneralizationCheck: ConceptCheck = {
         {
           label: "The cross-validation was too optimistic — use more folds to get a lower estimate",
           feedback:
-            "More folds won't close a distribution gap. CV was honest *for the training distribution*; the problem is production isn't that distribution. The estimate was right about the wrong population.",
+            "More folds won't close a distribution gap. CV was honest for the training distribution; the problem is production isn't that distribution. The estimate was right about the wrong population.",
         },
         {
           label: "The model overfit — add regularisation and the production score will match CV",

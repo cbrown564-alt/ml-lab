@@ -47,7 +47,7 @@ export const regressionTaskCheck: ConceptCheck = {
         {
           label: "Regression uses a straight line and classification uses curves",
           feedback:
-            "The shape of the model isn't what defines the task — both can be linear or curved. It's the *target*: continuous (regression) vs categorical (classification).",
+            "The shape of the model isn't what defines the task — both can be linear or curved. It's the target: continuous (regression) vs categorical (classification).",
         },
         {
           label: "Regression needs more features than classification",
@@ -78,7 +78,7 @@ export const regressionTaskCheck: ConceptCheck = {
         {
           label: "Accuracy — you can no longer compute accuracy on a yes/no target",
           feedback:
-            "Accuracy is exactly what you *can* compute on yes/no. What you lose is the magnitude the continuous target carried — and you inherit an arbitrary cutoff.",
+            "Accuracy is exactly what you can compute on yes/no. What you lose is the magnitude the continuous target carried — and you inherit an arbitrary cutoff.",
         },
       ],
       verify: "Binarising a continuous target discards magnitude and forces an arbitrary threshold.",

@@ -19,7 +19,7 @@ export const dataLeakageSpine: Spine<DataLeakageFrame> = [
     frame: { mode: "leaky" },
     terms: [
       { phrase: "R² ≈ 0.41", hue: "error" },
-      { phrase: "the *order* of operations", hue: "param" },
+      { phrase: "the order of operations", hue: "param" },
     ],
     predict: {
       prompt:

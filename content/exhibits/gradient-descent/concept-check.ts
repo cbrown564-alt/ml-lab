@@ -23,7 +23,7 @@ export const gradientDescentCheck: ConceptCheck = {
         {
           label: "The algorithm started moving uphill instead of downhill",
           feedback:
-            "The direction was never wrong — every step still pointed downhill from where it stood. The step *length* was the problem: it sailed past the bottom and ended up higher on the far wall.",
+            "The direction was never wrong — every step still pointed downhill from where it stood. The step length was the problem: it sailed past the bottom and ended up higher on the far wall.",
         },
         {
           label: "Large learning rates make the gradient itself larger",
@@ -69,12 +69,12 @@ export const gradientDescentCheck: ConceptCheck = {
           label: "It points uphill — toward steepest increase — so stepping downhill means going the opposite way",
           correct: true,
           feedback:
-            "Right. The gradient is the direction of steepest *ascent* of the loss; the minus sign in the update rule is the entire “descent” in gradient descent.",
+            "Right. The gradient is the direction of steepest ascent of the loss; the minus sign in the update rule is the entire “descent” in gradient descent.",
         },
         {
           label: "It points downhill, and subtracting is just a convention",
           feedback:
-            "It's the reverse: the gradient points uphill. The subtraction isn't cosmetic — without it you'd be doing gradient *ascent* and maximizing your loss.",
+            "It's the reverse: the gradient points uphill. The subtraction isn't cosmetic — without it you'd be doing gradient ascent and maximizing your loss.",
         },
         {
           label: "It points toward the minimum from anywhere on the surface",

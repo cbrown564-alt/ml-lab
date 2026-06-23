@@ -10,7 +10,7 @@ export const featureScalingNarrative: ExhibitNarrative = {
   nodeId: "feature-scaling",
   hook: [
     "Two features — age in years, income in dollars — and the model treats a one-dollar change as the same size as a one-year change, because to gradient descent a number is just a number. The result isn't a wrong answer; it's a model that takes thousands of steps to find an answer it should have reached in ten.",
-    "Here is that slowness made visible. The same data, the same line being learned — but watch the *surface* the descent has to cross, and what one small change to the input does to it.",
+    "Here is that slowness made visible. The same data, the same line being learned — but watch the surface the descent has to cross, and what one small change to the input does to it.",
   ],
   story: [
     {

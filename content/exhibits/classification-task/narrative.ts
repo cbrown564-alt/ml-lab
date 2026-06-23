@@ -8,7 +8,7 @@ import type { ExhibitNarrative } from "@/lib/narrative/schema";
 export const classificationTaskNarrative: ExhibitNarrative = {
   nodeId: "classification-task",
   hook: [
-    "A classifier hands you a probability: this email is 0.73 spam, this scan is 0.12 tumour. But a probability isn't an action — at some point you have to *decide*. Drawing that line is its own task, separate from training the model, and it's where most of the real-world judgement lives.",
+    "A classifier hands you a probability: this email is 0.73 spam, this scan is 0.12 tumour. But a probability isn't an action — at some point you have to decide. Drawing that line is its own task, separate from training the model, and it's where most of the real-world judgement lives.",
     "Here are the classifier's probabilities, fixed. Everything you change now is the decision, not the model — and watch how much rides on it.",
   ],
   story: [

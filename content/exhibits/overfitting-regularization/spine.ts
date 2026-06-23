@@ -39,7 +39,7 @@ export const overfittingRegularizationSpine: Spine<RegularizationFrame> = [
         {
           label: "It gets wigglier — more pressure, more flexing",
           feedback:
-            "The opposite — the penalty pushes weights toward zero, which *removes* wiggle. Step on and watch the curve calm down.",
+            "The opposite — the penalty pushes weights toward zero, which removes wiggle. Step on and watch the curve calm down.",
         },
       ],
     },

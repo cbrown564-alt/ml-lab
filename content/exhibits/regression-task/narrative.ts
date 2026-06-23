@@ -1,7 +1,7 @@
 import type { ExhibitNarrative } from "@/lib/narrative/schema";
 
 /**
- * What a regression task *is*: supervised learning where the target is a continuous
+ * What a regression task is: supervised learning where the target is a continuous
  * quantity, so a good answer is a close one — scored by distance. Told apart from
  * classification (a categorical target, scored right/wrong) by the kind of thing you're
  * predicting. The task framing comes first; it dictates the output, the loss, the metric.
@@ -17,7 +17,7 @@ export const regressionTaskNarrative: ExhibitNarrative = {
       id: "anatomy",
       heading: "Examples in, a number out",
       paragraphs: [
-        "Supervised learning starts with labelled examples: each one a set of features (here, study hours) paired with a known answer (the score). The job is a function that turns features into the answer, so that for a new student — whose score you don't yet know — you can predict it. What makes it a *regression* task is the answer's type: a continuous quantity, a number on a scale, not a category.",
+        "Supervised learning starts with labelled examples: each one a set of features (here, study hours) paired with a known answer (the score). The job is a function that turns features into the answer, so that for a new student — whose score you don't yet know — you can predict it. What makes it a regression task is the answer's type: a continuous quantity, a number on a scale, not a category.",
       ],
     },
     {
@@ -31,7 +31,7 @@ export const regressionTaskNarrative: ExhibitNarrative = {
       id: "classification-contrast",
       heading: "Change the target, change the task",
       paragraphs: [
-        "Now split the same scores at a pass line. The question becomes pass or fail: a category, not a number. The prediction is no longer a point on a scale but one of two labels, and “off by 4 points” stops meaning anything — a guess is simply right or wrong. That's a classification task, and accuracy, not distance, is its score. Same students, same features; the *target's type* is what made it a different problem.",
+        "Now split the same scores at a pass line. The question becomes pass or fail: a category, not a number. The prediction is no longer a point on a scale but one of two labels, and “off by 4 points” stops meaning anything — a guess is simply right or wrong. That's a classification task, and accuracy, not distance, is its score. Same students, same features; the target's type is what made it a different problem.",
       ],
     },
     {

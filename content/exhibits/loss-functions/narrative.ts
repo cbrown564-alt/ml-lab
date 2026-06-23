@@ -1,7 +1,7 @@
 import type { ExhibitNarrative } from "@/lib/narrative/schema";
 
 /**
- * Loss functions: the loss is the *judge*, and the judge decides the verdict.
+ * Loss functions: the loss is the judge, and the judge decides the verdict.
  * The arc moves from "a model needs a number to shrink" → the three penalty
  * shapes → how squared error lets a few far points rule → how robust judges hold
  * the bulk → how to choose. Concrete throughout; the maths arrives in Run it.
