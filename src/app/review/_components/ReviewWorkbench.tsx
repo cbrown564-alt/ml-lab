@@ -96,7 +96,11 @@ export function ReviewWorkbench({
     const surface = DIMENSION_SURFACE[REGISTER_DIMENSIONS[0].key];
     return (pickSurface(frames, surface) ?? pickSurface(frames, "hero"))?.file ?? frames[0]?.file ?? "";
   });
-  const [zoom, setZoom] = useState(false);
+  // The stage shows ONE large image at a time — the thing you're judging — and you
+  // flip between your capture and the benchmark. Big enough to actually evaluate,
+  // no second image stealing half the width.
+  const [view, setView] = useState<"capture" | "benchmark">("capture");
+  const [fullscreen, setFullscreen] = useState(false);
 
   /* ---- the evidence stage: captured frame ↔ benchmark, following attention ---- */
   const captured = frames.find((f) => f.file === stageFile) ?? frames[0] ?? null;
@@ -105,10 +109,13 @@ export function ReviewWorkbench({
     return captured?.exemplar ?? initial.register[0]?.exemplarFrame ?? "";
   }, [focus, register, captured, initial.register]);
 
-  // Focusing a section pulls the most relevant captured surface into the stage.
+  // Focusing a section pulls the most relevant captured surface into the stage and
+  // snaps back to "your capture" — the thing being scored — so it's always the
+  // default view; the benchmark is one click away.
   const focusOn = useCallback(
     (key: FocusKey) => {
       setFocus(key);
+      setView("capture");
       const surface =
         key === "hero" ? "hero" : key === "assessment" ? "explain" : key ? DIMENSION_SURFACE[key] : null;
       if (surface) {
@@ -183,8 +190,23 @@ export function ReviewWorkbench({
   const orderedKeys = REGISTER_DIMENSIONS.map((d) => d.key);
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setFullscreen(false);
+        return;
+      }
       const el = e.target as HTMLElement | null;
       if (el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
+      // b/f flip and zoom the stage — judge at size with the hands on the keys.
+      if (e.key === "b") {
+        e.preventDefault();
+        setView((v) => (v === "capture" ? "benchmark" : "capture"));
+        return;
+      }
+      if (e.key === "f") {
+        e.preventDefault();
+        setFullscreen((z) => !z);
+        return;
+      }
       if (!focus || focus === "hero" || focus === "assessment") return;
       if (e.key >= "0" && e.key <= "4") {
         e.preventDefault();
@@ -226,27 +248,94 @@ export function ReviewWorkbench({
   const blockers = flagshipBlockers(draft);
   const clears = completeness.complete && blockers.length === 0;
 
+  const showingBenchmark = view === "benchmark";
+  const stageSrc = showingBenchmark ? exemplarUrl(benchmark) : captured ? frameUrl(captured.file) : "";
+  const stageCaption = showingBenchmark ? `benchmark · ${benchmark}` : (captured?.label ?? "");
+
   return (
-    <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+    <div className="mt-8 grid items-start gap-8 lg:grid-cols-[3fr_2fr]">
       {/* ───────────────────────── Evidence stage (sticky) ───────────────────── */}
       <div className="lg:sticky lg:top-6">
         {frames.length > 0 && captured ? (
           <>
-            <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-2">
+            {/* capture ↔ benchmark — one big image, flipped with a toggle (or 'b') */}
+            <div className="flex items-center justify-between gap-3 pb-2">
+              <div className="inline-flex rounded-full border border-line p-0.5 text-sm">
+                <button
+                  type="button"
+                  onClick={() => setView("capture")}
+                  aria-pressed={!showingBenchmark}
+                  className={`rounded-full px-3 py-1 transition-colors ${
+                    !showingBenchmark ? "bg-accent text-accent-ink" : "text-ink-muted hover:text-ink"
+                  }`}
+                >
+                  Your capture
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setView("benchmark")}
+                  aria-pressed={showingBenchmark}
+                  className={`rounded-full px-3 py-1 transition-colors ${
+                    showingBenchmark ? "bg-ink text-surface" : "text-ink-muted hover:text-ink"
+                  }`}
+                >
+                  Benchmark
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={() => setFullscreen(true)}
+                title="Fullscreen (f)"
+                className="rounded border border-line px-2 py-1 font-mono text-[10px] tracking-wide uppercase transition-colors hover:border-ink-faint hover:text-ink"
+              >
+                fullscreen ⤢
+              </button>
+            </div>
+
+            {/* the big image — ~60% of the screen, fit to view, no second image
+                stealing half the width. Click to go fullscreen. */}
+            <button
+              type="button"
+              onClick={() => setFullscreen(true)}
+              className={`block w-full overflow-hidden rounded-lg border bg-sunken ${
+                showingBenchmark ? "border-dashed border-line" : "border-line"
+              }`}
+            >
+              <img
+                src={stageSrc}
+                alt={stageCaption}
+                className="max-h-[72vh] w-full cursor-zoom-in object-contain"
+              />
+              <span
+                className={`block truncate border-t border-line px-3 py-1.5 text-left text-xs ${
+                  showingBenchmark ? "font-mono text-ink-faint" : "text-ink-muted"
+                }`}
+              >
+                {stageCaption}
+              </span>
+            </button>
+
+            {/* surface filmstrip — which captured frame is on the stage */}
+            <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
               {frames.map((f) => (
                 <button
                   key={f.file}
                   type="button"
-                  onClick={() => setStageFile(f.file)}
+                  onClick={() => {
+                    setStageFile(f.file);
+                    setView("capture");
+                  }}
                   title={f.label}
                   className={`group shrink-0 overflow-hidden rounded-md border transition-colors ${
-                    f.file === stageFile ? "border-accent" : "border-line hover:border-ink-faint"
+                    f.file === stageFile && !showingBenchmark
+                      ? "border-accent"
+                      : "border-line hover:border-ink-faint"
                   }`}
                 >
                   <img src={frameUrl(f.file)} alt={f.label} className="h-12 w-20 object-cover object-top" />
                   <span
                     className={`block px-1 py-0.5 text-center font-mono text-[9px] capitalize ${
-                      f.file === stageFile ? "text-ink" : "text-ink-faint"
+                      f.file === stageFile && !showingBenchmark ? "text-ink" : "text-ink-faint"
                     }`}
                   >
                     {f.surface}
@@ -254,37 +343,12 @@ export function ReviewWorkbench({
                 </button>
               ))}
             </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <StageFigure
-                href={frameUrl(captured.file)}
-                src={frameUrl(captured.file)}
-                caption={captured.label}
-                kind="captured"
-                zoom={zoom}
-              />
-              <StageFigure
-                href={exemplarUrl(benchmark)}
-                src={exemplarUrl(benchmark)}
-                caption={`benchmark · ${benchmark}`}
-                kind="benchmark"
-                zoom={zoom}
-              />
-            </div>
-            <div className="mt-2 flex items-center justify-between text-xs text-ink-faint">
-              <span>
-                {focus && focus !== "hero" && focus !== "assessment"
-                  ? "benchmark follows the focused dimension"
-                  : "benchmark is this surface's pairing"}
-              </span>
-              <button
-                type="button"
-                onClick={() => setZoom((z) => !z)}
-                className="rounded border border-line px-2 py-0.5 font-mono text-[10px] tracking-wide uppercase transition-colors hover:border-ink-faint hover:text-ink-muted"
-              >
-                {zoom ? "fit" : "fill"} ↕
-              </button>
-            </div>
+            <p className="mt-1.5 text-xs text-ink-faint">
+              {focus && focus !== "hero" && focus !== "assessment"
+                ? "benchmark follows the focused dimension"
+                : "benchmark is this surface's pairing"}{" "}
+              · <span className="font-mono">b</span> flips, <span className="font-mono">f</span> fullscreen
+            </p>
           </>
         ) : (
           <div className="rounded-lg border border-dashed border-line bg-sunken p-6 text-sm text-ink-faint">
@@ -498,44 +562,80 @@ export function ReviewWorkbench({
 
       {/* Always-visible save status — autosave means the verdict is never lost */}
       <SaveStatus state={saveState} savedAt={savedAt} onRetry={save} />
+
+      {/* Fullscreen viewer — the whole frame at maximum size, still flippable */}
+      {fullscreen && captured && (
+        <FullscreenViewer
+          src={stageSrc}
+          caption={stageCaption}
+          showingBenchmark={showingBenchmark}
+          onView={setView}
+          onClose={() => setFullscreen(false)}
+        />
+      )}
     </div>
   );
 }
 
 /* -------------------------------------------------------------------------- */
 
-function StageFigure({
-  href,
+function FullscreenViewer({
   src,
   caption,
-  kind,
-  zoom,
+  showingBenchmark,
+  onView,
+  onClose,
 }: {
-  href: string;
   src: string;
   caption: string;
-  kind: "captured" | "benchmark";
-  zoom: boolean;
+  showingBenchmark: boolean;
+  onView: (v: "capture" | "benchmark") => void;
+  onClose: () => void;
 }) {
   return (
-    <figure
-      className={`overflow-hidden rounded-lg border bg-sunken ${
-        kind === "benchmark" ? "border-dashed border-line" : "border-line"
-      }`}
-    >
-      <a href={href} target="_blank" rel="noreferrer" title="open full resolution ↗" className="block">
-        <div className={zoom ? "max-h-[64vh] overflow-y-auto" : "flex max-h-[64vh] items-start justify-center"}>
-          <img src={src} alt={caption} className={zoom ? "w-full" : "max-h-[64vh] w-full object-contain"} />
-        </div>
-      </a>
-      <figcaption
-        className={`truncate border-t border-line px-3 py-1.5 text-xs ${
-          kind === "benchmark" ? "font-mono text-ink-faint" : "text-ink-muted"
-        }`}
+    <div className="fixed inset-0 z-[100] flex flex-col bg-black/90" onClick={onClose}>
+      <div
+        className="flex items-center justify-between gap-3 px-4 py-3 text-sm"
+        onClick={(e) => e.stopPropagation()}
       >
-        {caption}
-      </figcaption>
-    </figure>
+        <div className="inline-flex rounded-full border border-white/20 p-0.5">
+          <button
+            type="button"
+            onClick={() => onView("capture")}
+            className={`rounded-full px-3 py-1 transition-colors ${
+              !showingBenchmark ? "bg-white text-black" : "text-white/70 hover:text-white"
+            }`}
+          >
+            Your capture
+          </button>
+          <button
+            type="button"
+            onClick={() => onView("benchmark")}
+            className={`rounded-full px-3 py-1 transition-colors ${
+              showingBenchmark ? "bg-white text-black" : "text-white/70 hover:text-white"
+            }`}
+          >
+            Benchmark
+          </button>
+        </div>
+        <span className="truncate font-mono text-xs text-white/60">{caption}</span>
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded border border-white/20 px-3 py-1 font-mono text-[10px] tracking-wide text-white/80 uppercase transition-colors hover:border-white/50 hover:text-white"
+        >
+          close (esc)
+        </button>
+      </div>
+      <div className="flex-1 overflow-auto px-4 pb-4" onClick={onClose}>
+        <img
+          src={src}
+          alt={caption}
+          onClick={(e) => e.stopPropagation()}
+          className="mx-auto w-auto max-w-full"
+        />
+      </div>
+    </div>
   );
 }
 
