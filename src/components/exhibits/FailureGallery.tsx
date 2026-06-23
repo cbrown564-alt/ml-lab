@@ -93,9 +93,9 @@ export function FailureGallery({
             <p className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
               The field guide
             </p>
-            <h3 className="mt-3 text-2xl font-semibold tracking-tight">
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight">
               Every way it breaks
-            </h3>
+            </h2>
             <p className="mt-2 leading-relaxed text-ink-muted">
               {gallery.intro ??
                 "The one you just drove, and the others worth recognising — each as the same drill: what triggers it, the symptom to spot, which assumption gave way, and the repair (and when the repair is itself the wrong move)."}
