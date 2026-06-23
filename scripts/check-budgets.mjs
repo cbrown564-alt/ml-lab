@@ -45,6 +45,7 @@ const BUDGETS = [
   { route: "/exhibits/logistic-regression", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/classification-task", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/train-test-generalization", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/the-gradient", jsKb: 700, htmlKb: 110 },
 ];
 
 const server =

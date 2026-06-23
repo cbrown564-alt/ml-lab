@@ -190,6 +190,7 @@ export const nodes: ConceptNode[] = [
     kind: "math",
     phase: 3,
     depth: "core",
-    status: "stub",
+    // Live on the four-act spine (See it + Run it); Break it + Explain it land next.
+    status: "interactive",
   },
 ];
