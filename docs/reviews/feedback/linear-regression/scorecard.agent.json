@@ -3,69 +3,64 @@
   "exhibit": "linear-regression",
   "reviewer": "agent-panel",
   "date": "2026-06-23",
-  "contentHash": "32320c534bfcaf22",
+  "contentHash": "7b621c8d06ec8a97",
   "register": [
     {
       "dimension": "hero-as-protagonist",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/00-viewport.png",
-      "note": "Full-width with a mono figcaption, but a thin diagonal line bisecting a near-empty box reads as a generic line chart at thumbnail size, where ciechanowski-watch/00's dimensional watch specimen is instantly poster-worthy."
+      "note": "Full-width, self-framed poster (THE LINE OF BEST FIT / 30 OBSERVATIONS) legible as a thumbnail; matches the exemplar's protagonist composition but lacks dimensional craft to reach 4."
     },
     {
       "dimension": "mechanism-in-the-picture",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
-      "note": "The hero is deliberately stripped to data+line and shows only the fitted result, whereas seeing-theory-regression/01 draws the pink squared-error boxes on every residual so the mechanism itself is the image."
+      "note": "The residual 'misses' are labelled and drawn (bold error ticks in hero, red segments/penalty squares in Run/Break), so what the line minimises is in the picture; 4 once the squared-area mark lives in the hero."
     },
     {
       "dimension": "annotation-integration",
       "score": 3,
       "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
-      "note": "The spine plot self-describes (inline 'y-hat — the model's line' in prediction-blue, a claim title, manipulation hint, live stat table, and gold/blue prose terms bound to the marks), though one label short of distill-momentum/02's five labeled regimes."
+      "note": "Canvas self-explains via in-plot 'y-hat — the model's line' label, title, drag/click hint, axes and live readout legend; meaning isn't prose-only."
     },
     {
       "dimension": "atmosphere-finish",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
-      "note": "Warm cream palette and hairline restraint are calm, but ~180px of dead air below the lede and a single line floating on white leave compositional slack that ciechanowski-watch/02's taut coil+sliders+tinted-prose column does not."
+      "note": "With the readout no longer clipped (full six-cell strip + clearance) and the left column void closed, the frame is Distill-soft with clean focal hierarchy — clears floor 3."
     },
     {
       "dimension": "motion",
       "score": 3,
       "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
-      "note": "Judged conservatively from stills: a single explanatory load (line eases up once) plus learner-driven live refit and a ballooning penalty square in Run/Break give a steppable, explanatory vocabulary, even if 3b1b's synchronized animation can't be verified from a frame."
+      "note": "Each motion is explanatory and action-tied (live refit on drag, Lines/Squares/Hide toggles, snap-back, penalty-square balloon), matching the exemplar's explanatory animation."
     },
     {
       "dimension": "colour-discipline",
       "score": 3,
       "exemplarFrame": "r2d3-trees/00-viewport.png",
-      "note": "Semantic grammar is held with no dilution (truth=gold, prediction=blue, error reserved for pink residuals, param=tinted readouts) and carried into prose via weight+underline so colour is never the sole carrier — exceeding r2d3-trees/00's class-colour use on the prose binding."
+      "note": "Lab grammar held exactly — gold observations, blue prediction line, red reserved for error (MSE/residuals/penalty squares) with no all-red flood and AA tinted prose terms."
     }
   ],
   "hero": {
     "present": true,
     "fullWidth": true,
     "labeledAnnotation": true,
-    "depictsMechanism": false,
-    "thumbnailLegible": false,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
     "atMostOneLoadMotion": true,
-    "note": "A full-width, single-load specimen with a mono figcaption, but it depicts only the fitted line (no residuals/squares/bowl) and reads as a generic diagonal in dead air rather than a distinctive, mechanism-bearing poster."
+    "note": "Full-width portrait of gold observations under a blue fit-line with bold labelled residual ticks — poster-worthy and on-grammar; would reach 4 by carrying the squared-error area mark."
   },
   "assessment": {
     "playableExperimentTask": true,
-    "transferIsInteractiveOrOpen": false,
+    "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
     "notPureMcqStack": true,
-    "note": "An interactive hands-on LAB TASK (05, gated on MSE<2) exists, but the explicit TRANSFER item (06, the house-prices/mansions case) resolves as a three-option MCQ rather than an open or interactive prompt."
+    "note": "Transfer item (transfer-house-prices) is now an open write-your-own prompt with a revealed model answer."
   },
   "verdict": {
-    "decision": "hold",
-    "blocking": [
-      "Hero omits the mechanism: render residual squares/lines or a ghosted loss-bowl on the specimen instead of data+line alone.",
-      "Recompose the hero so the fit is not a thin diagonal across a ~50% empty box (zoom/spread or add y-context) so it is legible as a specimen at thumbnail size.",
-      "Remove the ~180px dead air between the masthead promise and the spine in the default Story viewport.",
-      "Make the TRANSFER item (06) interactive or open rather than a three-option MCQ."
-    ],
-    "summary": "Strong interactive acts and disciplined colour, but the hero shows the outcome not the mechanism and floats in dead air — two DELIGHT floors miss, so it holds below register 3."
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Both prior atmosphere defects fixed in pixels (readout fully in-viewport, column void closed); all six register dimensions clear floor 3 — advance."
   }
 }
