@@ -34,22 +34,34 @@ export function ClassificationTaskHero() {
       </figcaption>
       <div className="px-5 py-4">
         <ProbabilityStrip scored={SCORED} threshold={T} />
-        <div className="mt-4 grid gap-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,300px)] sm:items-center">
-          <div className="flex flex-col gap-1">
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-x-10 gap-y-5 sm:justify-between">
+          <ConfusionMatrix tp={CM.tp} fp={CM.fp} fn={CM.fn} tn={CM.tn} large />
+          <div className="flex flex-col gap-3">
             <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
-              reading the threshold (t = {T.toFixed(2)})
+              read off at t = {T.toFixed(2)}
             </span>
-            <p className="max-w-[46ch] text-sm leading-relaxed text-ink-muted">
-              Slide the line and the verdict shifts:{" "}
-              <span style={{ color: "var(--viz-prediction-ink)" }}>precision {precision(CM).toFixed(2)}</span>{" "}
-              (of those called positive, how many were) trades against{" "}
-              <span style={{ color: "var(--viz-param-ink)" }}>recall {recall(CM).toFixed(2)}</span>{" "}
-              (of the actual positives, how many it caught).
+            <div className="flex gap-8">
+              <Metric label="precision" value={precision(CM)} hue="var(--viz-prediction-ink)" note="of predicted +" />
+              <Metric label="recall" value={recall(CM)} hue="var(--viz-param-ink)" note="of actual +" />
+            </div>
+            <p className="max-w-[28ch] text-xs leading-snug text-ink-faint">
+              Slide the line and the two trade: catch more positives, or be surer of the ones you call.
             </p>
           </div>
-          <ConfusionMatrix tp={CM.tp} fp={CM.fp} fn={CM.fn} tn={CM.tn} />
         </div>
       </div>
     </figure>
+  );
+}
+
+function Metric({ label, value, hue, note }: { label: string; value: number; hue: string; note: string }) {
+  return (
+    <div className="flex flex-col gap-0.5">
+      <span className="font-mono text-[10px] tracking-wide text-ink-faint uppercase">{label}</span>
+      <span className="font-mono text-2xl tabular-nums" style={{ color: hue }}>
+        {value.toFixed(2)}
+      </span>
+      <span className="font-mono text-[10px] tracking-wide text-ink-faint uppercase">{note}</span>
+    </div>
   );
 }
