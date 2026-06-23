@@ -62,9 +62,9 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    // Live on the four-act spine (See it + Run it) — first regression-cluster
-    // scale-out; Break it + Explain it land next to reach flagship.
-    status: "interactive",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green). First regression-cluster scale-out node.
+    status: "flagship",
   },
   {
     id: "gradient-descent",
@@ -99,8 +99,9 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    // Live on the four-act spine (See it + Run it); Break it + Explain it next.
-    status: "interactive",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green).
+    status: "flagship",
   },
   {
     id: "logistic-regression",
@@ -144,9 +145,9 @@ export const nodes: ConceptNode[] = [
     kind: "technique",
     phase: 1,
     depth: "core",
-    // Live on the four-act spine (See it + Run it); Break it + Explain it land
-    // next to reach flagship.
-    status: "interactive",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green).
+    status: "flagship",
   },
   {
     id: "bias-variance",
@@ -157,8 +158,9 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    // Live on the four-act spine (See it + Run it); Break it + Explain it next.
-    status: "interactive",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green).
+    status: "flagship",
   },
   {
     id: "data-leakage",
@@ -169,8 +171,9 @@ export const nodes: ConceptNode[] = [
     kind: "practice",
     phase: 1,
     depth: "core",
-    // Live on the four-act spine (See it + Run it); Break it + Explain it next.
-    status: "interactive",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green).
+    status: "flagship",
   },
   {
     id: "the-gradient",
