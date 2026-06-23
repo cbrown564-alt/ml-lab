@@ -33,4 +33,16 @@ test.describe("the-gradient exhibit", () => {
     await panel(page).getByRole("button", { name: /Perpendicular to it/i }).click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
   });
+
+  test("Break it: a greedy climb is trapped on the lower hill", async ({ page }) => {
+    await openTab(page, "Break it");
+    await panel(page).getByRole("button", { name: /Release/i }).click();
+    await expect(panel(page).getByRole("status")).toHaveText("Trapped on the lower hill");
+  });
+
+  test("Explain it pairs the check with a live companion", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/Drag to read the arrow/i)).toBeVisible();
+    await expect(panel(page).getByText(/a stationary point/i)).toBeVisible();
+  });
 });

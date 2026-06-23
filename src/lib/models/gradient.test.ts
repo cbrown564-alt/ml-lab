@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { gradient, magnitude, surface, unit } from "@/lib/models/gradient";
+import { ascend, gradient, magnitude, surface, unit } from "@/lib/models/gradient";
 
 /**
  * The gradient's defining properties, checked numerically: the analytic gradient
@@ -44,6 +44,17 @@ describe("the gradient", () => {
       // first-order change along the contour is zero, so the height barely moves
       expect(Math.abs(along - surface(p.x, p.y))).toBeLessThan(1e-5);
     }
+  });
+
+  it("greedy ascent climbs the nearest hill, not the tallest — the local-max trap", () => {
+    const small = ascend({ x: -1.7, y: -1.4 });
+    const big = ascend({ x: 1.2, y: 0.9 });
+    // they settle in genuinely different places
+    expect(Math.hypot(small.settled.x - big.settled.x, small.settled.y - big.settled.y)).toBeGreaterThan(1.5);
+    // the small-hill start is trapped at a strictly lower summit
+    expect(surface(small.settled.x, small.settled.y)).toBeLessThan(surface(big.settled.x, big.settled.y));
+    // …which is itself a stationary point — the gradient there has vanished
+    expect(magnitude(gradient(small.settled.x, small.settled.y))).toBeLessThan(1e-2);
   });
 
   it("magnitude is the slope in the steepest direction", () => {

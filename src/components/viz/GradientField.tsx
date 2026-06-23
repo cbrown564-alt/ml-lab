@@ -34,6 +34,7 @@ export function GradientField({
   onMove,
   descent = false,
   interactive = true,
+  path,
   domain = [-3.4, 3.4],
   width = 520,
   height = 520,
@@ -44,6 +45,9 @@ export function GradientField({
   /** Whether the point can be dragged. The See-it story drives the point by beat, so
    * it renders non-interactive. */
   interactive?: boolean;
+  /** An ascent trajectory to draw as a trail, with a hollow start marker — used by the
+   * Break-it to show a greedy run climbing to whichever peak it started under. */
+  path?: Vec2[];
   domain?: [number, number];
   width?: number;
   height?: number;
@@ -141,6 +145,21 @@ export function GradientField({
           </marker>
         </defs>
         <rect x={MARGIN.left} y={MARGIN.top} width={width - MARGIN.left - MARGIN.right} height={height - MARGIN.top - MARGIN.bottom} fill="none" stroke="var(--line)" />
+        {/* the ascent trail + its start marker */}
+        {path && path.length > 1 && (
+          <>
+            <polyline
+              points={path.map((p) => `${sx(p.x)},${sy(p.y)}`).join(" ")}
+              fill="none"
+              stroke="var(--viz-prediction)"
+              strokeWidth={2.5}
+              strokeLinejoin="round"
+              strokeOpacity={0.85}
+            />
+            <circle cx={sx(path[0].x)} cy={sy(path[0].y)} r={5} fill="none" stroke="var(--ink)" strokeWidth={2} />
+            <circle cx={sx(path[path.length - 1].x)} cy={sy(path[path.length - 1].y)} r={6} fill="var(--viz-truth)" stroke="var(--surface-bg)" strokeWidth={2} />
+          </>
+        )}
         {/* the gradient arrow */}
         {mag > 1e-3 && (
           <line

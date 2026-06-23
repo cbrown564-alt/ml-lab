@@ -1,6 +1,10 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { GradientBreakIt } from "@/components/exhibits/GradientBreakIt";
+import { GradientCheckLab } from "@/components/exhibits/GradientCheckLab";
 import { GradientLab } from "@/components/exhibits/GradientLab";
 import { GradientStory } from "@/components/exhibits/GradientStory";
+import { theGradientCheck } from "@content/exhibits/the-gradient/concept-check";
+import { theGradientFailures } from "@content/exhibits/the-gradient/failures";
 import { theGradientMath } from "@content/exhibits/the-gradient/math";
 import { theGradientNarrative } from "@content/exhibits/the-gradient/narrative";
 import { theGradientSpine } from "@content/exhibits/the-gradient/spine";
@@ -12,6 +16,10 @@ export default function TheGradientExhibit() {
       narrative={theGradientNarrative}
       spine={theGradientSpine}
       math={theGradientMath}
+      check={theGradientCheck}
+      failures={theGradientFailures}
+      breakIt={<GradientBreakIt />}
+      checkCompanion={<GradientCheckLab />}
       story={<GradientStory />}
       experiment={<GradientLab />}
       lede={
