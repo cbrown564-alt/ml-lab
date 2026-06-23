@@ -70,6 +70,48 @@ Each saved verdict lands in `docs/reviews/feedback/<exhibit>/` and is read back 
 the loop as ground truth (`npm run brief -- <id>`), so the next build pass fixes
 what the human flagged and never re-proposes a rejected direction.
 
+## Agent pre-pass complete (2026-06-23) — the defensible baseline
+
+Before the human pass, the **adversarial agent panel** (the non-circular
+`designer-critic`, comparing each captured frame to the *pinned* exemplar pixels,
+never memory) judged all 15 live nodes. Each verdict is a validated
+`scorecard.agent.json` beside the human card (`docs/reviews/feedback/<id>/`), so
+agent↔human divergence stays a tracked signal (docs/08 Part 4). These are the seed
+the `/review` form now opens on — the human **adjusts taste from a logical
+baseline**, never authors from a contradiction. The instrument now *enforces* that
+logic: the rubric schema rejects any hero-judged dim scored above 0 when no hero is
+present, so "mechanism 3 while hero absent" is a parse error.
+
+The agent landscape (register scores; all 15 verdicts = **hold**):
+
+| node | hero | mech | annot | atmos | motion | colour |
+| --- | --- | --- | --- | --- | --- | --- |
+| gradient-descent ✓hero | 3 | 2 | 2 | 2 | 3 | 3 |
+| linear-regression ✓hero | 2 | 2 | 3 | 2 | 3 | 3 |
+| loss-functions | 0 | 0 | 3 | 2 | 2 | 3 |
+| what-is-ml | 0 | 0 | 3 | 2 | 2 | 3 |
+| the-gradient | 0 | 0 | 2 | 2 | 3 | 3 |
+| feature-scaling | 0 | 0 | 2 | 2 | 2 | **2** |
+| train-test-generalization | 0 | 0 | 2 | 2 | 2 | **2** |
+| (8 others) | 0 | 0 | 2 | 2 | 2 | 3 |
+
+Three systematic findings the panel converged on, falsifiable against the captures:
+
+- **Atmosphere is a wall of 2s.** Every node reads "calm but sparse" — dead vertical
+  air around the spine, flat 2D strokes, no Distill depth. Atmosphere-finish never
+  reaches floor anywhere.
+- **The two all-red loss-surface fields drain "error"** (feature-scaling,
+  gradient-descent): the crimson field becomes wallpaper, so colour-discipline drops
+  to 2 / docks gradient-descent. Same root cause flagged on both independently.
+- **Every "Explain it" transfer item is an MCQ** (`transferIsInteractiveOrOpen`
+  false on 12/15), confirming the §1c "exam cosplay is about rendering" read.
+
+**Capture-pipeline bug (flag, not yet fixed):** for the two nodes *with* a hero
+(`linear-regression`, `gradient-descent`) the stored `see/run/break/explain`
+frames are duplicates of the hero — the capture script didn't navigate the acts.
+Both agents re-captured the real acts with Playwright and judged on those, so the
+scores stand, but `scripts/capture-review.mjs` needs a fix before the next run.
+
 ## Turning the gate on
 
 `npm run check:rubric -- --strict` already fails on the 13 hero blockers. It is

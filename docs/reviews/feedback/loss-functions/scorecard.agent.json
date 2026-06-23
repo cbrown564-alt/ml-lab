@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "loss-functions",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "45b269b2f1709492",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 0,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Forced 0 — hero.png is a document header (title, paragraph, metadata card, four-act rail) with no graphic above the fold, where ciechanowski-watch/00 already renders the 3D watch with a drag affordance in the first viewport."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 0,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Forced 0 — there is no hero plot, so the visible residual squares seeing-theory-regression/01 shows in its first frame have no counterpart here."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The see-spine plot self-describes (title, 'drag a point to refit all three', inline Huber/absolute line labels, a penalty-curve legend, SLOPE/INTCPT/LOSS readout) and matches the bar in spirit, but stops short of distill-momentum/02 where each small-multiple's caption plus governing inequality lives inside the figure."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Warm and restrained, but the see hero leaves a ~400px dead right column and the pink residual squares alpha-stack into a muddy overlapping blob top-right — aliased and heavy where ciechanowski-watch/02 keeps every stroke individually clean."
+    },
+    {
+      "dimension": "motion",
+      "score": 2,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "Drag-point / drop-rogue-points / judge-toggle / penalty-slider affordances imply explanatory live refits, but motion is unverifiable from statics and there is no steppable transport for a complex sequence the way 3b1b-gradient-descent/02 steps the cost accumulation."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Semantic grammar held exactly per DESIGN.md (blue=prediction/fit, gold=truth/data, red=error/residual/loss) across all four views and carried into prose with hue+underline+weight; as disciplined as r2d3-trees/00, with the only dilution being the error-hue pooling in the stacked squares."
+    }
+  ],
+  "hero": {
+    "present": false,
+    "fullWidth": false,
+    "labeledAnnotation": false,
+    "depictsMechanism": false,
+    "thumbnailLegible": false,
+    "atMostOneLoadMotion": false,
+    "note": "A hero would need a full-width, isolated 'one cloud, three judges' plot above the fold with the residual squares and labeled fit lines already composed — poster-worthy as a thumbnail."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": false,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "The hands-on work lives in the 04 LAB TASK, but the 05 TRANSFER item itself is a three-option MCQ (Switch to Huber / Train longer / Drop the mansions), not an interaction or open prompt."
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": [
+      "No hero specimen: add a full-width composed 'three judges' plot above the fold so the mechanism (residual squares, three fit lines) is the page's face, not a metadata card.",
+      "Fix the residual-square alpha-stacking blob (outline-only above N squares or clamp the y-range) — it drags both atmosphere-finish and the colour dilution note.",
+      "Make the 05 TRANSFER item an interaction/open prompt rather than a third MCQ, or relabel the hands-on lab task as the transfer."
+    ],
+    "summary": "Strong annotation and colour discipline, but the absent hero forces the DELIGHT floor to 0 and atmosphere/motion sit at 2 — register does not clear 3."
+  }
+}

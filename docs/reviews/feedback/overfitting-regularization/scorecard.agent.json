@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "overfitting-regularization",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "df4142d82046f009",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 0,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Forced 0 and earned: hero.png is a text masthead (title + 3 lines + metadata card) with the right two-thirds of the canvas empty, where Ciechanowski opens on a saturated blue band and a rendered 3D watch."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 0,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Forced 0: there is no hero, so nothing in the opening depicts the mechanism the way Seeing-Theory draws pink squared-error squares on the residuals — our overfit/penalty mechanism only appears after scrolling into See."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 2,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The plot self-labels (header 'NO PENALTY — OVERFITTING', titled error-vs-lambda inset with 'best lambda', legend) but carries no callouts pointing at the overfit lobe or the train/test gap, so meaning still lives in the left prose column — short of Distill's panels that bake the math condition into each caption."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Calm, AA-clean, and never harsh, but flat: thin 2D SVG strokes and large dead canvas (bare hero right side, empty left column below short See prose) with no depth or color-keyed delight, versus Ciechanowski's shaded 3D render and hue-bound sliders."
+    },
+    {
+      "dimension": "motion",
+      "score": 2,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "A live lambda slider re-renders the curve and updates the train/test readout (explanatory, not decorative), but there is no visible transport/stepping and statics can't confirm tweened transitions, so it reads as a competent live control rather than 3B1B's cinematic term-by-term build."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "The lab grammar is held exactly — blue prediction line, amber observed points, red reserved for honest test error, purple penalty lambda — with no all-red dilution and a bound colored 'Regularisation' term, carrying more semantic load cleanly than R2D3's two-hue scatter."
+    }
+  ],
+  "hero": {
+    "present": false,
+    "fullWidth": false,
+    "labeledAnnotation": false,
+    "depictsMechanism": false,
+    "thumbnailLegible": false,
+    "atMostOneLoadMotion": false,
+    "note": "A hero would need the existing degree-12 overfit curve (blue fit, amber train/test split, error-vs-lambda U) composed full-width above the prose with one annotated wiggle lobe and residual, legible as a thumbnail."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": false,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "The Check keeps a hands-on lab task (B4, 'completed with your hands, not a click') and a persistent live dial, but the closing transfer item (B5) is still a 3-option MCQ rather than an interactive or open prompt."
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": [
+      "No composed hero exists; promote the See/Run overfit plot into a full-width, labeled hero above the masthead prose so both hero dimensions become judgeable.",
+      "Add in-figure callouts to the overfit plot (mark the wiggle lobe and the train/test 'honest gap') so meaning leaves the prose column.",
+      "Give the canvas finish and depth and cut the dead air (bare hero right side, empty See left column) to move atmosphere past competent.",
+      "Make the B5 transfer item interactive/open (set lambda on the dial to repair the underfit, then explain) instead of a 3-option MCQ."
+    ],
+    "summary": "Colour discipline matches the bar (3), but with no hero and annotation/atmosphere/motion all at 2 the exhibit reads as a clean blog post with a competent figure, not Distill/3B1B — register does not clear 3."
+  }
+}

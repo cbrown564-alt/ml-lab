@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "feature-scaling",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "7e969654f7018610",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 0,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "No hero specimen: hero.png opens as a document title block (H1 + lede + metadata card + four-pass rail) on bare cream, where ciechanowski-watch/00-viewport.png leads with a composed, drag-able rendered watch as the page's face — forced 0."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 0,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "There is no opening visual at all, so nothing depicts the bowl/residuals the way seeing-theory-regression/01 draws shaded squared-error boxes on the OLS line — forced 0."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 2,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The See plot self-labels axes, a beat title, and two callouts ('start', 'the valley floor (OLS)'), but the meaning of the red field is never labeled inside the picture and the 'THE WALK SO FAR' readout sits outside it — far short of distill-momentum/02 where every small-multiple carries its own named caption and inline math integrated into the curve."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "The contour fill is visibly banded/posterized with aliased diagonal band edges and the cream page carries large dead air around one boxed card — not the buttery anti-aliased, restrained-whitespace finish of ciechanowski-watch/02-scroll-40pct.png."
+    },
+    {
+      "dimension": "motion",
+      "score": 2,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "The drawn zig-zag descent and 'play and scrub' framing imply explanatory (not decorative) motion at parity-of-intent with 3b1b-gradient-descent/02, but only one playback mode is evident and nothing steppable is visible in statics, so I cannot reward beyond competent per the conservative rule."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 2,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "The lab-wide grammar is held in principle (red=error/loss, 'explodes.' tinted error-ink) but the loss surface floods almost the entire canvas in saturated crimson, draining red's 'incorrect/high-loss' signal into wallpaper — unlike r2d3-trees/00 where green/blue marks stay sparse on white and every hue keeps its meaning."
+    }
+  ],
+  "hero": {
+    "present": false,
+    "fullWidth": false,
+    "labeledAnnotation": false,
+    "depictsMechanism": false,
+    "thumbnailLegible": false,
+    "atMostOneLoadMotion": false,
+    "note": "A hero would need a full-bleed, poster-worthy loss-bowl portrait above the fold — the stretched valley with start/OLS marked and the descent on it — legible as a thumbnail, instead of the current title-block-first opening."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "The Check ('ANSWER AGAINST THE BOWL') drives the live loss surface via a Raw/Standardised toggle and exposes 'Open' interactive items, so the transfer is a manipulation against the bowl, not another MCQ."
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": [
+      "No hero: compose a full-bleed, poster-worthy loss-bowl portrait above the fold (stretched valley with start + OLS marked) so the exhibit opens canvas-first, not as a title block.",
+      "Replace the banded/posterized contour fill with a smooth anti-aliased colormap to clear the atmosphere-finish floor.",
+      "Stop flooding the canvas with saturated crimson — desaturate the high-loss field or invert to a neutral ground so red still reads as 'error', and label the field's meaning inside the picture.",
+      "Pull the 'THE WALK SO FAR' readout into the plot and label the red field, so the graphic carries its own explanation rather than leaning on adjacent prose."
+    ],
+    "summary": "Competent canvas-first lab with real labels and an interactive Check, but no hero and a banded all-red surface keep four dimensions at 2 and two forced to 0 — does not clear register 3."
+  }
+}

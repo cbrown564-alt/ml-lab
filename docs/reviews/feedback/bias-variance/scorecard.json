@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "bias-variance",
+  "reviewer": "human",
+  "date": "2026-06-23",
+  "contentHash": "408f1a4d9163ab70",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 0,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png"
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 0,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png"
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 2,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png"
+    }
+  ],
+  "hero": {
+    "present": false,
+    "fullWidth": false,
+    "labeledAnnotation": false,
+    "depictsMechanism": false,
+    "thumbnailLegible": false,
+    "atMostOneLoadMotion": false
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": false,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": []
+  }
+}

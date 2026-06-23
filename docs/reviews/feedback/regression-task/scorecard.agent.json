@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "regression-task",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "2df9cc713d4e1506",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 0,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "hero.png is a title + placard card + act rail with no specimen visual at all, where ciechanowski-watch/00 opens on a thumbnail-legible rendered watch face."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 0,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "no hero exists to depict residuals or the fitted line the way seeing-theory-regression/01 draws the OLS line with squared-error squares through the data."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 2,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "the SEE scatter self-labels axes + a mono title but has no in-graphic mechanism callout, so meaning still lives in adjacent prose unlike distill-momentum/02's labelled regimes, inline math, and captions inside the figure."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "calm warm-paper chrome but see-viewport spends the whole fold on a repeated masthead/placard with the graphic ~400px below (ciechanowski-watch/02 fills the frame with the specimen), and the lede renders 'been'the model with a missing space."
+    },
+    {
+      "dimension": "motion",
+      "score": 2,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "run supports drag-to-predict-and-reveal but statics show no step/transport affordance and I cannot confirm motion is explanatory, where 3b1b-gradient-descent/02 stages a deliberate cost-stacking reveal."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "break-full holds the lab grammar exactly — blue prediction line + shaded band, amber-filled vs red-hollow points (shape as redundant channel), crimson 'accuracy' prose terms bound to the figure, teal distance — with no all-red dilution, matching r2d3-trees/00's strict semantic colour split."
+    }
+  ],
+  "hero": {
+    "present": false,
+    "fullWidth": false,
+    "labeledAnnotation": false,
+    "depictsMechanism": false,
+    "thumbnailLegible": false,
+    "atMostOneLoadMotion": false,
+    "note": "needs a wide ambient specimen portrait above the masthead — amber data with a prediction-hued line easing into the fit and residuals shown — so the page opens on the mechanism, not a placard."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": false,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "the closing transfer-wrong-metric item is a 3-option choice MCQ with per-option feedback, not an interaction or open prompt, though the set is not a pure MCQ stack (it includes a predict and a live experiment-task)."
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": [
+      "No specimen hero: hero.png shows only title + placard, forcing hero-as-protagonist and mechanism-in-the-picture to 0 against floor 3.",
+      "SEE scatter carries no in-graphic mechanism annotation, leaving annotation-integration at 2 vs distill-momentum's labelled figure.",
+      "The fold is dead air above the graphic and the lede has a missing-space rendering bug ('been'the model), holding atmosphere-finish at 2.",
+      "The closing transfer item is another MCQ, not an interactive/open prompt, under-serving the learning-loop payoff."
+    ],
+    "summary": "A colour-coherent, calm blog-with-figures that does not yet clear register 3 — it lacks the composed specimen hero and in-graphic mechanism that the benchmark set demands."
+  }
+}

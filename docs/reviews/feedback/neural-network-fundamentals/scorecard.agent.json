@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "neural-network-fundamentals",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "9bc9017ab005082d",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 0,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "No specimen hero present: hero.png opens on a title+lede with a metadata placard and a large empty void right of the lede, where ciechanowski-watch/00 lands a composed, poster-worthy 3D watch directly under its lede."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 0,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "No hero exists to depict the mechanism, so unlike seeing-theory-regression/01 where the residual squares and fitted line ARE the opening picture, the masthead shows no XOR boundary at all until you scroll into the spine."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 2,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The See-it canvas does carry its own labels (title strip 'ONE NEURON — A STRAIGHT LINE XOR DEFEATS', live '75% ON XOR', axes x1/x2) and colour-tints key prose terms, but it offers one headline+one stat where distill-momentum/02 fuses five named, separately-captioned small-multiples and inline math into the figure itself."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Calm, warm, AA-clean and Distill-soft with no aliasing, but the masthead carries a conspicuous dead-air void right of the lede and the XOR scatter is a flat banded blue/tan split with plain dots — competent, not the dimensional, finished render ciechanowski-watch/02 sustains."
+    },
+    {
+      "dimension": "motion",
+      "score": 2,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "Run-it has a learner-controlled Train/Reset transport whose boundary-morph is genuinely explanatory (not decorative), but from statics I cannot verify stepping/scrubbing of the training, so it does not reach the choreographed, steppable descent 3b1b-gradient-descent/02 implies."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Semantic grammar holds cleanly — Break-it keeps the blue prediction-field / amber truth-points and tints 'memorise the noise' error-red only as a weighted+underlined prose term rather than draining the canvas red, matching r2d3-trees/00's restrained class-colour discipline."
+    }
+  ],
+  "hero": {
+    "present": false,
+    "fullWidth": false,
+    "labeledAnnotation": false,
+    "depictsMechanism": false,
+    "thumbnailLegible": false,
+    "atMostOneLoadMotion": false,
+    "note": "A hero would need a full-content-width XOR specimen showing the bent decision boundary (the mechanism) with a mono figcaption, replacing the empty void beside the lede so the page has a poster-worthy, thumbnail-legible face."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": false,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Item 04 is a real hands-on LAB TASK, but the item explicitly labelled '05 TRANSFER' resolves the novel double-the-size scenario via a 3-option MCQ stack rather than an interaction or open prompt."
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": [
+      "No specimen hero: add a full-width XOR boundary portrait under the lede (mechanism-in-the-picture) to fill the masthead void and give the page a thumbnail-legible face.",
+      "Lift annotation density on the See-it canvas toward distill-momentum/02 — in-figure callouts/leader-lines on the boundary and per-quadrant labels, not just one title strip plus a single stat.",
+      "Make the '05 TRANSFER' item interactive or open (e.g. let the learner act on the failing network) instead of a 3-option MCQ, since transfer is the loop's payoff."
+    ],
+    "summary": "Disciplined colour and a real learning loop, but no hero and only competent annotation/atmosphere/motion keep it below the benchmark — does not clear register 3."
+  }
+}

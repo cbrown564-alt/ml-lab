@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "the-gradient",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "8b888db41396d87d",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 0,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "hero.png opens to a bare title masthead with a tiny placard floating in a wide upper-right void and no specimen at all, where ciechanowski-watch/00-viewport.png leads its landing straight into a large rendered watch portrait; forced 0 and earned."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 0,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "there is no hero to depict the mechanism (the arrow-vs-contour move only appears mid-scroll in the See/Run canvas, never promoted to a poster like seeing-theory's residual squares); forced 0."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 2,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "the See canvas carries a mono title and a live grad/slope/height readout strip, but the blue arrow itself is untagged and the right-angle-to-contour claim lives in adjacent prose, short of distill-momentum/02 where each small-multiple is individually titled with its math consequence captioned in-figure."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "the masthead chrome is warm and Distill-soft, but the focal contour landscape is visibly aliased (native crop shows chunky stair-stepped band edges) unlike the clean anti-aliased strokes in ciechanowski-watch/02-scroll-40pct.png, and the empty hero void breaks first-paint focal hierarchy."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "statics show explanatory, steppable apparatus — draggable point with a swinging/stretching gradient arrow, ascent/descent toggle, a 01/05 beat stepper, and a released greedy-climb in Break — transitional not decorative, at parity with the behavior-per-panel intent of 3b1b-gradient-descent/02 (judged conservatively, no unseen polish rewarded)."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "the lab grammar holds — teal=selected/live, blue=the gradient/model arrow matching the blue grad readout, amber/slate as a legitimate elevation ramp (no all-red error dilution), and prose terms pair the darkened viz-ink hue with underline — as consistently held as the green/blue class split in r2d3-trees/00-viewport.png."
+    }
+  ],
+  "hero": {
+    "present": false,
+    "fullWidth": false,
+    "labeledAnnotation": false,
+    "depictsMechanism": false,
+    "thumbnailLegible": false,
+    "atMostOneLoadMotion": false,
+    "note": "needs a wide ambient specimen portrait (per DESIGN.md / LinearRegressionHero) of the contour landscape with the gradient arrow standing on it, smoothly rendered with one explanatory load-motion, so the page has a poster-worthy face instead of an empty masthead void."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": false,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "the experiment is genuinely playable (drag the point) and every Check option gets process feedback, but the 06 TRANSFER item is a three-row MCQ with no interaction or open prompt."
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": [
+      "Add a wide specimen hero before the masthead — an ambient contour-landscape portrait with the gradient arrow on it, one explanatory load-motion, no readouts — so the exhibit has a poster-worthy protagonist (currently absent; forces hero dims to 0).",
+      "Re-render the contour landscape anti-aliased (it is visibly stair-stepped/pixel-blocky at native resolution) so the page's focal object reaches the Distill/Ciechanowski smoothness bar.",
+      "Tag the arrow in-figure (label it grad-f and mark the right angle where it crosses a contour) so the canvas self-documents instead of leaning on adjacent prose, per distill-momentum's per-panel captions.",
+      "Make the Transfer item interactive or open-ended (e.g. drag onto a multi-basin landscape and predict the basin) rather than a third MCQ."
+    ],
+    "summary": "Strong colour grammar and steppable motion, but no specimen hero and an aliased centerpiece keep two dimensions at 0 and two at 2 — below the register-3 bar."
+  }
+}

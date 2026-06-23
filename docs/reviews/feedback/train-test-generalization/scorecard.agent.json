@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "train-test-generalization",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "28f34a6f7e817764",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 0,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "hero.png has no opening visual at all — the left two-thirds is empty and the only right-column object is a metadata/relations card, so unlike ciechanowski-watch/00's poster-worthy full-viewport watch render there is nothing to thumbnail (forced 0, no hero)."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 0,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "with no hero present there is no opening graphic to carry the residual/spread mechanism the way seeing-theory-regression/01 shows squared-error squares and the OLS line on load (forced 0)."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 2,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "the See/Run figures do self-label (mono titles, axis ticks, 'train'/'CV' marks, a metric table with 'flatters'/'honest' notes), but unlike distill-momentum/02 where each mini-plot carries its regime name AND full inline explanation, ours leaves the 'why the spread matters' reasoning to adjacent left-column prose and gives the chart only a bare '5-fold CV' tick — competent, not exemplar."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "warm light theme and soft sanctioned panels are clean, but focal hierarchy is weak — the See-it panel floats a single thin 'train' bar in a large near-empty plot and the hero's whole left column is dead whitespace, where ciechanowski-watch/02 composes render + sliders + color-coded prose into one tight, intentional frame."
+    },
+    {
+      "dimension": "motion",
+      "score": 2,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "'Reshuffle the split' plausibly redraws the scatter/histogram and moves the test mark (explanatory, not decorative), but the spread is not steppable and smoothness can't be confirmed from statics, falling short of 3b1b-gradient-descent/02 where the motion IS the explanation and stays legible mid-step."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 2,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "train=neutral / test=prediction-blue and red used sparingly hold the grammar with no all-red drain, but the CV quantity is drawn in --accent teal (hue 190, outside the five-token viz palette) on the chart yet keyed to --viz-truth-ink gold in the readout, a visible seam absent from r2d3-trees/00's two perfectly disciplined hues."
+    }
+  ],
+  "hero": {
+    "present": false,
+    "fullWidth": false,
+    "labeledAnnotation": false,
+    "depictsMechanism": false,
+    "thumbnailLegible": false,
+    "atMostOneLoadMotion": false,
+    "note": "a hero would need a full-width opening panel showing the mechanism — e.g. the test-error spread of many splits scattering wide while the CV mark holds steady — self-labeled and legible as a thumbnail, replacing the current empty left column."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": false,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "the transfer item (transfer-deployment-gap) is a richly-framed 3-option MCQ, not an interaction or open prompt, so transfer is not interactive/open even though the broader check mixes predict and an experiment-task."
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": [
+      "Add a full-width hero panel that depicts the mechanism (many-split test-error spread scattering wide vs the steady CV mark), self-labeled and thumbnail-legible, to fill the empty hero left column.",
+      "Resolve the colour seam: draw CV in one sanctioned viz hue consistently across chart and readout rather than --accent teal on the figure and --viz-truth-ink gold in the table.",
+      "Strengthen See-it focal hierarchy: the single 'train' bar floats in a near-empty plot — compose the figure so the spread/mechanism is the focal object, not dead space.",
+      "Move the 'why the spread matters' annotation onto the figure (callout of spread width / CV stability) instead of relying on adjacent prose, to match Distill-grade self-sufficient graphics."
+    ],
+    "summary": "Solid four-act learning loop with honest interactive widgets, but a missing hero (two forced 0s) and a wall of competent-not-delightful 2s leave it below the Distill/3B1B benchmark — hold."
+  }
+}

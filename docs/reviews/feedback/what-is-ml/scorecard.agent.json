@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "what-is-ml",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "4d868549d6a08a85",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 0,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Forced 0 — no specimen: hero.png opens with title+prose+placard+rail on bare cream, where even document-first ciechanowski-watch/00 lands its render in the opening viewport."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 0,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Forced 0 — no hero to carry the cut; seeing-theory-regression/01 shows residual squares (the mechanism) in its first frame while here the threshold only appears far below the fold."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The spine graphic self-labels (mono title, in-canvas 'your rule' tag on the boundary, axis ticks, 70% readout) at parity with distill-momentum/02, short of 4 only because the readout '70%' is unlabelled."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Restrained but focal hierarchy fails — see-viewport's top ~60% is repeated masthead/placard/rail with the scatter pushed ~640px down and clipped, where ciechanowski-watch/02 lets one render own the frame."
+    },
+    {
+      "dimension": "motion",
+      "score": 2,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "StoryStepper beats and the Break-it failure loop are explanatory and learner-controlled (clears intent), but nothing shows motion carrying explanation the way 3b1b-gradient-descent/02 does, and no earned on-load specimen motion exists."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Semantic grammar holds without dilution — break-viewport keeps pink=error/bias, blue=prediction, orange=truth distinct (no all-red drain), and prose Terms pair hue+underline+weight, matching r2d3-trees/00's discipline."
+    }
+  ],
+  "hero": {
+    "present": false,
+    "fullWidth": false,
+    "labeledAnnotation": false,
+    "depictsMechanism": false,
+    "thumbnailLegible": false,
+    "atMostOneLoadMotion": false,
+    "note": "A hero would need a wide, ambient portrait of the threshold-cut scatter in truth/prediction hues above the masthead, with one explanatory on-load motion (the rule line easing into its cut)."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": false,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "The transfer item (transfer-hiring) is a third multiple-choice question with options, not an interaction or open prompt; the genuine interaction (break-bias) is an earlier experiment-task, not the transfer."
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": [
+      "Add the specimen hero specified in DESIGN.md so the threshold-cut scatter (truth/prediction hues, no chrome) is visible in the opening viewport before the rail — this is the journey's first node and currently has the weakest opening in the cluster (§1d).",
+      "Compress the masthead/placard/rail stack so the See-it scatter clears the fold at 1440x900 instead of starting ~640px down.",
+      "Make the transfer item (transfer-hiring) an interaction or open prompt rather than a third MCQ."
+    ],
+    "summary": "Interior acts match the bar (annotation 3, colour 3) but the title-led, specimen-less doorway forces two delight dims to 0 and a chrome-heavy atmosphere 2 — the journey's first node reads as the weakest opening, does not clear register 3."
+  }
+}

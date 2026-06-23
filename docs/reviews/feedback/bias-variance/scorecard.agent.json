@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "bias-variance",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "408f1a4d9163ab70",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 0,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "No hero: hero.png opens on a title + 4-line lede + metadata card with the entire left-center canvas empty cream, where ciechanowski-watch/00-viewport.png lands a rendered 3D watch with a drag/slider invitation as the page's face (forced 0)."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 0,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "No hero exists to depict the bias-variance U or residuals the way seeing-theory-regression/01 paints squared-error boxes onto the OLS line, so there is no protagonist to judge (forced 0)."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 2,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The see-spine graphic self-labels (title, axis ticks, train/test scorecards, 'sweet spot' marker, legend) but unlike distill-momentum/02 — which names each behavior in-figure ('Ripples','Divergence') with inline math — our filled-vs-hollow train/held-out distinction and the residual mechanism are explained only in adjacent prose, not on the canvas."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Cream ground, soft curves and restraint read calm, but focal hierarchy is weak — see-viewport shows ~180px+ of dead cream between the header card and the four-pass nav with no hero for the eye to land on, where ciechanowski-watch/02 fuses graphic + coloured prose + slider into one composed instrument."
+    },
+    {
+      "dimension": "motion",
+      "score": 2,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "The degree slider drives the fit curve and the sweet-spot marker, which is explanatory not decorative, but from static frames I see no proof of stepped/choreographed reveal of the bias-variance decomposition comparable to 3b1b-gradient-descent/02's frame-by-frame cost build-up, so it cannot be rewarded above competent."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Semantic grammar holds and is carried into prose (amber=data, blue=fit, grey=train, crimson=test/honest with 'wriggle' tinted to match the test-error line, purple=chosen degree) with no all-red field draining 'error', matching r2d3's shared-vocabulary discipline; only nit is the inline crimson term at ~4.14:1 (under body-AA, mitigated by underline+weight)."
+    }
+  ],
+  "hero": {
+    "present": false,
+    "fullWidth": false,
+    "labeledAnnotation": false,
+    "depictsMechanism": false,
+    "thumbnailLegible": false,
+    "atMostOneLoadMotion": false,
+    "note": "A hero would need a full-width composed bias-variance U or a wiggling-fit-vs-residuals plot as the page's face, self-labeled and legible as a thumbnail, replacing the empty cream beside the title."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": false,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Item 5 is a genuine novel-scenario transfer (teammate scores 0.99 train / 0.62 held-out) but is mechanically a 3-option MCQ, not an interaction with the live U widget or an open prompt."
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": [
+      "Compose a full-width hero specimen as the page's face (e.g. the bias-variance U or the wiggling fit with held-out residuals) so hero-as-protagonist and mechanism-in-the-picture stop being forced 0.",
+      "Annotate the see graphic in-canvas: label filled=train vs hollow=held-out and call out the residual/turn on the curve rather than deferring meaning to prose.",
+      "Kill the ~180px of dead cream around the see-viewport header and give the eye a focal anchor so atmosphere reads as a composed instrument, not a blog with a figure.",
+      "Lift the crimson inline term ('wriggle') to >=4.5:1 on cream to clear body-text AA, keeping underline+weight as the secondary cue.",
+      "Make the transfer item interactive or open (have learners drive the live U widget to the failure, or answer in their own words) instead of a third MCQ."
+    ],
+    "summary": "Disciplined colour and competent annotation/atmosphere/motion, but no composed hero and three judgeable dims at 2 leave it below the benchmark bar — hold."
+  }
+}
