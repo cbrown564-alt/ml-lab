@@ -40,6 +40,20 @@ test.describe("the-gradient exhibit", () => {
     await expect(panel(page).getByRole("status")).toHaveText("Trapped on the lower hill");
   });
 
+  test("Break it: dropping far out on the flat stalls (vanishing gradient)", async ({ page }) => {
+    await openTab(page, "Break it");
+    const field = panel(page).getByRole("img", { name: /A landscape/i });
+    await field.scrollIntoViewIfNeeded();
+    const box = (await field.boundingBox())!;
+    // drop the start in the far upper-left corner — the flattest region
+    await page.mouse.move(box.x + box.width * 0.07, box.y + box.height * 0.07);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width * 0.06, box.y + box.height * 0.06, { steps: 4 });
+    await page.mouse.up();
+    await panel(page).getByRole("button", { name: /Release/i }).click();
+    await expect(panel(page).getByRole("status")).toHaveText("Stalled — crawling on the flat");
+  });
+
   test("Explain it pairs the check with a live companion", async ({ page }) => {
     await openTab(page, "Explain it");
     await expect(panel(page).getByText(/Drag to read the arrow/i)).toBeVisible();

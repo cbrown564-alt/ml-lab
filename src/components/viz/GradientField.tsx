@@ -15,19 +15,25 @@ import { gradient, magnitude, surface, unit, type Vec2 } from "@/lib/models/grad
 
 const MARGIN = { top: 14, right: 14, bottom: 14, left: 14 };
 const BANDS = 12;
-const MAX_F = 1.7;
-// Valley → peak: a deep slate floor warming to a bright amber summit.
+// Just above the tallest summit, so the global peak reaches full amber (the shorter
+// hill stays honestly dimmer — it is genuinely lower).
+const MAX_F = 1.55;
+// Valley → peak: a deep slate floor, a clean warm taupe mid, a bright amber summit.
 const RAMP: [number, number, number][] = [
-  [44, 52, 64], // low
-  [120, 120, 110],
-  [224, 178, 96], // peak
+  [42, 50, 66], // low — deep slate
+  [138, 116, 90], // mid — warm taupe
+  [238, 196, 112], // peak — amber
 ];
 const lerp = (a: number, b: number, u: number) => Math.round(a + (b - a) * u);
-const rampColor = (t: number) => {
+const rampRGB = (t: number): [number, number, number] => {
   const u = t <= 0.5 ? t * 2 : (t - 0.5) * 2;
   const [c0, c1] = t <= 0.5 ? [RAMP[0], RAMP[1]] : [RAMP[1], RAMP[2]];
-  return `rgb(${lerp(c0[0], c1[0], u)}, ${lerp(c0[1], c1[1], u)}, ${lerp(c0[2], c1[2], u)})`;
+  return [lerp(c0[0], c1[0], u), lerp(c0[1], c1[1], u), lerp(c0[2], c1[2], u)];
 };
+const rampColor = (t: number) => `rgb(${rampRGB(t).join(", ")})`;
+// A contour line at a band boundary: the ramp colour, darkened, so the field reads as a
+// drawn topographic map rather than a stepped wash.
+const contourColor = (t: number) => `rgb(${rampRGB(t).map((c) => Math.round(c * 0.62)).join(", ")})`;
 
 export function GradientField({
   point,
@@ -67,12 +73,20 @@ export function GradientField({
     if (!canvas || !ctx) return;
     canvas.width = cols;
     canvas.height = rows;
+    // First the integer band index of every cell, so we can find where bands meet.
+    const band = (cc: number, rr: number) => {
+      const xv = d0 + ((d1 - d0) * (cc + 0.5)) / cols;
+      const yv = d0 + ((d1 - d0) * (rr + 0.5)) / rows;
+      return Math.round((Math.min(MAX_F, surface(xv, yv)) / MAX_F) * BANDS);
+    };
+    const bands: number[][] = Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => band(c, r)));
     for (let r = 0; r < rows; r++) {
-      const yv = d0 + ((d1 - d0) * (r + 0.5)) / rows;
       for (let c = 0; c < cols; c++) {
-        const xv = d0 + ((d1 - d0) * (c + 0.5)) / cols;
-        const t = Math.round((Math.min(MAX_F, surface(xv, yv)) / MAX_F) * BANDS) / BANDS;
-        ctx.fillStyle = rampColor(t);
+        const b = bands[r][c];
+        const t = b / BANDS;
+        // A cell on a band boundary (lower-left neighbours differ) becomes a contour line.
+        const onContour = (c > 0 && bands[r][c - 1] !== b) || (r > 0 && bands[r - 1][c] !== b);
+        ctx.fillStyle = onContour ? contourColor(t) : rampColor(t);
         ctx.fillRect(c, rows - 1 - r, 1, 1);
       }
     }
@@ -160,17 +174,12 @@ export function GradientField({
             <circle cx={sx(path[path.length - 1].x)} cy={sy(path[path.length - 1].y)} r={6} fill="var(--viz-truth)" stroke="var(--surface-bg)" strokeWidth={2} />
           </>
         )}
-        {/* the gradient arrow */}
+        {/* the gradient arrow, on a soft halo so it reads against any band */}
         {mag > 1e-3 && (
-          <line
-            x1={sx(point.x)}
-            y1={sy(point.y)}
-            x2={sx(tip.x)}
-            y2={sy(tip.y)}
-            stroke={arrowColor}
-            strokeWidth={3}
-            markerEnd="url(#grad-arrow)"
-          />
+          <g>
+            <line x1={sx(point.x)} y1={sy(point.y)} x2={sx(tip.x)} y2={sy(tip.y)} stroke="var(--surface-bg)" strokeWidth={6.5} strokeOpacity={0.5} strokeLinecap="round" />
+            <line x1={sx(point.x)} y1={sy(point.y)} x2={sx(tip.x)} y2={sy(tip.y)} stroke={arrowColor} strokeWidth={3} markerEnd="url(#grad-arrow)" />
+          </g>
         )}
         {/* the draggable point */}
         <circle cx={sx(point.x)} cy={sy(point.y)} r={7} fill="var(--surface-bg)" stroke="var(--ink)" strokeWidth={2} />

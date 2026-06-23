@@ -25,7 +25,7 @@ export function GradientStory() {
       <figcaption className="mb-3 font-mono text-[11px] tracking-widest text-ink-faint uppercase">
         {descent ? "Descent — the arrow flips to −∇f" : "Ascent — the gradient points uphill"}
       </figcaption>
-      <GradientField point={point} descent={descent} interactive={false} width={520} height={460} />
+      <GradientField point={point} descent={descent} interactive={false} width={560} height={470} />
       <div className="mt-4">
         <StatGrid
           caption={`At (${point.x.toFixed(1)}, ${point.y.toFixed(1)})`}

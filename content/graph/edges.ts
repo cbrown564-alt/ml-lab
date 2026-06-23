@@ -16,7 +16,13 @@ export const edges: ConceptEdge[] = [
   { from: "loss-functions", to: "gradient-descent", type: "requires", strength: "hard" },
   { from: "linear-regression", to: "gradient-descent", type: "requires", strength: "soft" },
   // The gradient is the maths that makes both mechanisms legible.
-  { from: "the-gradient", to: "gradient-descent", type: "mathematical_basis", strength: "soft" },
+  {
+    from: "the-gradient",
+    to: "gradient-descent",
+    type: "mathematical_basis",
+    strength: "soft",
+    note: "Descent is this hunt automated: step against −∇f until the gradient vanishes. The local-optimum trap and the vanishing-gradient stall you met here are exactly the failures descent inherits.",
+  },
   // The OLS closed form is the gradient-vanishes condition, solved — the
   // linear-regression math wing leans on the same math node.
   { from: "the-gradient", to: "linear-regression", type: "mathematical_basis", strength: "soft" },

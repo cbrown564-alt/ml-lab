@@ -190,7 +190,9 @@ export const nodes: ConceptNode[] = [
     kind: "math",
     phase: 3,
     depth: "core",
-    // Live on the four-act spine (See it + Run it); Break it + Explain it land next.
-    status: "interactive",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green), with the contour-stroke + vanishing-gradient trigger
+    // applied as the reviewers' push-to-exemplar recommendations.
+    status: "flagship",
   },
 ];

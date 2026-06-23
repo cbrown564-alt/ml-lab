@@ -96,6 +96,16 @@ export const theGradientCheck: ConceptCheck = {
       targets: ["grad:break"],
     },
     {
+      id: "break-vanishing-gradient",
+      kind: "experiment-task",
+      prompt: "Now the other failure: drag the start far out onto the dark flat and release. Watch the climb crawl — the gradient is tiny far from any peak, so each step barely moves.",
+      taskEvent: "the-gradient:vanishing-gradient",
+      feedback:
+        "That's a vanishing gradient — small not because you've arrived but because the surface is flat, so descent starves of signal. It's the boundary the trap card names: a small gradient is fine at an optimum, and stuck everywhere else.",
+      difficulty: 1,
+      targets: ["grad:break-vanishing"],
+    },
+    {
       id: "transfer-training-plateau",
       kind: "transfer",
       scenario:
