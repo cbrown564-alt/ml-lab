@@ -1,6 +1,7 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
 import { LossFunctionsBreakIt } from "@/components/exhibits/LossFunctionsBreakIt";
 import { LossFunctionsCheckLab } from "@/components/exhibits/LossFunctionsCheckLab";
+import { LossFunctionsHero } from "@/components/exhibits/LossFunctionsHero";
 import { LossFunctionsLab } from "@/components/exhibits/LossFunctionsLab";
 import { LossFunctionsStory } from "@/components/exhibits/LossFunctionsStory";
 import { lossFunctionsCheck } from "@content/exhibits/loss-functions/concept-check";
@@ -20,6 +21,7 @@ export default function LossFunctionsExhibit() {
       failures={lossFunctionsFailures}
       breakIt={<LossFunctionsBreakIt />}
       checkCompanion={<LossFunctionsCheckLab />}
+      hero={<LossFunctionsHero />}
       story={<LossFunctionsStory />}
       experiment={<LossFunctionsLab />}
       lede={

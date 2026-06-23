@@ -103,26 +103,14 @@ export const lossFunctionsCheck: ConceptCheck = {
       kind: "transfer",
       scenario:
         "A teammate's house-price model has a great average error overall, but it's wildly off on a handful of mansions — and those big misses are dragging the reported error up and skewing the fit toward them. They trained with mean squared error.",
-      prompt: "From what the judges taught you, what's the most likely fix, and the one thing to check first?",
-      options: [
-        {
-          label:
-            "Switch to Huber (or absolute) loss so the few mansions stop dominating — after confirming they're genuine outliers, not a segment you must predict well",
-          correct: true,
-          feedback:
-            "That's the transfer: squared error let the extremes hijack the fit; a robust loss reins them in. But first check the boundary — if mansions are a real segment, ignoring them is the wrong move.",
-        },
-        {
-          label: "Train even longer with squared error so the model finally learns the mansions too",
-          feedback:
-            "More training won't help — squared error is doing exactly what it's designed to do, weighting those big misses heavily. The loss is the lever, not the training time.",
-        },
-        {
-          label: "Drop the mansions from the data so the average error looks better",
-          feedback:
-            "Deleting inconvenient data is metric-gaming, not a fix — and if mansions matter, you've made the model blind to them. A robust loss down-weights them without discarding them.",
-        },
-      ],
+      prompt:
+        "From what the judges taught you: what's the most likely fix, what's the one thing to check first, and why won't more training help? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. squared error lets the mansions… so switch to… but first check… more training won't help because…",
+        answer:
+          "Squared error scores a miss by its area, so the handful of mansions — huge residuals — dominate the loss and hijack the fit toward themselves. The fix is a robust loss (Huber, or absolute) that stops far points from dominating. But check the boundary first: if mansions are a real segment you must predict well, down-weighting them is the wrong move — robustness assumes they're genuine outliers, not a population you care about. More training won't help: squared error is doing exactly what it's designed to do, weighting big misses heavily — the loss is the lever, not the training time. And don't just delete the mansions; that's metric-gaming, and a robust loss down-weights them without discarding them.",
+      },
       difficulty: 3,
       targets: ["loss:transfer-robust"],
     },
