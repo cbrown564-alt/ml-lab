@@ -112,9 +112,9 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    // Live on the four-act spine (See it + Run it) — opens the classification cluster;
-    // Break it + Explain it land next to reach flagship.
-    status: "interactive",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green). Opens the classification cluster.
+    status: "flagship",
   },
   {
     id: "classification-task",
@@ -125,8 +125,9 @@ export const nodes: ConceptNode[] = [
     kind: "task",
     phase: 1,
     depth: "core",
-    // Live on the four-act spine (See it + Run it); Break it + Explain it land next.
-    status: "interactive",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green).
+    status: "flagship",
   },
   {
     id: "neural-network-fundamentals",
