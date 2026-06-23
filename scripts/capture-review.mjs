@@ -87,6 +87,25 @@ async function reachable() {
   }
 }
 
+/**
+ * Put the act's tab bar just under the top of the viewport so the viewport
+ * screenshot frames the ACT PANEL — not the hero/masthead above it (which is
+ * captured separately as hero.png). Playwright scrolls the tab into view to
+ * click it; a naive scrollTo(0,0) undoes that and re-shoots the hero, which is
+ * exactly why hero nodes' act frames used to duplicate the hero. Falls back to
+ * the page top for any exhibit with no tablist.
+ */
+async function frameAct(page) {
+  const anchored = await page.evaluate(() => {
+    const tl = document.querySelector('[role="tablist"]');
+    if (!tl) return false;
+    const top = tl.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, Math.max(0, Math.round(top - 16)));
+    return true;
+  });
+  if (!anchored) await page.evaluate(() => window.scrollTo(0, 0));
+}
+
 async function captureExhibit(page, exhibit, log) {
   const dir = outDir(exhibit);
   const frames = [];
@@ -112,7 +131,7 @@ async function captureExhibit(page, exhibit, log) {
       await page.waitForTimeout(650);
     }
     // Bring the act's panel into frame, then capture viewport + full page.
-    await page.evaluate(() => window.scrollTo(0, 0));
+    await frameAct(page);
     await page.waitForTimeout(150);
     const vp = path.join(dir, `${act.id}-viewport.png`);
     await page.screenshot({ path: vp });
