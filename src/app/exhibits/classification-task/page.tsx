@@ -1,6 +1,10 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { ClassificationTaskBreakIt } from "@/components/exhibits/ClassificationTaskBreakIt";
+import { ClassificationTaskCheckLab } from "@/components/exhibits/ClassificationTaskCheckLab";
 import { ClassificationTaskLab } from "@/components/exhibits/ClassificationTaskLab";
 import { ClassificationTaskStory } from "@/components/exhibits/ClassificationTaskStory";
+import { classificationTaskCheck } from "@content/exhibits/classification-task/concept-check";
+import { classificationTaskFailures } from "@content/exhibits/classification-task/failures";
 import { classificationTaskMath } from "@content/exhibits/classification-task/math";
 import { classificationTaskNarrative } from "@content/exhibits/classification-task/narrative";
 import { classificationTaskSpine } from "@content/exhibits/classification-task/spine";
@@ -12,6 +16,10 @@ export default function ClassificationTaskExhibit() {
       narrative={classificationTaskNarrative}
       spine={classificationTaskSpine}
       math={classificationTaskMath}
+      check={classificationTaskCheck}
+      failures={classificationTaskFailures}
+      breakIt={<ClassificationTaskBreakIt />}
+      checkCompanion={<ClassificationTaskCheckLab />}
       story={<ClassificationTaskStory />}
       experiment={<ClassificationTaskLab />}
       lede={

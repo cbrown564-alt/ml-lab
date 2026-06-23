@@ -35,4 +35,17 @@ test.describe("classification-task exhibit", () => {
     await panel(page).getByRole("button", { name: /Recall falls/i }).click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
   });
+
+  test("Break it: the imbalance trap, then lowering the threshold catches positives", async ({ page }) => {
+    await openTab(page, "Break it");
+    await expect(panel(page).getByRole("status")).toHaveText("95% accurate, useless");
+    await panel(page).getByRole("slider").first().fill("0.3");
+    await expect(panel(page).getByRole("status")).toHaveText("Catching positives");
+  });
+
+  test("Explain it pairs the check with a live companion", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/Answer against the matrix/i)).toBeVisible();
+    await expect(panel(page).getByText(/why is that accuracy meaningless/i)).toBeVisible();
+  });
 });
