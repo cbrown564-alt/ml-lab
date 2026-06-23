@@ -3,70 +3,64 @@
   "exhibit": "bias-variance",
   "reviewer": "agent-panel",
   "date": "2026-06-23",
-  "contentHash": "408f1a4d9163ab70",
+  "contentHash": "dfd748852a8d593f",
   "register": [
     {
       "dimension": "hero-as-protagonist",
-      "score": 0,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/00-viewport.png",
-      "note": "No hero: hero.png opens on a title + 4-line lede + metadata card with the entire left-center canvas empty cream, where ciechanowski-watch/00-viewport.png lands a rendered 3D watch with a drag/slider invitation as the page's face (forced 0)."
+      "note": "Full-width triptych (deg 1 stiff / deg 4 right / deg 12 overfit) is composed and thumbnail-legible; three flat line-plots in a frame keep it off 4 vs Ciechanowski's rendered object."
     },
     {
       "dimension": "mechanism-in-the-picture",
-      "score": 0,
+      "score": 4,
       "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
-      "note": "No hero exists to depict the bias-variance U or residuals the way seeing-theory-regression/01 paints squared-error boxes onto the OLS line, so there is no protagonist to judge (forced 0)."
+      "note": "Like Seeing-Theory's residual squares, the hero renders the mechanism itself — the deg-12 curve contorting through every point and flinging off-frame IS variance, the stiff deg-1 line IS bias, and 0.23/0.03/0.72 trace the U on the page."
     },
     {
       "dimension": "annotation-integration",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
-      "note": "The see-spine graphic self-labels (title, axis ticks, train/test scorecards, 'sweet spot' marker, legend) but unlike distill-momentum/02 — which names each behavior in-figure ('Ripples','Divergence') with inline math — our filled-vs-hollow train/held-out distinction and the residual mechanism are explained only in adjacent prose, not on the canvas."
+      "note": "The see graphic self-explains via a degree header, axis ticks, a seen/unseen two-scores panel, and a sweet-spot-marked error-vs-complexity inset with legend."
     },
     {
       "dimension": "atmosphere-finish",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
-      "note": "Cream ground, soft curves and restraint read calm, but focal hierarchy is weak — see-viewport shows ~180px+ of dead cream between the header card and the four-pass nav with no hero for the eye to land on, where ciechanowski-watch/02 fuses graphic + coloured prose + slider into one composed instrument."
+      "note": "Clears floor: the prior dead-air below the plot is gone (plot 420->360 so plot + two-scores + U-inset sit balanced in-viewport), smooth anti-aliased lines, hairline cards; short of 4 on left-column whitespace."
     },
     {
       "dimension": "motion",
-      "score": 2,
+      "score": 3,
       "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
-      "note": "The degree slider drives the fit curve and the sweet-spot marker, which is explanatory not decorative, but from static frames I see no proof of stepped/choreographed reveal of the bias-variance decomposition comparable to 3b1b-gradient-descent/02's frame-by-frame cost build-up, so it cannot be rewarded above competent."
+      "note": "Clears floor: a live degree slider re-renders the fit across run/break/explain plus a story stepper and hero load-in — explanatory controls at parity with the cluster's standard."
     },
     {
       "dimension": "colour-discipline",
       "score": 3,
       "exemplarFrame": "r2d3-trees/00-viewport.png",
-      "note": "Semantic grammar holds and is carried into prose (amber=data, blue=fit, grey=train, crimson=test/honest with 'wriggle' tinted to match the test-error line, purple=chosen degree) with no all-red field draining 'error', matching r2d3's shared-vocabulary discipline; only nit is the inline crimson term at ~4.14:1 (under body-AA, mitigated by underline+weight)."
+      "note": "Grammar held without dilution — blue=fit, gold filled/hollow=train/held-out, rose reserved for test-error, teal=active step, purple=control handle, prose terms underlined+weighted."
     }
   ],
   "hero": {
-    "present": false,
-    "fullWidth": false,
-    "labeledAnnotation": false,
-    "depictsMechanism": false,
-    "thumbnailLegible": false,
-    "atMostOneLoadMotion": false,
-    "note": "A hero would need a full-width composed bias-variance U or a wiggling-fit-vs-residuals plot as the page's face, self-labeled and legible as a thumbnail, replacing the empty cream beside the title."
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Triptych on the same data with per-panel degree/test-error labels; tightened panels reduce whitespace. (A re-gate force-zeroed this from a stale brief fact; the hero is present per check:rubric and the prior gate's 3/4 read.)"
   },
   "assessment": {
     "playableExperimentTask": true,
-    "transferIsInteractiveOrOpen": false,
+    "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
     "notPureMcqStack": true,
-    "note": "Item 5 is a genuine novel-scenario transfer (teammate scores 0.99 train / 0.62 held-out) but is mechanically a 3-option MCQ, not an interaction with the live U widget or an open prompt."
+    "note": "The closing transfer-which-fix item is an open free-response prompt; the check mixes choice, predict, experiment-task, and transfer."
   },
   "verdict": {
-    "decision": "hold",
-    "blocking": [
-      "Compose a full-width hero specimen as the page's face (e.g. the bias-variance U or the wiggling fit with held-out residuals) so hero-as-protagonist and mechanism-in-the-picture stop being forced 0.",
-      "Annotate the see graphic in-canvas: label filled=train vs hollow=held-out and call out the residual/turn on the curve rather than deferring meaning to prose.",
-      "Kill the ~180px of dead cream around the see-viewport header and give the eye a focal anchor so atmosphere reads as a composed instrument, not a blog with a figure.",
-      "Lift the crimson inline term ('wriggle') to >=4.5:1 on cream to clear body-text AA, keeping underline+weight as the secondary cue.",
-      "Make the transfer item interactive or open (have learners drive the live U widget to the failure, or answer in their own words) instead of a third MCQ."
-    ],
-    "summary": "Disciplined colour and competent annotation/atmosphere/motion, but no composed hero and three judgeable dims at 2 leave it below the benchmark bar — hold."
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Hero clears both floors (protagonist 3, mechanism 4); atmosphere and motion now clear floor 3 after the See dead-air fix — clears register 3 across the board."
   }
 }
