@@ -17,6 +17,7 @@ export const liveExhibits: Record<string, { href: string }> = {
   "train-test-generalization": { href: "/exhibits/train-test-generalization" },
   "the-gradient": { href: "/exhibits/the-gradient" },
   "regression-task": { href: "/exhibits/regression-task" },
+  "neural-network-fundamentals": { href: "/exhibits/neural-network-fundamentals" },
 };
 
 export const isLive = (nodeId: string): boolean => nodeId in liveExhibits;

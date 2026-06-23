@@ -33,8 +33,8 @@ test.describe("home", () => {
     const map = page.locator("#map");
     await expect(map.getByRole("link", { name: /Gradient Descent/ })).toBeVisible();
     // Stub nodes are present on the map but are not links.
-    await expect(map.getByText("Neural Network Fundamentals")).toBeVisible();
-    await expect(map.getByRole("link", { name: /Neural Network Fundamentals/ })).toHaveCount(0);
+    await expect(map.getByText("What is Machine Learning?")).toBeVisible();
+    await expect(map.getByRole("link", { name: /What is Machine Learning/ })).toHaveCount(0);
 
     await map.getByRole("link", { name: /Gradient Descent/ }).click();
     await expect(page.getByRole("heading", { name: "Gradient Descent" })).toBeVisible();
