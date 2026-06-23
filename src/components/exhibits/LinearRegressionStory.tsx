@@ -112,7 +112,7 @@ export function LinearRegressionStory() {
       </figcaption>
       <Plot
         width={640}
-        height={560}
+        height={440}
         xDomain={xDomain}
         yDomain={yDomain}
         interactive
