@@ -1,6 +1,10 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { TheDatasetBreakIt } from "@/components/exhibits/TheDatasetBreakIt";
+import { TheDatasetCheckLab } from "@/components/exhibits/TheDatasetCheckLab";
 import { TheDatasetLab } from "@/components/exhibits/TheDatasetLab";
 import { TheDatasetStory } from "@/components/exhibits/TheDatasetStory";
+import { theDatasetCheck } from "@content/exhibits/the-dataset/concept-check";
+import { theDatasetFailures } from "@content/exhibits/the-dataset/failures";
 import { theDatasetMath } from "@content/exhibits/the-dataset/math";
 import { theDatasetNarrative } from "@content/exhibits/the-dataset/narrative";
 import { theDatasetSpine } from "@content/exhibits/the-dataset/spine";
@@ -12,6 +16,10 @@ export default function TheDatasetExhibit() {
       narrative={theDatasetNarrative}
       spine={theDatasetSpine}
       math={theDatasetMath}
+      check={theDatasetCheck}
+      failures={theDatasetFailures}
+      breakIt={<TheDatasetBreakIt />}
+      checkCompanion={<TheDatasetCheckLab />}
       story={<TheDatasetStory />}
       experiment={<TheDatasetLab />}
       lede={

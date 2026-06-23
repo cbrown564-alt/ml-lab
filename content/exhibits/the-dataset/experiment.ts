@@ -37,11 +37,10 @@ export const houses: House[] = (() => {
   });
 })();
 
-/** Two corrupted rows for the Break-it: a typo (an extra digit on price) and a bad size. */
-export const corruptedRows: House[] = [
-  { id: 13, size: 72, bedrooms: 3, price: 2480 }, // £2,480k — a misplaced decimal
-  { id: 14, size: 6, bedrooms: 2, price: 150 }, // 6 m² — a data-entry slip
-];
+/** One corrupted row for the Break-it: a data-entry slip — a 112 m² flat recorded as 12 m²
+ * (a dropped digit), so the model sees a tiny home at a high price. High leverage at the
+ * left edge, it alone flattens the whole trend. Visible on a [0,400] price axis. */
+export const corruptedRows: House[] = [{ id: 13, size: 12, bedrooms: 2, price: 360 }];
 
 /** The scatter view: size (feature) → price (target). */
 export const toPoints = (rows: House[]): Point[] => rows.map((h) => ({ x: h.size, y: h.price }));

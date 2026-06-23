@@ -35,4 +35,17 @@ test.describe("the-dataset exhibit", () => {
     await panel(page).getByRole("button", { name: /Only the rows and columns/i }).click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
   });
+
+  test("Break it: one bad row flattens the trend; removing it snaps back", async ({ page }) => {
+    await openTab(page, "Break it");
+    await expect(panel(page).getByText(/flattens the whole trend/i)).toBeVisible();
+    await panel(page).getByRole("checkbox").uncheck();
+    await expect(panel(page).getByText(/snaps back/i)).toBeVisible();
+  });
+
+  test("Explain it pairs the check with a live companion", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/One bad row/i)).toBeVisible();
+    await expect(panel(page).getByText(/what do the rows and columns represent/i)).toBeVisible();
+  });
 });
