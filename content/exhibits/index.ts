@@ -14,6 +14,7 @@ export const liveExhibits: Record<string, { href: string }> = {
   "data-leakage": { href: "/exhibits/data-leakage" },
   "logistic-regression": { href: "/exhibits/logistic-regression" },
   "classification-task": { href: "/exhibits/classification-task" },
+  "train-test-generalization": { href: "/exhibits/train-test-generalization" },
 };
 
 export const isLive = (nodeId: string): boolean => nodeId in liveExhibits;
