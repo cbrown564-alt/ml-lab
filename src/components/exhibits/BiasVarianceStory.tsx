@@ -45,7 +45,7 @@ export function BiasVarianceStory() {
       </figcaption>
       <Plot
         width={640}
-        height={420}
+        height={360}
         xDomain={[-0.02, 1.02]}
         yDomain={[-1.8, 1.8]}
         ariaLabel={`A degree-${degree} polynomial fit; training error ${trainErr.toFixed(3)}, test error ${testErr.toFixed(3)}. ${regime}.`}

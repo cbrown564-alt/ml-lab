@@ -60,9 +60,9 @@ function Panel({ panel, reveal }: { panel: (typeof PANELS)[number]; reveal: numb
       </div>
       <Plot
         width={400}
-        height={300}
+        height={270}
         xDomain={[-0.02, 1.02]}
-        yDomain={[-1.8, 1.8]}
+        yDomain={[-1.55, 1.55]}
         ariaLabel={`A degree-${panel.degree} polynomial fit (${panel.kicker}); test error ${panel.testErr.toFixed(2)} on held-out points.`}
       >
         <TestPoints />
