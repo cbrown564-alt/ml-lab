@@ -22,6 +22,7 @@ import { conceptChecks } from "@content/exhibits/checks";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { detectAssessmentForm } from "@content/quality/checks";
 import { ScorecardSchema, type Scorecard } from "@content/quality/rubric";
+import { DecisionsSchema, type Decisions } from "@content/quality/decisions";
 import { nodes } from "@content/graph/nodes";
 
 const ROOT = process.cwd();
@@ -235,19 +236,63 @@ export function writeScorecard(exhibitId: string, card: Scorecard): void {
   );
 }
 
-export function readTextDoc(exhibitId: string, name: "notes.md" | "decisions.md"): string {
+/**
+ * The **agent panel's prediction**, stored beside the human verdict rather than
+ * clobbering it (docs/08 Part 4 — "the panel proposes and predicts; the human
+ * disposes on taste; the filesystem remembers"). It is the defensible baseline the
+ * `/review` form seeds from when no human verdict exists yet, and keeping both on
+ * disk makes agent↔human divergence a *tracked* signal (is the panel calibrated?).
+ * It validates against the same schema (so the hero invariant binds the agent too)
+ * but carries `reviewer: "agent-panel"`.
+ */
+export function readAgentScorecard(exhibitId: string): Scorecard | null {
+  const file = path.join(feedbackDir(exhibitId), "scorecard.agent.json");
+  if (!existsSync(file)) return null;
+  const parsed = ScorecardSchema.safeParse(JSON.parse(readFileSync(file, "utf8")));
+  return parsed.success ? parsed.data : null;
+}
+
+export function writeAgentScorecard(exhibitId: string, card: Scorecard): void {
+  const dir = feedbackDir(exhibitId);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(
+    path.join(dir, "scorecard.agent.json"),
+    JSON.stringify(card, null, 2) + "\n",
+    "utf8",
+  );
+}
+
+export function readTextDoc(exhibitId: string, name: "notes.md"): string {
   const file = path.join(feedbackDir(exhibitId), name);
   return existsSync(file) ? readFileSync(file, "utf8") : "";
 }
 
-export function writeTextDoc(
-  exhibitId: string,
-  name: "notes.md" | "decisions.md",
-  body: string,
-): void {
+export function writeTextDoc(exhibitId: string, name: "notes.md", body: string): void {
   const dir = feedbackDir(exhibitId);
   mkdirSync(dir, { recursive: true });
   writeFileSync(path.join(dir, name), body.endsWith("\n") ? body : body + "\n", "utf8");
+}
+
+/**
+ * The declarative "this, not that" record (docs/08 Part 3/6) — slots, candidates,
+ * and the chosen direction, machine-readable so the loop reads taste back rather
+ * than re-deriving it. Supersedes the old freeform `decisions.md`.
+ */
+export function readDecisions(exhibitId: string): Decisions | null {
+  const file = path.join(feedbackDir(exhibitId), "decisions.json");
+  if (!existsSync(file)) return null;
+  const parsed = DecisionsSchema.safeParse(JSON.parse(readFileSync(file, "utf8")));
+  return parsed.success ? parsed.data : null;
+}
+
+export function writeDecisions(exhibitId: string, decisions: Decisions): void {
+  const dir = feedbackDir(exhibitId);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(
+    path.join(dir, "decisions.json"),
+    JSON.stringify(decisions, null, 2) + "\n",
+    "utf8",
+  );
 }
 
 /* -------------------------------------------------------------------------- */

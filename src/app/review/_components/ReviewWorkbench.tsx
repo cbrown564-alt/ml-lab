@@ -48,6 +48,10 @@ export type ReviewWorkbenchInitial = {
   assessment: AssessmentForm;
   verdict: Verdict;
   notes: string;
+  /** Where the opening scores came from — so the reviewer knows what they're adjusting. */
+  seededFrom: "human" | "agent-panel" | "defaults";
+  /** The agent panel's per-dimension prediction, for inline divergence (or null). */
+  agentRegister: Partial<Record<RegisterDimensionKey, number>> | null;
 };
 
 type RegState = Record<RegisterDimensionKey, { score: number; exemplarFrame: string; note: string }>;
@@ -368,6 +372,7 @@ export function ReviewWorkbench({
 
       {/* ───────────────────────────── Scorecard ────────────────────────────── */}
       <div>
+        <SeedBanner seededFrom={initial.seededFrom} />
         <SectionLabel>Visual register §1a — floors ≥3 (2 is not a passing grade)</SectionLabel>
         <div className="mt-3 space-y-1.5">
           {REGISTER_DIMENSIONS.map((d) => {
@@ -401,6 +406,17 @@ export function ReviewWorkbench({
                       </span>
                     )}
                   </span>
+                  {(() => {
+                    const pred = initial.agentRegister?.[d.key];
+                    return pred != null && pred !== row.score ? (
+                      <span
+                        title="agent panel predicted this score"
+                        className="font-mono text-[10px] text-ink-faint tabular-nums"
+                      >
+                        panel {pred}
+                      </span>
+                    ) : null;
+                  })()}
                   <span
                     className={`font-mono text-xs tabular-nums ${below ? "text-error-viz" : "text-ink-muted"}`}
                   >
@@ -728,6 +744,30 @@ function SaveStatus({
         >
           Save failed — retry
         </button>
+      )}
+    </div>
+  );
+}
+
+function SeedBanner({ seededFrom }: { seededFrom: "human" | "agent-panel" | "defaults" }) {
+  if (seededFrom === "human") return null;
+  const agent = seededFrom === "agent-panel";
+  return (
+    <div
+      className={`mb-3 rounded-md border px-3 py-2 text-xs ${
+        agent ? "border-accent/40 bg-sunken text-ink-muted" : "border-line bg-sunken text-ink-faint"
+      }`}
+    >
+      {agent ? (
+        <>
+          Seeded from the <span className="font-medium text-ink">agent panel&apos;s prediction</span> —
+          a defensible baseline to adjust, not a verdict. Your scores become the ground truth on save.
+        </>
+      ) : (
+        <>
+          No verdict or agent prediction yet — opening on honest defaults (hero-judged dims forced to 0
+          where no hero; everything else 2, never an unearned 3).
+        </>
       )}
     </div>
   );

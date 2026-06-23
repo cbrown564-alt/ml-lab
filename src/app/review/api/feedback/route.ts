@@ -1,11 +1,14 @@
 import type { NextRequest } from "next/server";
 import { ScorecardSchema, RUBRIC_VERSION } from "@content/quality/rubric";
+import { DecisionsSchema, DECISIONS_VERSION } from "@content/quality/decisions";
 import {
   contentHash,
   isLive,
+  readDecisions,
   readScorecard,
   readTextDoc,
   today,
+  writeDecisions,
   writeScorecard,
   writeTextDoc,
 } from "../../_lib/store";
@@ -32,7 +35,7 @@ export function GET(request: NextRequest) {
   return Response.json({
     scorecard: readScorecard(exhibit),
     notes: readTextDoc(exhibit, "notes.md"),
-    decisions: readTextDoc(exhibit, "decisions.md"),
+    decisions: readDecisions(exhibit),
     contentHash: contentHash(exhibit),
   });
 }
@@ -48,7 +51,23 @@ export async function POST(request: NextRequest) {
   }
 
   if (typeof body.notes === "string") writeTextDoc(exhibit, "notes.md", body.notes);
-  if (typeof body.decisions === "string") writeTextDoc(exhibit, "decisions.md", body.decisions);
+
+  if (body.decisions && typeof body.decisions === "object") {
+    // The form supplies the slots + chosen direction; the server stamps provenance
+    // (which exhibit, when) and validates against the declarative schema before it
+    // becomes ground truth the loop reads back.
+    const stamped = {
+      ...body.decisions,
+      schemaVersion: DECISIONS_VERSION,
+      exhibit,
+      date: today(),
+    };
+    const parsed = DecisionsSchema.safeParse(stamped);
+    if (!parsed.success) {
+      return Response.json({ ok: false, issues: parsed.error.issues }, { status: 422 });
+    }
+    writeDecisions(exhibit, parsed.data);
+  }
 
   if (body.scorecard) {
     // Stamp the provenance fields server-side: the form supplies the judgment

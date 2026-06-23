@@ -128,6 +128,24 @@ export const REGISTER_DIMENSION_KEYS = REGISTER_DIMENSIONS.map((d) => d.key) as 
 export const RegisterDimensionEnum = z.enum(REGISTER_DIMENSION_KEYS);
 
 /**
+ * The register dimensions that are a judgment **of the hero specifically**:
+ * "is the opening visual poster-worthy" and "does *the hero* show the mechanism".
+ * If an exhibit has no hero (`hero.present === false`) there is no protagonist to
+ * judge, so these cannot be scored above 0 — encoded as a schema invariant on
+ * `ScorecardSchema` (below) so the contradiction "mechanism 3 while hero absent"
+ * is *unrepresentable*, not merely discouraged. Shared by the `/review` seed logic
+ * and the scoring form so all three agree on which scores the hero gates.
+ */
+export const HERO_JUDGED_DIMENSION_KEYS = [
+  "hero-as-protagonist",
+  "mechanism-in-the-picture",
+] as const satisfies readonly RegisterDimensionKey[];
+
+export function isHeroJudged(key: RegisterDimensionKey): boolean {
+  return (HERO_JUDGED_DIMENSION_KEYS as readonly string[]).includes(key);
+}
+
+/**
  * §1e — Pinned-benchmark verdict. Every register sub-score **names a specific
  * exemplar PNG**; a score with no named frame is invalid and the schema rejects
  * it. The frame is a path into `docs/exemplars/<slug>/<file>.png`, so the verdict
@@ -287,6 +305,31 @@ export const ScorecardSchema = z.object({
   /** §1c — the assessment-form spec for "Explain it". */
   assessment: AssessmentFormSchema.optional(),
   verdict: VerdictSchema,
+}).superRefine((card, ctx) => {
+  // The hero invariant: with no hero specimen there is no protagonist to judge,
+  // so the hero-judged register dims cannot score above 0 and the dependent hero
+  // sub-checks cannot hold. This is what makes "mechanism-in-the-picture 3 while
+  // hero absent" a *parse error*, not a verdict a reviewer can rationalize.
+  if (!card.hero || card.hero.present) return;
+  for (const sub of card.register) {
+    if (isHeroJudged(sub.dimension) && sub.score !== 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["register"],
+        message: `${sub.dimension} must be 0 when no hero is present — there is no protagonist to judge (got ${sub.score})`,
+      });
+    }
+  }
+  for (const c of HERO_CHECKS) {
+    if (c.key === "present") continue;
+    if (card.hero[c.key] === true) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["hero", c.key],
+        message: `hero.${c.key} cannot be true when hero.present is false`,
+      });
+    }
+  }
 });
 
 export type Scorecard = z.infer<typeof ScorecardSchema>;

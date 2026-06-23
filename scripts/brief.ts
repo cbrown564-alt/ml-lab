@@ -11,8 +11,10 @@ import { nodes } from "../content/graph/nodes";
 import { edges } from "../content/graph/edges";
 import { journeys } from "../content/journeys/foundations";
 import { registerBreaches } from "../content/quality/rubric";
+import { type DecisionCandidate } from "../content/quality/decisions";
 import {
   contentHash,
+  readDecisions,
   readScorecard,
   readTextDoc,
 } from "../src/app/review/_lib/store";
@@ -62,11 +64,31 @@ if (!card) {
     for (const line of notes.split("\n")) p(`  > ${line}`);
   }
 }
-const decisions = readTextDoc(id, "decisions.md").trim();
-if (decisions) {
+const decisions = readDecisions(id);
+if (decisions && decisions.slots.length) {
   p();
   p(`### This-not-that decisions (never re-propose a rejected direction)`);
-  for (const line of decisions.split("\n")) p(line);
+  const describe = (c: DecisionCandidate) =>
+    c.text ? `"${c.text}"` : (c.frame ?? c.label ?? c.id);
+  for (const slot of decisions.slots) {
+    const tag = `${slot.kind}${slot.dimension ? ` · ${slot.dimension}` : ""}`;
+    const chosen = slot.candidates.find((c) => c.id === slot.chosen);
+    if (chosen) {
+      const rejected = slot.candidates.filter((c) => c.id !== slot.chosen);
+      p(`- **${tag}** — chose ${chosen.id}: ${describe(chosen)}${slot.why ? ` — ${slot.why}` : ""}`);
+      if (rejected.length) {
+        p(`  - rejected (do not re-propose): ${rejected.map(describe).join("; ")}`);
+      }
+      if (slot.refs) p(`  - refs: ${slot.refs}`);
+    } else {
+      p(
+        `- **${tag}** — OPEN: ${slot.prompt}` +
+          (slot.candidates.length
+            ? ` (${slot.candidates.length} candidate(s) awaiting a pick)`
+            : " (awaiting candidates)"),
+      );
+    }
+  }
 }
 
 p();

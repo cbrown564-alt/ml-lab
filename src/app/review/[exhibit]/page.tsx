@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { nodes } from "@content/graph/nodes";
-import { REGISTER_DIMENSIONS, type RegisterDimensionKey } from "@content/quality/rubric";
+import {
+  REGISTER_DIMENSIONS,
+  isHeroJudged,
+  registerBreaches,
+  type RegisterDimensionKey,
+} from "@content/quality/rubric";
+import { slotForDimension, type DecisionSlot } from "@content/quality/decisions";
 import {
   DEFAULT_DIMENSION_EXEMPLAR,
   contentHash,
@@ -11,6 +17,8 @@ import {
   latestCaptureDate,
   listExemplarFrames,
   listVariantFrames,
+  readAgentScorecard,
+  readDecisions,
   readManifest,
   readScorecard,
   readTextDoc,
@@ -37,6 +45,16 @@ export default async function ReviewExhibitPage({
   const date = latestCaptureDate(exhibit);
   const manifest = date ? readManifest(exhibit, date) : null;
   const scorecard = readScorecard(exhibit);
+  const agentCard = readAgentScorecard(exhibit);
+  // The defensible baseline the form opens on: a human verdict if one exists,
+  // otherwise the adversarial panel's prediction (docs/08 Part 4). Either way the
+  // hero invariant has already bound it, so the scores are logical on arrival.
+  const seed = scorecard ?? agentCard;
+  const seededFrom: "human" | "agent-panel" | "defaults" = scorecard
+    ? "human"
+    : agentCard
+      ? "agent-panel"
+      : "defaults";
   const heroPresent = detectHeroPresent(exhibit);
   const assessment = detectAssessment(exhibit);
   const stale = scorecard ? scorecard.contentHash !== contentHash(exhibit) : false;
@@ -51,13 +69,16 @@ export default async function ReviewExhibitPage({
   const next = idx >= 0 && idx < roster.length - 1 ? roster[idx + 1] : null;
   const reviewed = roster.filter((r) => r.hasScorecard && !r.scorecardStale).length;
 
-  // Seed the form: a stored verdict is authoritative; otherwise pre-fill what the
-  // machine already knows (hero presence, the assessment booleans) and the default
-  // benchmark frame per dimension, leaving the taste calls to the human.
+  // Seed the form so the scores are LOGICAL on arrival (the user adjusts taste; the
+  // baseline is never self-contradictory). Order of authority: a human verdict, then
+  // the agent panel's prediction, then honest defaults. The defaults claim nothing
+  // they can't: a hero-judged dim with no hero is forced to 0 (the invariant would
+  // reject anything else), and an un-judged dim seeds to 2 — "competent", never the
+  // flagship-clearing 3 that an unreviewed page hasn't earned.
   const initial: ReviewWorkbenchInitial = {
     register: REGISTER_DIMENSIONS.map((d) => {
-      const existing = scorecard?.register.find((s) => s.dimension === d.key);
-      const defaultScore = d.key === "hero-as-protagonist" && !heroPresent ? 0 : 3;
+      const existing = seed?.register.find((s) => s.dimension === d.key);
+      const defaultScore = isHeroJudged(d.key) && !heroPresent ? 0 : 2;
       return {
         dimension: d.key as RegisterDimensionKey,
         score: existing?.score ?? defaultScore,
@@ -65,7 +86,7 @@ export default async function ReviewExhibitPage({
         note: existing?.note ?? "",
       };
     }),
-    hero: scorecard?.hero ?? {
+    hero: seed?.hero ?? {
       present: heroPresent,
       fullWidth: false,
       labeledAnnotation: false,
@@ -73,14 +94,21 @@ export default async function ReviewExhibitPage({
       thumbnailLegible: false,
       atMostOneLoadMotion: false,
     },
-    assessment: scorecard?.assessment ?? {
+    assessment: seed?.assessment ?? {
       playableExperimentTask: assessment?.playableExperimentTask ?? false,
       transferIsInteractiveOrOpen: false,
       processFeedbackEveryOption: assessment?.processFeedbackEveryOption ?? false,
       notPureMcqStack: assessment?.notPureMcqStack ?? false,
     },
-    verdict: scorecard?.verdict ?? { decision: "hold", blocking: [] },
+    verdict: seed?.verdict ?? { decision: "hold", blocking: [] },
     notes: readTextDoc(exhibit, "notes.md"),
+    seededFrom,
+    // The agent panel's per-dimension prediction, shown beside the human's score so
+    // divergence is visible inline (only meaningful once a human card also exists).
+    agentRegister:
+      scorecard && agentCard
+        ? Object.fromEntries(agentCard.register.map((s) => [s.dimension, s.score]))
+        : null,
   };
 
   const frames: CaptureFrameView[] = (manifest?.frames ?? []).map((f) => ({
@@ -89,6 +117,25 @@ export default async function ReviewExhibitPage({
     label: f.label,
     exemplar: f.exemplar,
   }));
+
+  // Decision slots are auto-derived where they're warranted: one per register
+  // dimension that scored BELOW floor (that's where an alternative rendering earns
+  // its keep), merged with any the loop or reviewer already populated. No decision
+  // is forced on a dimension that already clears the bar.
+  const persisted = readDecisions(exhibit);
+  const breachDims = seed ? registerBreaches(seed).map((b) => b.dimension) : [];
+  const byId = new Map<string, DecisionSlot>((persisted?.slots ?? []).map((s) => [s.id, s]));
+  for (const dim of breachDims) {
+    if (!byId.has(dim)) byId.set(dim, slotForDimension(dim));
+  }
+  // Order: below-floor slots first (in register order), then any free/legacy slots.
+  const dimOrder = new Map(REGISTER_DIMENSIONS.map((d, i) => [d.key, i] as const));
+  const slots = [...byId.values()].sort((a, b) => {
+    const ai = a.dimension ? (dimOrder.get(a.dimension) ?? 99) : 100;
+    const bi = b.dimension ? (dimOrder.get(b.dimension) ?? 99) : 100;
+    return ai - bi;
+  });
+  const openDecisions = slots.filter((s) => s.chosen == null).length;
 
   return (
     <main>
@@ -152,19 +199,18 @@ export default async function ReviewExhibitPage({
       <ReviewWorkbench exhibit={exhibit} frames={frames} exemplars={exemplars} initial={initial} />
 
       {/* "This, not that" is a secondary surface — present, but not in the way of
-          the core scoring flow. Collapsed until a composition decision is being made. */}
-      <details className="mt-12 border-t border-line pt-6">
+          the core scoring flow. Collapsed until a composition decision is being made;
+          opens with one A/B slot per below-floor dimension to resolve. */}
+      <details className="mt-12 border-t border-line pt-6" open={openDecisions > 0 && slots.some((s) => s.candidates.length > 0)}>
         <summary className="cursor-pointer text-sm font-medium text-ink-muted transition-colors hover:text-ink">
           Decisions — this, not that
-          {variants.length > 0 && (
-            <span className="ml-2 font-mono text-xs text-ink-faint">{variants.length} candidate frame(s)</span>
+          {slots.length > 0 && (
+            <span className="ml-2 font-mono text-xs text-ink-faint">
+              {openDecisions} open · {slots.length} slot(s)
+            </span>
           )}
         </summary>
-        <DecisionsPanel
-          exhibit={exhibit}
-          variants={variants}
-          initialDecisions={readTextDoc(exhibit, "decisions.md")}
-        />
+        <DecisionsPanel exhibit={exhibit} slots={slots} variants={variants} />
       </details>
     </main>
   );

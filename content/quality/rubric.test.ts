@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   ASSESSMENT_CHECKS,
   HERO_CHECKS,
+  HERO_JUDGED_DIMENSION_KEYS,
   REGISTER_DIMENSIONS,
   RUBRIC_VERSION,
   ScorecardSchema,
+  type HeroSpec,
   type Scorecard,
   assessmentPasses,
   flagshipBlockers,
@@ -88,6 +90,73 @@ describe("rubric v2 scorecard schema", () => {
 
   it("fails a hero that exists but isn't poster-worthy", () => {
     expect(heroPasses({ ...base.hero!, thumbnailLegible: false })).toBe(false);
+  });
+
+  it("rejects a hero-judged dimension scored above 0 when no hero is present", () => {
+    // The exact contradiction this invariant exists to kill: "mechanism-in-the-
+    // picture 3" while the hero is absent — there is no protagonist to judge.
+    const noHero: HeroSpec = {
+      present: false,
+      fullWidth: false,
+      labeledAnnotation: false,
+      depictsMechanism: false,
+      thumbnailLegible: false,
+      atMostOneLoadMotion: false,
+    };
+    const contradictory = {
+      ...base,
+      hero: noHero,
+      register: base.register.map((s) =>
+        s.dimension === "mechanism-in-the-picture" ? { ...s, score: 3 } : { ...s, score: 0 },
+      ),
+      verdict: { decision: "hold" as const, blocking: [] },
+    };
+    const parsed = ScorecardSchema.safeParse(contradictory);
+    expect(parsed.success).toBe(false);
+    expect(JSON.stringify(parsed.error?.issues)).toContain("mechanism-in-the-picture");
+  });
+
+  it("accepts a hero-less card when every hero-judged dim is 0", () => {
+    const noHero: HeroSpec = {
+      present: false,
+      fullWidth: false,
+      labeledAnnotation: false,
+      depictsMechanism: false,
+      thumbnailLegible: false,
+      atMostOneLoadMotion: false,
+    };
+    const honest = {
+      ...base,
+      hero: noHero,
+      register: base.register.map((s) =>
+        HERO_JUDGED_DIMENSION_KEYS.includes(s.dimension as (typeof HERO_JUDGED_DIMENSION_KEYS)[number])
+          ? { ...s, score: 0 as const }
+          : s,
+      ),
+      verdict: { decision: "hold" as const, blocking: [] },
+    };
+    expect(ScorecardSchema.safeParse(honest).success).toBe(true);
+  });
+
+  it("rejects a hero sub-check set true while hero.present is false", () => {
+    const inconsistentHero: HeroSpec = {
+      present: false,
+      fullWidth: true, // cannot be full-width if there is no hero
+      labeledAnnotation: false,
+      depictsMechanism: false,
+      thumbnailLegible: false,
+      atMostOneLoadMotion: false,
+    };
+    const bad = {
+      ...base,
+      hero: inconsistentHero,
+      register: base.register.map((s) =>
+        HERO_JUDGED_DIMENSION_KEYS.includes(s.dimension as (typeof HERO_JUDGED_DIMENSION_KEYS)[number])
+          ? { ...s, score: 0 as const }
+          : s,
+      ),
+    };
+    expect(ScorecardSchema.safeParse(bad).success).toBe(false);
   });
 
   it("fails a pure MCQ stack outright (§1c exam-cosplay gate)", () => {
