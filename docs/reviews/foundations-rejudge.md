@@ -156,13 +156,62 @@ transfer (11 remaining).
   converted to the open form. Panel verdict: **advance**. The human's prior verdict
   is now *stale* (content changed) — re-judge on `/review` to refresh it.
 
-Remaining: 13 hero-less nodes need a composed hero, and 11 nodes need their transfer
-converted to the open form (the gate now lists both).
+## Hero phase — COMPLETE (2026-06-23)
+
+All 15 Foundations nodes now carry a composed specimen hero and an open transfer.
+`check:rubric`: **0/15 carry a content blocker (§1b/§1c)**. Every hero reuses the
+node's real model/viz (computed live, no faked frames) and was panel-gated against
+the pinned exemplars; every closing transfer is the write-your-own-then-reveal form.
+
+Per-node agent-panel verdicts (`docs/reviews/feedback/<node>/scorecard.agent.json`)
+— all **advance** (register ≥3 on all six dimensions). Three heroes reach
+`mechanism-in-the-picture = 4` (feature-scaling, bias-variance, data-leakage):
+
+| node | hero (one line) |
+|---|---|
+| what-is-ml | by-hand 70% vs the machine 97%, same dots |
+| the-dataset | one mistyped row drags the whole line (leverage) |
+| regression-task | error is a distance, not right-or-wrong |
+| linear-regression | the line of best fit + labelled residual misses |
+| loss-functions | squared loss = total area; outliers dominate |
+| gradient-descent | the descent lands on the labelled minimum |
+| feature-scaling | same data, two shapes (101 vs 23 steps) |
+| train-test-generalization | one split is a lottery; CV pins it |
+| bias-variance | same data, three fits, the test-error U (mech 4) |
+| data-leakage | same noise, two pipelines; the leak fakes skill (mech 4) |
+| overfitting-regularization | same degree-12 model, penalty off (0.43) vs on (0.11) |
+| classification-task | a threshold turns scores into a decision + confusion matrix |
+| logistic-regression | untrained 50% flat → trained 93% boundary |
+| neural-network-fundamentals | one neuron's line (75%) vs the bent X (100%) |
+| the-gradient | the arrow of steepest ascent, ⟂ the contours |
+
+### Full panel (run after all 15 cleared)
+
+- **designer-critic** (per node, non-circular vs exemplars): 15/15 **advance**.
+- **tester** (integrity): **green** — `tsc`, `eslint`, 173 unit tests, `next build`,
+  `check:budgets` (data-leakage code-split back under 700 KB), e2e 116/116 incl.
+  axe (zero serious/critical), Core Web Vitals (LCP<2.5s, CLS<0.1), and the 100ms
+  interaction budget.
+- **teacher** (pedagogy): **PASS** — heroes teach (honest mechanism previews), open
+  transfers are genuine transfer with correct model answers, choreography intact.
+  Two **non-blocking** enhancements for a future pass (teacher said do not gate):
+  1. the logistic-regression hero previews linear success, not the curve-failure aha
+     that is the node's sharper surprise (the curve limit is still developed in the
+     experiment + field notes) — could foreshadow "…where one straight line can't
+     follow a curve";
+  2. add a one-line epistemic-status note that the open transfer is **self-graded**
+     (commit-and-reveal resolves it regardless of answer quality — the honest design
+     for a local-first, no-grader product).
 
 ## Turning the gate on
 
-`npm run check:rubric -- --strict` already fails on the 13 hero blockers. It is
-**not** wired into `prebuild` yet: doing so today would red-build the repo before
-the heroes are built. The sequence (docs/08 Part 5): build the missing heroes →
-re-judge through `/review` → then make `--strict` (content + verdict freshness)
-the flagship gate, so "flagship" can no longer lie.
+The machine gate is clear and the agent panel + tester + teacher all pass. What's
+left is the **human pass**: every node's prior human verdict is now *stale*
+(content changed under it), and `check:rubric` reports all 15 lack an in-date human
+scorecard (red line #6). The sequence (docs/08 Part 5):
+
+1. **Re-judge through `/review`** — refresh the human verdict per node against the
+   new heroes/transfers (the agent cards are predictions, not the human's call).
+2. **Then make `--strict` the flagship gate** — once human verdicts are in-date,
+   wire `npm run check:rubric -- --strict` (content + verdict freshness) into
+   `prebuild`, so "flagship" can no longer lie.
