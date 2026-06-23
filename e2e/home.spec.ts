@@ -29,15 +29,12 @@ test.describe("home", () => {
     ).toBeVisible();
   });
 
-  test("the map's open doors navigate; closed rooms do not", async ({ page }) => {
+  test("the map's doors all navigate — every node is now live", async ({ page }) => {
     const map = page.locator("#map");
     await expect(map.getByRole("link", { name: /Gradient Descent/ })).toBeVisible();
-    // Stub nodes are present on the map but are not links.
-    await expect(map.getByText("The Dataset")).toBeVisible();
-    await expect(map.getByRole("link", { name: /The Dataset/ })).toHaveCount(0);
-
-    await map.getByRole("link", { name: /Gradient Descent/ }).click();
-    await expect(page.getByRole("heading", { name: "Gradient Descent" })).toBeVisible();
+    // Every foundations node now has a live exhibit — including the last one to land.
+    await map.getByRole("link", { name: /The Dataset/ }).click();
+    await expect(page.getByRole("heading", { name: "The Dataset" })).toBeVisible();
   });
 
   test("the journey lists every stop in order with live links", async ({ page }) => {

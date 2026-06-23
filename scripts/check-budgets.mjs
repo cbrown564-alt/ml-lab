@@ -49,6 +49,7 @@ const BUDGETS = [
   { route: "/exhibits/regression-task", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/neural-network-fundamentals", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/what-is-ml", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/the-dataset", jsKb: 700, htmlKb: 110 },
 ];
 
 const server =
