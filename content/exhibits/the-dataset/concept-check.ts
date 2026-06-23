@@ -99,26 +99,14 @@ export const theDatasetCheck: ConceptCheck = {
       kind: "transfer",
       scenario:
         "A factory's temperature-prediction model suddenly makes wild forecasts. Engineers find that one sensor occasionally reports −9999 (its error code) instead of a temperature, and those rows are in the training data.",
-      prompt: "From what you've learned, what's happening and what's the right fix?",
-      options: [
-        {
-          label:
-            "The −9999 error codes are extreme outliers the model treats as real readings, dragging the fit; clean those rows (and guard against the error code) — fix the data",
-          correct: true,
-          feedback:
-            "That's the transfer: the model can't tell an error code from a temperature, so a few −9999 rows act as massive high-leverage outliers. Detecting and removing them — fixing the data — is the fix, not a new model.",
-        },
-        {
-          label: "The model is underpowered — switch to a deep network and it will ignore the bad readings",
-          feedback:
-            "A more powerful model fits the −9999 points even more faithfully, not less. The problem is corrupted rows in the data; capacity can't tell a typo from a fact.",
-        },
-        {
-          label: "The sensor noise will average out with more data — just keep collecting",
-          feedback:
-            "−9999 is systematic, not zero-mean noise — it doesn't average away, and each occurrence is a huge outlier. You must detect and remove the error-coded rows.",
-        },
-      ],
+      prompt:
+        "From what the mistyped row taught you: what's happening, what's the right fix, and what would not help? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. to the model a −9999 row is just… so it… the fix is… a bigger model would…",
+        answer:
+          "To the model a −9999 row is just another example — it can't tell an error code from a temperature — so each one is a massive high-leverage outlier that drags the fit, exactly like the one mistyped house here. The fix is upstream, in the data: detect and remove the error-coded rows and guard against the code on the way in. A more powerful model wouldn't help — it would fit the −9999 points even more faithfully — and 'collect more data' won't either, because −9999 is systematic, not zero-mean noise that averages away.",
+      },
       difficulty: 3,
       targets: ["ds:transfer-quality"],
     },
