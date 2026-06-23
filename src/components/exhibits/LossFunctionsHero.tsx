@@ -22,7 +22,8 @@ const OUTLIER = POINTS.reduce((a, b) => (resid(b) > resid(a) ? b : a), POINTS[0]
 const XS = POINTS.map((p) => p.x);
 const YS = POINTS.map((p) => p.y);
 const X_DOMAIN: [number, number] = [Math.min(...XS) - 0.6, Math.max(...XS) + 0.6];
-const Y_DOMAIN: [number, number] = [Math.min(...YS) - 3, Math.max(...YS) + 3];
+// Extra bottom room so the lowest points and their squares don't kiss the axis.
+const Y_DOMAIN: [number, number] = [Math.min(...YS) - 8, Math.max(...YS) + 4];
 
 function OutlierLabel() {
   const { x, y } = usePlot();

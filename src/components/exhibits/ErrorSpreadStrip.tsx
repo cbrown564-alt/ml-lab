@@ -64,8 +64,10 @@ export function ErrorSpreadStrip({
           const mx = x(mk.value);
           const near = mx < m.l + 34 ? "start" : mx > width - m.r - 34 ? "end" : "middle";
           const lx = near === "start" ? mx + 3 : near === "end" ? mx - 3 : mx;
+          // Bump to a new row when labels would overlap. The threshold is the
+          // label width, not a token gap — short labels still touch at ~50px.
           let row = 0;
-          while (placed.some((p) => p.row === row && Math.abs(p.lx - lx) < 50)) row++;
+          while (placed.some((p) => p.row === row && Math.abs(p.lx - lx) < 92)) row++;
           placed.push({ lx, row });
           const ly = m.t - 8 - row * 12;
           return (
