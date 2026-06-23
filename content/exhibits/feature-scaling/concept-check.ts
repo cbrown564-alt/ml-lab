@@ -99,26 +99,14 @@ export const featureScalingCheck: ConceptCheck = {
       kind: "transfer",
       scenario:
         "A colleague's k-nearest-neighbours model weighs house age (years, 0–100) and lot size (square feet, 0–50,000). It performs oddly — predictions seem to depend almost entirely on lot size, ignoring age.",
-      prompt: "From what the bowl taught you, what's the cause, and the fix?",
-      options: [
-        {
-          label:
-            "Lot size's huge numeric range dominates the distance, so standardise both features and the model will weigh them comparably",
-          correct: true,
-          feedback:
-            "That's the transfer: any method that compares features by magnitude — distances, gradients, ridge penalties — inherits the scaling problem. Standardising puts age and lot size on equal footing.",
-        },
-        {
-          label: "k-NN is broken for this data; switch to a model that doesn't use distances",
-          feedback:
-            "k-NN is fine once the features are scaled. The problem isn't the model — it's that an unscaled lot size dwarfs age in the distance calculation.",
-        },
-        {
-          label: "Collect more data so the model can learn to balance the two features",
-          feedback:
-            "More data won't fix a distance dominated by one feature's units — k-NN doesn't learn feature weights. Standardising the inputs is the direct fix.",
-        },
-      ],
+      prompt:
+        "From what the bowl taught you: what's the cause, what's the fix, and why won't 'a better model' or 'more data' rescue it? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. lot size's range is ~500× age's, so in the distance it… the fix is… more data won't help because…",
+        answer:
+          "Lot size ranges 0–50,000 while age ranges 0–100, so in the Euclidean distance k-NN uses, lot size's magnitude swamps age entirely — 'nearest' is decided almost only by lot size. The fix is the same one-line move the bowl needed: standardise both features (subtract the mean, divide by the spread) so they weigh comparably. Switching models or collecting more data won't help — k-NN doesn't learn feature weights, and any method that compares features by magnitude (distances, gradients, ridge penalties) inherits the same scaling problem.",
+      },
       difficulty: 3,
       targets: ["scaling:transfer-distance"],
     },

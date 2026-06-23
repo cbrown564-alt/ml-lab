@@ -55,6 +55,7 @@ export function LossSurface({
   width = 880,
   height = 460,
   bare = false,
+  legend = true,
 }: {
   points: Point[];
   trace: ReadonlyArray<DescentStep>;
@@ -65,6 +66,9 @@ export function LossSurface({
   /** Portrait mode (the specimen hero): drop the axes and text labels, keep the
    *  heat, the start/valley marks, and the descent path. */
   bare?: boolean;
+  /** Show the bare-mode loss legend. Off for the right of a paired before/after,
+   *  where one shared legend reads cleaner. */
+  legend?: boolean;
 }) {
   // A much finer grid than the default keeps the upscaled field and its contour
   // lines crisp instead of blocky (the old 110×80 read as stair-stepped at full
@@ -242,7 +246,7 @@ export function LossSurface({
               so this is what keeps "darker = higher loss" in the picture. Sits on
               its own surface panel so the label stays crisp (a heavy per-glyph halo
               over a contour field blobs small mono text). */}
-          {bare && (
+          {bare && legend && (
             <g transform={`translate(${MARGIN.left + 10},${MARGIN.top + 10})`}>
               <rect
                 x={-8}
