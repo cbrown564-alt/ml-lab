@@ -1,6 +1,10 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { LossFunctionsBreakIt } from "@/components/exhibits/LossFunctionsBreakIt";
+import { LossFunctionsCheckLab } from "@/components/exhibits/LossFunctionsCheckLab";
 import { LossFunctionsLab } from "@/components/exhibits/LossFunctionsLab";
 import { LossFunctionsStory } from "@/components/exhibits/LossFunctionsStory";
+import { lossFunctionsCheck } from "@content/exhibits/loss-functions/concept-check";
+import { lossFunctionsFailures } from "@content/exhibits/loss-functions/failures";
 import { lossFunctionsMath } from "@content/exhibits/loss-functions/math";
 import { lossFunctionsNarrative } from "@content/exhibits/loss-functions/narrative";
 import { lossFunctionsSpine } from "@content/exhibits/loss-functions/spine";
@@ -12,6 +16,10 @@ export default function LossFunctionsExhibit() {
       narrative={lossFunctionsNarrative}
       spine={lossFunctionsSpine}
       math={lossFunctionsMath}
+      check={lossFunctionsCheck}
+      failures={lossFunctionsFailures}
+      breakIt={<LossFunctionsBreakIt />}
+      checkCompanion={<LossFunctionsCheckLab />}
       story={<LossFunctionsStory />}
       experiment={<LossFunctionsLab />}
       lede={

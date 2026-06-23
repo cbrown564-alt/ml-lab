@@ -1,9 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
 
 /**
- * The loss-functions exhibit (regression cluster #1, four-act spine, interactive
- * status — See it + Run it). The central claim under test: switching the judge
- * refits the line, and the See-it prediction is committed before the reveal.
+ * The loss-functions exhibit (regression cluster #1, full four-act spine). The
+ * central claim under test: switching the judge refits the line; the See-it
+ * prediction is committed before the reveal; the Break-it loop stages the outlier
+ * failure and its repair; Explain it pairs the check with a live companion.
  */
 
 const openTab = (page: Page, name: string) => page.getByRole("tab", { name }).click();
@@ -37,5 +38,19 @@ test.describe("loss-functions exhibit", () => {
       .getByRole("button", { name: /its penalty for a far miss is enormous/i })
       .click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
+  });
+
+  test("Break it stages the outlier failure loop and its repair", async ({ page }) => {
+    await openTab(page, "Break it");
+    await panel(page).getByRole("button", { name: /Drop in three rogue points/i }).click();
+    await expect(panel(page).getByText("Pulled off true", { exact: true })).toBeVisible();
+    await panel(page).getByRole("button", { name: "Huber", exact: true }).click();
+    await expect(panel(page).getByText("Holds the trend", { exact: true })).toBeVisible();
+  });
+
+  test("Explain it pairs the check with a live companion", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/Answer against the judges/i)).toBeVisible();
+    await expect(panel(page).getByText(/Why does squared error react so strongly/i)).toBeVisible();
   });
 });
