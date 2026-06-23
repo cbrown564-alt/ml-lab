@@ -42,6 +42,22 @@ export function bestRuleAccuracy(points: LabeledPoint[]): { t: number; acc: numb
   return best;
 }
 
+/**
+ * A biased training set: the examples from the upper region (x2 > 0) were collected with
+ * a systematic labelling error — a fraction `bias` of them are mislabelled toward class 0.
+ * The flip is deterministic per point (a seeded draw), so raising `bias` flips steadily
+ * more. A model trained on this faithfully learns the bias and misjudges the true
+ * population — garbage in, garbage out.
+ */
+const FLIP = (() => {
+  const rng = mulberry32(42);
+  return whatIsMlData.map(() => rng());
+})();
+
+export function biasedTrainingSet(bias: number): LabeledPoint[] {
+  return whatIsMlData.map((p, i) => (p.x2 > 0 && FLIP[i] < bias ? { ...p, y: 0 as 0 | 1 } : p));
+}
+
 export const whatIsMlScenario = {
   id: "rule-vs-learn",
   title: "Write the rule, or learn it",

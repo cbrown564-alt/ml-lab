@@ -35,4 +35,17 @@ test.describe("what-is-ml exhibit", () => {
     await panel(page).getByRole("button", { name: /Examples labelled with the right answers/i }).click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
   });
+
+  test("Break it: biased labels yield a biased rule; clean data fixes it", async ({ page }) => {
+    await openTab(page, "Break it");
+    await expect(panel(page).getByText(/learned the bias/i)).toBeVisible();
+    await panel(page).getByRole("slider").first().fill("0");
+    await expect(panel(page).getByText(/Repaired/i)).toBeVisible();
+  });
+
+  test("Explain it pairs the check with a live companion", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/Bias in, bias out/i)).toBeVisible();
+    await expect(panel(page).getByText(/essential difference between traditional programming/i)).toBeVisible();
+  });
 });
