@@ -36,4 +36,17 @@ test.describe("neural-network-fundamentals exhibit", () => {
     await panel(page).getByRole("button", { name: /one unit is still essentially one bend/i }).click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
   });
+
+  test("Break it: high capacity overfits, low capacity generalises", async ({ page }) => {
+    await openTab(page, "Break it");
+    await expect(panel(page).getByRole("status")).toHaveText("Overfit — memorising noise");
+    await panel(page).getByRole("button", { name: "4", exact: true }).click();
+    await expect(panel(page).getByRole("status")).toHaveText("Generalising");
+  });
+
+  test("Explain it pairs the check with a live companion", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/The capacity trade-off/i)).toBeVisible();
+    await expect(panel(page).getByText(/collapses to a single linear map/i)).toBeVisible();
+  });
 });

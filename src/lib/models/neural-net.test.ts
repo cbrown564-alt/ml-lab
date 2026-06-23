@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { accuracy, forward, gradient, initNet, logLoss, train, type Net, type Sample } from "@/lib/models/neural-net";
+import { breakTest, breakTrain, NN_LR } from "@content/exhibits/neural-network-fundamentals/experiment";
 
 /**
  * The network's maths must be exact (so what trains on screen is real) and it must
@@ -54,6 +55,17 @@ describe("neural network", () => {
     expect(losses[losses.length - 1]).toBeLessThan(losses[0]); // loss fell
     expect(accuracy(trained, data)).toBeGreaterThan(0.9); // and it solved XOR
     expect(accuracy(trained, data)).toBeGreaterThan(before);
+  });
+
+  it("too much capacity overfits — a big net fits train better but generalises worse", () => {
+    const small = train(initNet(4, 3), breakTrain, NN_LR, 1500).net;
+    const big = train(initNet(32, 3), breakTrain, NN_LR, 1500).net;
+    const gap = (n: Net) => accuracy(n, breakTrain) - accuracy(n, breakTest);
+    // the big net memorises noisy train points (higher train accuracy)…
+    expect(accuracy(big, breakTrain)).toBeGreaterThan(accuracy(small, breakTrain));
+    // …but pays for it on held-out data — a much wider train-test gap
+    expect(gap(big)).toBeGreaterThan(gap(small) + 0.1);
+    expect(accuracy(big, breakTest)).toBeLessThan(accuracy(small, breakTest));
   });
 
   it("forward output is a probability in (0,1)", () => {

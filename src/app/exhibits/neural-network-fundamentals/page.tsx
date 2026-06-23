@@ -1,6 +1,10 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { NeuralNetBreakIt } from "@/components/exhibits/NeuralNetBreakIt";
+import { NeuralNetCheckLab } from "@/components/exhibits/NeuralNetCheckLab";
 import { NeuralNetLab } from "@/components/exhibits/NeuralNetLab";
 import { NeuralNetStory } from "@/components/exhibits/NeuralNetStory";
+import { neuralNetworkFundamentalsCheck } from "@content/exhibits/neural-network-fundamentals/concept-check";
+import { neuralNetworkFundamentalsFailures } from "@content/exhibits/neural-network-fundamentals/failures";
 import { neuralNetworkFundamentalsMath } from "@content/exhibits/neural-network-fundamentals/math";
 import { neuralNetworkFundamentalsNarrative } from "@content/exhibits/neural-network-fundamentals/narrative";
 import { neuralNetworkFundamentalsSpine } from "@content/exhibits/neural-network-fundamentals/spine";
@@ -12,6 +16,10 @@ export default function NeuralNetworkFundamentalsExhibit() {
       narrative={neuralNetworkFundamentalsNarrative}
       spine={neuralNetworkFundamentalsSpine}
       math={neuralNetworkFundamentalsMath}
+      check={neuralNetworkFundamentalsCheck}
+      failures={neuralNetworkFundamentalsFailures}
+      breakIt={<NeuralNetBreakIt />}
+      checkCompanion={<NeuralNetCheckLab />}
       story={<NeuralNetStory />}
       experiment={<NeuralNetLab />}
       lede={
