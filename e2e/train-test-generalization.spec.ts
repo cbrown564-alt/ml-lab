@@ -37,4 +37,17 @@ test.describe("train-test-generalization exhibit", () => {
     await panel(page).getByRole("button", { name: /It jumps around/i }).click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
   });
+
+  test("Break it: a tiny holdout is a coin flip, a larger one is stable", async ({ page }) => {
+    await openTab(page, "Break it");
+    await expect(panel(page).getByRole("status")).toHaveText("A coin-flip score");
+    await panel(page).getByRole("slider").first().fill("14");
+    await expect(panel(page).getByRole("status")).toHaveText("Stable enough to trust");
+  });
+
+  test("Explain it pairs the check with a live companion", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/Answer against the spread/i)).toBeVisible();
+    await expect(panel(page).getByText(/the same model.s test error swung/i)).toBeVisible();
+  });
 });

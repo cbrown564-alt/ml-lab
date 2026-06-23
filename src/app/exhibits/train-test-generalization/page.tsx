@@ -1,6 +1,10 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { TrainTestBreakIt } from "@/components/exhibits/TrainTestBreakIt";
+import { TrainTestCheckLab } from "@/components/exhibits/TrainTestCheckLab";
 import { TrainTestLab } from "@/components/exhibits/TrainTestLab";
 import { TrainTestStory } from "@/components/exhibits/TrainTestStory";
+import { trainTestGeneralizationCheck } from "@content/exhibits/train-test-generalization/concept-check";
+import { trainTestGeneralizationFailures } from "@content/exhibits/train-test-generalization/failures";
 import { trainTestGeneralizationMath } from "@content/exhibits/train-test-generalization/math";
 import { trainTestGeneralizationNarrative } from "@content/exhibits/train-test-generalization/narrative";
 import { trainTestGeneralizationSpine } from "@content/exhibits/train-test-generalization/spine";
@@ -12,6 +16,10 @@ export default function TrainTestGeneralizationExhibit() {
       narrative={trainTestGeneralizationNarrative}
       spine={trainTestGeneralizationSpine}
       math={trainTestGeneralizationMath}
+      check={trainTestGeneralizationCheck}
+      failures={trainTestGeneralizationFailures}
+      breakIt={<TrainTestBreakIt />}
+      checkCompanion={<TrainTestCheckLab />}
       story={<TrainTestStory />}
       experiment={<TrainTestLab />}
       lede={
