@@ -6,7 +6,7 @@ import { corruptedRows, houses, toPoints } from "@content/exhibits/the-dataset/e
 
 /**
  * The Explain-it companion: one bad row, on a toggle. Include the mistyped row and the
- * price-per-m² slope flattens and the 100 m² estimate craters; remove it and both recover
+ * price-per-m² slope flattens and the 120 m² estimate craters; remove it and both recover
  * — the contrast the checks ask about.
  */
 const CLEAN = olsFit(toPoints(houses));

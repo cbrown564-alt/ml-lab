@@ -30,7 +30,7 @@ export function TheDatasetStory() {
   const frame = useActiveFrame<TheDatasetFrame>();
   const highlight = frame?.highlight ?? "row";
   const caption =
-    highlight === "columns" ? "Columns — features vs the target" : highlight === "matrix" ? "The whole matrix — all the model sees" : "One row — one example";
+    highlight === "columns" ? "Columns — features vs the target" : highlight === "matrix" ? "The matrix — all the model sees" : "One row — one example";
 
   return (
     <figure className="flex flex-col gap-4 rounded-xl border border-line bg-raised p-5">

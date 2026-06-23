@@ -21,18 +21,11 @@ function HousePoints({ highlightId, onHover }: { highlightId: number | null; onH
       {houses.map((h) => {
         const on = highlightId === h.id;
         return (
-          <circle
-            key={h.id}
-            cx={x(h.size)}
-            cy={y(h.price)}
-            r={on ? 8 : 5}
-            fill={on ? "var(--accent)" : "var(--viz-truth)"}
-            stroke="var(--surface-bg)"
-            strokeWidth={1.5}
-            className="cursor-pointer"
-            onPointerEnter={() => onHover(h.id)}
-            onPointerLeave={() => onHover(null)}
-          />
+          <g key={h.id}>
+            <circle cx={x(h.size)} cy={y(h.price)} r={on ? 8 : 5} fill={on ? "var(--accent)" : "var(--viz-truth)"} stroke="var(--surface-bg)" strokeWidth={1.5} pointerEvents="none" />
+            {/* a generous invisible hit-target so a point is as easy to find as a row */}
+            <circle cx={x(h.size)} cy={y(h.price)} r={13} fill="transparent" className="cursor-pointer" onPointerEnter={() => onHover(h.id)} onPointerLeave={() => onHover(null)} />
+          </g>
         );
       })}
     </g>
@@ -52,11 +45,11 @@ export function TheDatasetLab() {
       <div className="lg:grid lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)] lg:items-start lg:gap-8">
         <div className="flex flex-col gap-5">
           <p className="leading-relaxed text-ink-muted">{theDatasetScenario.prompt}</p>
-          <dl className="grid grid-cols-1 gap-2 text-sm">
+          <div className="grid grid-cols-1 gap-2 text-sm">
             <Row label="rows" value={`${houses.length} examples`} hue="var(--viz-prediction-ink)" note="one house each" />
             <Row label="feature columns" value="size, beds" hue="var(--viz-neutral-ink)" note="the inputs the model may use" />
             <Row label="target column" value="price" hue="var(--viz-truth-ink)" note="the answer it learns to predict" />
-          </dl>
+          </div>
         </div>
 
         <div className="mt-6 flex flex-col gap-4 lg:mt-0">
@@ -112,10 +105,10 @@ function Row({ label, value, hue, note }: { label: string; value: string; hue: s
   return (
     <div className="flex items-baseline justify-between gap-3 rounded-lg border border-line bg-sunken px-3 py-2">
       <div>
-        <dt className="font-mono text-[11px] tracking-wide text-ink-faint uppercase">{label}</dt>
-        <dd className="text-xs text-ink-faint">{note}</dd>
+        <p className="font-mono text-[11px] tracking-wide text-ink-faint uppercase">{label}</p>
+        <p className="text-xs text-ink-faint">{note}</p>
       </div>
-      <dd className="font-mono text-sm" style={{ color: hue }}>{value}</dd>
+      <span className="font-mono text-sm" style={{ color: hue }}>{value}</span>
     </div>
   );
 }

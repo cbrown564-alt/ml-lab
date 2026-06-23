@@ -87,7 +87,7 @@ export const theDatasetCheck: ConceptCheck = {
     {
       id: "break-outlier",
       kind: "experiment-task",
-      prompt: "Break it on purpose: include the mistyped row and watch one point flatten the whole trend and wreck the 100 m² estimate — then drop it and see the trend snap back.",
+      prompt: "Break it on purpose: include the mistyped row and watch one point flatten the whole trend and wreck the 120 m² estimate — then drop it and see the trend snap back.",
       taskEvent: "the-dataset:outlier",
       feedback:
         "You've seen why data work is most of the job: one bad row can dominate, and the model can't tell a typo from a fact. The fix is in the data, not the algorithm.",
