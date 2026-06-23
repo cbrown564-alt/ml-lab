@@ -213,11 +213,11 @@ export function ReviewWorkbench({
         const s = Number(e.key);
         setRegister((r) => ({ ...r, [focus]: { ...r[focus], score: s } }));
       } else if (e.key === "j" || e.key === "k") {
-        // vim: j moves down the list, k moves up. Scroll the new row into view so
-        // the direction is visible even when the focused row is below the fold.
+        // j moves up the list, k moves down. Scroll the new row into view so the
+        // direction is visible even when the focused row is below the fold.
         e.preventDefault();
         const i = orderedKeys.indexOf(focus);
-        const next = e.key === "j" ? orderedKeys[i + 1] : orderedKeys[i - 1];
+        const next = e.key === "j" ? orderedKeys[i - 1] : orderedKeys[i + 1];
         if (next) {
           focusOn(next);
           requestAnimationFrame(() =>
