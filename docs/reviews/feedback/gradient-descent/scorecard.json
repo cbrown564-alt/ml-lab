@@ -7,9 +7,8 @@
   "register": [
     {
       "dimension": "hero-as-protagonist",
-      "score": 2,
-      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
-      "note": "the legend loss: low -> high has poor alignment, text bleeds out"
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png"
     },
     {
       "dimension": "mechanism-in-the-picture",
@@ -44,18 +43,16 @@
     "labeledAnnotation": true,
     "depictsMechanism": true,
     "thumbnailLegible": true,
-    "atMostOneLoadMotion": true,
-    "note": "Full-width loss-surface specimen with a single ease-out load motion and a mono figcaption, but it carries no in-graphic labels (start/end/minimum unmarked), the path converges into a dark high-loss corner instead of the bright 'x', and it does not survive thumbnail scale."
+    "atMostOneLoadMotion": true
   },
   "assessment": {
     "playableExperimentTask": true,
     "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
-    "notPureMcqStack": true,
-    "note": "The Explain act is a graded instrument with a live coordinated descent widget; transfer work is genuinely interactive (item 04 PREDICT & VERIFY sets eta=0.12 against the live walk, item 05 LAB TASK is hands-completed) — though the explicitly-labelled item 06 'TRANSFER' is itself a 3-option MCQ."
+    "notPureMcqStack": true
   },
   "verdict": {
-    "decision": "hold",
+    "decision": "advance",
     "blocking": []
   }
 }

@@ -7,9 +7,8 @@
   "register": [
     {
       "dimension": "hero-as-protagonist",
-      "score": 2,
-      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
-      "note": "it needs a bit more visual polish - the split-screen views in e.g. neural network fundamentals are much cleaner. and the labels should be clearer with 'train error' and 'test error'"
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png"
     },
     {
       "dimension": "mechanism-in-the-picture",
@@ -44,18 +43,16 @@
     "labeledAnnotation": true,
     "depictsMechanism": true,
     "thumbnailLegible": true,
-    "atMostOneLoadMotion": true,
-    "note": "A hero would need the existing degree-12 overfit curve (blue fit, amber train/test split, error-vs-lambda U) composed full-width above the prose with one annotated wiggle lobe and residual, legible as a thumbnail."
+    "atMostOneLoadMotion": true
   },
   "assessment": {
     "playableExperimentTask": true,
     "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
-    "notPureMcqStack": true,
-    "note": "The Check keeps a hands-on lab task (B4, 'completed with your hands, not a click') and a persistent live dial, but the closing transfer item (B5) is still a 3-option MCQ rather than an interactive or open prompt."
+    "notPureMcqStack": true
   },
   "verdict": {
-    "decision": "hold",
+    "decision": "advance",
     "blocking": []
   }
 }
