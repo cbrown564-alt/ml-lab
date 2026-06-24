@@ -48,6 +48,19 @@ const rampRGB = (t: number): [number, number, number] => {
 
 const clampPx = (v: number) => Math.max(-2000, Math.min(2000, v));
 
+// Bare-mode loss legend geometry. The label is the widest element, so the panel
+// is sized to it — at 12px mono "loss: low → high" runs ~120px, wider than the
+// 98px swatch row, and the old fixed 114px box let "→ high" bleed past the edge.
+const LEGEND_PAD = 12;
+const LEGEND_SWATCHES = 14;
+const LEGEND_SWATCH_W = 7;
+const LEGEND_LABEL = "loss: low → high";
+const LEGEND_SWATCH_ROW = LEGEND_SWATCHES * LEGEND_SWATCH_W; // 98
+// Mono advance ≈ 0.62em at 12px; round up so font substitution can't re-bleed.
+const LEGEND_LABEL_W = Math.ceil(LEGEND_LABEL.length * 7.5);
+const LEGEND_W = Math.max(LEGEND_SWATCH_ROW, LEGEND_LABEL_W) + LEGEND_PAD * 2;
+const LEGEND_H = 40;
+
 export function LossSurface({
   points,
   trace,
@@ -249,23 +262,32 @@ export function LossSurface({
           {bare && legend && (
             <g transform={`translate(${MARGIN.left + 10},${MARGIN.top + 10})`}>
               <rect
-                x={-8}
+                x={-LEGEND_PAD}
                 y={-8}
-                width={14 * 7 + 16}
-                height={40}
+                width={LEGEND_W}
+                height={LEGEND_H}
                 rx={6}
                 fill="var(--surface-bg)"
                 fillOpacity={0.9}
                 stroke="var(--line)"
                 strokeWidth={1}
               />
-              {Array.from({ length: 14 }).map((_, k) => {
-                const [r, g, b] = rampRGB(k / 13);
-                return <rect key={k} x={k * 7} y={0} width={7} height={8} fill={`rgb(${r},${g},${b})`} />;
+              {Array.from({ length: LEGEND_SWATCHES }).map((_, k) => {
+                const [r, g, b] = rampRGB(k / (LEGEND_SWATCHES - 1));
+                return (
+                  <rect
+                    key={k}
+                    x={k * LEGEND_SWATCH_W}
+                    y={0}
+                    width={LEGEND_SWATCH_W}
+                    height={8}
+                    fill={`rgb(${r},${g},${b})`}
+                  />
+                );
               })}
-              <rect x={0} y={0} width={14 * 7} height={8} fill="none" stroke="var(--ink-faint)" strokeWidth={0.75} />
+              <rect x={0} y={0} width={LEGEND_SWATCH_ROW} height={8} fill="none" stroke="var(--ink-faint)" strokeWidth={0.75} />
               <text x={0} y={24} fontSize={12} fontFamily="var(--font-mono)" fill="var(--ink-muted)">
-                loss: low → high
+                {LEGEND_LABEL}
               </text>
             </g>
           )}
