@@ -67,10 +67,12 @@ export function GradientField({
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
-  // Scale the grid with the rendered size (~3px/cell) so contours stay crisp
-  // instead of stair-stepping when the field is rendered wide (e.g. the hero).
-  const cols = Math.min(420, Math.max(130, Math.round((width - MARGIN.left - MARGIN.right) / 3)));
-  const rows = Math.min(360, Math.max(130, Math.round((height - MARGIN.top - MARGIN.bottom) / 3)));
+  // Scale the grid with the rendered size (~2px/cell) so the band boundaries are
+  // sub-pixel-fine and read as smooth contours, not a stepped wash, when the field
+  // is rendered wide (e.g. the full-bleed hero). One-time paint, so the higher cell
+  // count is cheap; the drag only moves the SVG overlay, never repaints the canvas.
+  const cols = Math.min(680, Math.max(160, Math.round((width - MARGIN.left - MARGIN.right) / 2)));
+  const rows = Math.min(560, Math.max(160, Math.round((height - MARGIN.top - MARGIN.bottom) / 2)));
   const [xd0, xd1] = xDomain ?? domain;
   const [yd0, yd1] = yDomain ?? domain;
 
@@ -194,6 +196,23 @@ export function GradientField({
         {/* the draggable point */}
         <circle cx={sx(point.x)} cy={sy(point.y)} r={7} fill="var(--surface-bg)" stroke="var(--ink)" strokeWidth={2} />
         <circle cx={sx(point.x)} cy={sy(point.y)} r={2.5} fill="var(--ink)" />
+        {/* the slope read off the field, pinned at the point — meaning on the graphic,
+            not only in the side table. Hidden in path/trail mode to keep that clean. */}
+        {mag > 1e-3 && !path && (
+          <text
+            x={sx(point.x)}
+            y={sy(tip.y) < sy(point.y) ? sy(point.y) + 22 : sy(point.y) - 14}
+            textAnchor="middle"
+            fontSize={12}
+            fontFamily="var(--font-mono)"
+            paintOrder="stroke"
+            stroke="var(--surface-bg)"
+            strokeWidth={3.5}
+            fill={arrowColor}
+          >
+            slope {mag.toFixed(2)}
+          </text>
+        )}
       </svg>
     </div>
   );
