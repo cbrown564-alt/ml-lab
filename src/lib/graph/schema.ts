@@ -4,7 +4,7 @@ import { z } from "zod";
  * Knowledge-graph schemas — the single source of truth for graph data shapes.
  * See docs/03-data-model.md. All content under content/graph/ must satisfy
  * these schemas; `npm run validate` enforces this plus structural rules
- * (prerequisite DAG, no dangling edges, journey coherence) at build time.
+ * (requires DAG, no dangling edges, journey coherence) at build time.
  */
 
 export const DOMAINS = [
@@ -40,14 +40,25 @@ export const EXHIBIT_STATUSES = [
   "flagship",
 ] as const;
 
+/**
+ * Pedagogical edge types (docs/03-data-model.md). The type carries a
+ * learner-facing meaning so the graph can explain *why* a connection matters,
+ * not merely that one exists. `requires` drives the DAG, recommendations, and
+ * journey coherence; the rest are lateral or forward relationships authored as
+ * the territory grows. Learner-facing labels live in lib/graph/labels.ts.
+ */
 export const EDGE_TYPES = [
-  "prerequisite",
-  "generalizes",
-  "specializes",
-  "contrasts",
-  "applies",
-  "composes",
-  "sequel",
+  "requires", // a prerequisite mechanism or representation (drives the DAG)
+  "generalises", // a broader formulation of the current concept
+  "special_case_of", // a constrained instance of another concept
+  "optimised_by", // the method used to fit or search it
+  "evaluated_by", // the metric or diagnostic used to judge it
+  "fails_when", // a condition that violates an assumption (→ failure taxonomy)
+  "often_confused_with", // a nearby idea that produces a common misconception
+  "implemented_using", // a computational primitive or system component
+  "mathematical_basis", // the maths that makes the mechanism legible
+  "used_inside", // a larger architecture or workflow containing the concept
+  "alternative_to", // a competing method under a comparable task
 ] as const;
 
 const nodeId = z
@@ -74,8 +85,9 @@ export const ConceptEdgeSchema = z
     strength: z.enum(["hard", "soft"]),
     note: z.string().optional(),
   })
-  .refine((e) => e.type !== "contrasts" || !!e.note, {
-    message: "contrasts edges require a learner-facing note — the comparison is the content",
+  .refine((e) => e.type !== "often_confused_with" || !!e.note, {
+    message:
+      "often_confused_with edges require a learner-facing note — naming the misconception is the content",
   });
 
 export const JourneyStopSchema = z.object({

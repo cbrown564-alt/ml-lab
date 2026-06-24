@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "train-test-generalization",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "e07f76ce58b55d65",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "The lottery histogram is a full-content-width, panel-framed, mono-captioned protagonist that reads as 'spread vs one stable line' even at thumbnail size; pin labels now de-collided onto separate rows."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "The hero shows the lesson's mechanism — the distribution of test error over 80 splits with train pinned on the optimistic flank and CV dropping a stable estimate — as an outcome distribution rather than the residual-square construction Seeing-Theory draws."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The See-it graphic self-describes (kicker, labelled train bar, axis cues, train-vs-test readout with 'seen — flatters'/'honest') and prose tints matching key terms, at parity with Distill's captioned small-multiples."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Warm off-white ground, hairline rules, restrained mono micro-labels, AA viz-ink terms and clear focal hierarchy give a Distill-soft finish; the pin-label collision is resolved."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "One explanatory hero load motion (histogram fills then CV pin drops, static under reduced-motion) plus learner-driven reshuffle/slider re-renders; explanatory not decorative like 3B1B's stepped cost."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "The prior seam is fixed — CV reads accent-teal on both the strip pin and the readout, bars stay viz-prediction blue, error language reserved, prose pairs hue with weight+underline; coherent lab-wide grammar (was 2)."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Lottery histogram with train/CV pins; reference-pin labels now de-collided so 'train — flatters' and 'CV — stable' never overprint."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Explain-it foregrounds an open/interactive transfer prompt above the recall items with feedback on every option."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Hero added and colour seam fixed — every register dimension clears floor 3."
+  }
+}

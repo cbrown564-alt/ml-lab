@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "classification-task",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "4614cb34df6f44e4",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Full-width composed strip with the dashed t=0.50 line as a dead-center focal anchor — poster-worthy and the page's face, just busier than the exemplar's single-object calm."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Shows the whole classification mechanism in one frame — threshold rule splitting decision regions, points by predicted probability, red-ringed misclassifications, plus confusion matrix and precision/recall."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "Self-labels (t=0.50 BALANCED, predict 0/1, READING THE DECISION, ACTUAL/PRED TP/FP/FN/TN with plain-English glosses)."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Distill-soft warm surface, soft borders, crisp anti-aliased marks; held off 4 by a flat field below the strip and a dead gutter right of the Run matrix."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "A docked decision-threshold slider live re-counts the matrix and moves precision/recall/accuracy/F1, plus the single hero load-motion."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "prediction=blue, truth=gold, error=red used only as misclassification rings and FP/FN tints (no all-red dilution), AA-tinted prose terms."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Full-width probability strip + threshold split + confusion matrix/precision-recall — the full mechanism in one frame, legible as a thumbnail via the centered t=0.50 line."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Closing transfer is an open prompt ('a case you haven't seen'), not another MCQ."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Clears register 3 across all six dimensions with a genuine mechanism-bearing hero."
+  }
+}

@@ -1,0 +1,7 @@
+
+[seeing-theory-regression] https://seeing-theory.brown.edu/regression-analysis/index.html
+  ✓ 00-index.png
+  ✓ 01-ols-anscombe-1.png
+  ✓ 02-ols-anscombe-3-outlier.png
+  ✓ 03-ols-anscombe-4-pathology.png
+  ✓ 04-correlation.png

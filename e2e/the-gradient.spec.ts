@@ -1,0 +1,62 @@
+import { expect, test, type Page } from "@playwright/test";
+
+/**
+ * The-gradient exhibit (foundations, four-act spine — See it + Run it). The claim under
+ * test: the gradient arrow points uphill and flips to −∇f in descent mode, and the
+ * See-it prediction — that it sits perpendicular to the contour — is committed before
+ * the reveal.
+ */
+const openTab = (page: Page, name: string) => page.getByRole("tab", { name }).click();
+const panel = (page: Page) => page.getByRole("tabpanel", { includeHidden: false });
+
+test.describe("the-gradient exhibit", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/exhibits/the-gradient");
+    await expect(page.getByTestId("mastery-badge")).toHaveText("seen"); // hydration
+  });
+
+  test("the Story opens on the ascent graphic", async ({ page }) => {
+    await expect(page.getByRole("heading", { name: "The Gradient" })).toBeVisible();
+    await expect(panel(page).getByText(/Ascent — the gradient points uphill/i)).toBeVisible();
+  });
+
+  test("Run it: dragging is live and descent flips the arrow", async ({ page }) => {
+    await openTab(page, "Run it");
+    await expect(panel(page).getByRole("img", { name: /points uphill/i })).toBeVisible();
+    await panel(page).getByRole("button", { name: /descent/i }).click();
+    await expect(panel(page).getByRole("img", { name: /points downhill/i })).toBeVisible();
+  });
+
+  test("See it enforces a committed prediction before the reveal", async ({ page }) => {
+    await panel(page).getByRole("button", { name: /Beat 3 of/ }).click();
+    await expect(panel(page).getByText(/Predict first/i)).toBeVisible();
+    await panel(page).getByRole("button", { name: /Perpendicular to it/i }).click();
+    await expect(panel(page).getByText(/You're right/)).toBeVisible();
+  });
+
+  test("Break it: a greedy climb is trapped on the lower hill", async ({ page }) => {
+    await openTab(page, "Break it");
+    await panel(page).getByRole("button", { name: /Release/i }).click();
+    await expect(panel(page).getByRole("status")).toHaveText("Trapped on the lower hill");
+  });
+
+  test("Break it: dropping far out on the flat stalls (vanishing gradient)", async ({ page }) => {
+    await openTab(page, "Break it");
+    const field = panel(page).getByRole("img", { name: /A landscape/i });
+    await field.scrollIntoViewIfNeeded();
+    const box = (await field.boundingBox())!;
+    // drop the start in the far upper-left corner — the flattest region
+    await page.mouse.move(box.x + box.width * 0.07, box.y + box.height * 0.07);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width * 0.06, box.y + box.height * 0.06, { steps: 4 });
+    await page.mouse.up();
+    await panel(page).getByRole("button", { name: /Release/i }).click();
+    await expect(panel(page).getByRole("status")).toHaveText("Stalled — crawling on the flat");
+  });
+
+  test("Explain it pairs the check with a live companion", async ({ page }) => {
+    await openTab(page, "Explain it");
+    await expect(panel(page).getByText(/Drag to read the arrow/i)).toBeVisible();
+    await expect(panel(page).getByText(/a stationary point/i)).toBeVisible();
+  });
+});

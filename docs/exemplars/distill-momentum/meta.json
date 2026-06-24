@@ -1,0 +1,17 @@
+{
+  "slug": "distill-momentum",
+  "title": "Distill — Why Momentum Really Works",
+  "url": "https://distill.pub/2017/momentum/",
+  "concept": "gradient descent / loss-surface conditioning",
+  "criteria": [
+    "B2 composed graphics",
+    "B3 motion",
+    "interactive-in-prose"
+  ],
+  "capturedAt": "2026-06-21T22:03:09.041Z",
+  "pageHeight": 30433,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  }
+}

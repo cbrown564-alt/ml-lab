@@ -16,7 +16,9 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Flagship: all four acts, cleared the non-circular panel after a two-round review
+    // (the hand-rule-vs-learned doorway, biased-data Break-it). The lab's front door.
+    status: "flagship",
   },
   {
     id: "the-dataset",
@@ -27,7 +29,10 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Flagship: all four acts, cleared the non-circular panel (the coordinated
+    // table↔scatter, the one-bad-row Break-it). The last node to land — the journey is
+    // complete: all 15 Foundations nodes are flagship.
+    status: "flagship",
   },
   {
     id: "regression-task",
@@ -38,7 +43,9 @@ export const nodes: ConceptNode[] = [
     kind: "task",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green); the metric-mismatch lesson verified honest on screen.
+    status: "flagship",
   },
   {
     id: "linear-regression",
@@ -62,7 +69,9 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green). First regression-cluster scale-out node.
+    status: "flagship",
   },
   {
     id: "gradient-descent",
@@ -86,7 +95,9 @@ export const nodes: ConceptNode[] = [
     kind: "practice",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green) after a two-round review.
+    status: "flagship",
   },
   {
     id: "overfitting-regularization",
@@ -97,7 +108,9 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green).
+    status: "flagship",
   },
   {
     id: "logistic-regression",
@@ -108,7 +121,9 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green). Opens the classification cluster.
+    status: "flagship",
   },
   {
     id: "classification-task",
@@ -119,7 +134,9 @@ export const nodes: ConceptNode[] = [
     kind: "task",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green).
+    status: "flagship",
   },
   {
     id: "neural-network-fundamentals",
@@ -130,7 +147,48 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    status: "stub",
+    // Flagship: all four acts, cleared the non-circular panel after a two-round review
+    // (the live XOR trainer + capacity/overfitting, the W₂W₁x→line widget). The capstone.
+    status: "flagship",
+  },
+  {
+    id: "feature-scaling",
+    title: "Feature Scaling",
+    oneLiner: "Why a model that ignores units crawls and zig-zags — and how standardizing the inputs fixes it.",
+    domain: "ml-practice",
+    tags: ["data", "optimization"],
+    kind: "technique",
+    phase: 1,
+    depth: "core",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green).
+    status: "flagship",
+  },
+  {
+    id: "bias-variance",
+    title: "Bias & Variance",
+    oneLiner: "Too simple underfits, too complex overfits — and the U-shaped test error in between.",
+    domain: "ml-practice",
+    tags: ["evaluation"],
+    kind: "concept",
+    phase: 1,
+    depth: "core",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green).
+    status: "flagship",
+  },
+  {
+    id: "data-leakage",
+    title: "Data Leakage",
+    oneLiner: "When information from the answer sneaks into the features — and the validation score that lies.",
+    domain: "ml-practice",
+    tags: ["data", "evaluation"],
+    kind: "practice",
+    phase: 1,
+    depth: "core",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green).
+    status: "flagship",
   },
   {
     id: "the-gradient",
@@ -141,6 +199,9 @@ export const nodes: ConceptNode[] = [
     kind: "math",
     phase: 3,
     depth: "core",
-    status: "stub",
+    // Flagship: all four acts, cleared the non-circular panel (register 3 visual,
+    // integrity + pedagogy green), with the contour-stroke + vanishing-gradient trigger
+    // applied as the reviewers' push-to-exemplar recommendations.
+    status: "flagship",
   },
 ];

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "regression-task",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "384dde4c54820313",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "New hero is a full-width composed portrait in the sanctioned panel with mono figcaption and reads as a fit-line-through-points at 160px; corner-to-corner line leaves some empty panel area so it clears 3, not 4."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "The hero draws each point's miss as a vertical error-hued residual stem with one called out 'error = distance', teaching residual-as-distance like Seeing-Theory's squares; the non-called-out stems are faint, so it clears 3 not 4."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "See-it carries in-graphic labels (mono caption, axis labels) and tinted prose terms bound to the marks, matching Distill's labelled-figure signaling."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Distill-soft surfaces, restrained chrome; the opening dead air is gone (opens on the full hero). See-it beat 01 still floats some empty left-column below short prose — caps at 3."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "From statics the motions read purposeful and learner-driven — hero line eases up and stems grow in once, Run-it drag prediction, Break-it stepped failure loop — transitional not decorative."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Semantic grammar holds lab-wide — prediction blue, truth amber, error crimson — and Break-it recolours out-of-band points to error-hue without an all-red field, AA-darkened ink in prose."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Hero is strong; to reach exemplar grade, all residual stems at consistent error weight and a tighter composition so the empty panel area shrinks."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Transfer item 05 is an open write-your-own textarea with 'Commit & reveal model answer', not an MCQ."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "New hero makes the regression mechanism the protagonist and resolves the opening dead air; clears register 3 with two non-blocking polish items (See-it beat-01 left-column void; under-weighted residual stems)."
+  }
+}

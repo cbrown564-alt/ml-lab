@@ -66,7 +66,7 @@ export function recommendNext({
   for (const n of nodes) {
     if (!liveIds.has(n.id) || touched(n.id)) continue;
     const prereqs = edges
-      .filter((e) => e.to === n.id && e.type === "prerequisite")
+      .filter((e) => e.to === n.id && e.type === "requires")
       .map((e) => byId.get(e.from)!);
     const cleared = prereqs.filter((p) => DONE.has(levelOf(p.id)));
     if (prereqs.length > 0 && cleared.length === prereqs.length) {

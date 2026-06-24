@@ -1,8 +1,14 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { GradientDescentBreakIt } from "@/components/exhibits/GradientDescentBreakIt";
+import { GradientDescentCheckLab } from "@/components/exhibits/GradientDescentCheckLab";
+import { GradientDescentHero } from "@/components/exhibits/GradientDescentHero";
 import { GradientDescentLab } from "@/components/exhibits/GradientDescentLab";
+import { GradientDescentStory } from "@/components/exhibits/GradientDescentStory";
 import { gradientDescentCheck } from "@content/exhibits/gradient-descent/concept-check";
+import { gradientDescentFailures } from "@content/exhibits/gradient-descent/failures";
 import { gradientDescentMath } from "@content/exhibits/gradient-descent/math";
 import { gradientDescentNarrative } from "@content/exhibits/gradient-descent/narrative";
+import { gradientDescentSpine } from "@content/exhibits/gradient-descent/spine";
 
 export default function GradientDescentExhibit() {
   return (
@@ -10,7 +16,12 @@ export default function GradientDescentExhibit() {
       nodeId="gradient-descent"
       check={gradientDescentCheck}
       narrative={gradientDescentNarrative}
+      spine={gradientDescentSpine}
       math={gradientDescentMath}
+      failures={gradientDescentFailures}
+      breakIt={<GradientDescentBreakIt />}
+      checkCompanion={<GradientDescentCheckLab />}
+      hero={<GradientDescentHero />}
       lede={
         <p>
           The engine under nearly everything. A model starts out wrong,
@@ -20,8 +31,15 @@ export default function GradientDescentExhibit() {
           whether the walk converges, crawls, or explodes.
         </p>
       }
-    >
-      <GradientDescentLab />
-    </ExhibitFrame>
+      promise={
+        <>
+          Stay twenty minutes and you&apos;ll see why too timid a step never
+          arrives and too bold a step blows up — the same misstep behind most
+          training runs that die.
+        </>
+      }
+      story={<GradientDescentStory />}
+      experiment={<GradientDescentLab />}
+    />
   );
 }

@@ -13,6 +13,9 @@
     "new:exhibit": "tsx scripts/new-exhibit.ts",
     "brief": "tsx scripts/brief.ts",
     "audio": "tsx scripts/generate-audio.ts",
+    "capture:exemplars": "node scripts/capture-exemplars.mjs",
+    "capture:review": "node scripts/capture-review.mjs",
+    "check:rubric": "tsx scripts/check-rubric.ts",
     "prebuild": "npm run validate",
     "test": "vitest run",
     "test:e2e": "playwright test"

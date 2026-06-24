@@ -8,9 +8,15 @@ import { expect, test } from "@playwright/test";
  */
 
 test.describe("code mode", () => {
+  // The Visual/Code toggle lives in the Run it act (the open bench).
+  const openCode = async (page: import("@playwright/test").Page) => {
+    await page.getByRole("tab", { name: "Run it" }).click();
+    await page.getByRole("button", { name: "code", exact: true }).click();
+  };
+
   test("the template mirrors the live dataset", async ({ page }) => {
     await page.goto("/exhibits/linear-regression");
-    await page.getByRole("button", { name: "code", exact: true }).click();
+    await openCode(page);
 
     const code = page.getByLabel("Python code mirroring the experiment");
     await expect(code).toBeVisible();
@@ -24,9 +30,16 @@ test.describe("code mode", () => {
     // First run downloads the Pyodide runtime from CDN.
     test.slow();
     await page.goto("/exhibits/linear-regression");
+    await page.getByRole("tab", { name: "Run it" }).click();
 
-    const equation = await page.getByText(/ŷ = /).textContent();
-    const [slope, intercept] = equation!.match(/-?\d+\.\d{2}/g)!;
+    // The visual fit, read from the plot's accessible name (2 decimals).
+    const plot = page
+      .getByRole("tabpanel", { includeHidden: false })
+      .getByRole("group", { name: /least-squares line/ });
+    const name = await plot.getAttribute("aria-label");
+    const [, slope, intercept] = name!.match(
+      /[Ss]lope (-?\d+\.\d{2}), intercept (-?\d+\.\d{2})/,
+    )!;
 
     await page.getByRole("button", { name: "code", exact: true }).click();
     await page.getByRole("button", { name: "Run", exact: true }).click();

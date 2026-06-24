@@ -15,6 +15,46 @@ The three master criteria, expanded into an evaluable framework grounded in lear
 
 ---
 
+## The exhibit acceptance rubric — the mechanizable flagship gate
+
+"Interactive" is not synonymous with "educational": a page can carry many controls and leave the learner with no stronger mental model. An exhibit needs *intentional choreography*. The rubric below should **live in the content schema and release process, not merely in an editorial guideline** — an exhibit does not earn `flagship` unless every answer is "yes." It is the operational distillation of Pillars A and B.
+
+| Test | Acceptance question |
+| --- | --- |
+| Hook | Does the opening create a concrete question/prediction rather than merely introduce a term? |
+| Manipulation | Can the learner cause the central mechanism to become visible? |
+| Causality | Is it clear which change produced which outcome? |
+| Representation | Are the visual, mathematical, and computational forms connected? |
+| Code parity | Does code mode reproduce the *exact* current experiment (same state, both directions)? |
+| Prediction | Must the learner commit to an expectation before a key reveal? |
+| Failure | Can the learner trigger at least two important failure modes? |
+| Diagnosis | Does the exhibit teach how to *distinguish* those failures (not just show them)? |
+| Transfer | Is there a novel case that cannot be passed by copying wording? |
+| Whiteboard | Can the learner reconstruct the idea concisely afterwards? |
+| Graph | Are prerequisites and next concepts *explained* (why), not merely linked? |
+| Trust | Are simplifications, sources, and epistemic status visible? |
+| Performance | Does the exhibit become interactive quickly on ordinary hardware? |
+| Accessibility | Can essential meaning be reached without relying solely on colour, pointer precision, or animation? |
+
+### Good vs. great — the dimension table
+
+The rubric's "yes" bar means clearing the **great** column, not the **good** one:
+
+| Dimension | A good exhibit | A great exhibit |
+| --- | --- | --- |
+| Narrative opening | Explains why the concept matters | Creates a concrete puzzle and asks for a prediction |
+| Interaction | Sliders and visible outputs | Cause/effect legible; constrains attention; encourages hypothesis testing |
+| Representation | A clear diagram | Coordinates data, geometry, math, model state, and output |
+| Code | A runnable example | Mirrors the exact visual experiment in both directions |
+| Math | Shows the relevant equation | Connects every term to something observable in the experiment |
+| Failure modes | Mentions limitations | Lets the learner deliberately trigger, identify, and repair canonical failures |
+| Assessment | Checks recall | Tests prediction, diagnosis, explanation, and transfer to an unfamiliar case |
+| Navigation | Links to related pages | Explains why the next concept is related and what prerequisite gap it resolves |
+| Trust | Provides correct content | Distinguishes established results, simplifications, heuristics, and open questions |
+| Finish | Ends with a summary | Leaves the learner able to reconstruct the idea at a whiteboard |
+
+---
+
 ## Pillar A — Beautiful, streamlined user experience
 
 The lab must feel effortless to move through. Research base: Nielsen's usability heuristics; response-time thresholds established by Card/Miller and popularized by Nielsen (0.1s perceived-instant / 1s flow-preserving / 10s attention limit) and Google's RAIL model; Core Web Vitals thresholds; Knowles' andragogy (adult learners demand self-direction and respect); self-determination theory (autonomy as intrinsic-motivation fuel — the research warrant for "no forced linear journey"); WCAG 2.2.
@@ -151,6 +191,20 @@ The architecture's job: exhibit #30 costs a fraction of exhibit #3, and a year o
 4. Content that condescends to the adult learner.
 5. A graph inconsistency (cycle, dangling edge) reaching production.
 6. Shipped `flagship` status with any section silently incomplete — the completeness model only works if it never lies.
+
+## Success metrics — measure transfer, not consumption
+
+The north-star metric is **not** completion rate or time-on-page; those reward shallow consumption and can rise while understanding falls. The primary learning metric is **whiteboard transfer**: after an exhibit, present a short *unseen* case and score whether the learner can
+
+1. state the problem the method solves,
+2. sketch or describe the mechanism,
+3. predict behaviour after a parameter or data change,
+4. diagnose one failure, and
+5. explain a connection to another concept.
+
+That yields a compact **transfer score** per exhibit (operationalised by the `transfer` assessment item). Supporting learner metrics: improvement from the initial prediction to the transfer challenge; failure-diagnosis accuracy; share reaching the first meaningful interaction; visual↔code transitions; completion of a coherent *cluster* (not a page); useful onward graph navigation and delayed returns.
+
+**Platform-economics metrics** (the C1 curve, tracked over the scale-out): authoring hours per exhibit and % built from shared primitives; count of unique bespoke components; visual-code parity defects and accessibility defects; performance-budget compliance and editorial review time; % of graph nodes meeting each completeness tier. Together these test whether the product is creating durable understanding *and* whether the platform is genuinely compounding.
 
 ## Cadence summary
 

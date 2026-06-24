@@ -23,11 +23,17 @@ The algorithms and tasks people actually come to learn. Every node here is high-
 
 **Algorithms**: linear regression; logistic regression; gradient descent; k-nearest neighbors; decision trees; random forests; gradient boosting; k-means; PCA; naive Bayes; SVM (+ kernel trick); neural network fundamentals (perceptron → MLP → backprop).
 
-**Deep learning on-ramps**: CNNs (vision); embeddings; attention; the transformer; "how LLMs work" (the single highest-demand exhibit — flagship treatment); fine-tuning vs prompting vs RAG (conceptual).
+**Deep learning on-ramps**: CNNs (vision); embeddings; attention; the transformer; "how LLMs work"; fine-tuning vs prompting vs RAG (conceptual).
+
+> **"How LLMs Work" is a graph journey, not one giant exhibit.** Impressive transformer/LLM visualizers already exist (Poloclub's Transformer Explainer, Google's MLCC LLM module), so a single beautiful animation is not, by itself, distinctive. ML Lab's edge is decomposition into a *connected sequence* — tokens & tokenization → vectors & embeddings → sequence prediction & attention as content-dependent routing → query/key/value & multi-head → residual pathways, normalisation & the transformer block → next-token training & the probability distribution → temperature/top-k/top-p decoding → context windows, retrieval limits, fine-tuning & preference optimisation → LLM failure modes (hallucination, prompt sensitivity, data limits, distribution shift). The desired outcome is not "I watched a transformer animate" but "I can explain how token prediction, attention, and decoding fit together — and identify which part of the pipeline explains a given behaviour." This is the *culmination* of the deep-learning cluster, reached by walking the graph.
 
 **Journeys at launch**: *Foundations* (zero-to-trees), *Into Deep Learning*, *Understanding LLMs* (the likely front door for many visitors).
 
-Sequencing within Phase 1: ship in graph-coherent clusters (regression cluster → trees cluster → unsupervised cluster → deep-learning cluster) so the explorer always shows a connected, navigable territory rather than scattered islands.
+Sequencing within Phase 1: **build clusters, not isolated exhibits** (regression cluster → trees cluster → unsupervised cluster → deep-learning cluster) so the explorer always shows a connected, navigable territory rather than scattered islands. A cluster lets a shared vocabulary, dataset, and kit compound, and lets *experiment state travel between exhibits* — a learner who creates an outlier in linear regression should later meet that saved case when learning robust loss or model evaluation.
+
+The strong initial regression cluster connects: linear regression; residuals & loss; gradient descent; feature scaling; polynomial features; regularisation; train/validation/test splits; bias–variance; data leakage; model evaluation. (Linear regression and gradient descent are already live and flagship.)
+
+**Content tiers make completeness honest.** Not every node is a flagship exhibit; the data model (docs/03) carries a tier — *flagship* / *full* / *field-note* / *reference* / *frontier* — so the map can show a node that is deliberately small without it reading as unfinished. A graph with *visible completeness* beats a graph padded with apparently-equivalent pages. Each cluster ships at flagship for its hero nodes, with supporting nodes at the honest tier their teaching role needs.
 
 ## Phase 2 — Niche & nascent (~25–40 nodes)
 

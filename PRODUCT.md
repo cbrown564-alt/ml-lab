@@ -4,6 +4,22 @@
 
 ML Lab is an interactive machine learning laboratory for adult learners. It is not a course, reference, notebook platform, or gamified learning app. Each concept is an exhibit: a self-contained experience with a narrative hook, manipulable experiment, code mode, concept checks, field notes, and graph-aware next steps.
 
+## Positioning
+
+**Category**: *the intuition layer for machine learning* — a browser-native interactive atlas where every concept becomes a ~20-minute experiment you can **see, run, and deliberately break**.
+
+**Positioning statement**: *For engineers and career-switchers who need durable ML intuition without another forty-hour course, ML Lab is a browser-native interactive atlas where every concept becomes a twenty-minute experiment that can be seen, run, and deliberately broken. Unlike video courses, notebooks, and one-off visualizers, each exhibit shares one visual↔code state, teaches failure diagnosis, tests transfer, and connects into a navigable map from linear regression to LLMs.*
+
+**Messaging hierarchy**:
+
+| Layer | Message |
+| --- | --- |
+| Primary promise | From "I have seen the formula" to "I can explain and diagnose it." |
+| Product description | Twenty-minute interactive exhibits that unite visual intuition, runnable code, failure modes, and concept checks. |
+| Proof mechanism | **See it. Run it. Break it. Explain it.** |
+
+**Avoid generic category language** that drops ML Lab into a crowded comparison set: "the best way to learn ML," "a free machine-learning course," "interactive ML visualizations," "a collection of explainers," "learn AI from scratch." The moat is the *cumulative system* (exhibit grammar + experiment kit + typed concept graph + failure taxonomy + editorial trust), not any single visualization — so every exhibit must visibly participate in that system.
+
 ## Register
 
 product
@@ -62,8 +78,8 @@ Learners can wander freely through the graph or follow curated journeys. Guidanc
 
 ## Product Surfaces
 
-- Home: orientation, live exhibits, knowledge map, and guided journey entry.
-- Exhibit page: graph-aware concept page with lede, hook, experiment island, story, checks, field notes, and onward links.
+- Home: orientation, live exhibits, knowledge map, guided journey entry, and the four-mode method made visible at the front door.
+- Exhibit page: a graph-aware concept page organised around the **four-act spine** — **See it** (the guided visual story), **Run it** (the open bench + the same model's mechanism in maths), **Break it** (a live, guided failure loop the learner drives — trigger → symptom → diagnose → repair — backed by a failure field guide), **Explain it** (the concept check, closing on a transfer case and the whiteboard) — framed by the specimen masthead (orientation) and the journey coda (forward motion). The spine *is* the navigation: the promise made structural.
 - Experiment visual mode: direct manipulation, scenarios, state readouts, steppable time where relevant.
 - Experiment code mode: Python via Pyodide, mirroring the same model and dataset where feasible.
 - Graph explorer: a map of open doors and future territory.

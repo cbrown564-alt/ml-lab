@@ -14,7 +14,14 @@ describe("layerNodes on the real graph", () => {
   });
 
   it("every ordering edge points to a strictly later layer", () => {
-    const ordering = new Set(["prerequisite", "sequel", "generalizes", "composes", "applies"]);
+    const ordering = new Set([
+      "requires",
+      "generalises",
+      "used_inside",
+      "mathematical_basis",
+      "optimised_by",
+      "evaluated_by",
+    ]);
     for (const e of edges) {
       if (!ordering.has(e.type)) continue;
       expect(
@@ -44,8 +51,8 @@ describe("layerNodes cycle guard", () => {
       status: "stub",
     });
     const cyclic: ConceptEdge[] = [
-      { from: "a", to: "b", type: "sequel", strength: "soft" },
-      { from: "b", to: "a", type: "sequel", strength: "soft" },
+      { from: "a", to: "b", type: "requires", strength: "soft" },
+      { from: "b", to: "a", type: "requires", strength: "soft" },
     ];
     const layers = layerNodes([stub("a"), stub("b")], cyclic);
     expect(layers.size).toBe(2);

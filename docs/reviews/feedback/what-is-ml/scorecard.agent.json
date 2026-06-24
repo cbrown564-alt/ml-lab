@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "what-is-ml",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "25958a8d9256b9bf",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "The new hero is full content-width and poster-legible — labelled scatter with hand vs machine rules and the 70%/97% contrast flanking it carries the whole thesis in one frame, matching Ciechanowski's iconic opening even if its dots-on-cream read slightly busier."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Like Seeing-Theory drawing the residual squares, the hero puts the mechanism on the canvas — both decision boundaries plus red-ringed misclassified points as the visible error, with the 70%/97% numbers quantifying the consequence in-graphic."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The See-it plot self-labels ('your rule', titled 'THE RULE YOU WRITE — ONE FEATURE, ONE CUT · 70%', axes) at Distill's bar, though the 'tops out short' claim still lives in adjacent prose rather than an on-graphic caption."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Distill-soft cream surface, restrained chrome, clean focal hierarchy; the prior opening dead air is resolved by the hero+masthead balance, with only a moderate lower-left void in the See-it column remaining."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "Conservatively from statics, the motions are explanatory — the hero's single line-ease load, the 'Learn from the examples' boundary tilt, and the live Break-it slider — though steppability can't be fully verified from a frame."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Semantic grammar held cleanly like R2D3 — truth dots by class, error reserved for mislabel rings and the 64% true-population drop, accent/teal for the learned rule and live state, neutral param slider, AA mono labels, no all-red dilution."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "The doorway thesis as a specimen: hand rule (70%, mistakes ringed) vs machine rule (97%, eased in), accuracy contrast flanking. To push toward 4: heavier dot/ring weight at thumbnail scale and de-collide the 'machine's rule' label."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Item 05 is a genuine open transfer prompt (free-text résumé-screening case, commit-then-reveal) and item 04 is a hands-on lab task, so the Explain act is not an MCQ stack."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "The new doorway hero clears hero-as-protagonist and mechanism-in-the-picture at floor 3, every register dimension matches the benchmark, the prior opening dead air is resolved, and the transfer is open — advance. Push-to-4 polish: heavier hero dots, an in-canvas 'tops out' annotation, See-it lower-left dead air."
+  }
+}

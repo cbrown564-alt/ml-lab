@@ -8,11 +8,12 @@ import type { ConceptEdge, ConceptNode } from "./schema";
  */
 
 const ORDERING_EDGE_TYPES = new Set([
-  "prerequisite",
-  "sequel",
-  "generalizes",
-  "composes",
-  "applies",
+  "requires",
+  "generalises",
+  "used_inside",
+  "mathematical_basis",
+  "optimised_by",
+  "evaluated_by",
 ]);
 
 export type PlacedNode = {
@@ -29,7 +30,7 @@ export type GraphLayout = {
   height: number;
 };
 
-/** Longest-path layer per node. Validation guarantees the prerequisite DAG;
+/** Longest-path layer per node. Validation guarantees the `requires` DAG;
  * other ordering types are not formally checked, so a defensive cycle guard
  * drops any back edge instead of hanging the build. */
 export function layerNodes(

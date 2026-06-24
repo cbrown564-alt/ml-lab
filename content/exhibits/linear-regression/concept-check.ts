@@ -126,5 +126,21 @@ export const linearRegressionCheck: ConceptCheck = {
       difficulty: 2,
       targets: ["linreg:outlier-influence"],
     },
+    {
+      id: "transfer-house-prices",
+      kind: "transfer",
+      scenario:
+        "You're predicting house prices. Most homes cluster around the median, but the dataset includes a handful of mansions that sold for fifty times that. Your least-squares line predicts the ordinary homes noticeably too high.",
+      prompt:
+        "Why does a handful of mansions pull the whole line up, and what's the cleanest fix that keeps the ordinary homes well-predicted (and what won't help)? Write it in your own words.",
+      open: {
+        placeholder:
+          "e.g. squared error makes the mansions' misses… so the line… the fix is… more features/data won't help because…",
+        answer:
+          "It's the residual-square mechanism from the hero, in the wild: squared error scores a miss by its area, so each mansion's enormous residual dwarfs the ordinary homes' and outvotes the crowd — the line tilts up to appease a few extremes. The cleanest fix is to stop those extremes from dominating the loss: a robust loss (Huber / absolute), or model the mansions as a separate segment. More features won't help — squared error still over-weights the mansions' residuals — and collecting more mansion sales makes it worse, pulling the fit even harder toward the extremes.",
+      },
+      difficulty: 3,
+      targets: ["linreg:transfer-robustness"],
+    },
   ],
 };

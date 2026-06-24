@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "bias-variance",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "dfd748852a8d593f",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Full-width triptych (deg 1 stiff / deg 4 right / deg 12 overfit) is composed and thumbnail-legible; three flat line-plots in a frame keep it off 4 vs Ciechanowski's rendered object."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 4,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Like Seeing-Theory's residual squares, the hero renders the mechanism itself — the deg-12 curve contorting through every point and flinging off-frame IS variance, the stiff deg-1 line IS bias, and 0.23/0.03/0.72 trace the U on the page."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The see graphic self-explains via a degree header, axis ticks, a seen/unseen two-scores panel, and a sweet-spot-marked error-vs-complexity inset with legend."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Clears floor: the prior dead-air below the plot is gone (plot 420->360 so plot + two-scores + U-inset sit balanced in-viewport), smooth anti-aliased lines, hairline cards; short of 4 on left-column whitespace."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "Clears floor: a live degree slider re-renders the fit across run/break/explain plus a story stepper and hero load-in — explanatory controls at parity with the cluster's standard."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Grammar held without dilution — blue=fit, gold filled/hollow=train/held-out, rose reserved for test-error, teal=active step, purple=control handle, prose terms underlined+weighted."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Triptych on the same data with per-panel degree/test-error labels; tightened panels reduce whitespace. (A re-gate force-zeroed this from a stale brief fact; the hero is present per check:rubric and the prior gate's 3/4 read.)"
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "The closing transfer-which-fix item is an open free-response prompt; the check mixes choice, predict, experiment-task, and transfer."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Hero clears both floors (protagonist 3, mechanism 4); atmosphere and motion now clear floor 3 after the See dead-air fix — clears register 3 across the board."
+  }
+}

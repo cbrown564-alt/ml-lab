@@ -27,6 +27,18 @@
   --viz-param: oklch(52% 0.16 303);
   --viz-neutral: oklch(57% 0.025 245);
 
+  /* Colour grammar carried into prose (docs/06, B2; Stream 2 pattern 3):
+     darker siblings of the canvas hues, tuned for body-text contrast on
+     --surface-bg (≥ AA, anchored to --ink-faint's measured 4.7:1). Same hue
+     identity as the figure, so a coloured key term and its mark on the canvas
+     read as the same thing. Terms always pair colour with weight + underline —
+     colour is never the only carrier of meaning. */
+  --viz-prediction-ink: oklch(48% 0.16 258);
+  --viz-truth-ink: oklch(44% 0.105 75);
+  --viz-error-ink: oklch(48% 0.165 8);
+  --viz-param-ink: oklch(47% 0.15 303);
+  --viz-neutral-ink: oklch(45% 0.02 245);
+
   /* One motion language lab-wide (docs/06, A5/B3): quick for microfeedback,
      move for state-to-state transitions the eye should follow. */
   --motion-quick: 120ms;

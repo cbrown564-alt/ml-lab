@@ -28,8 +28,8 @@ const nodes = [
 ];
 
 const edges: ConceptEdge[] = [
-  { from: "a", to: "b", type: "prerequisite", strength: "hard" },
-  { from: "b", to: "c", type: "prerequisite", strength: "hard" },
+  { from: "a", to: "b", type: "requires", strength: "hard" },
+  { from: "b", to: "c", type: "requires", strength: "hard" },
 ];
 
 const journeys: Journey[] = [

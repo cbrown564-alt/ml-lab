@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "overfitting-regularization",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "2aa1183a19c38607",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Full-width before/after diptych reads as a poster and thumbnail-legible (contort vs smooth); held to 3 by the left curve's fling-off near the panel edges."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Mechanism (same degree-12 model contorting vs obeying the penalty, train/test filled/hollow, per-panel test error) is in the picture."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "See plot self-labels (mono title, axes, error-vs-lambda inset with best-lambda line + legend, two-scores readout)."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Warm cream ground, soft borders, smooth anti-aliased curve, clean hierarchy; slack empty space lower-left of the see prose."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "Explanatory lambda slider with live readout drives the persistent curve plus one load ease — clears the floor."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "prediction-blue curve, truth-amber points, error-red numbers, control-purple slider+coefficient bars; no red-field dilution."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Before/after on the same degree-12 model: lambda~0 overfit (test 0.43) vs lambda=0.3 smooth (0.11); to reach 4, contain the left fling-off and label train/test split."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Check has a docked live lambda slider + error-vs-lambda chart and an open closing transfer prompt."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Clears register 3 across all six dimensions including both DELIGHT floors."
+  }
+}

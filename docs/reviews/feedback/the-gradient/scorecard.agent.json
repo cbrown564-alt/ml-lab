@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "the-gradient",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "44583abbf82a606c",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Full-bleed contour landscape (now spanning content width, per-axis window keeps it undistorted) with one perpendicular, slope-stretched gradient arrow and a STRAIGHT-UPHILL caption — a composed poster legible as a thumbnail."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Draws the mechanism itself — perpendicular-to-contours and length-scales-with-steepness — the way Seeing-Theory draws the squared residuals, not just the data."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The canvas self-labels (kicker, live grad/slope/height readouts) and prose terms are tinted to the grammar like Distill's labelled small-multiples."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Warm restrained surface, clean one-peak/one-arrow focal hierarchy; the grid now scales with size so the contour bands are crisp rather than stair-stepped at full width."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "Explanatory controls docked to the canvas (draggable point, ascent/descent toggle, live readouts) plus a sticky scroll-spine clear the floor at 3 under the cluster's affordance standard."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Grammar holds — blue gradient arrow, neutral earth terrain, teal live controls, no all-red error wash, prose hues paired with weight+underline."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Now full-bleed: the landscape fills the content width (per-axis window keeps pixels square so contours stay round and the arrow truly perpendicular), with the callout below; grid scales with size for crisp contours."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "The closing transfer (transfer-training-plateau) is now an open write-your-own prompt; the experiment is a hands-on draggable point."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Full-bleed hero clears hero-as-protagonist and mechanism at floor 3 with crisp contours; every register dimension clears floor 3."
+  }
+}

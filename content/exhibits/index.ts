@@ -7,6 +7,19 @@
 export const liveExhibits: Record<string, { href: string }> = {
   "linear-regression": { href: "/exhibits/linear-regression" },
   "gradient-descent": { href: "/exhibits/gradient-descent" },
+  "loss-functions": { href: "/exhibits/loss-functions" },
+  "feature-scaling": { href: "/exhibits/feature-scaling" },
+  "bias-variance": { href: "/exhibits/bias-variance" },
+  "overfitting-regularization": { href: "/exhibits/overfitting-regularization" },
+  "data-leakage": { href: "/exhibits/data-leakage" },
+  "logistic-regression": { href: "/exhibits/logistic-regression" },
+  "classification-task": { href: "/exhibits/classification-task" },
+  "train-test-generalization": { href: "/exhibits/train-test-generalization" },
+  "the-gradient": { href: "/exhibits/the-gradient" },
+  "regression-task": { href: "/exhibits/regression-task" },
+  "neural-network-fundamentals": { href: "/exhibits/neural-network-fundamentals" },
+  "what-is-ml": { href: "/exhibits/what-is-ml" },
+  "the-dataset": { href: "/exhibits/the-dataset" },
 };
 
 export const isLive = (nodeId: string): boolean => nodeId in liveExhibits;

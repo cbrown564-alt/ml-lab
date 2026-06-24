@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "data-leakage",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "7c163e105938e2ad",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Full-width before/after diptych whose leaked-tilt-vs-honest-flat contrast is legible as a thumbnail; held off 4 by near-identical twin scatters distinguished mainly by trend angle + R²."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 4,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Draws the failure mechanism itself — the held-out trend manufacturing slope from pure noise (R² 0.41) on the left vs lying flat (R² -0.08) on the right against the predicted=actual diagonal — exemplar-grade for the concept."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "Per-panel kicker, R² readouts, the predicted=actual mark, and notes carry the meaning on the graphic; competent labeling short of Distill's per-state math captions."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Warm calm surface, hairline borders, single focal canvas, AA tinted terms (smooth, not aliased); flat dots and Run/Break lower-left voids keep it off 4."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "A Run-it toggle swinging the scatter + per-fold R² bars, a hands-on Break-it loop, a stepped See-it rail, and one hero load-fade clear the floor at 3."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Prediction-blue throughout, error-red reserved only for the leaked R², honest R² neutral, no all-red field; mono-blue + one accent is less rich than R2D3's two-hue vocabulary."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Poster-worthy full-width before/after on the same noise — leaked tilt R² 0.41 vs honest flat R² -0.08 against the predicted=actual diagonal — with per-panel readouts and a single load fade."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Item 05 is a genuine open free-text transfer prompt gated by 'commit your own first'; item 04 is a hands-on lab task."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Clears register 3 — the new hero is the strongest frame in the set (mechanism 4, protagonist 3); remaining gap to flagship is pure compositional finish."
+  }
+}

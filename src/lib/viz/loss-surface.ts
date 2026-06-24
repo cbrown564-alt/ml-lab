@@ -19,8 +19,11 @@ export type LossSurfaceGrid = {
   minimum: { slope: number; intercept: number };
 };
 
+// Slope is framed symmetrically about the valley: the zigzag overshoots past
+// the minimum on the far side, so the window has to hold the swings.
 export const SLOPE_HALF_WINDOW = 4;
-export const INTERCEPT_HALF_WINDOW = 20;
+// The descent's fixed starting line (createGradientDescent's default initial).
+const DESCENT_ORIGIN_INTERCEPT = 0;
 
 export function lossSurfaceGrid(
   points: Point[],
@@ -32,10 +35,13 @@ export function lossSurfaceGrid(
     minimum.slope - SLOPE_HALF_WINDOW,
     minimum.slope + SLOPE_HALF_WINDOW,
   ];
-  const interceptRange: [number, number] = [
-    minimum.intercept - INTERCEPT_HALF_WINDOW,
-    minimum.intercept + INTERCEPT_HALF_WINDOW,
-  ];
+  // Intercept runs (monotonically) between the flat-line start and the valley
+  // floor, so frame exactly that segment with margin rather than a fixed ±20
+  // window — which left the walk a thin band adrift in empty bowl.
+  const iLo = Math.min(DESCENT_ORIGIN_INTERCEPT, minimum.intercept);
+  const iHi = Math.max(DESCENT_ORIGIN_INTERCEPT, minimum.intercept);
+  const iPad = Math.max((iHi - iLo) * 0.35, 2);
+  const interceptRange: [number, number] = [iLo - iPad, iHi + iPad];
 
   const values = new Float64Array(cols * rows);
   let lo = Infinity;

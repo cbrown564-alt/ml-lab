@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "the-dataset",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "a361f9931d415130",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "New hero is full-width, thumbnail-legible (two diverging lines + scatter) with mono figcaptions; the mistyped point now ties to the line with a dotted leader. Off 4 only on the top-band composition."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "The honest dashed trend vs the dragged flat blue fit, the 'SLOPE 2.1 -> 0.4' readout, and the dotted leader from the line to the mistyped row depict leverage — the cause now on-canvas, not just asserted."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The see-frame carries its own caption, axis labels, and an in-figure teal row-to-point binding; short of Distill's every-segment labelling because the blue line/axes stay barer."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Warm cream, soft lines, AA-tinted underlined terms; the prior page-opening dead air is resolved by the hero. Off 4 by residual in-panel voids (hero top band, see lower-left)."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "Conservatively from stills: a single explanatory load motion (line drags flat), an object-constant stepper, and a live break-it toggle (slope/estimate snap) — explanatory, not decorative."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 4,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Exemplar-grade: amber=truth, blue=prediction, crimson=error rationed to only the one bad row and its wrong estimate (no all-red field), teal=active, carried identically across canvas, controls, and AA -ink prose terms."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Hero clears both DELIGHT floors; the mistyped row is drawn at its real position with a dotted leader to the line it drags, so the leverage cause lives in the picture."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "The closing transfer (transfer-sensor) is a genuine open write-your-own prompt with a revealed model answer, not an MCQ."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Clears register 3 across the board (colour 4); the hero resolves the opening dead air and depicts the leverage mechanism with the mistyped row tied to the line it drags."
+  }
+}

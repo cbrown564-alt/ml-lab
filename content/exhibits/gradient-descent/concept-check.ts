@@ -23,7 +23,7 @@ export const gradientDescentCheck: ConceptCheck = {
         {
           label: "The algorithm started moving uphill instead of downhill",
           feedback:
-            "The direction was never wrong — every step still pointed downhill from where it stood. The step *length* was the problem: it sailed past the bottom and ended up higher on the far wall.",
+            "The direction was never wrong — every step still pointed downhill from where it stood. The step length was the problem: it sailed past the bottom and ended up higher on the far wall.",
         },
         {
           label: "Large learning rates make the gradient itself larger",
@@ -69,12 +69,12 @@ export const gradientDescentCheck: ConceptCheck = {
           label: "It points uphill — toward steepest increase — so stepping downhill means going the opposite way",
           correct: true,
           feedback:
-            "Right. The gradient is the direction of steepest *ascent* of the loss; the minus sign in the update rule is the entire “descent” in gradient descent.",
+            "Right. The gradient is the direction of steepest ascent of the loss; the minus sign in the update rule is the entire “descent” in gradient descent.",
         },
         {
           label: "It points downhill, and subtracting is just a convention",
           feedback:
-            "It's the reverse: the gradient points uphill. The subtraction isn't cosmetic — without it you'd be doing gradient *ascent* and maximizing your loss.",
+            "It's the reverse: the gradient points uphill. The subtraction isn't cosmetic — without it you'd be doing gradient ascent and maximizing your loss.",
         },
         {
           label: "It points toward the minimum from anywhere on the surface",
@@ -89,14 +89,14 @@ export const gradientDescentCheck: ConceptCheck = {
       id: "double-the-stride",
       kind: "predict",
       setup:
-        "Stay on “Watch it learn” — learning rate 0.02, which converges comfortably. You're about to double the stride.",
+        "Stay on “Watch it learn” — learning rate 0.06, which converges (with a zigzag) just fine. You're about to double the stride.",
       prompt:
-        "Set the learning rate to 0.04 — twice the step size — and restart the walk. After a few hundred steps, the loss will be…",
+        "Set the learning rate to 0.12 — twice the step size — and restart the walk. After a few hundred steps, the loss will be…",
       options: [
         {
           label: "Lower, sooner — bigger steps cover the same ground in half the time",
           feedback:
-            "That's true right up until the step size crosses this surface's stability limit — which sits, inconveniently, between 0.02 and 0.04. Past it, every step overshoots more than it gains.",
+            "That's true right up until the step size crosses this surface's stability limit — which sits, inconveniently, between 0.06 and 0.12. Past it, every step overshoots more than it gains.",
         },
         {
           label: "About the same — the walk converges either way, just along a different path",
@@ -104,14 +104,14 @@ export const gradientDescentCheck: ConceptCheck = {
             "There's a cliff between these two rates, not a gentle trade-off. Below the critical step size the walk converges; above it, each step lands higher than the last and the loss explodes.",
         },
         {
-          label: "Astronomically worse — 0.04 is past this surface's speed limit, and the walk explodes",
+          label: "Astronomically worse — 0.12 is past this surface's speed limit, and the walk explodes",
           correct: true,
           feedback:
-            "Right — and this is the unsettling part: the safe-looking 0.02 was already half of the critical step size. The boundary between converging and exploding is a line you cross, not a slope you climb.",
+            "Right — and this is the unsettling part: the zigzagging 0.06 was already most of the way to the critical step size (≈0.077). The boundary between converging and exploding is a line you cross, not a slope you climb.",
         },
       ],
       verify:
-        "Drag the learning-rate knob to 0.04, restart the descent, and play. Then lift the fog and watch the path rocket off the map.",
+        "Drag the learning-rate knob to 0.12, restart the descent, and play. Then lift the fog and watch the path rocket off the map.",
       difficulty: 3,
       targets: ["gd:stability-threshold"],
     },
@@ -125,6 +125,22 @@ export const gradientDescentCheck: ConceptCheck = {
         "You've met the failure mode that haunts every real training run — loss climbing by powers of ten, each step landing higher than the last. Now you know its face, and the knob that causes it.",
       difficulty: 1,
       targets: ["gd:divergence"],
+    },
+    {
+      id: "transfer-slow-training",
+      kind: "transfer",
+      scenario:
+        "A colleague is training a model on a dataset you've never seen. They report the loss is falling — but agonisingly slowly, barely halving over thousands of steps — and they've triple-checked the code for bugs.",
+      prompt:
+        "From what the walk taught you: what's the most likely cause, what would you change, and what's the one risk in that fix? Write it as you'd say it at their desk.",
+      open: {
+        placeholder:
+          "e.g. the step size is probably… I'd… but the risk is…",
+        answer:
+          "A slow-but-steady fall is the “too timid” regime — the learning rate is too small, so every step inches downhill. The fix is a larger learning rate for bigger strides. The one risk: push it past the surface's stability ceiling and the steps overshoot the valley, so the loss climbs by powers of ten instead — the exact divergence you triggered in “over the edge.” So raise it, but stay under that cliff (and if unsure, raise it gradually and watch the loss curve).",
+      },
+      difficulty: 3,
+      targets: ["gd:transfer-step-size"],
     },
   ],
 };

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "neural-network-fundamentals",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "9cafc84f5c496372",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Full-width XOR before/after diptych reads at thumbnail scale (straight line fails 75% / bent X solves 100%); capture now shows both panels' full clusters (clip fixed)."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Shows the mechanism — the decision boundary, straight-diagonal-fails vs bent-interlocking-X-solves, with the unseparable cluster red-ringed."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "Canvas self-labels with an in-frame header, a red '75% ON XOR' readout and x1/x2 axes; discursive text still in the prose column."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Warm cream surface, soft anti-aliased blue/tan gradient field, restrained focal hierarchy — Distill-soft."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "Train (live boundary-bending), Reset, a steppable hidden-units control, and a live LOSS readout clear the floor."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "blue=prediction-class, orange=truth-class, red-ring=error per DESIGN.md hues; break-frame tan field is class regions, not an all-error dilution."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Before/after XOR diptych — one neuron's straight line (75%) vs the hidden-layer bent X (100%); capture clip raised so both panels are fully visible."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Closing transfer is a genuine open free-text prompt with commit/reveal, not an MCQ."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Clears register 3 on all six dimensions including both hero floors; hero capture clip fixed."
+  }
+}

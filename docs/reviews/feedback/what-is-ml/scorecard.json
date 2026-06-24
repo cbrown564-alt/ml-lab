@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "what-is-ml",
+  "reviewer": "human",
+  "date": "2026-06-24",
+  "contentHash": "25958a8d9256b9bf",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png"
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png"
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Semantic grammar holds without dilution — break-viewport keeps pink=error/bias, blue=prediction, orange=truth distinct (no all-red drain), and prose Terms pair hue+underline+weight, matching r2d3-trees/00's discipline."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "A hero would need a wide, ambient portrait of the threshold-cut scatter in truth/prediction hues above the masthead, with one explanatory on-load motion (the rule line easing into its cut)."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "The transfer item (transfer-hiring) is a third multiple-choice question with options, not an interaction or open prompt; the genuine interaction (break-bias) is an earlier experiment-task, not the transfer."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [
+      "Add the specimen hero specified in DESIGN.md so the threshold-cut scatter (truth/prediction hues, no chrome) is visible in the opening viewport before the rail — this is the journey's first node and currently has the weakest opening in the cluster (§1d).",
+      "Compress the masthead/placard/rail stack so the See-it scatter clears the fold at 1440x900 instead of starting ~640px down.",
+      "Make the transfer item (transfer-hiring) an interaction or open prompt rather than a third MCQ."
+    ]
+  }
+}

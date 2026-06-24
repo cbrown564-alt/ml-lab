@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "loss-functions",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "bc89e98b96bbca36",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Full-width composed OLS-cloud hero with giant outlier squares is poster-worthy and thumbnail-legible; bottom padding added so the lowest squares no longer kiss the axis."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 4,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "The squared penalty IS the picture — area = loss, outliers' enormous squares visibly bend the line — strictly more legible than seeing-theory/01 where the squares are uniform and the mechanism is quiet."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The see graphic self-labels (title, 'drag a point to refit all three', Huber/absolute line tags, 'THE SQUARED VERDICT', 'miss r') like distill-momentum/02; the loss-curve inset still relies on a legend rather than in-place curve labels."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Distill-soft cream field, restrained pink fills, clean focal hierarchy match ciechanowski-watch/02's calm; a tall empty column under the left See prose keeps it from 4."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "Squares-fade-in on load plus draggable refit and judge-switch that move the line and recompute the verdict are explanatory like 3b1b/02; held at 3 as steppability is unverifiable from statics."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Semantic grammar held across all four views (blue=line, gold=data, pink=penalty, teal=active) with AA weight+underline Terms like r2d3/00; below 4 only because pink penalty and red warning label sit close in hue."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Mechanism-bearing hero (squared-area residuals, outliers dominating); bottom padding added so squares stay clear of the axis."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Transfer is a write-your-own open prompt with a confirm-and-reveal model answer; the check stays composed against the live judge plot."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Clears register 3 across all six dimensions with a genuine mechanism-bearing hero (4)."
+  }
+}

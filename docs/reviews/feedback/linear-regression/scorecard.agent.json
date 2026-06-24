@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "linear-regression",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "7b621c8d06ec8a97",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Full-width, self-framed poster (THE LINE OF BEST FIT / 30 OBSERVATIONS) legible as a thumbnail; matches the exemplar's protagonist composition but lacks dimensional craft to reach 4."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "The residual 'misses' are labelled and drawn (bold error ticks in hero, red segments/penalty squares in Run/Break), so what the line minimises is in the picture; 4 once the squared-area mark lives in the hero."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "Canvas self-explains via in-plot 'y-hat — the model's line' label, title, drag/click hint, axes and live readout legend; meaning isn't prose-only."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "With the readout no longer clipped (full six-cell strip + clearance) and the left column void closed, the frame is Distill-soft with clean focal hierarchy — clears floor 3."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "Each motion is explanatory and action-tied (live refit on drag, Lines/Squares/Hide toggles, snap-back, penalty-square balloon), matching the exemplar's explanatory animation."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Lab grammar held exactly — gold observations, blue prediction line, red reserved for error (MSE/residuals/penalty squares) with no all-red flood and AA tinted prose terms."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Full-width portrait of gold observations under a blue fit-line with bold labelled residual ticks — poster-worthy and on-grammar; would reach 4 by carrying the squared-error area mark."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Transfer item (transfer-house-prices) is now an open write-your-own prompt with a revealed model answer."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Both prior atmosphere defects fixed in pixels (readout fully in-viewport, column void closed); all six register dimensions clear floor 3 — advance."
+  }
+}

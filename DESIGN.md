@@ -34,7 +34,16 @@ Use the tokens in `src/app/globals.css` as the source of truth. Current palette:
 --viz-error: oklch(54% 0.17 8);
 --viz-param: oklch(52% 0.16 303);
 --viz-neutral: oklch(57% 0.025 245);
+
+/* Same hues, darkened for body-text contrast (Stream 2, colour-into-prose) */
+--viz-prediction-ink, --viz-truth-ink, --viz-error-ink,
+--viz-param-ink, --viz-neutral-ink
 ```
+
+The `--viz-*-ink` siblings carry the visual grammar into the prose: a key term
+("the line", "residual", "the gradient") is tinted to match its mark on the
+canvas. Use them only for the `-ink` (text) context — never as the only carrier
+of meaning, so terms always pair the hue with weight and an underline.
 
 Rules:
 
@@ -78,23 +87,94 @@ Rules:
 
 ## Layout
 
-The page grammar is intentionally stable:
+The product is canvas-first (Stream 2): the experiment is the protagonist, not a
+figure inside an article. The page grammar:
 
 1. Graph-aware back link.
-2. Domain and kind kicker.
-3. Title and mastery badge.
-4. Lede.
-5. Narrative hook.
-6. Experiment island.
-7. Story sections.
-8. Concept checks.
-9. Field notes.
-10. Builds on and Leads to graph links.
-11. Honest construction/status note when needed.
+2. **The specimen hero** — a wide, ambient portrait of the live object opens the
+   exhibit before any chrome (`hero` slot, e.g. `LinearRegressionHero`). It shares
+   the working experiment's visual grammar — the same truth-hued data, the same
+   prediction-hued line — but stripped to a portrait: no axes, no readouts, no
+   controls, set in the sanctioned panel (`rounded-xl border border-line
+   bg-raised`) with a mono figcaption. On load it performs one *explanatory*
+   motion (never decorative): for linear regression the line eases up from the
+   flat baseline and settles into the fit. You meet the living thing, then read
+   its tag. Like the placard, the slot is optional — an exhibit without one keeps
+   the title-led masthead until it earns its own specimen.
+3. **The masthead** — beneath the specimen, a two-column header. On the left the
+   title, the lede, and a one-line **promise** of the payoff (the `promise` slot —
+   often the failure mode this exhibit teaches), set off by an accent rule; this
+   promise also balances the column against the placard's height, so the
+   lower-left is invitation, not void. The **specimen placard** (`SpecimenPlacard`)
+   sits on the right: the exhibit's catalogue record — classification (domain ·
+   kind) and the learner's standing in the header, then Builds on / Leads to graph
+   chips and the journey position — set in the same mono-label-over-data voice the
+   live readouts speak. The masthead **orients** the learner in the graph before
+   the interactive; the page's **forward** motion (continue the journey) lives at
+   the foot. Orient at the top, advance at the bottom.
+4. **The spine — See it · Run it · Break it · Explain it** (`ExhibitSpine`). The
+   product promise *is* the page's structure, not a tagline at the foot: a prominent
+   numbered four-act rail (verb + one-line purpose per act, Back/Next, arrow keys
+   scoped to the rail) that the learner **advances through** — the report's 20-minute
+   choreography made navigable. Acts mount on first visit and stay mounted (state
+   survives a detour); only the opening act is in the server HTML (budget honesty).
+   This replaced the old undifferentiated tab pile (Story/Math/Experiment/Break/Check).
+5. **The four acts**, each composed as its own graphic-led panel — never a reading
+   column with a figure pinned in it:
+   - **① See it — form the mental model.** The guided visual story (`StoryStepper`):
+     one persistent graphic the learner re-frames by *stepping* discrete beats (object
+     constancy via `FrameContext` / `useActiveFrame`), prose + light direct
+     manipulation beside it, a secondary beat rail within the act. **Scroll reads, drag
+     manipulates** — the two gestures never fight, and side-by-side holds to 700px so
+     the graphic and its beat stay co-visible. The hook is the first beat; field notes
+     close the walk.
+   - **② Run it — inspect the implementation.** *Coordinated representations* of one
+     canonical state: the open **bench** (the same instrument from the story, guardrails
+     off — scenarios, paint-your-own, the visual↔code toggle where the lab offers one)
+     leads, then the same model's **mechanism in maths** beneath — *math beside its
+     consequence* (pattern 5): equations set Unicode in the readouts' mono voice, key
+     symbols tinted to their mark on the canvas via `HUE_INK`, and a live widget
+     (`StabilityScale`, `SquaredPenalty`) where a claim has a live consequence. The copy
+     bridges the two ("the exact quantity the readout reports, the same code the tests
+     verify") so bench and maths read as one model, not two views.
+   - **③ Break it — learn the operating envelope.** The differentiating act (the
+     report), and deliberately the *most* hands-on. A live, guided failure loop the
+     learner drives (`GradientDescentBreakIt`, `LinearRegressionBreakIt`): **trigger** it
+     past the edge by hand, watch the **symptom** on the live canvas (the loss curve
+     exploding; the penalty square ballooning), **diagnose** the cause, then **repair** it
+     and watch it recover — guidance that tracks the phase the whole way. Beneath the
+     loop, the **field guide** (`FailureGallery`, `asFieldGuide`) catalogues every failure
+     mode as the same structured drill (Trigger → Symptom → Diagnose → Repair → Boundary),
+     each bound to a reusable taxonomy primitive (docs/07). Break it must out-feel Run it —
+     confront the failure with your hands, never read a card about it.
+   - **④ Explain it — prove transfer.** The concept check as a *graded instrument* (a
+     live "N of M resolved" meter, each item in the catalogue voice), foregrounding the
+     **transfer** item (a novel unseen case) and closing on the **whiteboard**: could you
+     now reconstruct the idea, its failures, and where it transfers? The learning loop is
+     our edge over the benchmark set, so it earns real presentation.
 
-Use generous vertical rhythm. The current system uses `mt-10`, `mt-12`, `mt-14`, and `py-16` for major sections. Keep prose narrow and experiments wider.
+   Reading prose within an act stays ~65–68ch. The page's only coda is the **journey
+   strip** — a single hairline-ruled line (mono position left, next-stop affordance
+   right), kept thin so the work stays the main event.
 
-Experiment panels use a single raised container:
+   *Rubric coverage (docs/06):* the spine is built so each acceptance-rubric area has a
+   home — Hook / Manipulation / Causality in See it; Representation / Code-parity / Math
+   in Run it; Failure / Diagnosis in Break it; Prediction / Transfer / Whiteboard in
+   Explain it.
+
+**Identity — museum catalogue meets lab instrument.** The placard and the live
+`StatGrid` readouts share one voice: precise mono uppercase micro-labels over
+sans/data values in hairline-ruled cells. The masthead record and the live
+estimates strip read as the same instrument. That precise, catalogued register —
+not warm-serif, not dark-acid, not broadsheet — is the lab's signature.
+
+The hero spans the full content width (`max-w-7xl`); prose elsewhere stays around
+65–68ch. Use generous vertical rhythm: `mt-14`, `mt-24`, `py-16` for major
+sections; beats are tall (`min-h-[68vh]`) so the sticky graphic stays pinned
+through each.
+
+Experiment panels use a single raised container, and that container is the unit
+the spine pins:
 
 ```tsx
 <div className="rounded-xl border border-line bg-raised p-6">

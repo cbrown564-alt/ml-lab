@@ -12,17 +12,14 @@ test.describe("narration", () => {
     await expect(page.getByTestId("mastery-badge")).toHaveText("seen");
   });
 
-  test("each section can read itself aloud with a word-synced transcript", async ({
+  test("a section reads itself aloud with a word-synced transcript", async ({
     page,
   }) => {
-    // Hook + every story section carries a Listen button.
-    const buttons = page.getByRole("button", { name: /^Listen/ });
-    expect(await buttons.count()).toBeGreaterThanOrEqual(4);
-
-    const first = buttons.first();
-    await first.scrollIntoViewIfNeeded();
-    await first.click();
-    await expect(page.getByRole("button", { name: /^Pause/ }).first()).toBeVisible();
+    // The stepper shows one beat at a time; the active beat carries a Listen.
+    const listen = page.getByRole("button", { name: /^Listen/ });
+    await expect(listen).toHaveCount(1);
+    await listen.click();
+    await expect(page.getByRole("button", { name: /^Pause/ })).toBeVisible();
 
     // The narrator reaches the first words; the transcript follows.
     await expect(page.locator("[data-word][data-active]").first()).toBeVisible({
@@ -30,19 +27,22 @@ test.describe("narration", () => {
     });
 
     // Pausing returns the button.
-    await page.getByRole("button", { name: /^Pause/ }).first().click();
-    await expect(first).toHaveText(/Listen/);
+    await page.getByRole("button", { name: /^Pause/ }).click();
+    await expect(page.getByRole("button", { name: /^Listen/ })).toBeVisible();
+
+    // A later beat narrates too — every story section carries its own audio.
+    await page.getByRole("button", { name: /Why the errors get squared/ }).click();
+    await expect(page.getByRole("button", { name: /^Listen/ })).toBeVisible();
   });
 
-  test("starting one narration stops another", async ({ page }) => {
-    const buttons = page.getByRole("button", { name: /^Listen/ });
-    await buttons.first().scrollIntoViewIfNeeded();
-    await buttons.first().click();
+  test("stepping to another beat stops the narration", async ({ page }) => {
+    // One narrator at a time: with a single beat mounted, stepping away unmounts
+    // the playing section and stops it.
+    await page.getByRole("button", { name: /^Listen/ }).click();
     await expect(page.getByRole("button", { name: /^Pause/ })).toHaveCount(1);
 
-    // The first *remaining* Listen button is the next section.
-    await buttons.first().scrollIntoViewIfNeeded();
-    await buttons.first().click();
-    await expect(page.getByRole("button", { name: /^Pause/ })).toHaveCount(1);
+    await page.getByRole("button", { name: "Next beat" }).click();
+    await expect(page.getByRole("button", { name: /^Pause/ })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /^Listen/ })).toBeVisible();
   });
 });

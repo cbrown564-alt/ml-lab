@@ -18,7 +18,7 @@ const node = (id: string, over: Partial<ConceptNode> = {}): ConceptNode => ({
 const prereq = (from: string, to: string, strength: "hard" | "soft" = "hard"): ConceptEdge => ({
   from,
   to,
-  type: "prerequisite",
+  type: "requires",
   strength,
 });
 
@@ -62,10 +62,10 @@ describe("validateGraph", () => {
     expect(errors(issues).some((e) => e.message.includes("island"))).toBe(true);
   });
 
-  it("rejects contrasts edges without a note", () => {
+  it("rejects often_confused_with edges without a note", () => {
     const issues = validateGraph(
       [node("a"), node("b")],
-      [{ from: "a", to: "b", type: "contrasts", strength: "soft" } as ConceptEdge],
+      [{ from: "a", to: "b", type: "often_confused_with", strength: "soft" } as ConceptEdge],
       [],
     );
     expect(errors(issues).length).toBeGreaterThan(0);

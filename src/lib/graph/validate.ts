@@ -11,7 +11,7 @@ export type GraphIssue = { level: "error" | "warning"; message: string };
 
 /**
  * Structural validation of the knowledge graph (docs/03-data-model.md):
- * schema conformance, unique ids, no dangling edges, prerequisite DAG,
+ * schema conformance, unique ids, no dangling edges, `requires` DAG,
  * no disconnected nodes, journey-prerequisite coherence.
  * A broken graph cannot ship (docs/06, C3).
  */
@@ -48,10 +48,10 @@ export function validateGraph(
     if (!ids.has(e.to)) error(`edge ${e.from}→${e.to}: unknown node '${e.to}'`);
   }
 
-  // Prerequisite edges must form a DAG.
+  // `requires` edges must form a DAG.
   const prereqOut = new Map<string, string[]>();
   for (const e of edges) {
-    if (e.type !== "prerequisite") continue;
+    if (e.type !== "requires") continue;
     prereqOut.set(e.from, [...(prereqOut.get(e.from) ?? []), e.to]);
   }
   const state = new Map<string, "visiting" | "done">();
@@ -96,7 +96,7 @@ export function validateGraph(
   // Journeys: stops exist; a hard prerequisite that is itself a stop must come first.
   const hardPrereqsOf = new Map<string, string[]>();
   for (const e of edges) {
-    if (e.type === "prerequisite" && e.strength === "hard") {
+    if (e.type === "requires" && e.strength === "hard") {
       hardPrereqsOf.set(e.to, [...(hardPrereqsOf.get(e.to) ?? []), e.from]);
     }
   }

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "logistic-regression",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "85e91ff86e344ee8",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Full-width before/after diptych, poster-worthy and thumbnail-legible; the bare left 'no opinion' scatter is quieter than the right gradient, holding it at 3."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Trained panel draws the probability gradient AND the dashed boundary plus red-ring residuals — mechanism, not just data."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "In-graphic header, axis labels and the classifier's-verdict accuracy/log-loss/class-hue strip carry meaning; the P=0.5 boundary line is untagged."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Warm paper, soft gradient, AA prose, quiet chrome read Distill-soft; mild dead air below the see prose column."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "Train, scrub-descent, probability-field toggle, raw+x1^2 toggle and act stepper are explanatory controls clearing the floor."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "amber=truth, blue=prediction, red=error reserved to point rings (no all-red field); matches r2d3's disciplined palette."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Before/after diptych untrained(50%, flat field) vs trained(93%, gold/blue boundary); to reach 4, a flat 50% wash on the left and a P=0.5 tag."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Explain closes on an open free-text transfer (commit/reveal); right panel has a live raw+x1^2 toggle."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "New before/after hero depicts the mechanism and clears floor 3 on both gated dimensions; every register dimension a solid 3."
+  }
+}

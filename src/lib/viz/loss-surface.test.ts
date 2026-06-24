@@ -9,7 +9,9 @@ import { lossSurfaceGrid } from "./loss-surface";
  * contains both the descent's start (0, 0) region and the valley floor.
  */
 
-const points = fixtures.cases.find((c) => c.name === "clean-linear")!
+// The loss surface is gradient descent's territory, so test it on that
+// exhibit's own dataset — the one the grid is actually framed for.
+const points = fixtures.cases.find((c) => c.name === "gd-zigzag")!
   .points as Point[];
 
 describe("lossSurfaceGrid", () => {

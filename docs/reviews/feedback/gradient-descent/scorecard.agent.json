@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "gradient-descent",
+  "reviewer": "agent-panel",
+  "date": "2026-06-23",
+  "contentHash": "3307740f46bd3ded",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Full-width, composed, thumbnail-legible loss-surface poster with a labelled descent path landing on the minimum; legend now on a crisp panel and 'start' clear of the path. Matches the bar; flat-2D field keeps it off 4 vs the sculpted watch."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Where Seeing-Theory draws squared-error squares on residuals, the hero draws the actual loss surface (contour bowl) with the descent walk and minimum marked — the optimization mechanism is in the picture, not just the data."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "Fix landed: see-spine now carries in-graphic labels ('data', 'least-squares fit', 'the line', 'loss (log)') so the chart self-explains in Distill's signaling style instead of leaning on adjacent prose — clears floor 3."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "The See-it viewport is Distill-soft — warm paper, restrained gold/teal/blue, clear focal hierarchy, no aliasing — and the loss surface is now an anti-aliased contour map; matches Ciechanowski's restraint."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "Judged conservatively from statics: a Play control, a scrub-through-time timeline, and a 'step / 500' counter show the descent animation is transitional and controllable like 3B1B's walk, not decorative."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Semantic grammar holds with R2D3-level discipline — gold=data, blue=the line, teal=control, crimson=loss used sparingly, purple=learning-rate knob — and the surface's cream-to-maroon field is a justified low-to-high encoding, not an all-red dilution."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Full-width contour loss surface with a labelled descent path from 'start' to 'the minimum' and a crisp 'loss: low to high' legend panel — reads as a strong thumbnail poster; all five spec booleans pass."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "The transfer item (transfer-slow-training) is now an OPEN prompt — the learner writes their own diagnosis + the one risk in the fix, then reveals a model answer — alongside the playable 'go over the edge' experiment-task and a predict-then-verify. No closed MCQ transfer."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Clears the bar: all six register dimensions at floor 3, the hero spec passes, and the assessment form is fully open/interactive (open transfer). Remaining items are polish toward 4 (hero tactile depth)."
+  }
+}

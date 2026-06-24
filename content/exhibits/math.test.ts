@@ -17,7 +17,11 @@ const allText = (d: (typeof drawers)[number]): string =>
   d.sections
     .flatMap((s) =>
       s.blocks.map((b) =>
-        b.kind === "prose" ? b.text : [...b.lines, b.caption ?? ""].join(" "),
+        b.kind === "prose"
+          ? b.text
+          : b.kind === "equation"
+            ? [...b.lines, b.caption ?? ""].join(" ")
+            : "",
       ),
     )
     .join(" ");
@@ -40,6 +44,24 @@ describe("math drawers", () => {
         }
       });
 
+      it("every tinted term actually occurs in its block (no silent highlight)", () => {
+        for (const s of d.sections) {
+          for (const b of s.blocks) {
+            if (b.kind === "widget" || !b.highlights) continue;
+            const hay =
+              b.kind === "prose"
+                ? b.text
+                : [...b.lines, b.caption ?? ""].join(" ");
+            for (const h of b.highlights) {
+              expect(
+                hay.includes(h.text),
+                `tinted term "${h.text}" not found in ${d.nodeId}/${s.id}`,
+              ).toBe(true);
+            }
+          }
+        }
+      });
+
       it("leans on real math nodes from the math wing", () => {
         expect(d.mathNodeIds.length).toBeGreaterThanOrEqual(1);
         for (const id of d.mathNodeIds) {
@@ -54,8 +76,8 @@ describe("math drawers", () => {
   describe("honesty pins", () => {
     // The Hessian of MSE over (slope, intercept) is (2/n)·[[Σx², Σx],[Σx, n]].
     // Its largest eigenvalue sets the divergence ceiling η < 2/λmax that the
-    // gradient-descent drawer states as ≈ 0.029, and the eigenvalue ratio is
-    // the "about 135 times steeper" condition number.
+    // gradient-descent drawer states as ≈ 0.077, and the eigenvalue ratio is
+    // the "about 52 times steeper" condition number.
     const points = gradientDescentExperiment.datasets[0].points;
     const n = points.length;
     let sxx = 0;
@@ -72,24 +94,24 @@ describe("math drawers", () => {
     const lmax = (tr + Math.sqrt(tr * tr - 4 * det)) / 2;
     const lmin = (tr - Math.sqrt(tr * tr - 4 * det)) / 2;
 
-    it("the stated stability ceiling η ≈ 0.029 is the dataset's actual 2/λmax", () => {
+    it("the stated stability ceiling η ≈ 0.077 is the dataset's actual 2/λmax", () => {
       const ceiling = 2 / lmax;
-      expect(ceiling).toBeGreaterThan(0.028);
-      expect(ceiling).toBeLessThan(0.03);
-      expect(allText(gradientDescentMath)).toContain("0.029");
+      expect(ceiling).toBeGreaterThan(0.076);
+      expect(ceiling).toBeLessThan(0.078);
+      expect(allText(gradientDescentMath)).toContain("0.077");
     });
 
-    it("the ceiling sits between the predict item's 0.02 and 0.04", () => {
+    it("the ceiling sits between the predict item's 0.06 and 0.12", () => {
       const ceiling = 2 / lmax;
-      expect(ceiling).toBeGreaterThan(0.02);
-      expect(ceiling).toBeLessThan(0.04);
+      expect(ceiling).toBeGreaterThan(0.06);
+      expect(ceiling).toBeLessThan(0.12);
     });
 
-    it("the stated condition number ≈ 135 is the dataset's actual eigenvalue ratio", () => {
+    it("the stated condition number ≈ 52 is the dataset's actual eigenvalue ratio", () => {
       const cond = lmax / lmin;
-      expect(cond).toBeGreaterThan(130);
-      expect(cond).toBeLessThan(140);
-      expect(allText(gradientDescentMath)).toContain("135");
+      expect(cond).toBeGreaterThan(50);
+      expect(cond).toBeLessThan(55);
+      expect(allText(gradientDescentMath)).toContain("52");
     });
 
     it("the linreg drawer's degenerate-x claim matches the implementation", () => {

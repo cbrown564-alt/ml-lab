@@ -8,6 +8,13 @@
  * - `experiment-task` — assessment inside the simulation ("make it
  *   diverge"): the experiment itself reports completion, so the check is
  *   continued play, not exam cosplay.
+ * - `transfer` — the north-star item (docs/06 success metrics): a novel,
+ *   *unseen* case the exhibit never walked through, written so it cannot be
+ *   passed by parroting the exhibit's wording. This is whiteboard transfer —
+ *   prediction + diagnosis + explanation applied somewhere new. The flagship
+ *   form (rubric v2 §1c) is **open**: the learner answers in their own words and
+ *   then reveals a model answer, because recognising one of three options is not
+ *   transfer. A legacy MCQ form (`options`) remains only while nodes migrate.
  */
 
 export type ChoiceOption = {
@@ -49,7 +56,31 @@ export type ExperimentTaskItem = ItemBase & {
   feedback: string;
 };
 
-export type AssessmentItem = ChoiceItem | PredictItem | ExperimentTaskItem;
+/** The open transfer: the learner commits an answer in their own words, then
+ *  reveals the model answer to check themselves against. */
+export type TransferOpen = {
+  /** Placeholder hint for the answer box. */
+  placeholder?: string;
+  /** The model answer, revealed after the learner commits their own. */
+  answer: string;
+};
+
+export type TransferItem = ItemBase & {
+  kind: "transfer";
+  /** The novel, unseen case — a situation the exhibit did not walk through. */
+  scenario: string;
+  prompt: string;
+  /** The flagship form (§1c): an open prompt with a model answer to reveal. */
+  open?: TransferOpen;
+  /** Legacy MCQ form — retained only until the node migrates to `open`. */
+  options?: ChoiceOption[];
+};
+
+export type AssessmentItem =
+  | ChoiceItem
+  | PredictItem
+  | ExperimentTaskItem
+  | TransferItem;
 
 export type ConceptCheck = {
   nodeId: string;

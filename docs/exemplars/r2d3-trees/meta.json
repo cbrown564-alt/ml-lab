@@ -1,0 +1,18 @@
+{
+  "slug": "r2d3-trees",
+  "title": "R2D3 — A Visual Introduction to Machine Learning, Part 1",
+  "url": "http://www.r2d3.us/visual-intro-to-machine-learning-part-1/",
+  "fallbackUrl": "https://web.archive.org/web/2023if_/http://www.r2d3.us/visual-intro-to-machine-learning-part-1/",
+  "concept": "decision trees, train/test, overfitting",
+  "criteria": [
+    "B1 guided discovery",
+    "B2 full-bleed scrollytelling",
+    "B4 orchestration"
+  ],
+  "capturedAt": "2026-06-21T22:06:45.861Z",
+  "pageHeight": 21572,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  }
+}
