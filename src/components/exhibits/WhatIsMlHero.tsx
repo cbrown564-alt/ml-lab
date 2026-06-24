@@ -102,9 +102,13 @@ function MachineGraphic({ reveal }: { reveal: number }) {
       <g opacity={reveal} clipPath={`url(#${clipId})`}>
         <line x1={A[0]} y1={A[1]} x2={B[0]} y2={B[1]} stroke="var(--accent)" strokeWidth={3} />
       </g>
-      <text x={x1 - 8} y={yT + 16} textAnchor="end" fontSize={12} fontFamily="var(--font-mono)" paintOrder="stroke" stroke="var(--surface-bg)" strokeWidth={3} fill="var(--accent)" opacity={reveal}>
-        the machine&apos;s boundary
-      </text>
+      {/* Label appears at full opacity once the boundary is mostly drawn — never
+          faded as low-opacity text (which would dip below the contrast floor). */}
+      {reveal > 0.55 && (
+        <text x={x1 - 8} y={yT + 16} textAnchor="end" fontSize={12} fontFamily="var(--font-mono)" paintOrder="stroke" stroke="var(--surface-bg)" strokeWidth={3} fill="var(--accent)">
+          the machine&apos;s boundary
+        </text>
+      )}
     </g>
   );
 }
@@ -114,23 +118,25 @@ function Panel({
   pct,
   tone,
   note,
-  pctOpacity,
+  style,
   children,
 }: {
   kicker: string;
   pct: number;
   tone: "neutral" | "accent";
   note: string;
-  pctOpacity?: number;
+  /** Reveal transform for the machine panel — a transform, never opacity, so the
+   * panel's text never animates through a low-contrast state. */
+  style?: React.CSSProperties;
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-w-0 flex-1">
+    <div className="min-w-0 flex-1" style={style}>
       <div className="flex items-baseline justify-between gap-2 px-1 pb-1">
         <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">{kicker}</span>
         <span
           className="text-2xl font-semibold tabular-nums"
-          style={{ color: tone === "accent" ? "var(--accent)" : "var(--viz-neutral-ink)", opacity: pctOpacity ?? 1 }}
+          style={{ color: tone === "accent" ? "var(--accent)" : "var(--viz-neutral-ink)" }}
         >
           {pct}%
         </span>
@@ -187,7 +193,7 @@ export function WhatIsMlHero() {
             <HandGraphic />
           </Plot>
         </Panel>
-        <Panel kicker="the machine · learned" pct={LEARNED_PCT} tone="accent" pctOpacity={reveal} note="both features, a tilted boundary — learned from the same dots, almost no reds left">
+        <Panel kicker="the machine · learned" pct={LEARNED_PCT} tone="accent" style={{ transform: `translateY(${((1 - reveal) * 8).toFixed(2)}px)` }} note="both features, a tilted boundary — learned from the same dots, almost no reds left">
           <Plot
             width={460}
             height={380}
