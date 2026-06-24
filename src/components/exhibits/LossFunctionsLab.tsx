@@ -33,28 +33,34 @@ const lossValue = (kind: LossKind, points: import("@/lib/models/linear-regressio
 
 /** A non-selected judge's line — ghosted and labelled, so all three verdicts are
  * visible at once and the selected one stands out against them. */
-function GhostLine({ params, label }: { params: LinearParams; label: string }) {
+function GhostLine({ params, label, below = false }: { params: LinearParams; label: string; below?: boolean }) {
   const { x, y } = usePlot();
   if (!Number.isFinite(params.slope + params.intercept)) return null;
   const [d0, d1] = x.domain;
+  const yEnd = params.slope * d1 + params.intercept;
   return (
     <g aria-hidden>
       <line
         x1={x(d0)}
         y1={y(params.slope * d0 + params.intercept)}
         x2={x(d1)}
-        y2={y(params.slope * d1 + params.intercept)}
+        y2={y(yEnd)}
         stroke="var(--viz-neutral)"
         strokeWidth={1.5}
         strokeOpacity={0.5}
         strokeDasharray="5 4"
       />
+      {/* The two ghosts ride close together (both robust to outliers), so stagger
+          their labels above / below the line — otherwise they stack and collide. */}
       <text
         x={x(d1) - 4}
-        y={y(params.slope * d1 + params.intercept) - 5}
+        y={y(yEnd) + (below ? 14 : -5)}
         textAnchor="end"
         fontSize={11}
         fontFamily="var(--font-mono)"
+        paintOrder="stroke"
+        stroke="var(--surface-bg)"
+        strokeWidth={3}
         fill="var(--viz-neutral)"
       >
         {label}
@@ -82,7 +88,8 @@ export function LossFunctionsLab() {
   const practiced = () => whenHydrated(() => useLearner.getState().recordPractice(spec.id));
 
   const xDomain: [number, number] = [-1, 11];
-  const yDomain: [number, number] = [-6, 40];
+  // Headroom so the squared judge's "one big miss" square isn't clipped at the top.
+  const yDomain: [number, number] = [-6, 50];
 
   // The worst miss under the current judge — the point the selected line is most
   // arguing with — gets the callout.
@@ -160,8 +167,8 @@ export function LossFunctionsLab() {
               />
             )}
             {/* the two judges you didn't pick, ghosted behind the chosen line */}
-            {JUDGES.filter((j) => j.kind !== judge).map((j) => (
-              <GhostLine key={j.kind} params={fits[j.kind]} label={j.label.toLowerCase()} />
+            {JUDGES.filter((j) => j.kind !== judge).map((j, i) => (
+              <GhostLine key={j.kind} params={fits[j.kind]} label={j.label.toLowerCase()} below={i === 1} />
             ))}
             {judge === "squared" ? (
               <ResidualSquares points={points} params={fit} />
