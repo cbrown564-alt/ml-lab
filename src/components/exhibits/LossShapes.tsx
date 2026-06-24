@@ -75,12 +75,18 @@ export function LossShapes({
         })}
       </svg>
       <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
-        {ORDER.map((kind) => (
-          <span key={kind} className="inline-flex items-center gap-1.5 text-xs" style={{ opacity: !selected || selected === kind ? 1 : 0.4 }}>
-            <span className="inline-block h-[3px] w-4 rounded-full" style={{ background: HUES[kind] }} />
-            <span className={selected === kind ? "font-medium text-ink" : "text-ink-muted"}>{LABELS[kind]}</span>
-          </span>
-        ))}
+        {ORDER.map((kind) => {
+          const dim = selected && selected !== kind;
+          // De-emphasise a non-selected judge by fading its colour swatch and
+          // dropping the label weight — never by dimming the label text, which
+          // would push it under the 4.5:1 contrast floor.
+          return (
+            <span key={kind} className="inline-flex items-center gap-1.5 text-xs">
+              <span className="inline-block h-[3px] w-4 rounded-full" style={{ background: HUES[kind], opacity: dim ? 0.45 : 1 }} />
+              <span className={dim ? "text-ink" : "font-medium text-ink"}>{LABELS[kind]}</span>
+            </span>
+          );
+        })}
       </div>
     </figure>
   );
