@@ -85,20 +85,25 @@ export function GradientField({
     if (!canvas || !ctx) return;
     canvas.width = cols;
     canvas.height = rows;
-    // First the integer band index of every cell, so we can find where bands meet.
-    const band = (cc: number, rr: number) => {
+    // The continuous normalised height of every cell. The FILL uses this directly
+    // (a smooth relief — no discrete band steps, so no staircase along the curves);
+    // the integer band index, derived from it, is used only to find where contour
+    // lines fall. Topographic banding then reads from the drawn lines over smooth
+    // ground, the way a real contour map works.
+    const heightAt = (cc: number, rr: number) => {
       const xv = xd0 + ((xd1 - xd0) * (cc + 0.5)) / cols;
       const yv = yd0 + ((yd1 - yd0) * (rr + 0.5)) / rows;
-      return Math.round((Math.min(MAX_F, surface(xv, yv)) / MAX_F) * BANDS);
+      return Math.min(MAX_F, surface(xv, yv)) / MAX_F;
     };
-    const bands: number[][] = Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => band(c, r)));
+    const heights: number[][] = Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => heightAt(c, r)));
+    const bandOf = (h: number) => Math.round(h * BANDS);
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
-        const b = bands[r][c];
-        const t = b / BANDS;
-        // A cell on a band boundary (lower-left neighbours differ) becomes a contour line.
-        const onContour = (c > 0 && bands[r][c - 1] !== b) || (r > 0 && bands[r - 1][c] !== b);
-        ctx.fillStyle = onContour ? contourColor(t) : rampColor(t);
+        const h = heights[r][c];
+        const b = bandOf(h);
+        // A cell whose band differs from a lower-left neighbour sits on a contour line.
+        const onContour = (c > 0 && bandOf(heights[r][c - 1]) !== b) || (r > 0 && bandOf(heights[r - 1][c]) !== b);
+        ctx.fillStyle = onContour ? contourColor(h) : rampColor(h);
         ctx.fillRect(c, rows - 1 - r, 1, 1);
       }
     }
