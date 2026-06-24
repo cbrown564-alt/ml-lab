@@ -2,17 +2,17 @@
   "schemaVersion": 2,
   "exhibit": "data-leakage",
   "reviewer": "human",
-  "date": "2026-06-23",
-  "contentHash": "281b69a39d715d15",
+  "date": "2026-06-24",
+  "contentHash": "ba87f81f5ca6694c",
   "register": [
     {
       "dimension": "hero-as-protagonist",
-      "score": 0,
+      "score": 3,
       "exemplarFrame": "ciechanowski-watch/00-viewport.png"
     },
     {
       "dimension": "mechanism-in-the-picture",
-      "score": 0,
+      "score": 3,
       "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png"
     },
     {
@@ -37,21 +37,21 @@
     }
   ],
   "hero": {
-    "present": false,
-    "fullWidth": false,
-    "labeledAnnotation": false,
-    "depictsMechanism": false,
-    "thumbnailLegible": false,
-    "atMostOneLoadMotion": false
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true
   },
   "assessment": {
     "playableExperimentTask": true,
-    "transferIsInteractiveOrOpen": false,
+    "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
     "notPureMcqStack": true
   },
   "verdict": {
-    "decision": "hold",
+    "decision": "advance",
     "blocking": []
   }
 }

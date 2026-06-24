@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "train-test-generalization",
+  "reviewer": "human",
+  "date": "2026-06-24",
+  "contentHash": "e07f76ce58b55d65",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png"
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png"
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png"
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "a hero would need a full-width opening panel showing the mechanism — e.g. the test-error spread of many splits scattering wide while the CV mark holds steady — self-labeled and legible as a thumbnail, replacing the current empty left column."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "the transfer item (transfer-deployment-gap) is a richly-framed 3-option MCQ, not an interaction or open prompt, so transfer is not interactive/open even though the broader check mixes predict and an experiment-task."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [
+      "Add a full-width hero panel that depicts the mechanism (many-split test-error spread scattering wide vs the steady CV mark), self-labeled and thumbnail-legible, to fill the empty hero left column.",
+      "Resolve the colour seam: draw CV in one sanctioned viz hue consistently across chart and readout rather than --accent teal on the figure and --viz-truth-ink gold in the table.",
+      "Strengthen See-it focal hierarchy: the single 'train' bar floats in a near-empty plot — compose the figure so the spread/mechanism is the focal object, not dead space.",
+      "Move the 'why the spread matters' annotation onto the figure (callout of spread width / CV stability) instead of relying on adjacent prose, to match Distill-grade self-sufficient graphics."
+    ]
+  }
+}

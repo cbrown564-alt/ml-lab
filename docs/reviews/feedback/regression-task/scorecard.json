@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "regression-task",
+  "reviewer": "human",
+  "date": "2026-06-24",
+  "contentHash": "384dde4c54820313",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png"
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png"
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "break-full holds the lab grammar exactly — blue prediction line + shaded band, amber-filled vs red-hollow points (shape as redundant channel), crimson 'accuracy' prose terms bound to the figure, teal distance — with no all-red dilution, matching r2d3-trees/00's strict semantic colour split."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "needs a wide ambient specimen portrait above the masthead — amber data with a prediction-hued line easing into the fit and residuals shown — so the page opens on the mechanism, not a placard."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "the closing transfer-wrong-metric item is a 3-option choice MCQ with per-option feedback, not an interaction or open prompt, though the set is not a pure MCQ stack (it includes a predict and a live experiment-task)."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [
+      "No specimen hero: hero.png shows only title + placard, forcing hero-as-protagonist and mechanism-in-the-picture to 0 against floor 3.",
+      "SEE scatter carries no in-graphic mechanism annotation, leaving annotation-integration at 2 vs distill-momentum's labelled figure.",
+      "The fold is dead air above the graphic and the lede has a missing-space rendering bug ('been'the model), holding atmosphere-finish at 2.",
+      "The closing transfer item is another MCQ, not an interactive/open prompt, under-serving the learning-loop payoff."
+    ]
+  }
+}

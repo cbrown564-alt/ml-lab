@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "gradient-descent",
+  "reviewer": "human",
+  "date": "2026-06-24",
+  "contentHash": "3307740f46bd3ded",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "the legend loss: low -> high has poor alignment, text bleeds out"
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png"
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "The semantic grammar holds lab-wide and into AA-tinted prose (truth-gold data, prediction-blue line, param-purple eta/slider/path, error-red reserved for loss/'climb'/bullets, weight+underline so hue isn't alone); docked from 4 because the all-red hero band field uses error-red as ambient terrain, mildly diluting red's 'error' meaning."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "Full-width loss-surface specimen with a single ease-out load motion and a mono figcaption, but it carries no in-graphic labels (start/end/minimum unmarked), the path converges into a dark high-loss corner instead of the bright 'x', and it does not survive thumbnail scale."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "The Explain act is a graded instrument with a live coordinated descent widget; transfer work is genuinely interactive (item 04 PREDICT & VERIFY sets eta=0.12 against the live walk, item 05 LAB TASK is hands-completed) — though the explicitly-labelled item 06 'TRANSFER' is itself a 3-option MCQ."
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": []
+  }
+}

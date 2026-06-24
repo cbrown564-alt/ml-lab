@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "overfitting-regularization",
+  "reviewer": "human",
+  "date": "2026-06-24",
+  "contentHash": "2aa1183a19c38607",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "it needs a bit more visual polish - the split-screen views in e.g. neural network fundamentals are much cleaner. and the labels should be clearer with 'train error' and 'test error'"
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png"
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "The lab grammar is held exactly — blue prediction line, amber observed points, red reserved for honest test error, purple penalty lambda — with no all-red dilution and a bound colored 'Regularisation' term, carrying more semantic load cleanly than R2D3's two-hue scatter."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "A hero would need the existing degree-12 overfit curve (blue fit, amber train/test split, error-vs-lambda U) composed full-width above the prose with one annotated wiggle lobe and residual, legible as a thumbnail."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "The Check keeps a hands-on lab task (B4, 'completed with your hands, not a click') and a persistent live dial, but the closing transfer item (B5) is still a 3-option MCQ rather than an interactive or open prompt."
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": []
+  }
+}

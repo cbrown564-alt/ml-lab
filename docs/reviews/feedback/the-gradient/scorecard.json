@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "the-gradient",
+  "reviewer": "human",
+  "date": "2026-06-24",
+  "contentHash": "44583abbf82a606c",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png"
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png"
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "the lab grammar holds — teal=selected/live, blue=the gradient/model arrow matching the blue grad readout, amber/slate as a legitimate elevation ramp (no all-red error dilution), and prose terms pair the darkened viz-ink hue with underline — as consistently held as the green/blue class split in r2d3-trees/00-viewport.png."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "needs a wide ambient specimen portrait (per DESIGN.md / LinearRegressionHero) of the contour landscape with the gradient arrow standing on it, smoothly rendered with one explanatory load-motion, so the page has a poster-worthy face instead of an empty masthead void."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "the experiment is genuinely playable (drag the point) and every Check option gets process feedback, but the 06 TRANSFER item is a three-row MCQ with no interaction or open prompt."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [
+      "Add a wide specimen hero before the masthead — an ambient contour-landscape portrait with the gradient arrow on it, one explanatory load-motion, no readouts — so the exhibit has a poster-worthy protagonist (currently absent; forces hero dims to 0).",
+      "Re-render the contour landscape anti-aliased (it is visibly stair-stepped/pixel-blocky at native resolution) so the page's focal object reaches the Distill/Ciechanowski smoothness bar.",
+      "Tag the arrow in-figure (label it grad-f and mark the right angle where it crosses a contour) so the canvas self-documents instead of leaning on adjacent prose, per distill-momentum's per-panel captions.",
+      "Make the Transfer item interactive or open-ended (e.g. drag onto a multi-basin landscape and predict the basin) rather than a third MCQ."
+    ]
+  }
+}

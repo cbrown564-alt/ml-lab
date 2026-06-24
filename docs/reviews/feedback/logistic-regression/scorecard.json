@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "logistic-regression",
+  "reviewer": "human",
+  "date": "2026-06-24",
+  "contentHash": "85e91ff86e344ee8",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png"
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png",
+      "note": "Forced 0: there is no hero specimen at all, so unlike seeing-theory-regression/01 which shows the OLS line plus the squared-residual squares as the mechanism, nothing above the spine depicts the boundary or probability field."
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png",
+      "note": "The plot carries axis labels, a TRAINED caption, and an in-figure accuracy/log-loss/class-hue strip, but the boundary line and probability gradient stay unlabeled (P=0.5, sure-vs-guessing live only in prose) — distill-momentum/02 instead writes its labels onto the artifact itself with per-mode captions tied to the inequality."
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Soft continuous gold-to-blue field, clean ringed points, calm focal hierarchy on warm ground — Distill-soft and competent, but a plain d3 scatter on a rectangle with a utilitarian verdict strip, well short of the hand-drawn coil and dual-slider craft of ciechanowski-watch/02."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png",
+      "note": "A Train button plus a visible step slider (step 0) scrubs the descent re-tracing the boundary and a probability-field toggle is explanatory scaffolding, but from static frames I cannot confirm it reads as cleanly as the staged cost/classification reveals in 3b1b-gradient-descent/02, so it holds at competent."
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Lab grammar is held throughout — amber=class0/truth, blue=class1/prediction, red reserved for misclassified points and 'wrong side'/log-loss, teal=active control — and the big field is a two-hue class gradient (no error wash); like r2d3-trees/00 the encoding stays consistent, and ours extends it into AA-tinted prose terms that R2D3 does not."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true,
+    "note": "A hero would need the trained boundary plot rendered full-width above the spine — gold/blue field, dashed line, a few ringed misclassified points, one in-graphic label — composed as a portrait legible as a thumbnail."
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true,
+    "note": "Item 04 is a hands-on lab task (work the Raw to Add-x1-squared toggle, completed with your hands) and item 05 is an open applied transfer about equipment-failure prediction at both temperature extremes, so the stack is not pure MCQ."
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [
+      "No hero specimen above the spine — add the trained decision-boundary plot as a full-width composed portrait so the two forced-0 DELIGHT dimensions can clear their floor of 3.",
+      "Annotation lives beside the figure, not on it — label the boundary as the decision boundary and mark P=0.5 / sure vs guessing in-canvas to lift annotation-integration off 2.",
+      "Atmosphere is clean but plain — add depth/finish to the scatter (softer field edges, a more crafted verdict strip) to move past competent toward the watch bar."
+    ]
+  }
+}
