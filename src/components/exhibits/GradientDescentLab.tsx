@@ -1,14 +1,22 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { Axes, DataPoints, FitLine, Plot, usePlot } from "@/components/viz/Plot";
-import { LossSurface } from "@/components/viz/LossSurface";
 import { ParamSlider } from "@/components/viz/ParamSlider";
 import { TrainingCurve } from "@/components/viz/TrainingCurve";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { useActHandoffFrame } from "@/components/exhibits/ActHandoffContext";
-import { GradientDescentMicroscope } from "@/components/exhibits/GradientDescentMicroscope";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
+
+const LossSurface = dynamic(
+  () => import("@/components/viz/LossSurface").then((m) => m.LossSurface),
+  { ssr: false, loading: () => <div className="h-[560px] rounded-xl border border-line bg-sunken" aria-hidden /> },
+);
+const GradientDescentMicroscope = dynamic(
+  () => import("@/components/exhibits/GradientDescentMicroscope").then((m) => m.GradientDescentMicroscope),
+  { ssr: false, loading: () => <div className="h-[420px] rounded-xl border border-line bg-sunken" aria-hidden /> },
+);
 import type { GradientDescentFrame } from "@content/exhibits/gradient-descent/spine";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { createExperimentStore } from "@/lib/experiment/store";

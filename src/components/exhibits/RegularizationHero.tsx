@@ -9,7 +9,6 @@ import {
   ridgeFitCheb,
   type ChebModel,
 } from "@/lib/models/polynomial";
-import { CausalTrace } from "@/components/viz/primitives";
 import { REG_DEGREE } from "@content/exhibits/overfitting-regularization/experiment";
 import fixtures from "@/lib/models/fixtures/polynomial.json";
 import type { Point } from "@/lib/models/linear-regression";
@@ -55,7 +54,7 @@ function CoefTrace({ model, lambdaT }: { model: ChebModel; lambdaT: number }) {
       {model.weights.slice(1).map((w, i) => (
         <div
           key={i}
-          className="w-3 rounded-t bg-[var(--viz-prediction)]"
+          className="w-3 rounded-t bg-[var(--viz-param)]"
           style={{
             height: `${Math.max(3, (Math.abs(w) / maxW) * 40)}px`,
             opacity: 0.35 + (1 - lambdaT) * 0.55,
@@ -69,7 +68,7 @@ function CoefTrace({ model, lambdaT }: { model: ChebModel; lambdaT: number }) {
         className="ml-2 self-center font-mono text-[9px] tracking-wide text-ink-faint uppercase"
         style={{ opacity: tension }}
       >
-        {lambdaT < 0.35 ? "weights free" : lambdaT < 0.7 ? "tension rising" : "weights pulled in"}
+        {lambdaT < 0.25 ? "weights free" : lambdaT < 0.75 ? "tension rising" : "weights pulled in"}
       </span>
     </div>
   );
@@ -105,13 +104,9 @@ export function RegularizationHero() {
 
   return (
     <figure className="overflow-hidden rounded-xl border border-line bg-raised">
-      <figcaption className="flex items-baseline justify-between gap-4 border-b border-line px-5 py-2.5">
+      <figcaption className="border-b border-line px-5 py-2.5">
         <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
           Overfitting &amp; regularisation
-        </span>
-        <span className="hidden font-mono text-[11px] tracking-widest text-ink-faint uppercase sm:inline">
-          λ {scrubLambda < 0.01 ? scrubLambda.toExponential(1) : scrubLambda.toFixed(2)} · test{" "}
-          {scrubTest.toFixed(2)}
         </span>
       </figcaption>
       <div className="px-3 py-3">
@@ -156,28 +151,6 @@ export function RegularizationHero() {
           />
           <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">λ high</span>
         </label>
-        {reveal > 0 && (
-          <div className="mt-3">
-            <CausalTrace
-              steps={[
-                { id: "lambda", label: "λ ↑", hue: "param" },
-                { id: "weights", label: "weights shrink", hue: "param" },
-                { id: "curve", label: "curve smooths", hue: "prediction" },
-                { id: "error", label: `test ${scrubTest.toFixed(2)}`, hue: "error" },
-              ]}
-              activeStepId={
-                lambdaT < 0.25
-                  ? "lambda"
-                  : lambdaT < 0.55
-                    ? "weights"
-                    : lambdaT < 0.85
-                      ? "curve"
-                      : "error"
-              }
-              ariaLabel="Regularization causal chain from penalty to test error"
-            />
-          </div>
-        )}
       </div>
       <div className="flex items-center justify-center gap-6 border-t border-line px-3 py-2 font-mono text-[11px] text-ink-faint">
         <span className="inline-flex items-center gap-1.5">

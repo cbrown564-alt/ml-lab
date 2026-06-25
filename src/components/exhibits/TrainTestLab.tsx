@@ -83,9 +83,6 @@ export function TrainTestLab() {
 
           <StatGrid
             direction="col"
-            className={
-              storyFrame && storyFrame.stage !== "split" ? "chrome-redundant-metrics" : undefined
-            }
             caption={`${split.train.length} train · ${split.test.length} validation · ${history.length} splits drawn`}
             stats={[
               { label: "training error", value: score.trainErr.toFixed(3), hue: "var(--viz-neutral-ink)", note: "on data it has seen — flatters" },

@@ -32,22 +32,32 @@ const BASE = `http://localhost:${PORT}`;
  * tight enough to red-build a real dependency (deps remain next/react/zod/
  * zustand; anything new lands as hundreds of KB, not twenty). Home stays at 680
  * (it sits ~631 with ample room).
+ *
+ * Per-route overrides (2026-06-25):
+ * - gradient-descent: 700 → 715 (html 110 → 115). The StepMicroscope anatomy
+ *   hero (GradientDescentMicroscope + ThetaSketch + DecompositionBars) is the
+ *   exhibit's visual identity — it cannot be deferred without gutting the hero.
+ *   The three-view lab (line / surface / microscope) is the run-it pedagogy.
+ * - linear-regression: 700 → 710. Prose expansion from copy audit; the route
+ *   has 11 scripts vs 10 for most exhibits (one extra shared chunk).
+ * - neural-network-fundamentals, data-leakage: 700 → 705. Nominal prose growth
+ *   from copy audit; content, not a stray dependency.
  */
 const BUDGETS = [
   { route: "/", jsKb: 680, htmlKb: 100 },
-  { route: "/exhibits/linear-regression", jsKb: 700, htmlKb: 110 },
-  { route: "/exhibits/gradient-descent", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/linear-regression", jsKb: 710, htmlKb: 110 },
+  { route: "/exhibits/gradient-descent", jsKb: 715, htmlKb: 115 },
   { route: "/exhibits/loss-functions", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/feature-scaling", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/bias-variance", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/overfitting-regularization", jsKb: 700, htmlKb: 110 },
-  { route: "/exhibits/data-leakage", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/data-leakage", jsKb: 705, htmlKb: 110 },
   { route: "/exhibits/logistic-regression", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/classification-task", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/train-test-generalization", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/the-gradient", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/regression-task", jsKb: 700, htmlKb: 110 },
-  { route: "/exhibits/neural-network-fundamentals", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/neural-network-fundamentals", jsKb: 705, htmlKb: 110 },
   { route: "/exhibits/what-is-ml", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/the-dataset", jsKb: 700, htmlKb: 110 },
 ];
