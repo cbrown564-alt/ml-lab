@@ -44,7 +44,7 @@ const WINGS: { title: string; blurb: string; ids: string[] }[] = [
   },
   {
     title: "Going deeper",
-    blurb: "Stacking simple parts into something powerful.",
+    blurb: "Simple parts, stacked into something powerful.",
     ids: ["neural-network-fundamentals"],
   },
 ];
@@ -88,7 +88,7 @@ export default function Home() {
       </header>
 
       <main className="mx-auto w-full max-w-6xl px-8">
-        <section className="pt-20 pb-24 text-center">
+        <section className="pt-20 pb-32 text-center">
           <p className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
             An interactive atlas of machine learning
           </p>
@@ -123,12 +123,12 @@ export default function Home() {
             overflow-x-clip wrapper around the page. */}
         <section
           id="exhibits"
-          className="jewel-field relative left-1/2 w-screen -translate-x-1/2 scroll-mt-8 border-y border-line pt-16 pb-24"
+          className="jewel-field relative left-1/2 w-screen -translate-x-1/2 scroll-mt-8 border-y border-line pt-20 pb-24"
         >
           <div className="mx-auto max-w-6xl px-8">
-            <p className="mb-16 text-center font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
+            <h2 className="mb-12 text-center font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
               Now showing · {openExhibits.length} exhibits, all open
-            </p>
+            </h2>
             <JewelGallery wings={wings} edges={jewelEdges} />
           </div>
         </section>

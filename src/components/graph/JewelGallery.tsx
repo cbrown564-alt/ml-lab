@@ -6,15 +6,14 @@ import { ExhibitGlyph } from "@/components/graph/ExhibitGlyph";
 import { MasteryDot } from "@/components/learner/MasteryDot";
 
 /**
- * The atlas as a museum of jewels (homepages/SYNTHESIS.md, after Seeing Theory's
- * chapter circles + neal.fun's variety): every exhibit is a deep gem-plate
- * holding its own luminous glyph. Two pieces of structure replace the messy
- * resting lines the diagram had:
- *   1. the collection is organised into labelled *wings* — a deliberate learning
- *      progression, so the grouping is explicit and the order is not a scatter;
- *   2. hovering a jewel lights the exhibits it connects to and tags each with
- *      its relationship (needed first / leads to / related), so the graph is
- *      legible without drawing a single line.
+ * The atlas as a museum floor-plan (homepages/SYNTHESIS.md, after Seeing
+ * Theory's chapter circles + neal.fun's variety): every exhibit is a deep
+ * gem-plate holding its own luminous glyph. The wings run as side-by-side
+ * *columns* so the whole collection reads in a single view — a deliberate
+ * left→right progression (Groundwork → … → Going deeper), the grouping named at
+ * the head of each column. No resting lines: hovering a jewel lights the
+ * exhibits it connects to and tags each (needed first / leads to / related), so
+ * the graph is legible without drawing one.
  */
 
 export type Jewel = {
@@ -55,19 +54,22 @@ export function JewelGallery({
   }, [active, edges]);
 
   return (
-    <div className="space-y-14" onMouseLeave={() => setActive(null)}>
+    <div
+      className="grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-4"
+      onMouseLeave={() => setActive(null)}
+    >
       {wings.map((wing) => (
-        <section key={wing.title} className="flex flex-col gap-6 lg:flex-row lg:gap-10">
-          <header className="lg:w-56 lg:shrink-0 lg:pt-5 lg:text-right">
-            <h3 className="font-mono text-xs font-semibold tracking-[0.16em] text-ink uppercase">
+        <section key={wing.title} className="flex flex-col">
+          <header className="mb-5 min-h-[4.25rem] border-t border-line pt-4 text-center">
+            <h3 className="font-mono text-[11px] font-semibold tracking-[0.16em] text-ink uppercase">
               {wing.title}
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-balance text-ink-faint">
+            <p className="mx-auto mt-2 max-w-[22ch] text-xs leading-relaxed text-balance text-ink-faint">
               {wing.blurb}
             </p>
           </header>
 
-          <ul className="flex flex-wrap justify-center gap-x-7 gap-y-8 lg:justify-start">
+          <ul className="flex flex-col items-center gap-y-6">
             {wing.jewels.map((j) => {
               const isActive = active === j.id;
               const role = roles.get(j.id);
@@ -84,13 +86,16 @@ export function JewelGallery({
                     <ExhibitGlyph id={j.id} className="h-[72%] w-[72%]" />
                     <MasteryDot nodeId={j.id} />
                   </span>
-                  <span className="mt-3.5 block text-sm leading-snug font-medium tracking-tight text-balance">
+                  {/* Two lines of reserved height so every title block is the
+                      same size and the jewels line up across rows and columns,
+                      whether the title wraps to one line or two. */}
+                  <span className="mt-3 block h-9 overflow-hidden text-center text-[13px] leading-snug font-medium tracking-tight text-balance">
                     {j.title}
                   </span>
                   {/* one reserved caption line so hover never shifts layout */}
-                  <span className="mt-1 block h-4 text-xs font-medium">
+                  <span className="mt-1 block h-4 text-[11px] font-medium">
                     {isActive ? (
-                      <span className="jewel-enter-now text-accent">Enter →</span>
+                      <span className="text-accent">Enter →</span>
                     ) : isLinked ? (
                       <span className="font-mono tracking-wide text-ink-faint uppercase">
                         {role}
@@ -105,7 +110,7 @@ export function JewelGallery({
               return (
                 <li
                   key={j.id}
-                  className="jewel w-36 text-center"
+                  className="jewel w-28 text-center"
                   style={{ opacity: recede ? 0.32 : 1 }}
                 >
                   {j.live && j.href ? (
