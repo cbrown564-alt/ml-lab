@@ -2,30 +2,31 @@
 
 ## What this is
 
-ML Lab is a machine learning laboratory you visit, not a course you take. Each concept — linear regression, gradient descent, attention, diffusion — is an *exhibit*: a self-contained, beautifully crafted experience combining narrative, visuals, audio, and a live experiment you can manipulate. The lab as a whole is organized as a knowledge graph, so concepts connect, build on each other, and can be traversed freely or via curated journeys.
+ML Lab is a machine-learning lab you visit, not a course you take. Each concept — linear regression, gradient descent, attention, diffusion — is an *exhibit*: a self-contained, beautifully crafted experience combining narrative, visuals, audio, and a live experiment you can manipulate. The lab as a whole is organized as a knowledge graph, so concepts connect, build on each other, and can be traversed freely or via curated journeys.
 
-The north star: a learner should leave each exhibit with an *intuition* — the kind practitioners build over years — not just a definition. The test for every exhibit is: "could someone explain this to a colleague at a whiteboard after spending 20 minutes here?"
+The north star: a learner should leave each exhibit able to **explain the idea in their own words** — what it does, when it helps, one way it can fail — not just recite a definition.
 
 ## Positioning & promise
 
 The market (see [the 2026-06 market-strategy report](ML_Lab_Market_Landscape_and_Product_Strategy.pdf)) is crowded at the *component* level — interactive explainers, playgrounds, courses, graphs all exist — but open at the *system* level: nothing makes those elements reinforce one another across all of ML. That is the gap ML Lab occupies.
 
-- **Category**: *the intuition layer for machine learning* — an explorable atlas where every important concept can be **seen, run, broken, and explained**. (Not "interactive ML education," which is already a crowded comparison set.)
-- **Promise** (the proof mechanism): **See it. Run it. Break it. Explain it.** The four learner modes every flagship exhibit delivers:
-  - **See it** — form the mental model (the visual/geometric intuition).
-  - **Run it** — inspect the implementation (mirrored, runnable code over the *same* state).
-  - **Break it** — learn the operating envelope (deliberately trigger, diagnose, and repair canonical failures).
-  - **Explain it** — prove transfer (a novel case that can't be passed by parroting wording).
+- **Category**: *the intuition layer for machine learning* — hands-on exhibits where every important concept can be **seen, run, broken, and explained**. (Not "interactive ML education," which is already a crowded comparison set.)
+- **Primary promise**: **Build intuition by running the model.** See the idea, change the inputs, push the model until it fails, then explain what happened.
+- **Proof mechanism** — four stages every flagship exhibit delivers:
+  - **See it** — build a visual intuition (the guided story).
+  - **Run it** — change the inputs and inspect the model (experiment + maths over the *same* state).
+  - **Break it** — trigger a failure and diagnose the cause (deliberately break, diagnose, repair).
+  - **Explain it** — apply the idea to a new case (transfer on an unseen scenario).
 - **Job to be done**: *when I hit an ML concept I only half-understand, repair the gap fast enough that I can explain it, implement it, and recognise when it fails.*
 - **The moat is the cumulative system, not any single visualization.** Good standalone visualizations are copyable; the defensible asset is the *integration* — one exhibit grammar, one shared visual↔code state, a typed concept graph, a cross-cutting failure taxonomy, and editorial trust. Distill is both our quality benchmark and our warning: *a collection of individually handcrafted masterpieces does not automatically become a scalable product.* So **every exhibit must visibly participate in the larger system** — shared grammar, typed graph edges, reusable failure primitives — never a beautiful island.
 
-### The north-star *metric*: whiteboard transfer
+### The north-star *metric*: transfer, not completion
 
-Success is **not** completion rate or time-on-page — those reward shallow consumption. After an exhibit, give the learner a short *unseen* case and score whether they can: state the problem the method solves; sketch the mechanism; predict behaviour after a parameter/data change; diagnose one failure; explain a connection to a neighbouring concept. That yields a compact **transfer score** per exhibit, and it is the measure that matters.
+Success is **not** completion rate or time-on-page — those reward shallow consumption. After an exhibit, give the learner a short *unseen* case and score whether they can: state the problem the method solves; sketch the mechanism; predict behaviour after a parameter/data change; diagnose one failure; explain a connection to a neighbouring concept. Concept checks operationalise this; they are evidence of practice, not proof of mastery. See [docs/style/voice.md](style/voice.md) for how completion copy should invite explanation without overclaiming.
 
 ## Audience
 
-Adult learners: career-changers entering data science/ML, software engineers leveling up, analysts, curious professionals, students supplementing formal coursework. They are intelligent, time-poor, and allergic to being talked down to. Tone is sophisticated and warm — *The Economist* meets *3Blue1Brown*, never childish.
+Adult learners: career-changers entering data science/ML, software engineers leveling up, analysts, curious professionals, students supplementing formal coursework. They are intelligent, time-poor, and allergic to being talked down to. Tone is sophisticated and warm — *The Economist* meets *3Blue1Brown*, never childish. Full voice rules: [docs/style/voice.md](style/voice.md).
 
 ## Pedagogical principles
 

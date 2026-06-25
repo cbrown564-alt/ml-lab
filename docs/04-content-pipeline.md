@@ -16,8 +16,8 @@ A one-page exhibit brief: the single *aha* this exhibit delivers, the core metap
 
 ### 2. Narrative (Claude + human edit)
 
-- Claude drafts the hook, story, math drawer, field notes against the brief, the house style guide, and the *actual experiment spec* (so prose references real controls: "drag the red point" only if there is one).
-- Written for adults; the style guide bans condescension, mandates concrete-before-abstract, sets reading level and length budgets per section.
+- Claude drafts the hook, story, math drawer, field notes against the brief, **[docs/style/voice.md](style/voice.md)**, and the *actual experiment spec* (so prose references real controls: "drag the red point" only if there is one).
+- Written for adults; the style guide bans condescension, theatrical templates ("Guardrails off," "Stay twenty minutes"), competing product metaphors, and unjustified absolutes; mandates concrete-before-abstract, US English, validation-vs-test discipline, and demonstration-specific labeling.
 - Human edit pass is mandatory. The draft is raw material.
 - Output: `index.mdx` with placeholder slots for visuals and the experiment.
 
@@ -45,7 +45,7 @@ A one-page exhibit brief: the single *aha* this exhibit delivers, the core metap
 
 - Wire everything into the exhibit package; set `SectionStatus` honestly.
 - QA checklist: narrative reads aloud cleanly; every experiment scenario reachable and teaching what it claims; concept-check feedback correct; performance budgets met; screenshots captured for visual regression.
-- A "lab review" pass: walk the exhibit as a learner, cold. The 20-minute whiteboard test (vision doc) is the acceptance criterion.
+- A "lab review" pass: walk the exhibit as a learner, cold. The transfer test (vision doc) is the acceptance criterion — can they explain the idea on an unseen case?
 - **The exhibit acceptance rubric** (docs/06) is checked here: an exhibit does not advance to `flagship` unless every one of the 14 rubric questions answers "yes." The rubric lives in the release process, not only in editorial taste.
 
 ## The ideal twenty-minute choreography
@@ -68,10 +68,11 @@ The success criterion is whether the learner can *explain and diagnose* the idea
 
 The "Break the model" beat is a first-class build stage, not a list of caveats. Most products teach the happy path; practitioners spend their time on validation collapse, misleading metrics, seed sensitivity, deployment mismatch, and spurious features. Each failure is authored as a structured **failure card** — Trigger → Visible symptom → Diagnosis prompt → Repair → Boundary (when the repair itself is wrong) — bound to a reusable taxonomy id (see [07-failure-taxonomy.md](07-failure-taxonomy.md)). Reusing the same failure primitives across exhibits makes them recognisable wherever they recur, which is itself the teaching device.
 
-## House style guide (to be written as `docs/style/`)
+## House style guide
 
-Three artifacts keep the pipeline consistent as it scales:
-- **`voice.md`** — prose voice, tone, banned moves, reading-level targets, how math is introduced.
+The canonical voice guide is **[docs/style/voice.md](style/voice.md)** (June 2026). It covers product vocabulary, four-stage copy, assessment microcopy, accuracy discipline, and the pre-ship editorial checklist.
+
+Additional style artifacts as the pipeline scales:
 - **`art-bible.md`** — character sheets, palette, rendering style, prompt scaffolds that reproduce the style, dos/don'ts gallery.
 - **`visual-grammar.md`** — the visualization kit's semantic conventions: what color means (e.g., predictions always one hue, ground truth another, error a third — *everywhere in the lab*), animation easing standards, annotation styles. Cross-exhibit consistency in visual grammar is itself a teaching device: learners stop re-decoding and start transferring.
 

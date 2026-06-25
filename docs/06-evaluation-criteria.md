@@ -32,7 +32,7 @@ The three master criteria, expanded into an evaluable framework grounded in lear
 | Transfer | Is there a novel case that cannot be passed by copying wording? |
 | Whiteboard | Can the learner reconstruct the idea concisely afterwards? |
 | Graph | Are prerequisites and next concepts *explained* (why), not merely linked? |
-| Trust | Are simplifications, sources, and epistemic status visible? |
+| Trust | Are simplifications, sources, and epistemic status visible? Does copy qualify claims and separate demo-specific behavior from general theory? |
 | Performance | Does the exhibit become interactive quickly on ordinary hardware? |
 | Accessibility | Can essential meaning be reached without relying solely on colour, pointer precision, or animation? |
 
@@ -51,7 +51,7 @@ The rubric's "yes" bar means clearing the **great** column, not the **good** one
 | Assessment | Checks recall | Tests prediction, diagnosis, explanation, and transfer to an unfamiliar case |
 | Navigation | Links to related pages | Explains why the next concept is related and what prerequisite gap it resolves |
 | Trust | Provides correct content | Distinguishes established results, simplifications, heuristics, and open questions |
-| Finish | Ends with a summary | Leaves the learner able to reconstruct the idea at a whiteboard |
+| Finish | Ends with a summary | Invites the learner to explain the idea in their own words on an unseen case |
 
 ---
 

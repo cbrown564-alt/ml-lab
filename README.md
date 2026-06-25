@@ -1,17 +1,19 @@
 # ML Lab
 
-**An immersive, visual machine learning laboratory for the web.**
+**Hands-on interactive exhibits for building machine-learning intuition.**
 
-ML Lab is a pedagogical web application that makes machine learning concepts feel intuitive through rich visual storytelling, hands-on interactive experiments, and carefully crafted narratives for adult learners. It spans the field from foundational algorithms to the cutting edge — and in later phases, down into the underlying mathematics and out into connected disciplines.
+ML Lab turns core machine-learning ideas into exhibits you can run, break, and apply. Each concept is a self-contained experience — narrative, visuals, audio, and a live experiment — connected in a knowledge graph from foundational algorithms to the cutting edge.
 
 ## Core ideas
 
-- **Every concept stands alone.** Each algorithm, technique, or idea is a self-contained experience that works exceptionally well on its own — narratively, visually, interactively. No forced linear progression.
-- **But everything connects.** Concepts live in a knowledge graph with typed relationships (prerequisites, generalizations, applications). Curated linear journeys exist as guided walks through the graph for learners who want structure.
+- **Build intuition by running the model.** See the idea, change the inputs, push the model until it fails, then explain what happened.
+- **Every concept stands alone.** Each algorithm, technique, or idea is a self-contained exhibit. No forced linear progression.
+- **But everything connects.** Concepts live in a knowledge graph with typed relationships (prerequisites, generalizations, applications). Curated journeys exist as guided walks through the graph for learners who want structure.
+- **Four stages per exhibit.** See it · Run it · Break it · Explain it — the product promise made structural on every page.
 - **Built for big screens.** Designed primarily for laptops and desktops, using the full canvas to tell rich visual stories and host immersive experiments.
 - **Two modes of exploration.** Every interactive experiment offers a **visual mode** (direct manipulation, sliders, drag-and-drop data points) and a **code mode** (edit and run real code in the browser).
 - **Multi-modal by design.** Each concept aspires to text, visuals, audio narration, and interactive components — produced through an AI-assisted content pipeline (narrative via Claude, character art via image generation, voices via ElevenLabs).
-- **Assessment-aware.** Concept checks feed a mastery model that powers recommended next steps across the graph.
+- **Assessment-aware.** Concept checks feed a progress model that powers recommended next steps across the graph.
 
 ## Documentation
 
@@ -19,6 +21,7 @@ ML Lab is a pedagogical web application that makes machine learning concepts fee
 | --- | --- |
 | [docs/00-decisions.md](docs/00-decisions.md) | Decision log for direction-setting choices |
 | [docs/01-vision.md](docs/01-vision.md) | Vision, pedagogy, design principles, what "exceptional" means here |
+| [docs/style/voice.md](docs/style/voice.md) | Canonical voice & copy style guide for learner-facing prose and UI |
 | [docs/02-architecture.md](docs/02-architecture.md) | Technical architecture, stack, rendering and in-browser ML strategy |
 | [docs/03-data-model.md](docs/03-data-model.md) | Knowledge graph schema, concept format, assessments, mastery model |
 | [docs/04-content-pipeline.md](docs/04-content-pipeline.md) | AI-assisted production workflow for narrative, art, audio, interactives |

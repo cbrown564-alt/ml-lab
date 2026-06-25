@@ -113,60 +113,55 @@ figure inside an article. The page grammar:
    the interactive; the page's **forward** motion (continue the journey) lives at
    the foot. Orient at the top, advance at the bottom.
 4. **The spine — See it · Run it · Break it · Explain it** (`ExhibitSpine`). The
-   product promise *is* the page's structure, not a tagline at the foot: a prominent
-   numbered four-act rail (verb + one-line purpose per act, Back/Next, arrow keys
-   scoped to the rail) that the learner **advances through** — the report's 20-minute
-   choreography made navigable. Acts mount on first visit and stay mounted (state
-   survives a detour); only the opening act is in the server HTML (budget honesty).
-   This replaced the old undifferentiated tab pile (Story/Math/Experiment/Break/Check).
-5. **The four acts**, each composed as its own graphic-led panel — never a reading
+   product promise *is* the page's structure: a prominent numbered four-stage rail
+   (verb + one-line purpose per stage, Back/Next, arrow keys scoped to the rail) that
+   the learner **advances through**. Label: "Work through four stages." Acts mount on
+   first visit and stay mounted (state survives a detour); only the opening act is in
+   the server HTML (budget honesty).
+5. **The four stages**, each composed as its own graphic-led panel — never a reading
    column with a figure pinned in it:
-   - **① See it — form the mental model.** The guided visual story (`StoryStepper`):
+   - **① See it — Build a visual intuition.** The guided visual story (`StoryStepper`):
      one persistent graphic the learner re-frames by *stepping* discrete beats (object
      constancy via `FrameContext` / `useActiveFrame`), prose + light direct
-     manipulation beside it, a secondary beat rail within the act. **Scroll reads, drag
+     manipulation beside it, a secondary beat rail within the stage. **Scroll reads, drag
      manipulates** — the two gestures never fight, and side-by-side holds to 700px so
      the graphic and its beat stay co-visible. The hook is the first beat; field notes
      close the walk.
-   - **② Run it — inspect the implementation.** *Coordinated representations* of one
-     canonical state: the open **bench** (the same instrument from the story, guardrails
-     off — scenarios, paint-your-own, the visual↔code toggle where the lab offers one)
-     leads, then the same model's **mechanism in maths** beneath — *math beside its
-     consequence* (pattern 5): equations set Unicode in the readouts' mono voice, key
-     symbols tinted to their mark on the canvas via `HUE_INK`, and a live widget
-     (`StabilityScale`, `SquaredPenalty`) where a claim has a live consequence. The copy
-     bridges the two ("the exact quantity the readout reports, the same code the tests
-     verify") so bench and maths read as one model, not two views.
-   - **③ Break it — learn the operating envelope.** The differentiating act (the
-     report), and deliberately the *most* hands-on. A live, guided failure loop the
-     learner drives (`GradientDescentBreakIt`, `LinearRegressionBreakIt`): **trigger** it
-     past the edge by hand, watch the **symptom** on the live canvas (the loss curve
-     exploding; the penalty square ballooning), **diagnose** the cause, then **repair** it
-     and watch it recover — guidance that tracks the phase the whole way. Beneath the
-     loop, the **field guide** (`FailureGallery`, `asFieldGuide`) catalogues every failure
-     mode as the same structured drill (Trigger → Symptom → Diagnose → Repair → Boundary),
-     each bound to a reusable taxonomy primitive (docs/07). Break it must out-feel Run it —
-     confront the failure with your hands, never read a card about it.
-   - **④ Explain it — prove transfer.** The concept check as a *graded instrument* (a
-     live "N of M resolved" meter, each item in the catalogue voice), foregrounding the
-     **transfer** item (a novel unseen case) and closing on the **whiteboard**: could you
-     now reconstruct the idea, its failures, and where it transfers? The learning loop is
-     our edge over the benchmark set, so it earns real presentation.
+   - **② Run it — Change the inputs and inspect the model.** *Coordinated representations*
+     of one canonical state: the open **experiment** (scenarios, paint-your-own, the
+     visual↔code toggle where the lab offers one) leads, then the same model's
+     **mechanism in maths** beneath — *math beside its consequence* (pattern 5): equations
+     set Unicode in the readouts' mono voice, key symbols tinted to their mark on the
+     canvas via `HUE_INK`, and a live widget (`StabilityScale`, `SquaredPenalty`) where a
+     claim has a live consequence. Default intro copy lives in `ExhibitFrame`; exhibits
+     override with exhibit-specific `experimentLede` where helpful.
+   - **③ Break it — Trigger a failure and diagnose the cause.** The differentiating stage.
+     A live, guided failure loop the learner drives (`GradientDescentBreakIt`,
+     `LinearRegressionBreakIt`): **trigger** past the edge, watch the **symptom** on the
+     live canvas, **diagnose** the cause, then **repair** and watch recovery. Beneath the
+     loop, the **field guide** (`FailureGallery`, `asFieldGuide`) catalogues failure modes
+     as Trigger → Symptom → Diagnose → Repair → Boundary, each bound to a reusable taxonomy
+     primitive (docs/07). Heading: "Failure modes to recognize."
+   - **④ Explain it — Apply the idea to a new case.** The concept check as a graded
+     instrument (a live "N of M" progress meter, each item in the catalogue voice),
+     foregrounding the **transfer** item on an unseen case. Completion invites the learner
+     to explain the idea in their own words — checks are evidence of practice, not proof
+     of mastery. See docs/style/voice.md for assessment labels.
 
-   Reading prose within an act stays ~65–68ch. The page's only coda is the **journey
+   Reading prose within a stage stays ~65–68ch. The page's only coda is the **journey
    strip** — a single hairline-ruled line (mono position left, next-stop affordance
    right), kept thin so the work stays the main event.
 
    *Rubric coverage (docs/06):* the spine is built so each acceptance-rubric area has a
    home — Hook / Manipulation / Causality in See it; Representation / Code-parity / Math
-   in Run it; Failure / Diagnosis in Break it; Prediction / Transfer / Whiteboard in
+   in Run it; Failure / Diagnosis in Break it; Prediction / Transfer / Explain-it in
    Explain it.
 
-**Identity — museum catalogue meets lab instrument.** The placard and the live
+**Identity — catalogue precision meets lab instrument.** The placard and the live
 `StatGrid` readouts share one voice: precise mono uppercase micro-labels over
-sans/data values in hairline-ruled cells. The masthead record and the live
-estimates strip read as the same instrument. That precise, catalogued register —
-not warm-serif, not dark-acid, not broadsheet — is the lab's signature.
+sans/data values in hairline-ruled cells. Visual design may suggest a curated
+collection; learner-facing copy uses **exhibit**, **journey**, and **stage** — not
+museum/atlas/cabinet metaphors (docs/style/voice.md).
 
 The hero spans the full content width (`max-w-7xl`); prose elsewhere stays around
 65–68ch. Use generous vertical rhythm: `mt-14`, `mt-24`, `py-16` for major
@@ -260,4 +255,4 @@ Rules:
 
 ## Product Feel
 
-The interface should feel like a quiet interactive museum for machine learning: warm, precise, and roomy. The page should disappear enough for the learner to focus, while the experiment earns the memorable moment.
+The interface should feel calm, precise, and trustworthy enough for repeated study sessions. Visual design may evoke a curated collection; learner-facing copy stays direct — **exhibit**, **stage**, **journey** — so the experiment earns the memorable moment.

@@ -4,6 +4,16 @@ Lightweight ADR-style log. One entry per direction-setting decision; newest firs
 
 ---
 
+## 006 — Editorial voice: copy audit style system (2026-06-25)
+
+**Decision**: Adopt a single product voice documented in `docs/style/voice.md`. Learner-facing copy uses **ML Lab / exhibit / stage / journey** vocabulary; avoids museum/atlas/cabinet metaphors in UI. Four stages use action-oriented purpose lines (build the picture, try the model, find its limits, apply the idea). Claims must be vivid about interaction and conservative about theory — qualify absolutes, separate demonstration-specific behavior from general rules, and use validation vs test correctly.
+
+**Why**: A June 2026 copy audit found strong interaction copy undermined by theatrical framing, repeated templates, and accuracy problems from overclaiming. The product identity was fragmented across competing metaphors.
+
+**Trade-off accepted**: Internal component names (`JewelGallery`, `SpecimenPlacard`) may retain collection-era naming until refactored; learner-facing strings follow the new guide.
+
+---
+
 ## 005 - Visual direction: unified light design system (2026-06-12)
 
 **Decision**: Narrative, assessment, code, and experiments all use the same calm light surface. Visualization tokens remain semantic, but are tuned for contrast on light backgrounds instead of switching to a dark lab canvas.
