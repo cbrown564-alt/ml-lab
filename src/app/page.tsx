@@ -1,12 +1,10 @@
 import Link from "next/link";
 import { JewelGallery, type Wing } from "@/components/graph/JewelGallery";
-import { MasteryBadge } from "@/components/learner/MasteryBadge";
-import { NextStep } from "@/components/learner/NextStep";
+import { FoundationsTrail } from "@/components/learner/FoundationsTrail";
 import { domainLabel } from "@/lib/graph/labels";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
 import { edges } from "@content/graph/edges";
-import { foundations } from "@content/journeys/foundations";
 
 /**
  * The lab's front door (docs/06, A1): orient in seconds — what this place
@@ -163,64 +161,7 @@ export default function Home() {
           </ol>
         </section>
 
-        <NextStep />
-
-        <section id="foundations" className="scroll-mt-8 border-t border-line py-16">
-          <h2 className="font-mono text-sm tracking-widest text-ink-faint uppercase">
-            Journey · {foundations.title}
-          </h2>
-          <p className="mt-4 max-w-[58ch] leading-relaxed text-ink-muted">
-            {foundations.description}
-          </p>
-          <ol className="mt-10 max-w-2xl">
-            {foundations.stops.map((stop, i) => {
-              const node = nodeById.get(stop.nodeId)!;
-              const live = isLive(node.id);
-              return (
-                <li
-                  key={stop.nodeId}
-                  className="relative flex gap-5 border-l border-line pb-8 pl-8 last:pb-0"
-                >
-                  <span
-                    aria-hidden
-                    className={`absolute top-1 -left-[0.6875rem] flex h-5 w-5 items-center justify-center rounded-full border text-[10px] font-medium ${
-                      live
-                        ? "border-accent bg-accent text-accent-ink"
-                        : "border-line bg-surface text-ink-faint"
-                    }`}
-                  >
-                    {i + 1}
-                  </span>
-                  <div>
-                    {live ? (
-                      <span className="inline-flex flex-wrap items-center gap-3">
-                        <Link
-                          href={liveExhibits[node.id].href}
-                          className="font-medium text-accent transition-colors hover:underline"
-                        >
-                          {node.title} →
-                        </Link>
-                        <MasteryBadge nodeId={node.id} />
-                      </span>
-                    ) : (
-                      <span className="font-medium text-ink-muted">
-                        {node.title}
-                        {stop.optional ? (
-                          <span className="ml-2 text-sm font-normal text-ink-faint">
-                            optional
-                          </span>
-                        ) : null}
-                      </span>
-                    )}
-                    <p className="mt-1 text-sm leading-relaxed text-ink-faint">
-                      {stop.framing ?? node.oneLiner}
-                    </p>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-        </section>
+        <FoundationsTrail />
       </main>
 
       <footer className="border-t border-line">

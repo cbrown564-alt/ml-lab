@@ -69,11 +69,11 @@ test.describe("concept check + mastery", () => {
     await page.reload();
     await expect(badge).toHaveText("mastered");
 
-    // And the home journey shows it.
+    // And the home trail shows it — the station carries its mastery state.
     await page.goto("/");
     await expect(
-      page.locator("#foundations").getByTestId("mastery-badge"),
-    ).toHaveText("mastered");
+      page.locator('#foundations [data-node-id="gradient-descent"]'),
+    ).toHaveAttribute("data-mastery", "mastered");
   });
 
   test("an unfinished exhibit becomes an explainable recommendation", async ({
