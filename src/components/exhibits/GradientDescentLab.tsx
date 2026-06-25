@@ -287,8 +287,6 @@ export function GradientDescentLab() {
                     ? `${viewing.step} / ${latest.step}`
                     : String(viewing.step),
               },
-              { label: "slope ŵ", value: viewing.params.slope.toFixed(2), hue: "var(--viz-prediction)" },
-              { label: "intcpt b̂", value: viewing.params.intercept.toFixed(2), hue: "var(--viz-prediction)" },
               { label: "loss", value: formatLoss(viewing.loss), hue: "var(--viz-error)", note: "lower is better" },
             ]}
           />

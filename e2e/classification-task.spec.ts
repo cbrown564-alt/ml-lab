@@ -46,6 +46,6 @@ test.describe("classification-task exhibit", () => {
   test("Explain it pairs the check with a live companion", async ({ page }) => {
     await openTab(page, "Explain it");
     await expect(panel(page).getByText(/Answer against the matrix/i)).toBeVisible();
-    await expect(panel(page).getByText(/why is that accuracy meaningless/i)).toBeVisible();
+    await expect(panel(page).getByText(/Why is accuracy alone inadequate/i)).toBeVisible();
   });
 });

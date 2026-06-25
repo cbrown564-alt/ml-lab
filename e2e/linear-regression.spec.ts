@@ -73,7 +73,7 @@ test.describe("linear-regression exhibit", () => {
     await expect(panel(page).getByText("Honest fit", { exact: true })).toBeVisible();
     // The field guide catalogues the failure modes beneath the loop.
     await expect(
-      panel(page).getByRole("heading", { name: /every way it breaks/i }),
+      panel(page).getByRole("heading", { name: /Failure modes to recognize/i }),
     ).toBeVisible();
     await expect(panel(page).getByText("Outliers", { exact: true })).toBeVisible();
     await expect(panel(page).getByText("Collinearity", { exact: true })).toBeVisible();
@@ -190,7 +190,7 @@ test.describe("linear-regression exhibit", () => {
 
   test("evicting the outliers completes the lab task", async ({ page }) => {
     await openTab(page, "Explain it");
-    const task = panel(page).locator("li", { hasText: "Make the tyranny stop" });
+    const task = panel(page).locator("li", { hasText: "Make the outlier influence stop" });
     await expect(task.getByText(/Waiting on the experiment/)).toBeVisible();
 
     // The manipulation lives in the Experiment tab; the task bus connects them.
@@ -222,7 +222,7 @@ test.describe("linear-regression exhibit", () => {
 
     await openTab(page, "Explain it");
     await expect(task.getByText(/Complete — the experiment registered it/)).toBeVisible();
-    await expect(task.getByText(/snapped back to the crowd/)).toBeVisible();
+    await expect(task.getByText(/snapped back to the main cluster/)).toBeVisible();
   });
 
   test("the predict item reveals the verify step after answering", async ({ page }) => {

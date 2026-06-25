@@ -74,7 +74,7 @@ test.describe("exhibit narrative", () => {
       page.getByRole("heading", { name: "One knob behind it all" }),
     ).toBeVisible();
     await page.getByRole("button", { name: /In the wild/ }).click();
-    await expect(page.getByText(/what's the learning rate\?/)).toBeVisible();
+    await expect(page.getByText(/loss curve rockets upward/)).toBeVisible();
   });
 });
 

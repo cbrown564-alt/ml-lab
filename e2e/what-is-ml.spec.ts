@@ -32,7 +32,7 @@ test.describe("what-is-ml exhibit", () => {
   test("See it enforces a committed prediction on the inversion beat", async ({ page }) => {
     await panel(page).getByRole("button", { name: /Beat 3 of/ }).click();
     await expect(panel(page).getByText(/Predict first/i)).toBeVisible();
-    await panel(page).getByRole("button", { name: /Examples labelled with the right answers/i }).click();
+    await panel(page).getByRole("button", { name: /Examples labeled with the right answers/i }).click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
   });
 
@@ -46,6 +46,6 @@ test.describe("what-is-ml exhibit", () => {
   test("Explain it pairs the check with a live companion", async ({ page }) => {
     await openTab(page, "Explain it");
     await expect(panel(page).getByText(/Bias in, bias out/i)).toBeVisible();
-    await expect(panel(page).getByText(/essential difference between traditional programming/i)).toBeVisible();
+    await expect(panel(page).getByText(/conventional programming/i)).toBeVisible();
   });
 });

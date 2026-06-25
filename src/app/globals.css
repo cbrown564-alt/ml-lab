@@ -8,13 +8,29 @@
 
 :root {
   /* Calm, light, editorial */
+  /* Hex fallbacks first so axe-core (which can't parse oklch) resolves a valid
+     sRGB color. Browsers that support oklch apply the @supports override below. */
+  --surface-bg: #faf7f3;
+  --surface-raised: #fffcf8;
+  --surface-sunken: #f0ece5;
+  --ink: #3a3530;
+  --ink-muted: #6b6056;
+  /* #707060 gives ≈4.8:1 on #faf7f3, matching the oklch value's documented 4.7:1 */
+  --ink-faint: #707060;
+}
+
+@supports (color: oklch(0% 0 0)) {
+  :root {
   --surface-bg: oklch(98.1% 0.009 76);
   --surface-raised: oklch(99.3% 0.006 76);
   --surface-sunken: oklch(94.5% 0.018 76);
   --ink: oklch(21.8% 0.017 72);
   --ink-muted: oklch(42.6% 0.026 72);
-  /* 4.7:1 on --surface-bg — axe-core gates serious contrast failures */
   --ink-faint: oklch(50.8% 0.024 72);
+  }
+}
+
+:root {
   --line: oklch(88.5% 0.023 76);
   --accent: oklch(46.8% 0.091 190);
   --accent-ink: oklch(98.6% 0.006 190);

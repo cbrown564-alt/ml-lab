@@ -17,7 +17,7 @@ test.describe("data-leakage exhibit", () => {
 
   test("the Story opens on the leaky pipeline", async ({ page }) => {
     await expect(page.getByRole("heading", { name: "Data Leakage" })).toBeVisible();
-    await expect(panel(page).getByText(/Select features on all data/i)).toBeVisible();
+    await expect(panel(page).getByText(/selection peeked at test folds/i)).toBeVisible();
   });
 
   test("selecting inside each fold collapses the manufactured score", async ({ page }) => {
@@ -37,9 +37,9 @@ test.describe("data-leakage exhibit", () => {
   test("Break it: selecting on all data manufactures skill, then the fix collapses it", async ({ page }) => {
     await openTab(page, "Break it");
     await panel(page).getByRole("button", { name: "Select on all data", exact: true }).click();
-    await expect(panel(page).getByRole("status")).toHaveText("Skill from nowhere");
+    await expect(panel(page).getByRole("status")).toHaveText("Wall breached");
     await panel(page).getByRole("button", { name: "Select inside each fold", exact: true }).click();
-    await expect(panel(page).getByRole("status")).toHaveText("The honest nothing");
+    await expect(panel(page).getByRole("status")).toHaveText("Pipe cleaned");
   });
 
   test("Explain it pairs the check with a live companion", async ({ page }) => {
