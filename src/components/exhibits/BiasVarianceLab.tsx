@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Axes, DataPoints, Plot, usePlot } from "@/components/viz/Plot";
 import { PolyCurve } from "@/components/viz/PolyCurve";
 import { ParamSlider } from "@/components/viz/ParamSlider";
-import { StatGrid } from "@/components/viz/StatGrid";
 import { ErrorCurves } from "@/components/exhibits/ErrorCurves";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import type { Point } from "@/lib/models/linear-regression";
@@ -57,7 +56,7 @@ function VarianceSwarm({ degree }: { degree: number }) {
   }, [degree]);
 
   return (
-    <g style={{ opacity: reveal * 0.38, transition: "opacity 300ms ease" }} aria-hidden>
+    <g style={{ opacity: reveal * 0.55, transition: "opacity 300ms ease" }} aria-hidden>
       {swarm.map((w, i) => (
         <PolyCurve key={`${degree}-${i}`} predict={(xv) => predictPoly(w, xv)} faint />
       ))}
@@ -102,14 +101,9 @@ export function BiasVarianceLab() {
             }}
           />
 
-          <StatGrid
-            direction="col"
-            caption={`Degree ${degree} — ${regime}`}
-            stats={[
-              { label: "training error", value: trainErr.toFixed(3), hue: "var(--viz-neutral-ink)", note: "on data it has seen" },
-              { label: "test error", value: testErr.toFixed(3), hue: "var(--viz-error)", note: "on data it hasn't — the honest one" },
-            ]}
-          />
+          <p className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
+            Degree {degree} — {regime}
+          </p>
 
           <ErrorCurves train={TRAIN} test={TEST} degree={degree} maxDegree={DEG.max} />
         </div>

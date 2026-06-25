@@ -38,14 +38,14 @@ const BASE = `http://localhost:${PORT}`;
  *   hero (GradientDescentMicroscope + ThetaSketch + DecompositionBars) is the
  *   exhibit's visual identity — it cannot be deferred without gutting the hero.
  *   The three-view lab (line / surface / microscope) is the run-it pedagogy.
- * - linear-regression: 700 → 710. Prose expansion from copy audit; the route
- *   has 11 scripts vs 10 for most exhibits (one extra shared chunk).
+ * - linear-regression: back to 700 after StatGrid removal from BiasVarianceLab
+ *   reorganized the shared chunk (was 708, now 675).
  * - neural-network-fundamentals, data-leakage: 700 → 705. Nominal prose growth
  *   from copy audit; content, not a stray dependency.
  */
 const BUDGETS = [
   { route: "/", jsKb: 680, htmlKb: 100 },
-  { route: "/exhibits/linear-regression", jsKb: 710, htmlKb: 110 },
+  { route: "/exhibits/linear-regression", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/gradient-descent", jsKb: 715, htmlKb: 115 },
   { route: "/exhibits/loss-functions", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/feature-scaling", jsKb: 700, htmlKb: 110 },

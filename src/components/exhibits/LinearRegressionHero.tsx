@@ -40,19 +40,26 @@ function HeroResiduals({ fit, t }: { fit: LinearParams; t: number }) {
   const shown = Math.max(1, Math.round(t * SPECIMEN.length));
   return (
     <g aria-hidden>
-      {SPECIMEN.slice(0, shown).map((p, i) => (
-        <line
-          key={i}
-          x1={x(p.x)}
-          y1={y(p.y)}
-          x2={x(p.x)}
-          y2={y(fit.slope * p.x + fit.intercept)}
-          stroke="var(--viz-error)"
-          strokeWidth={2.25}
-          strokeLinecap="round"
-          opacity={0.85}
-        />
-      ))}
+      {SPECIMEN.slice(0, shown).map((p, i) => {
+        const xPx = x(p.x);
+        const yPt = y(p.y);
+        const yFit = y(fit.slope * p.x + fit.intercept);
+        const side = Math.abs(yPt - yFit);
+        return (
+          <rect
+            key={i}
+            x={xPx - side}
+            y={Math.min(yPt, yFit)}
+            width={side}
+            height={side}
+            fill="var(--viz-error)"
+            fillOpacity={0.14}
+            stroke="var(--viz-error)"
+            strokeWidth={1.5}
+            strokeOpacity={0.7}
+          />
+        );
+      })}
     </g>
   );
 }

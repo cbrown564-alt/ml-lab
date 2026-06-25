@@ -62,7 +62,7 @@ function TestPoints() {
 function VarianceSwarm({ degree, reveal }: { degree: number; reveal: number }) {
   const swarm = useMemo(() => bootstrapFits(degree), [degree]);
   return (
-    <g style={{ opacity: reveal * 0.42, transition: "opacity 350ms ease" }} aria-hidden>
+    <g style={{ opacity: reveal * 0.62, transition: "opacity 350ms ease" }} aria-hidden>
       {swarm.map((w, i) => (
         <PolyCurve key={`${degree}-${i}`} predict={(xv) => predictPoly(w, xv)} faint />
       ))}
