@@ -59,8 +59,8 @@ export function TheGradientHero() {
         <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
           The gradient
         </span>
-        <span className="hidden font-mono text-[11px] tabular-nums tracking-widest text-ink-faint uppercase sm:inline">
-          drag probe · |∇f| {slope.toFixed(2)}
+        <span className="hidden font-mono text-[11px] tracking-widest text-ink-faint uppercase sm:inline">
+          drag the probe
         </span>
       </figcaption>
       <div className="px-3 py-2">

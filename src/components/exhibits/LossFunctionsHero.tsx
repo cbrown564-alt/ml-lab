@@ -73,48 +73,6 @@ function OutlierMiss({ fit }: { fit: LinearParams }) {
   );
 }
 
-/** Penalty deformation for the outlier residual — morphs with the active judge. */
-function PenaltyDeform({
-  from,
-  to,
-  morphT,
-  fit,
-}: {
-  from: LossKind;
-  to: LossKind;
-  morphT: number;
-  fit: LinearParams;
-}) {
-  const { x, y } = usePlot();
-  const r = OUTLIER.y - (fit.slope * OUTLIER.x + fit.intercept);
-  const penalty = lerpPenalty(from, to, r, morphT);
-  const maxP = Math.max(
-    penaltyOf("squared", r),
-    penaltyOf("absolute", r),
-    penaltyOf("huber", r),
-  );
-  const barW = (penalty / maxP) * 88;
-  const px = x(OUTLIER.x) + 16;
-  const py = y(OUTLIER.y) - 22;
-
-  return (
-    <g aria-hidden>
-      <text x={px} y={py - 6} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
-        outlier penalty
-      </text>
-      <rect x={px} y={py} width={barW} height={11} rx={2} fill="var(--viz-error)" opacity={0.8} />
-      <text
-        x={px + barW + 5}
-        y={py + 9}
-        fontSize={10}
-        fontFamily="var(--font-mono)"
-        fill="var(--viz-error-ink)"
-      >
-        {penalty.toFixed(1)}
-      </text>
-    </g>
-  );
-}
 
 /** ContributionStack — per-point penalties stacking into mean loss. */
 function LossStack({
@@ -313,7 +271,6 @@ export function LossFunctionsHero() {
           <FitLine params={fit} />
           <DataPoints points={POINTS} />
           <OutlierMiss fit={fit} />
-          <PenaltyDeform from={morphFrom} to={kind} morphT={morphT} fit={fit} />
           <OutlierLabel kind={kind} morphing={morphing} />
         </Plot>
       </div>

@@ -155,7 +155,6 @@ export function WhatIsMlLab() {
           <StatGrid
             direction="col"
             caption="Same data, two rules"
-            className="chrome-redundant-metrics"
             stats={[
               { label: "your hand-written rule", value: `${Math.round(ruleAcc * 100)}%`, hue: "var(--viz-neutral-ink)", note: "one feature, one threshold" },
               { label: "the learned rule", value: learnedAcc !== null ? `${Math.round(learnedAcc * 100)}%` : "—", hue: "var(--accent)", note: learnedAcc !== null ? "weighs both features, fit from data" : "press Learn" },
