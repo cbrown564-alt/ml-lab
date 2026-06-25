@@ -3,10 +3,9 @@
 import { useEffect, useId, useState } from "react";
 
 /**
- * Provenance pipe — the data-leakage protagonist. Rows flow through feature
- * selection, cross a train/test wall, and land in a CV score. In the leaky
- * pipeline forbidden test-side information visibly crosses the wall back into
- * selection and inflates R²; sealing the boundary (honest mode) cleans the pipe.
+ * Data-leakage provenance pipe — exhibit-specific SVG implementing the
+ * {@link ProvenancePipe} visual-argument pattern (train/test wall, boundary
+ * violation, contaminated score readout).
  */
 
 const W = 680;

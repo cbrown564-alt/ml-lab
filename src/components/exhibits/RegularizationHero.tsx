@@ -9,6 +9,7 @@ import {
   ridgeFitCheb,
   type ChebModel,
 } from "@/lib/models/polynomial";
+import { CausalTrace } from "@/components/viz/primitives";
 import { REG_DEGREE } from "@content/exhibits/overfitting-regularization/experiment";
 import fixtures from "@/lib/models/fixtures/polynomial.json";
 import type { Point } from "@/lib/models/linear-regression";
@@ -135,7 +136,6 @@ export function RegularizationHero() {
 
   const scrubLambda = LAMBDA_LOW * Math.pow(LAMBDA_HIGH / LAMBDA_LOW, lambdaT);
   const scrubModel = useMemo(() => ridgeFitCheb(TRAIN, REG_DEGREE, scrubLambda), [scrubLambda]);
-  const scrubTrain = useMemo(() => chebMSE(TRAIN, scrubModel), [scrubModel]);
   const scrubTest = useMemo(() => chebMSE(TEST, scrubModel), [scrubModel]);
 
   const panels = useMemo(
@@ -204,9 +204,24 @@ export function RegularizationHero() {
             />
             <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">λ high</span>
           </label>
-          <p className="mt-2 text-center font-mono text-[10px] text-ink-faint">
-            causal chain: λ ↑ → weights shrink → curve smooths → train {scrubTrain.toFixed(2)} · test {scrubTest.toFixed(2)}
-          </p>
+          <CausalTrace
+            steps={[
+              { id: "lambda", label: "λ ↑", hue: "param" },
+              { id: "weights", label: "weights shrink", hue: "param" },
+              { id: "curve", label: "curve smooths", hue: "prediction" },
+              { id: "error", label: `test ${scrubTest.toFixed(2)}`, hue: "error" },
+            ]}
+            activeStepId={
+              lambdaT < 0.25
+                ? "lambda"
+                : lambdaT < 0.55
+                  ? "weights"
+                  : lambdaT < 0.85
+                    ? "curve"
+                    : "error"
+            }
+            ariaLabel="Regularization causal chain from penalty to test error"
+          />
         </div>
       )}
       <div className="flex items-center justify-center gap-6 border-t border-line px-3 py-2 font-mono text-[11px] text-ink-faint">

@@ -23,15 +23,18 @@ export function StatGrid({
   stats,
   caption,
   direction = "row",
+  className,
 }: {
   stats: Stat[];
   /** Optional label for the whole strip, e.g. "Least-squares estimate". */
   caption?: string;
   /** "row" = a horizontal strip (under a plot); "col" = a stacked table (a side rail). */
   direction?: "row" | "col";
+  /** Optional wrapper class — e.g. `chrome-redundant-metrics` when See-it already showed these numbers. */
+  className?: string;
 }) {
   return (
-    <div>
+    <div className={className}>
       {caption && (
         <p className="mb-2 font-mono text-[11px] tracking-widest text-ink-faint uppercase">
           {caption}

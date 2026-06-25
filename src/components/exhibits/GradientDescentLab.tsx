@@ -6,8 +6,10 @@ import { LossSurface } from "@/components/viz/LossSurface";
 import { ParamSlider } from "@/components/viz/ParamSlider";
 import { TrainingCurve } from "@/components/viz/TrainingCurve";
 import { StatGrid } from "@/components/viz/StatGrid";
+import { useActHandoffFrame } from "@/components/exhibits/ActHandoffContext";
 import { GradientDescentMicroscope } from "@/components/exhibits/GradientDescentMicroscope";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
+import type { GradientDescentFrame } from "@content/exhibits/gradient-descent/spine";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { createExperimentStore } from "@/lib/experiment/store";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
@@ -62,6 +64,8 @@ export function GradientDescentLab() {
   const { points, params, scenarioId, spec, setParam, loadScenario, reset } =
     useExperiment();
   const learningRate = params.learningRate;
+  const storyFrame = useActHandoffFrame<GradientDescentFrame>();
+  const appliedHandoff = useRef(false);
 
   const runRef = useRef<GradientDescentRun | null>(null);
   const lrRef = useRef(learningRate);
@@ -86,6 +90,16 @@ export function GradientDescentLab() {
     lrRef.current = learningRate;
     runRef.current?.setLearningRate(learningRate);
   }, [learningRate]);
+
+  // Seed Run-it from the See-it story's final frame (scenario, view, microscope).
+  useEffect(() => {
+    if (appliedHandoff.current || !storyFrame) return;
+    if (!spec.scenarios.some((s) => s.id === storyFrame.scenarioId)) return;
+    appliedHandoff.current = true;
+    loadScenario(storyFrame.scenarioId);
+    if (storyFrame.microscope) setView("microscope");
+    else setView(storyFrame.view);
+  }, [storyFrame, loadScenario, spec.scenarios]);
 
   // A new dataset identity (scenario load or reset) means a new loss surface:
   // start a fresh run from step 0. The learning rate is read through a ref so

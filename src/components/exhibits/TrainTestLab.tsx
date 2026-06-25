@@ -1,15 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Axes, DataPoints, Plot, usePlot } from "@/components/viz/Plot";
 import { PolyCurve } from "@/components/viz/PolyCurve";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { ErrorSpreadStrip } from "@/components/exhibits/ErrorSpreadStrip";
+import { useActHandoffFrame } from "@/components/exhibits/ActHandoffContext";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import type { Point } from "@/lib/models/linear-regression";
 import { predictPoly } from "@/lib/models/polynomial";
 import { kFoldCV, scoreSplit, splitPoints } from "@/lib/models/generalization";
 import { pooledPoints, TT_DEGREE, TT_LAMBDA, trainTestScenario } from "@content/exhibits/train-test-generalization/experiment";
+import type { TrainTestFrame } from "@content/exhibits/train-test-generalization/spine";
 
 /**
  * Train/test bench: one pool of points, split live. The model is fit on the gold
@@ -33,10 +35,25 @@ function TestPoints({ points }: { points: Point[] }) {
 }
 
 export function TrainTestLab() {
+  const storyFrame = useActHandoffFrame<TrainTestFrame>();
+  const appliedHandoff = useRef(false);
   const [seed, setSeed] = useState(1);
   const [history, setHistory] = useState<number[]>([]);
   const split = useMemo(() => splitPoints(pooledPoints, TEST_FRAC, seed), [seed]);
   const score = useMemo(() => scoreSplit(split, TT_DEGREE, TT_LAMBDA), [split]);
+
+  // Seed Run-it histogram from the See-it story stage when the learner advances.
+  useEffect(() => {
+    if (appliedHandoff.current || !storyFrame || storyFrame.stage === "split") return;
+    appliedHandoff.current = true;
+    const seeds = storyFrame.stage === "cv" ? [1, 2, 3, 4, 5, 6, 7, 8] : [1, 2, 3, 4, 5];
+    setHistory(
+      seeds.map(
+        (s) => scoreSplit(splitPoints(pooledPoints, TEST_FRAC, s), TT_DEGREE, TT_LAMBDA).testErr,
+      ),
+    );
+    setSeed(seeds[seeds.length - 1]!);
+  }, [storyFrame]);
 
   // Seed the history with the first split (adjust during render, no effect needed).
   const [seenSeed, setSeenSeed] = useState<number | null>(null);
@@ -66,6 +83,7 @@ export function TrainTestLab() {
 
           <StatGrid
             direction="col"
+            className={storyFrame?.stage === "split" ? "chrome-redundant-metrics" : undefined}
             caption={`${split.train.length} train · ${split.test.length} validation · ${history.length} splits drawn`}
             stats={[
               { label: "training error", value: score.trainErr.toFixed(3), hue: "var(--viz-neutral-ink)", note: "on data it has seen — flatters" },
