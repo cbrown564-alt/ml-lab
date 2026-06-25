@@ -209,33 +209,40 @@ const GLYPHS: Record<string, React.ReactNode> = {
     </>
   ),
 
-  // Neural network: stacked units with a nonlinear bend.
+  // Neural network: input (2) → hidden (3) → output (1), every edge landing on
+  // a real node and the hidden layer converging on the single final unit.
   "neural-network-fundamentals": (
     <>
-      {[
-        [30, 32],
-        [30, 64],
-      ].map(([x1, y1], i) =>
-        [58, 86].map((x2, j) =>
-          [28, 48, 68].map((y2, k) => (
-            <line
-              key={`${i}-${j}-${k}`}
-              x1={x1}
-              y1={y1}
-              x2={x2}
-              y2={y2}
-              stroke={C.faint}
-              strokeWidth="1.2"
-              strokeOpacity="0.7"
-            />
-          )),
-        ),
+      {/* input → hidden */}
+      {[32, 64].map((y1, i) =>
+        [28, 48, 68].map((y2, j) => (
+          <line
+            key={`ih-${i}-${j}`}
+            x1="30"
+            y1={y1}
+            x2="58"
+            y2={y2}
+            stroke={C.faint}
+            strokeWidth="1.2"
+            strokeOpacity="0.7"
+          />
+        )),
       )}
-      {[
-        [30, 32],
-        [30, 64],
-      ].map(([x, y], i) => (
-        <circle key={`i${i}`} cx={x} cy={y} r="4" fill={C.data} />
+      {/* hidden → output: all three converge on the final node */}
+      {[28, 48, 68].map((y1, j) => (
+        <line
+          key={`ho-${j}`}
+          x1="58"
+          y1={y1}
+          x2="86"
+          y2="48"
+          stroke={C.faint}
+          strokeWidth="1.2"
+          strokeOpacity="0.7"
+        />
+      ))}
+      {[32, 64].map((y, i) => (
+        <circle key={`i${i}`} cx="30" cy={y} r="4" fill={C.data} />
       ))}
       {[28, 48, 68].map((y, i) => (
         <circle key={`hd${i}`} cx="58" cy={y} r="4" fill={C.model} />
