@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { DataPoints, FitLine, Plot, usePlot } from "@/components/viz/Plot";
+import { PlotContributionStack, PlotPinGhost } from "@/components/viz/primitives";
 import { mse, olsFit, type LinearParams } from "@/lib/models/linear-regression";
 import { linearRegressionExperiment } from "@content/exhibits/linear-regression/experiment";
 
@@ -32,52 +33,6 @@ function lerpParams(a: LinearParams, b: LinearParams, t: number): LinearParams {
     slope: a.slope + (b.slope - a.slope) * t,
     intercept: a.intercept + (b.intercept - a.intercept) * t,
   };
-}
-
-/** ContributionStack — residual squares whose total area is MSE. */
-function MseStack({ fit, t }: { fit: LinearParams; t: number }) {
-  const { x, y, width, height } = usePlot();
-  const stackX = width - 64;
-  const maxArea = Math.max(
-    ...SPECIMEN.map((p) => {
-      const r = p.y - (fit.slope * p.x + fit.intercept);
-      return r * r;
-    }),
-  );
-  const areas = SPECIMEN.map((p) => {
-    const r = p.y - (fit.slope * p.x + fit.intercept);
-    return r * r;
-  });
-  const shown = Math.max(1, Math.round(t * SPECIMEN.length));
-  const partialMse = areas.slice(0, shown).reduce((s, a) => s + a, 0) / SPECIMEN.length;
-  const barH = (height - 44) / SPECIMEN.length;
-
-  return (
-    <g aria-hidden>
-      <text x={stackX + 20} y={12} textAnchor="middle" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
-        MSE stack
-      </text>
-      {areas.map((area, i) => {
-        const side = Math.sqrt(area / maxArea) * barH * 0.8;
-        const visible = i < shown;
-        return (
-          <rect
-            key={i}
-            x={stackX + (barH - side) / 2}
-            y={22 + i * barH}
-            width={visible ? side : 0}
-            height={visible ? side : 0}
-            fill="var(--viz-error)"
-            opacity={0.55}
-            rx={1}
-          />
-        );
-      })}
-      <text x={stackX + 20} y={height - 8} textAnchor="middle" fontSize={12} fontFamily="var(--font-mono)" fontWeight={600} fill="var(--viz-error-ink)">
-        {partialMse.toFixed(2)}
-      </text>
-    </g>
-  );
 }
 
 function HeroResiduals({ fit, t }: { fit: LinearParams; t: number }) {
@@ -141,6 +96,26 @@ function HeroLabels({ fit }: { fit: LinearParams }) {
   );
 }
 
+function MseStackLayer({ fit, t }: { fit: LinearParams; t: number }) {
+  const areas = SPECIMEN.map((p) => {
+    const r = p.y - (fit.slope * p.x + fit.intercept);
+    return r * r;
+  });
+  const partialMse = areas.reduce((s, a) => s + a, 0) / SPECIMEN.length;
+  return (
+    <PlotContributionStack
+      values={areas}
+      progress={t}
+      total={partialMse}
+      stackLabel="MSE stack"
+      totalLabel="MSE"
+      variant="square"
+      width={44}
+      insetRight={16}
+    />
+  );
+}
+
 export function LinearRegressionHero() {
   const bestFit = useMemo(() => olsFit(SPECIMEN), []);
   const [settled, setSettled] = useState(false);
@@ -150,6 +125,7 @@ export function LinearRegressionHero() {
 
   const candidate = useMemo(() => lerpParams(FLAT, bestFit, scrub), [bestFit, scrub]);
   const loss = useMemo(() => mse(SPECIMEN, candidate), [candidate]);
+  const searching = scrub < 0.98;
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -197,7 +173,7 @@ export function LinearRegressionHero() {
           The line of best fit
         </span>
         <span className="hidden font-mono text-[11px] tracking-widest text-ink-faint uppercase sm:inline">
-          MSE {loss.toFixed(2)} · scrub candidates
+          MSE {loss.toFixed(2)} · {searching ? "searching…" : "best fit found"}
         </span>
       </figcaption>
       <div className="px-3 py-2">
@@ -210,29 +186,34 @@ export function LinearRegressionHero() {
         >
           {settled && (
             <g style={{ opacity: animate ? 1 : 0, transition: "opacity 600ms ease" }}>
+              <PlotPinGhost visible={searching}>
+                <FitLine params={FLAT} />
+                <HeroResiduals fit={FLAT} t={1} />
+              </PlotPinGhost>
               <HeroResiduals fit={candidate} t={residT} />
-              <MseStack fit={candidate} t={residT} />
+              <MseStackLayer fit={candidate} t={residT} />
             </g>
           )}
           <FitLine params={settled ? candidate : FLAT} ease={animate && scrub === 1} />
           <DataPoints points={SPECIMEN} />
           {settled && <HeroLabels fit={candidate} />}
         </Plot>
-        {settled && (
-          <label className="mt-2 flex items-center gap-3 px-1">
-            <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">flat</span>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              value={Math.round(scrub * 100)}
-              onChange={(e) => setScrub(Number(e.target.value) / 100)}
-              className="min-w-0 flex-1 accent-[var(--viz-prediction)]"
-              aria-label="Scrub between flat baseline and best-fit line"
-            />
-            <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">best fit</span>
-          </label>
-        )}
+        {/* Reserve scrubber slot before hydrate to avoid layout shift */}
+        <label className="mt-2 flex min-h-[2rem] items-center gap-3 px-1">
+          <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">flat</span>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={Math.round(scrub * 100)}
+            onChange={(e) => setScrub(Number(e.target.value) / 100)}
+            className="min-w-0 flex-1 accent-[var(--viz-prediction)]"
+            aria-label="Scrub between flat baseline and best-fit line"
+            disabled={!settled}
+            style={{ opacity: settled ? 1 : 0.35 }}
+          />
+          <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">best fit</span>
+        </label>
       </div>
     </figure>
   );

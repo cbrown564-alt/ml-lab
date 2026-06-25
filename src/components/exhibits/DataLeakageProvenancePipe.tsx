@@ -1,17 +1,26 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 /**
  * Data-leakage provenance pipe — exhibit-specific SVG implementing the
  * {@link ProvenancePipe} visual-argument pattern (train/test wall, boundary
  * violation, contaminated score readout).
+ *
+ * Stage layout mirrors the shared ProvenancePipe stages: all rows → pick features
+ * → fit & score, with the train/test wall between selection and scoring.
  */
+
+export const PROVENANCE_STAGES = [
+  { id: "rows", label: "all rows", xFrac: 0.1 },
+  { id: "select", label: "pick features", xFrac: 0.3 },
+  { id: "score", label: "fit & score", xFrac: 0.78 },
+] as const;
 
 const W = 680;
 const H = 300;
 const M = { l: 24, r: 24, t: 36, b: 44 };
-const WALL_X = 0.58; // fraction across the pipe interior
+const WALL_X = 0.58;
 const wallPx = () => M.l + WALL_X * (W - M.l - M.r);
 
 type Props = {
@@ -24,17 +33,17 @@ type Props = {
 
 export function DataLeakageProvenancePipe({ leaky, r2, reveal = 1, className }: Props) {
   const clipId = useId();
-  const [pulse, setPulse] = useState(0);
+  const prevLeaky = useRef(leaky);
+  const [repairFlash, setRepairFlash] = useState(false);
 
   useEffect(() => {
-    if (!leaky) {
-      setPulse(0);
-      return;
+    if (prevLeaky.current && !leaky) {
+      setRepairFlash(true);
+      const t = window.setTimeout(() => setRepairFlash(false), 650);
+      prevLeaky.current = leaky;
+      return () => window.clearTimeout(t);
     }
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
-    const id = window.setInterval(() => setPulse((p) => (p + 1) % 3), 900);
-    return () => window.clearInterval(id);
+    prevLeaky.current = leaky;
   }, [leaky]);
 
   const innerW = W - M.l - M.r;
@@ -45,11 +54,10 @@ export function DataLeakageProvenancePipe({ leaky, r2, reveal = 1, className }: 
   const trainW = wx - M.l;
   const testW = W - M.r - wx;
 
-  const stages = [
-    { x: M.l + innerW * 0.1, label: "all rows" },
-    { x: M.l + innerW * 0.3, label: "pick features" },
-    { x: M.l + innerW * 0.78, label: "fit & score" },
-  ];
+  const stages = PROVENANCE_STAGES.map((s) => ({
+    ...s,
+    x: M.l + innerW * s.xFrac,
+  }));
 
   const r2Hue = leaky ? "var(--viz-error-ink)" : "var(--viz-neutral-ink)";
   const r2Note = leaky ? "contaminated" : "honest";
@@ -73,15 +81,15 @@ export function DataLeakageProvenancePipe({ leaky, r2, reveal = 1, className }: 
         <marker id="leak-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
           <path d="M0,0 L8,4 L0,8 Z" fill="var(--viz-error)" />
         </marker>
+        <marker id="flow-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="var(--ink-faint)" />
+        </marker>
       </defs>
 
-      {/* pipe body */}
       <rect x={M.l} y={pipeY} width={innerW} height={pipeH} rx={8} fill="var(--surface-sunken)" stroke="var(--line)" />
-      {/* train / test zones */}
       <rect x={M.l} y={pipeY} width={trainW} height={pipeH} fill="var(--viz-truth)" fillOpacity={0.08} clipPath={`url(#${clipId})`} />
       <rect x={wx} y={pipeY} width={testW} height={pipeH} fill="var(--viz-prediction)" fillOpacity={0.08} clipPath={`url(#${clipId})`} />
 
-      {/* train/test wall */}
       <line
         x1={wx}
         y1={pipeY - 10}
@@ -90,8 +98,17 @@ export function DataLeakageProvenancePipe({ leaky, r2, reveal = 1, className }: 
         stroke={leaky ? "var(--viz-error)" : "var(--accent)"}
         strokeWidth={leaky ? 2.5 : 3}
         strokeDasharray={leaky ? "6 4" : undefined}
+        style={{ transition: "stroke 400ms ease, stroke-width 400ms ease" }}
       />
-      <text x={wx} y={pipeY - 16} textAnchor="middle" fontSize={10} fontFamily="var(--font-mono)" fill={leaky ? "var(--viz-error-ink)" : "var(--accent)"}>
+      <text
+        x={wx}
+        y={pipeY - 16}
+        textAnchor="middle"
+        fontSize={10}
+        fontFamily="var(--font-mono)"
+        fill={leaky ? "var(--viz-error-ink)" : "var(--accent)"}
+        style={{ transition: "fill 400ms ease" }}
+      >
         {leaky ? "wall breached" : "wall sealed"}
       </text>
       <text x={M.l + trainW / 2} y={pipeY + pipeH + 14} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
@@ -101,7 +118,6 @@ export function DataLeakageProvenancePipe({ leaky, r2, reveal = 1, className }: 
         held-out folds
       </text>
 
-      {/* row dots in pipe — train side dense, test side peeked in leaky mode */}
       {Array.from({ length: 16 }, (_, i) => {
         const col = i % 8;
         const row = Math.floor(i / 8);
@@ -122,7 +138,6 @@ export function DataLeakageProvenancePipe({ leaky, r2, reveal = 1, className }: 
         );
       })}
 
-      {/* feature selection box */}
       <rect
         x={stages[1].x - 44}
         y={pipeY - 28}
@@ -132,12 +147,12 @@ export function DataLeakageProvenancePipe({ leaky, r2, reveal = 1, className }: 
         fill="var(--surface-raised)"
         stroke={leaky ? "var(--viz-error)" : "var(--accent)"}
         strokeWidth={1.5}
+        style={{ transition: "stroke 400ms ease" }}
       />
       <text x={stages[1].x} y={pipeY - 14} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-muted)">
         {leaky ? "10 feats · all rows" : "10 feats · train only"}
       </text>
 
-      {/* forward flow arrows */}
       {[0, 1].map((i) => (
         <line
           key={`fwd${i}`}
@@ -147,8 +162,8 @@ export function DataLeakageProvenancePipe({ leaky, r2, reveal = 1, className }: 
           y2={pipeY + pipeH / 2}
           stroke="var(--ink-faint)"
           strokeWidth={1.5}
-          markerEnd="url(#leak-arrow)"
-          opacity={0.35}
+          markerEnd="url(#flow-arrow)"
+          opacity={0.45}
         />
       ))}
       <line
@@ -158,17 +173,15 @@ export function DataLeakageProvenancePipe({ leaky, r2, reveal = 1, className }: 
         y2={pipeY + pipeH / 2}
         stroke="var(--ink-faint)"
         strokeWidth={1.5}
-        opacity={0.35}
+        opacity={0.45}
       />
 
-      {/* forbidden back-flow — the leak */}
       {leaky && (
-        <g opacity={0.85 + pulse * 0.05}>
+        <g className="leak-backflow">
           <path
             d={`M ${wx + testW * 0.35} ${pipeY + 8} Q ${wx + innerW * 0.08} ${pipeY - 42} ${stages[1].x} ${pipeY - 28}`}
             fill="none"
             stroke="var(--viz-error)"
-            strokeWidth={2.25}
             strokeDasharray="5 4"
             markerEnd="url(#leak-arrow)"
           />
@@ -178,20 +191,39 @@ export function DataLeakageProvenancePipe({ leaky, r2, reveal = 1, className }: 
         </g>
       )}
 
-      {/* stage labels */}
       {stages.map((s) => (
-        <text key={s.label} x={s.x} y={H - 12} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+        <text key={s.id} x={s.x} y={H - 12} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
           {s.label}
         </text>
       ))}
 
-      {/* CV score gauge — the contaminated readout */}
-      <g transform={`translate(${stages[2].x + 52}, ${pipeY + pipeH / 2 - 28})`}>
-        <rect x={0} y={0} width={72} height={56} rx={6} fill="var(--surface-raised)" stroke={leaky ? "var(--viz-error)" : "var(--line)"} strokeWidth={1.5} />
+      <g
+        transform={`translate(${stages[2].x + 52}, ${pipeY + pipeH / 2 - 28})`}
+        className={repairFlash ? "pipe-score-repair" : undefined}
+      >
+        <rect
+          x={0}
+          y={0}
+          width={72}
+          height={56}
+          rx={6}
+          fill="var(--surface-raised)"
+          stroke={leaky ? "var(--viz-error)" : "var(--accent)"}
+          strokeWidth={1.5}
+          style={{ transition: "stroke 400ms ease" }}
+        />
         <text x={36} y={16} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
           CV R²
         </text>
-        <text x={36} y={38} textAnchor="middle" fontSize={20} fontFamily="var(--font-mono)" fill={r2Hue}>
+        <text
+          x={36}
+          y={38}
+          textAnchor="middle"
+          fontSize={20}
+          fontFamily="var(--font-mono)"
+          fill={r2Hue}
+          style={{ transition: "fill 400ms ease" }}
+        >
           {r2.toFixed(2)}
         </text>
         <text x={36} y={50} textAnchor="middle" fontSize={8} fontFamily="var(--font-mono)" fill="var(--ink-faint)">

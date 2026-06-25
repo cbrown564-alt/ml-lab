@@ -46,6 +46,7 @@ export function GradientField({
   yDomain,
   width = 520,
   height = 520,
+  showComponents = false,
 }: {
   point: Vec2;
   onMove?: (p: Vec2) => void;
@@ -64,6 +65,8 @@ export function GradientField({
   yDomain?: [number, number];
   width?: number;
   height?: number;
+  /** Draw ∂f/∂x and ∂f/∂y component vectors at the probe (hero tangent readout). */
+  showComponents?: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -190,6 +193,65 @@ export function GradientField({
             <circle cx={sx(path[0].x)} cy={sy(path[0].y)} r={5} fill="none" stroke="var(--ink)" strokeWidth={2} />
             <circle cx={sx(path[path.length - 1].x)} cy={sy(path[path.length - 1].y)} r={6} fill="var(--viz-truth)" stroke="var(--surface-bg)" strokeWidth={2} />
           </>
+        )}
+        {/* Component vectors — tangent-plane decomposition at the probe. */}
+        {showComponents && mag > 1e-3 && (
+          <g aria-hidden>
+            <line
+              x1={sx(point.x)}
+              y1={sy(point.y)}
+              x2={sx(point.x + sign * grad.x * len * 0.55)}
+              y2={sy(point.y)}
+              stroke="var(--viz-truth)"
+              strokeWidth={2.25}
+              strokeLinecap="round"
+              opacity={0.9}
+            />
+            <line
+              x1={sx(point.x + sign * grad.x * len * 0.55)}
+              y1={sy(point.y)}
+              x2={sx(tip.x)}
+              y2={sy(tip.y)}
+              stroke="var(--viz-prediction)"
+              strokeWidth={2.25}
+              strokeLinecap="round"
+              opacity={0.9}
+            />
+            <circle
+              cx={sx(point.x + sign * grad.x * len * 0.55)}
+              cy={sy(point.y)}
+              r={3}
+              fill="var(--surface-bg)"
+              stroke="var(--ink)"
+              strokeWidth={1.25}
+            />
+            <text
+              x={sx(point.x + sign * grad.x * len * 0.28)}
+              y={sy(point.y) + 16}
+              textAnchor="middle"
+              fontSize={10}
+              fontFamily="var(--font-mono)"
+              paintOrder="stroke"
+              stroke="var(--surface-bg)"
+              strokeWidth={2.5}
+              fill="var(--viz-truth-ink)"
+            >
+              ∂f/∂x
+            </text>
+            <text
+              x={sx(tip.x) + (sign * dir.x > 0 ? 8 : -8)}
+              y={sy(tip.y) + (sign * dir.y > 0 ? 14 : -8)}
+              textAnchor={sign * dir.x > 0 ? "start" : "end"}
+              fontSize={10}
+              fontFamily="var(--font-mono)"
+              paintOrder="stroke"
+              stroke="var(--surface-bg)"
+              strokeWidth={2.5}
+              fill="var(--viz-prediction-ink)"
+            >
+              ∂f/∂y
+            </text>
+          </g>
         )}
         {/* the gradient arrow, on a soft halo so it reads against any band */}
         {mag > 1e-3 && (

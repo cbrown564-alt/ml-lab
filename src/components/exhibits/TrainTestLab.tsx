@@ -83,7 +83,9 @@ export function TrainTestLab() {
 
           <StatGrid
             direction="col"
-            className={storyFrame?.stage === "split" ? "chrome-redundant-metrics" : undefined}
+            className={
+              storyFrame && storyFrame.stage !== "split" ? "chrome-redundant-metrics" : undefined
+            }
             caption={`${split.train.length} train · ${split.test.length} validation · ${history.length} splits drawn`}
             stats={[
               { label: "training error", value: score.trainErr.toFixed(3), hue: "var(--viz-neutral-ink)", note: "on data it has seen — flatters" },
@@ -117,6 +119,7 @@ export function TrainTestLab() {
             <ErrorSpreadStrip
               errs={history}
               axisMax={0.2}
+              accentLatest
               marks={[
                 { value: score.trainErr, label: "train", color: "var(--viz-neutral)" },
                 { value: CV, label: "CV", color: "var(--accent)" },

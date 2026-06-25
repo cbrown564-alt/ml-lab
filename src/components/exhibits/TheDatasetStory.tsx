@@ -1,6 +1,7 @@
 "use client";
 
 import { Axes, FitLine, Plot, usePlot } from "@/components/viz/Plot";
+import { PointRowLink } from "@/components/viz/primitives/PointRowLink";
 import { useActiveFrame } from "@/components/exhibits/story-frame";
 import type { TheDatasetFrame } from "@content/exhibits/the-dataset/spine";
 import { olsFit } from "@/lib/models/linear-regression";
@@ -12,32 +13,39 @@ import { COLUMNS, houses, toPoints } from "@content/exhibits/the-dataset/experim
  * the whole matrix linked to the plot.
  */
 const FIT = olsFit(toPoints(houses));
-const DEMO_ID = 5; // the example highlighted on the "row" beat
+const DEMO_ID = 5;
 
 function StoryPoints({ rowMode, highlight }: { rowMode: boolean; highlight: TheDatasetFrame["highlight"] }) {
   const { x, y } = usePlot();
   const demo = houses.find((h) => h.id === DEMO_ID);
+  const matrixMode = highlight === "matrix";
+
   return (
     <g>
-      {highlight === "row" && demo && (
-        <g aria-hidden>
-          <line
-            x1={x(demo.size)}
-            y1={y(demo.price)}
-            x2={x(demo.size) + 36}
-            y2={y(demo.price) - 24}
-            stroke="var(--accent)"
-            strokeWidth={1.5}
-            strokeDasharray="4 3"
-          />
-          <rect x={x(demo.size) + 38} y={y(demo.price) - 38} width={100} height={32} rx={4} fill="var(--surface-bg)" stroke="var(--accent)" strokeWidth={1} />
-          <text x={x(demo.size) + 44} y={y(demo.price) - 24} fontSize={9} fontFamily="var(--font-mono)" fill="var(--accent)">row #{demo.id}</text>
-          <text x={x(demo.size) + 44} y={y(demo.price) - 14} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-muted)">{demo.size} m² · €{demo.price}k</text>
-        </g>
+      {rowMode && demo && (
+        <PointRowLink
+          point={[x(demo.size), y(demo.price)]}
+          card={[x(demo.size) + 38, y(demo.price) - 38]}
+          kicker={`row #${demo.id}`}
+          lines={[`${demo.size} m² · €${demo.price}k`]}
+          tone="accent"
+        />
       )}
       {houses.map((h) => {
         const on = rowMode && h.id === DEMO_ID;
-        return <circle key={h.id} cx={x(h.size)} cy={y(h.price)} r={on ? 8 : 5} fill={on ? "var(--accent)" : "var(--viz-truth)"} stroke="var(--surface-bg)" strokeWidth={1.5} />;
+        const dim = matrixMode && !on;
+        return (
+          <circle
+            key={h.id}
+            cx={x(h.size)}
+            cy={y(h.price)}
+            r={on ? 8 : 5}
+            fill={on ? "var(--accent)" : "var(--viz-truth)"}
+            stroke="var(--surface-bg)"
+            strokeWidth={1.5}
+            opacity={dim ? 0.55 : 1}
+          />
+        );
       })}
     </g>
   );
@@ -47,12 +55,22 @@ export function TheDatasetStory() {
   const frame = useActiveFrame<TheDatasetFrame>();
   const highlight = frame?.highlight ?? "row";
   const caption =
-    highlight === "columns" ? "Columns — features vs the target" : highlight === "matrix" ? "The matrix — all the model sees" : "One row — one example";
+    highlight === "columns"
+      ? "Columns — features vs the target"
+      : highlight === "matrix"
+        ? "The matrix — all the model sees"
+        : "One row — one example";
 
   return (
     <figure className="flex flex-col gap-4 rounded-xl border border-line bg-raised p-5">
       <figcaption className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">{caption}</figcaption>
-      <Plot width={520} height={260} xDomain={[35, 130]} yDomain={[60, 320]} ariaLabel={`Size vs price for ${houses.length} houses with the trend line; ${caption}.`}>
+      <Plot
+        width={520}
+        height={260}
+        xDomain={[35, 130]}
+        yDomain={[60, 320]}
+        ariaLabel={`Size vs price for ${houses.length} houses with the trend line; ${caption}.`}
+      >
         <Axes />
         <FitLine params={FIT} />
         <StoryPoints rowMode={highlight === "row"} highlight={highlight} />
@@ -65,7 +83,10 @@ export function TheDatasetStory() {
               {COLUMNS.map((c) => {
                 const lit = highlight === "columns" && (c.kind === "target" || c.kind === "feature");
                 return (
-                  <th key={c.key} className={`px-3 py-2 font-normal ${lit && c.kind === "target" ? "bg-[var(--viz-truth)]/15 text-[var(--viz-truth-ink)]" : lit ? "bg-[var(--viz-neutral)]/10" : ""}`}>
+                  <th
+                    key={c.key}
+                    className={`px-3 py-2 font-normal ${lit && c.kind === "target" ? "bg-[var(--viz-truth)]/15 text-[var(--viz-truth-ink)]" : lit ? "bg-[var(--viz-neutral)]/10" : ""}`}
+                  >
                     {c.label}
                     {highlight === "columns" && <span className="ml-1 text-ink-faint">· {c.kind}</span>}
                   </th>
@@ -75,7 +96,10 @@ export function TheDatasetStory() {
           </thead>
           <tbody>
             {houses.slice(0, 6).map((h) => (
-              <tr key={h.id} className={`border-t border-line ${highlight === "row" && h.id === DEMO_ID ? "bg-accent/10" : ""}`}>
+              <tr
+                key={h.id}
+                className={`border-t border-line ${highlight === "row" && h.id === DEMO_ID ? "bg-accent/10" : highlight === "matrix" ? "bg-sunken/40" : ""}`}
+              >
                 <td className="px-3 py-1.5 font-mono text-ink-faint">{h.id}</td>
                 <td className="px-3 py-1.5">{h.size}</td>
                 <td className="px-3 py-1.5">{h.bedrooms}</td>

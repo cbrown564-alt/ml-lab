@@ -68,7 +68,9 @@ export function NeuralNetHero() {
           Neural networks
         </span>
         <span className="hidden font-mono text-[11px] tracking-widest text-ink-faint uppercase sm:inline">
-          {foldCount < UNIT_COUNT ? "each hidden unit folds the space" : `${ACC}% on XOR`}
+          {foldCount < UNIT_COUNT
+            ? `fold ${foldCount} of ${UNIT_COUNT} bending the space`
+            : `${ACC}% on XOR — ${UNIT_COUNT} folds carve the X`}
         </span>
       </figcaption>
       <div className="px-3 py-3" style={{ opacity: 0.35 + reveal * 0.65, transition: "opacity 400ms ease" }}>

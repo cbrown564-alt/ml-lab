@@ -2,6 +2,8 @@
 
 import { useEffect, useId, useState } from "react";
 import { Plot, usePlot } from "@/components/viz/Plot";
+import { easeProgress } from "@/components/viz/primitives/interpolation";
+import { usePrefersReducedMotion } from "@/components/viz/primitives/shared";
 import { accuracy, boundaryX2, fitLogistic, proba } from "@/lib/models/logistic";
 import { bestRuleAccuracy, whatIsMlData } from "@content/exhibits/what-is-ml/experiment";
 
@@ -23,6 +25,7 @@ const LEARNED = fitLogistic(whatIsMlData);
 const T = BEST.t;
 const HAND_PCT = Math.round(BEST.acc * 100);
 const LEARNED_PCT = Math.round(accuracy(whatIsMlData, LEARNED) * 100);
+const MORPH_MS = 480;
 
 type Pt = { x1: number; x2: number; y: 0 | 1 };
 const handPredict = (p: Pt) => (p.x1 > T ? 1 : 0);
@@ -43,12 +46,12 @@ function MistakeGhosts({ opacity = 0.55 }: { opacity?: number }) {
           key={i}
           cx={x(p.x1)}
           cy={y(p.x2)}
-          r={8}
+          r={9}
           fill="none"
           stroke="var(--viz-error)"
-          strokeWidth={2}
-          strokeDasharray="4 3"
-          opacity={0.7}
+          strokeWidth={2.25}
+          strokeDasharray="5 3"
+          opacity={0.85}
         />
       ))}
     </g>
@@ -77,6 +80,36 @@ function Dots({ predict }: { predict: (p: Pt) => number }) {
   );
 }
 
+function PlotLabel({
+  x,
+  y,
+  anchor,
+  children,
+  fill = "var(--viz-neutral-ink)",
+}: {
+  x: number;
+  y: number;
+  anchor: "start" | "end" | "middle";
+  children: React.ReactNode;
+  fill?: string;
+}) {
+  return (
+    <text
+      x={x}
+      y={y}
+      textAnchor={anchor}
+      fontSize={11}
+      fontFamily="var(--font-mono)"
+      paintOrder="stroke"
+      stroke="var(--surface-bg)"
+      strokeWidth={4}
+      fill={fill}
+    >
+      {children}
+    </text>
+  );
+}
+
 function HandGraphic() {
   const { x, y } = usePlot();
   const tx = x(T);
@@ -90,9 +123,9 @@ function HandGraphic() {
       <rect x={tx} y={yT} width={x1 - tx} height={yB - yT} fill={ZONE1} opacity={ZONE_OP} />
       <line x1={tx} x2={tx} y1={yT} y2={yB} stroke="var(--viz-neutral-ink)" strokeWidth={2.5} strokeDasharray="6 4" />
       <Dots predict={handPredict} />
-      <text x={tx + 7} y={yT + 16} fontSize={12} fontFamily="var(--font-mono)" paintOrder="stroke" stroke="var(--surface-bg)" strokeWidth={3} fill="var(--viz-neutral-ink)">
+      <PlotLabel x={tx + 8} y={yB - 10} anchor="start">
         your cut
-      </text>
+      </PlotLabel>
     </g>
   );
 }
@@ -104,7 +137,6 @@ function MachineGraphic({ morph }: { morph: number }) {
   const x1 = x(XD[1]);
   const yT = y(YD[1]);
   const yB = y(YD[0]);
-  // CounterfactualReplay: morph boundary from hand vertical cut → learned tilted line.
   const handTop = y(YD[1]);
   const handBot = y(YD[0]);
   const learnedA = [x0, y(boundaryX2(LEARNED, XD[0]))];
@@ -115,7 +147,6 @@ function MachineGraphic({ morph }: { morph: number }) {
   const predictAtMorph = (p: Pt) => {
     if (morph < 0.02) return handPredict(p);
     if (morph > 0.98) return machinePredict(p);
-    // Mid-morph: use the interpolated boundary as a soft classifier.
     const bx = boundaryX2(LEARNED, p.x1);
     const handSide = p.x1 > T ? 1 : 0;
     const machSide = p.x2 > bx ? 1 : 0;
@@ -124,7 +155,9 @@ function MachineGraphic({ morph }: { morph: number }) {
   const topIs1 = predictAtMorph({ x1: 0, x2: YD[1], y: 1 }) === 1;
   const top = [[x0, yT], [x1, yT], B, A].map((p) => p.join(",")).join(" ");
   const bot = [[x0, yB], [x1, yB], B, A].map((p) => p.join(",")).join(" ");
-  const ghostOpacity = 0.35 + 0.4 * morph;
+  const ghostOpacity = 0.45 + 0.45 * morph;
+  const labelAnchorX = A[0] + (B[0] - A[0]) * 0.55;
+  const labelAnchorY = A[1] + (B[1] - A[1]) * 0.55;
   return (
     <g>
       <defs>
@@ -141,10 +174,15 @@ function MachineGraphic({ morph }: { morph: number }) {
       <g clipPath={`url(#${clipId})`}>
         <line x1={A[0]} y1={A[1]} x2={B[0]} y2={B[1]} stroke="var(--accent)" strokeWidth={3} />
       </g>
-      {morph > 0.55 && (
-        <text x={x1 - 8} y={yT + 16} textAnchor="end" fontSize={12} fontFamily="var(--font-mono)" paintOrder="stroke" stroke="var(--surface-bg)" strokeWidth={3} fill="var(--accent)">
-          the machine&apos;s boundary
-        </text>
+      {morph > 0.35 && (
+        <PlotLabel
+          x={labelAnchorX + 10}
+          y={labelAnchorY - 8}
+          anchor="start"
+          fill="var(--accent)"
+        >
+          machine boundary
+        </PlotLabel>
       )}
     </g>
   );
@@ -183,36 +221,33 @@ function Panel({
 }
 
 export function WhatIsMlHero() {
-  const [morph, setMorph] = useState(0);
-  const [autoPlayed, setAutoPlayed] = useState(false);
+  const reduceMotion = usePrefersReducedMotion();
+  const [morph, setMorph] = useState(reduceMotion ? 1 : 0);
+  const [autoPlayed, setAutoPlayed] = useState(reduceMotion);
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      const id = requestAnimationFrame(() => {
-        setMorph(1);
-        setAutoPlayed(true);
-      });
-      return () => cancelAnimationFrame(id);
+    if (reduceMotion) {
+      setMorph(1);
+      setAutoPlayed(true);
+      return;
     }
     let raf = 0;
     let start = 0;
-    const DURATION = 1100;
-    const tick = (t: number) => {
-      if (!start) start = t;
-      const p = Math.min(1, (t - start) / DURATION);
-      setMorph(1 - Math.pow(1 - p, 3));
-      if (p < 1) raf = requestAnimationFrame(tick);
+    const tick = (now: number) => {
+      if (!start) start = now;
+      const p = easeProgress(now - start, MORPH_MS);
+      setMorph(p);
+      if (now - start < MORPH_MS) raf = requestAnimationFrame(tick);
       else setAutoPlayed(true);
     };
     const arm = window.setTimeout(() => {
       raf = requestAnimationFrame(tick);
-    }, 360);
+    }, 280);
     return () => {
       window.clearTimeout(arm);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [reduceMotion]);
 
   const morphPct = Math.round((HAND_PCT + (LEARNED_PCT - HAND_PCT) * morph) * 10) / 10;
 
@@ -254,7 +289,7 @@ export function WhatIsMlHero() {
                 value={Math.round(morph * 100)}
                 onChange={(e) => setMorph(Number(e.target.value) / 100)}
                 className="min-w-0 flex-1 accent-[var(--accent)]"
-                aria-label="Replay morph from hand rule to learned rule"
+                aria-label="Replay morph from hand rule to learned rule — scrub backward to reverse"
               />
               <span className="shrink-0 font-mono text-[10px] tabular-nums text-ink-faint">{Math.round(morph * 100)}%</span>
             </label>

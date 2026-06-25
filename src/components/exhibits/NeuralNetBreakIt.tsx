@@ -95,15 +95,22 @@ export function NeuralNetBreakIt() {
             </div>
           </div>
 
-          <label className="flex cursor-pointer items-center gap-2 text-sm text-ink-muted">
-            <input
-              type="checkbox"
-              checked={showFolds}
-              onChange={(e) => setShowFolds(e.target.checked)}
-              className="accent-[var(--accent)]"
-            />
-            Show fold lines (half-space boundaries)
-          </label>
+          <div className="flex flex-wrap items-center gap-2 text-sm text-ink-muted">
+            <button
+              type="button"
+              role="switch"
+              aria-checked={showFolds}
+              onClick={() => setShowFolds((v) => !v)}
+              className={`rounded-full border px-3 py-1 font-mono text-[11px] tracking-wide transition-colors ${
+                showFolds
+                  ? "border-[var(--viz-param)] bg-[color-mix(in_oklab,var(--viz-param)_12%,transparent)] text-[var(--viz-param-ink)]"
+                  : "border-line text-ink-muted hover:text-ink"
+              }`}
+            >
+              {showFolds ? "Fold lines on" : "Show fold lines"}
+            </button>
+            <span className="text-xs text-ink-faint">half-space boundaries per unit</span>
+          </div>
 
           <div className="flex items-center justify-between gap-3">
             <span role="status" className={`rounded-full border px-2.5 py-0.5 font-mono text-[11px] tracking-wide ${broken ? "border-[var(--viz-error)] text-[var(--viz-error-ink)]" : repaired ? "border-accent text-accent" : "border-line text-ink-faint"}`}>

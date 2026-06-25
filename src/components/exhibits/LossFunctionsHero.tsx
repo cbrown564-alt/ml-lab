@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { DataPoints, FitLine, Plot, usePlot } from "@/components/viz/Plot";
+import { usePrefersReducedMotion } from "@/components/viz/primitives/shared";
 import { olsFit, type LinearParams, type Point } from "@/lib/models/linear-regression";
 import {
   fitUnder,
@@ -11,9 +12,9 @@ import {
 import { lossFunctionsExperiment } from "@content/exhibits/loss-functions/experiment";
 
 /**
- * The specimen hero — why the choice of loss matters. CounterfactualReplay toggles
- * the same miss under L2 / L1 / Huber judges; ContributionStack shows how each
- * penalty deforms and accumulates into total loss. Reduced motion renders drawn.
+ * The specimen hero — why the choice of loss matters. Toggling the judge morphs
+ * the same miss under L2 / L1 / Huber (CounterfactualReplay semantics in one
+ * canvas); ContributionStack shows how each penalty deforms and accumulates.
  */
 
 const POINTS: Point[] = lossFunctionsExperiment.datasets[0].points;
@@ -38,20 +39,77 @@ const LOSS_LABELS: Record<LossKind, string> = {
   huber: "Huber",
 };
 
-/** Penalty deformation for the outlier residual under each judge. */
-function PenaltyDeform({ kind, fit }: { kind: LossKind; fit: LinearParams }) {
+const MORPH_MS = 520;
+
+function lerpParams(a: LinearParams, b: LinearParams, t: number): LinearParams {
+  return {
+    slope: a.slope + (b.slope - a.slope) * t,
+    intercept: a.intercept + (b.intercept - a.intercept) * t,
+  };
+}
+
+function lerpPenalty(from: LossKind, to: LossKind, r: number, t: number): number {
+  return penaltyOf(from, r) + (penaltyOf(to, r) - penaltyOf(from, r)) * t;
+}
+
+/** Residual segment for the outlier — the fixed miss every judge prices. */
+function OutlierMiss({ fit }: { fit: LinearParams }) {
+  const { x, y } = usePlot();
+  const yHat = fit.slope * OUTLIER.x + fit.intercept;
+  return (
+    <g aria-hidden>
+      <line
+        x1={x(OUTLIER.x)}
+        y1={y(OUTLIER.y)}
+        x2={x(OUTLIER.x)}
+        y2={y(yHat)}
+        stroke="var(--viz-error)"
+        strokeWidth={2}
+        strokeDasharray="4 3"
+        opacity={0.85}
+      />
+      <circle cx={x(OUTLIER.x)} cy={y(OUTLIER.y)} r={7} fill="none" stroke="var(--viz-error)" strokeWidth={2} />
+    </g>
+  );
+}
+
+/** Penalty deformation for the outlier residual — morphs with the active judge. */
+function PenaltyDeform({
+  from,
+  to,
+  morphT,
+  fit,
+}: {
+  from: LossKind;
+  to: LossKind;
+  morphT: number;
+  fit: LinearParams;
+}) {
   const { x, y } = usePlot();
   const r = OUTLIER.y - (fit.slope * OUTLIER.x + fit.intercept);
-  const penalty = penaltyOf(kind, r);
-  const maxP = Math.max(penaltyOf("squared", r), penaltyOf("absolute", r), penaltyOf("huber", r));
-  const barW = (penalty / maxP) * 80;
-  const px = x(OUTLIER.x) + 14;
-  const py = y(OUTLIER.y) - 20;
+  const penalty = lerpPenalty(from, to, r, morphT);
+  const maxP = Math.max(
+    penaltyOf("squared", r),
+    penaltyOf("absolute", r),
+    penaltyOf("huber", r),
+  );
+  const barW = (penalty / maxP) * 88;
+  const px = x(OUTLIER.x) + 16;
+  const py = y(OUTLIER.y) - 22;
 
   return (
     <g aria-hidden>
-      <rect x={px} y={py} width={barW} height={10} rx={2} fill="var(--viz-error)" opacity={0.75} />
-      <text x={px + barW + 4} y={py + 9} fontSize={10} fontFamily="var(--font-mono)" fill="var(--viz-error-ink)">
+      <text x={px} y={py - 6} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+        outlier penalty
+      </text>
+      <rect x={px} y={py} width={barW} height={11} rx={2} fill="var(--viz-error)" opacity={0.8} />
+      <text
+        x={px + barW + 5}
+        y={py + 9}
+        fontSize={10}
+        fontFamily="var(--font-mono)"
+        fill="var(--viz-error-ink)"
+      >
         {penalty.toFixed(1)}
       </text>
     </g>
@@ -59,49 +117,93 @@ function PenaltyDeform({ kind, fit }: { kind: LossKind; fit: LinearParams }) {
 }
 
 /** ContributionStack — per-point penalties stacking into mean loss. */
-function LossStack({ kind, fit, t }: { kind: LossKind; fit: LinearParams; t: number }) {
+function LossStack({
+  from,
+  to,
+  morphT,
+  fit,
+  stackT,
+}: {
+  from: LossKind;
+  to: LossKind;
+  morphT: number;
+  fit: LinearParams;
+  stackT: number;
+}) {
   const { width, height } = usePlot();
   const penalties = POINTS.map((p) => {
     const r = p.y - (fit.slope * p.x + fit.intercept);
-    return penaltyOf(kind, r);
+    return lerpPenalty(from, to, r, morphT);
   });
-  const maxP = Math.max(...penalties);
-  const shown = Math.max(1, Math.round(t * POINTS.length));
+  const maxP = Math.max(...penalties, 1e-6);
+  const shown = Math.max(1, Math.round(stackT * POINTS.length));
   const mean = penalties.slice(0, shown).reduce((s, v) => s + v, 0) / POINTS.length;
-  const stackX = width - 58;
-  const barH = (height - 40) / POINTS.length;
+  const stackX = width - 62;
+  const barH = (height - 52) / POINTS.length;
 
   return (
     <g aria-hidden>
+      <text
+        x={stackX + 24}
+        y={12}
+        textAnchor="middle"
+        fontSize={9}
+        fontFamily="var(--font-mono)"
+        fill="var(--ink-faint)"
+      >
+        penalty stack
+      </text>
       {penalties.map((pen, i) => {
-        const w = (pen / maxP) * 42;
+        const w = (pen / maxP) * 46;
         const visible = i < shown;
+        const isOutlier = POINTS[i] === OUTLIER;
         return (
-          <rect
-            key={i}
-            x={stackX}
-            y={18 + i * barH}
-            width={visible ? w : 0}
-            height={barH * 0.7}
-            fill="var(--viz-error)"
-            opacity={0.5}
-            rx={1}
-          />
+          <g key={i}>
+            <rect
+              x={stackX}
+              y={20 + i * barH}
+              width={visible ? w : 0}
+              height={barH * 0.72}
+              fill="var(--viz-error)"
+              opacity={isOutlier ? 0.85 : 0.45}
+              rx={1}
+              stroke={isOutlier ? "var(--viz-error-ink)" : "none"}
+              strokeWidth={isOutlier ? 0.75 : 0}
+            />
+          </g>
         );
       })}
-      <text x={stackX + 21} y={height - 6} textAnchor="middle" fontSize={11} fontFamily="var(--font-mono)" fontWeight={600} fill="var(--viz-error-ink)">
+      <text
+        x={stackX + 24}
+        y={height - 18}
+        textAnchor="middle"
+        fontSize={9}
+        fontFamily="var(--font-mono)"
+        fill="var(--ink-faint)"
+      >
+        mean loss
+      </text>
+      <text
+        x={stackX + 24}
+        y={height - 4}
+        textAnchor="middle"
+        fontSize={12}
+        fontFamily="var(--font-mono)"
+        fontWeight={600}
+        fill="var(--viz-error-ink)"
+      >
         {mean.toFixed(2)}
       </text>
     </g>
   );
 }
 
-function OutlierLabel({ kind }: { kind: LossKind }) {
+function OutlierLabel({ kind, morphing }: { kind: LossKind; morphing: boolean }) {
   const { x, y } = usePlot();
   return (
     <text
       x={x(OUTLIER.x)}
-      y={y(OUTLIER.y) - 12}
+      y={y(OUTLIER.y) - 14}
       textAnchor="middle"
       fontSize={12}
       fontFamily="var(--font-mono)"
@@ -110,39 +212,73 @@ function OutlierLabel({ kind }: { kind: LossKind }) {
       strokeWidth={3}
       fill="var(--viz-error-ink)"
     >
-      same miss · {LOSS_LABELS[kind]}
+      {morphing ? "same miss · judge morphing…" : `same miss · ${LOSS_LABELS[kind]}`}
     </text>
   );
 }
 
 export function LossFunctionsHero() {
+  const reduceMotion = usePrefersReducedMotion();
   const [kind, setKind] = useState<LossKind>("squared");
-  const [t, setT] = useState(0);
-  const fit = useMemo(() => fitUnder(kind, POINTS), [kind]);
+  const [morphFrom, setMorphFrom] = useState<LossKind>("squared");
+  const [morphT, setMorphT] = useState(1);
+  const [stackT, setStackT] = useState(0);
+  const fitFrom = useMemo(() => fitUnder(morphFrom, POINTS), [morphFrom]);
+  const fitTo = useMemo(() => fitUnder(kind, POINTS), [kind]);
+  const fit = useMemo(() => lerpParams(fitFrom, fitTo, morphT), [fitFrom, fitTo, morphT]);
+
+  const pickKind = (k: LossKind) => {
+    if (k === kind && morphT >= 1) return;
+    setMorphFrom(kind);
+    setKind(k);
+    setMorphT(0);
+    setStackT(0);
+  };
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      const id = requestAnimationFrame(() => setT(1));
-      return () => cancelAnimationFrame(id);
+    if (reduceMotion) {
+      setMorphT(1);
+      setStackT(1);
+      return;
     }
     let raf = 0;
     let start = 0;
-    const DURATION = 1000;
+    const tick = (now: number) => {
+      if (!start) start = now;
+      const p = Math.min(1, (now - start) / MORPH_MS);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setMorphT(eased);
+      setStackT(eased);
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [kind, morphFrom, reduceMotion]);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setStackT(1);
+      return;
+    }
+    let raf = 0;
+    let start = 0;
+    const DURATION = 900;
     const tick = (now: number) => {
       if (!start) start = now;
       const p = Math.min(1, (now - start) / DURATION);
-      setT(1 - Math.pow(1 - p, 3));
+      setStackT(1 - Math.pow(1 - p, 3));
       if (p < 1) raf = requestAnimationFrame(tick);
     };
     const arm = window.setTimeout(() => {
       raf = requestAnimationFrame(tick);
-    }, 340);
+    }, 280);
     return () => {
       window.clearTimeout(arm);
       cancelAnimationFrame(raf);
     };
-  }, [kind]);
+  }, [reduceMotion]);
+
+  const morphing = morphT < 0.98;
 
   return (
     <figure className="overflow-hidden rounded-xl border border-line bg-raised">
@@ -155,7 +291,7 @@ export function LossFunctionsHero() {
             <button
               key={k}
               type="button"
-              onClick={() => setKind(k)}
+              onClick={() => pickKind(k)}
               className={`rounded px-2 py-0.5 font-mono text-[10px] tracking-wide uppercase transition-colors ${kind === k ? "bg-accent/15 text-accent" : "text-ink-faint hover:text-ink-muted"}`}
             >
               {LOSS_LABELS[k]}
@@ -171,13 +307,14 @@ export function LossFunctionsHero() {
           yDomain={Y_DOMAIN}
           ariaLabel={`A cloud of points with one outlier and the ${LOSS_LABELS[kind]} fit. Toggle the judge to see how the same miss is penalised differently; penalties stack into mean loss on the right.`}
         >
-          <g opacity={0.25 + 0.75 * t}>
-            <LossStack kind={kind} fit={fit} t={t} />
+          <g opacity={0.3 + 0.7 * stackT}>
+            <LossStack from={morphFrom} to={kind} morphT={morphT} fit={fit} stackT={stackT} />
           </g>
           <FitLine params={fit} />
           <DataPoints points={POINTS} />
-          <PenaltyDeform kind={kind} fit={fit} />
-          <OutlierLabel kind={kind} />
+          <OutlierMiss fit={fit} />
+          <PenaltyDeform from={morphFrom} to={kind} morphT={morphT} fit={fit} />
+          <OutlierLabel kind={kind} morphing={morphing} />
         </Plot>
       </div>
     </figure>

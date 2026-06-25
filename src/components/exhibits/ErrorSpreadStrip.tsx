@@ -17,6 +17,7 @@ export function ErrorSpreadStrip({
   bins = 20,
   width = 600,
   height = 170,
+  accentLatest = false,
 }: {
   errs: number[];
   marks: SpreadMark[];
@@ -26,6 +27,8 @@ export function ErrorSpreadStrip({
   bins?: number;
   width?: number;
   height?: number;
+  /** Highlight the newest bin so accumulation reads beat-by-beat. */
+  accentLatest?: boolean;
 }) {
   const m = { l: 16, r: 16, t: 34, b: 22 };
   const plotW = width - m.l - m.r;
@@ -43,19 +46,29 @@ export function ErrorSpreadStrip({
   return (
     <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Distribution of validation error across ${errs.length} random splits; ${marks.map((mk) => `${mk.label} at ${mk.value.toFixed(3)}`).join(", ")}.`} className="h-auto w-full">
       <line x1={m.l} x2={width - m.r} y1={height - m.b} y2={height - m.b} stroke="var(--line)" />
-      {counts.map((c, i) =>
-        c === 0 ? null : (
+      {counts.map((c, i) => {
+        if (c === 0) return null;
+        const latestBin =
+          accentLatest &&
+          errs.length > 0 &&
+          i ===
+            Math.min(
+              bins - 1,
+              Math.floor((Math.min(errs[errs.length - 1]!, axisMax) / axisMax) * bins),
+            );
+        return (
           <rect
             key={i}
             x={m.l + i * bw + bw * 0.12}
             y={height - m.b - (c / maxCount) * plotH}
             width={bw * 0.76}
             height={(c / maxCount) * plotH}
-            fill="var(--viz-prediction)"
-            fillOpacity={0.55}
+            fill={latestBin ? "var(--accent)" : "var(--viz-prediction)"}
+            fillOpacity={latestBin ? 0.85 : 0.55}
+            style={{ transition: accentLatest ? "fill 200ms ease, fill-opacity 200ms ease" : undefined }}
           />
-        ),
-      )}
+        );
+      })}
       {(() => {
         // Place labels so they never collide: edge marks anchor inward, and a mark
         // whose label would overprint a nearer one is bumped up a row.

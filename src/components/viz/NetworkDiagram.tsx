@@ -1,6 +1,7 @@
 "use client";
 
 import type { Net } from "@/lib/models/neural-net";
+import { MOTION_QUICK } from "@/components/viz/primitives/shared";
 
 /**
  * The network's wiring, drawn: two inputs on the left, the hidden tanh units in the
@@ -35,16 +36,21 @@ export function NetworkDiagram({
     ...net.W1.flat().map(Math.abs),
     ...net.W2.map(Math.abs),
   );
-  const stroke = (w: number, muted = false) => ({
-    width: 0.5 + (Math.abs(w) / maxW) * 3.5,
+  const stroke = (w: number, muted = false, selected = false) => ({
+    width: 0.5 + (Math.abs(w) / maxW) * (selected ? 4.5 : 3.5),
     color: w >= 0 ? "var(--viz-prediction)" : "var(--viz-error)",
-    opacity: muted ? 0.12 : 0.25 + (Math.abs(w) / maxW) * 0.55,
+    opacity: muted ? 0.1 : selected ? 0.75 : 0.25 + (Math.abs(w) / maxW) * 0.55,
   });
 
   const inY = [col(2, 0), col(2, 1)];
   const hidY = net.W2.map((_, j) => col(H, j));
   const outY = col(1, 0);
   const hr = Math.max(4, Math.min(11, (height - 2 * pad) / (H * 2.4)));
+
+  const pickUnit = (j: number) => {
+    if (!onSelectUnit) return;
+    onSelectUnit(selectedUnit === j ? null : j);
+  };
 
   return (
     <svg
@@ -55,7 +61,8 @@ export function NetworkDiagram({
     >
       {net.W1.map((w, j) =>
         [0, 1].map((k) => {
-          const s = stroke(w[k], mutedUnits.has(j));
+          const isSel = selectedUnit === j;
+          const s = stroke(w[k], mutedUnits.has(j), isSel);
           return (
             <line
               key={`i${j}-${k}`}
@@ -66,12 +73,14 @@ export function NetworkDiagram({
               stroke={s.color}
               strokeWidth={s.width}
               strokeOpacity={s.opacity}
+              style={{ transition: `stroke-opacity ${MOTION_QUICK}, stroke-width ${MOTION_QUICK}` }}
             />
           );
         }),
       )}
       {net.W2.map((w, j) => {
-        const s = stroke(w, mutedUnits.has(j));
+        const isSel = selectedUnit === j;
+        const s = stroke(w, mutedUnits.has(j), isSel);
         return (
           <line
             key={`h${j}`}
@@ -82,6 +91,7 @@ export function NetworkDiagram({
             stroke={s.color}
             strokeWidth={s.width}
             strokeOpacity={s.opacity}
+            style={{ transition: `stroke-opacity ${MOTION_QUICK}, stroke-width ${MOTION_QUICK}` }}
           />
         );
       })}
@@ -98,6 +108,18 @@ export function NetworkDiagram({
         const isMuted = mutedUnits.has(j);
         return (
           <g key={`h${j}`}>
+            {isSel && (
+              <circle
+                cx={colX[1]}
+                cy={y}
+                r={hr + 5}
+                fill="none"
+                stroke="var(--viz-param)"
+                strokeWidth={2}
+                strokeOpacity={0.35}
+                style={{ transition: `r ${MOTION_QUICK}, stroke-opacity ${MOTION_QUICK}` }}
+              />
+            )}
             {onSelectUnit ? (
               <circle
                 cx={colX[1]}
@@ -105,19 +127,45 @@ export function NetworkDiagram({
                 r={hr + 6}
                 fill="transparent"
                 className="cursor-pointer"
-                onClick={() => onSelectUnit(isSel ? null : j)}
+                role="button"
+                tabIndex={0}
+                aria-label={`Hidden unit ${j + 1}${isMuted ? ", muted" : ""}${isSel ? ", selected" : ""}`}
+                aria-pressed={isSel}
+                onClick={() => pickUnit(j)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    pickUnit(j);
+                  }
+                }}
               />
             ) : null}
             <circle
               cx={colX[1]}
               cy={y}
               r={hr}
-              fill={isSel ? "color-mix(in oklch, var(--viz-param) 18%, var(--surface-raised))" : "var(--surface-raised)"}
-              stroke={isSel ? "var(--viz-param)" : "var(--viz-param)"}
-              strokeWidth={isSel ? 2.5 : 1.5}
+              fill={isSel ? "color-mix(in oklch, var(--viz-param) 22%, var(--surface-raised))" : "var(--surface-raised)"}
+              stroke="var(--viz-param)"
+              strokeWidth={isSel ? 2.75 : 1.5}
               strokeOpacity={isMuted ? 0.35 : 1}
-              fillOpacity={isMuted ? 0.5 : 1}
+              fillOpacity={isMuted ? 0.45 : 1}
+              style={{ transition: `fill-opacity ${MOTION_QUICK}, stroke-opacity ${MOTION_QUICK}, stroke-width ${MOTION_QUICK}` }}
             />
+            {(isSel || H <= 8) && (
+              <text
+                x={colX[1]}
+                y={y + (isSel ? 3.5 : 3)}
+                textAnchor="middle"
+                fontSize={isSel ? 10 : 8}
+                fontWeight={isSel ? 600 : 400}
+                fontFamily="var(--font-mono)"
+                fill={isMuted ? "var(--ink-faint)" : "var(--viz-param-ink)"}
+                pointerEvents="none"
+                opacity={isMuted ? 0.6 : 1}
+              >
+                {j + 1}
+              </text>
+            )}
             {isMuted && (
               <line
                 x1={colX[1] - hr}
@@ -127,6 +175,7 @@ export function NetworkDiagram({
                 stroke="var(--viz-error)"
                 strokeWidth={1.5}
                 strokeOpacity={0.7}
+                pointerEvents="none"
               />
             )}
           </g>
@@ -142,7 +191,7 @@ export function NetworkDiagram({
         inputs
       </text>
       <text x={colX[1]} y={height - 8} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
-        hidden
+        hidden folds
       </text>
       <text x={colX[2]} y={height - 8} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
         output

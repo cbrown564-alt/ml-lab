@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Plot, usePlot } from "@/components/viz/Plot";
+import { PointRowLink } from "@/components/viz/primitives/PointRowLink";
+import { easeProgress } from "@/components/viz/primitives/interpolation";
+import { usePrefersReducedMotion } from "@/components/viz/primitives/shared";
 import { olsFit, type LinearParams } from "@/lib/models/linear-regression";
 import { corruptedRows, houses, toPoints } from "@content/exhibits/the-dataset/experiment";
 
@@ -20,51 +23,9 @@ const DIRTY = olsFit(toPoints([...houses, ...corruptedRows]));
 const OUTLIER = corruptedRows[0];
 const X_DOMAIN: [number, number] = [0, 132];
 const Y_DOMAIN: [number, number] = [0, 400];
+const MORPH_MS = 480;
 
 const at = (p: LinearParams, x: number) => p.slope * x + p.intercept;
-
-/** ProvenancePipe — tether + lens linking the scatter point to its table row. */
-function ProvenanceLens({ t }: { t: number }) {
-  const { x, y } = usePlot();
-  const px = x(OUTLIER.size);
-  const py = y(OUTLIER.price);
-  const lx = px + 52;
-  const ly = py - 38;
-  return (
-    <g opacity={t} aria-hidden>
-      <line
-        x1={px}
-        y1={py}
-        x2={lx - 8}
-        y2={ly + 22}
-        stroke="var(--viz-error)"
-        strokeWidth={1.5}
-        strokeDasharray="5 4"
-        opacity={0.75}
-      />
-      <rect
-        x={lx}
-        y={ly}
-        width={148}
-        height={52}
-        rx={6}
-        fill="var(--surface-bg)"
-        stroke="var(--viz-error)"
-        strokeWidth={1.25}
-        opacity={0.95}
-      />
-      <text x={lx + 8} y={ly + 16} fontSize={10} fontFamily="var(--font-mono)" fill="var(--viz-error-ink)" fontWeight={600}>
-        row · provenance
-      </text>
-      <text x={lx + 8} y={ly + 30} fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-muted)">
-        size {OUTLIER.size} m² (typo)
-      </text>
-      <text x={lx + 8} y={ly + 42} fontSize={10} fontFamily="var(--font-mono)" fill="var(--viz-truth-ink)">
-        price €{OUTLIER.price}k
-      </text>
-    </g>
-  );
-}
 
 function HeroGraphic({ t }: { t: number }) {
   const { x, y } = usePlot();
@@ -73,6 +34,8 @@ function HeroGraphic({ t }: { t: number }) {
     intercept: CLEAN.intercept + (DIRTY.intercept - CLEAN.intercept) * t,
   };
   const [x0, x1] = X_DOMAIN;
+  const px = x(OUTLIER.size);
+  const py = y(OUTLIER.price);
   return (
     <g>
       {houses.map((h) => (
@@ -97,16 +60,16 @@ function HeroGraphic({ t }: { t: number }) {
       />
       <text
         x={x(x1) - 6}
-        y={y(at(CLEAN, x1)) - 8}
+        y={y(at(CLEAN, x1)) - 10}
         textAnchor="end"
-        fontSize={12}
+        fontSize={11}
         fontFamily="var(--font-mono)"
         paintOrder="stroke"
         stroke="var(--surface-bg)"
-        strokeWidth={3}
+        strokeWidth={4}
         fill="var(--viz-neutral-ink)"
       >
-        the honest trend
+        honest trend
       </text>
       <line
         x1={x(x0)}
@@ -118,55 +81,55 @@ function HeroGraphic({ t }: { t: number }) {
       />
       <g opacity={t}>
         <line
-          x1={x(OUTLIER.size)}
+          x1={px}
           y1={y(at(dragged, OUTLIER.size))}
-          x2={x(OUTLIER.size)}
-          y2={y(OUTLIER.price)}
+          x2={px}
+          y2={py}
           stroke="var(--viz-error)"
           strokeWidth={1.5}
           strokeDasharray="3 3"
-          opacity={0.6}
+          opacity={0.65}
         />
-        <circle
-          cx={x(OUTLIER.size)}
-          cy={y(OUTLIER.price)}
-          r={7}
-          fill="var(--viz-error)"
-          stroke="var(--surface-bg)"
-          strokeWidth={2}
+        <circle cx={px} cy={py} r={7} fill="var(--viz-error)" stroke="var(--surface-bg)" strokeWidth={2} />
+        <PointRowLink
+          point={[px, py]}
+          card={[px + 48, py - 52]}
+          cardWidth={152}
+          cardHeight={48}
+          kicker="row · provenance"
+          lines={[`size ${OUTLIER.size} m² (typo)`, `price €${OUTLIER.price}k`]}
+          tone="error"
+          opacity={t}
         />
-        <ProvenanceLens t={t} />
       </g>
     </g>
   );
 }
 
 export function TheDatasetHero() {
-  const [t, setT] = useState(0);
+  const reduceMotion = usePrefersReducedMotion();
+  const [t, setT] = useState(reduceMotion ? 1 : 0);
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      const id = requestAnimationFrame(() => setT(1));
-      return () => cancelAnimationFrame(id);
+    if (reduceMotion) {
+      setT(1);
+      return;
     }
     let raf = 0;
     let start = 0;
-    const DURATION = 1100;
     const tick = (now: number) => {
       if (!start) start = now;
-      const p = Math.min(1, (now - start) / DURATION);
-      setT(1 - Math.pow(1 - p, 3));
-      if (p < 1) raf = requestAnimationFrame(tick);
+      setT(easeProgress(now - start, MORPH_MS));
+      if (now - start < MORPH_MS) raf = requestAnimationFrame(tick);
     };
     const arm = window.setTimeout(() => {
       raf = requestAnimationFrame(tick);
-    }, 360);
+    }, 280);
     return () => {
       window.clearTimeout(arm);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [reduceMotion]);
 
   const slopeDrop = `${CLEAN.slope.toFixed(1)} → ${DIRTY.slope.toFixed(1)}`;
 

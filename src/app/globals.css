@@ -112,9 +112,33 @@ body {
     transform: translateY(10px);
   }
 }
-.lift-fog {
-  animation: lift-fog 600ms var(--ease-out);
+.leak-backflow path {
+  animation: leak-backflow-pulse 1.1s ease-in-out infinite;
 }
+@keyframes leak-backflow-pulse {
+  0%,
+  100% {
+    stroke-opacity: 0.65;
+    stroke-width: 2;
+  }
+  50% {
+    stroke-opacity: 1;
+    stroke-width: 2.75;
+  }
+}
+
+.pipe-score-repair {
+  animation: pipe-score-repair 600ms var(--ease-out);
+}
+@keyframes pipe-score-repair {
+  0% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 
 /* Prose measure variants (Batch 2): width responds to content where allowed. */
 .prose-measure {
@@ -171,9 +195,9 @@ body {
     0 4px 14px -8px oklch(18% 0.02 265 / 0.25),
     inset 0 1px 0 0 oklch(100% 0 0 / 0.6);
   transition:
-    transform 240ms var(--ease-out),
-    box-shadow 240ms var(--ease-out),
-    border-color 240ms var(--ease-out);
+    transform var(--motion-move) var(--ease-out),
+    box-shadow var(--motion-move) var(--ease-out),
+    border-color var(--motion-move) var(--ease-out);
 }
 .jewel-plate[data-active] {
   transform: scale(1.06) translateY(-2px);
@@ -190,11 +214,11 @@ body {
     inset 0 0 0 1px color-mix(in oklch, var(--accent) 30%, transparent);
 }
 .jewel {
-  transition: opacity 240ms var(--ease-out);
+  transition: opacity var(--motion-move) var(--ease-out);
 }
 .jewel-enter {
   opacity: 0;
-  transition: opacity 200ms var(--ease-out);
+  transition: opacity var(--motion-quick) var(--ease-out);
 }
 .jewel a:hover .jewel-enter,
 .jewel a:focus-visible .jewel-enter {

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { FeatureFoldField } from "@/components/viz/FeatureFoldField";
 import { NetworkDiagram } from "@/components/viz/NetworkDiagram";
 import { StatGrid } from "@/components/viz/StatGrid";
+import { PortalView, RepresentationPortal } from "@/components/viz/primitives";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import { initNet, logLoss, predictProbaMuted, step, type Net } from "@/lib/models/neural-net";
 import { DEFAULT_HIDDEN, HIDDEN_CHOICES, NN_LR, neuralNetScenario, xorData } from "@content/exhibits/neural-network-fundamentals/experiment";
@@ -61,6 +62,16 @@ export function NeuralNetLab() {
       return next;
     });
     whenHydrated(() => useLearner.getState().recordPractice("neural-network-fundamentals"));
+  }, []);
+
+  const portalEntityId = selectedUnit !== null ? `fold-${selectedUnit}` : null;
+  const onPortalEntityChange = useCallback((id: string | null) => {
+    if (id === null) {
+      setSelectedUnit(null);
+      return;
+    }
+    const match = /^fold-(\d+)$/.exec(id);
+    if (match) setSelectedUnit(Number(match[1]));
   }, []);
 
   const predict = useMemo(
@@ -147,24 +158,35 @@ export function NeuralNetLab() {
         </div>
 
         <div className="mt-6 lg:mt-0">
-          <FeatureFoldField
-            net={net}
-            points={xorData}
-            muted={muted}
-            selectedUnit={selectedUnit}
-            width={520}
-            height={420}
-          />
-          <div className="mx-auto mt-4 w-full max-w-[320px]">
-            <NetworkDiagram
-              net={net}
-              selectedUnit={selectedUnit}
-              mutedUnits={muted}
-              onSelectUnit={setSelectedUnit}
-            />
-          </div>
+          <RepresentationPortal
+            activeEntityId={portalEntityId}
+            onActiveEntityChange={onPortalEntityChange}
+          >
+            <div className="flex flex-col gap-4">
+              <PortalView label="Feature space · XOR folds">
+                <FeatureFoldField
+                  net={net}
+                  points={xorData}
+                  muted={muted}
+                  selectedUnit={selectedUnit}
+                  width={520}
+                  height={420}
+                />
+              </PortalView>
+              <PortalView label="Network · click a hidden fold">
+                <div className="mx-auto w-full max-w-[320px]">
+                  <NetworkDiagram
+                    net={net}
+                    selectedUnit={selectedUnit}
+                    mutedUnits={muted}
+                    onSelectUnit={setSelectedUnit}
+                  />
+                </div>
+              </PortalView>
+            </div>
+          </RepresentationPortal>
           <p className="mt-2 text-center text-xs text-ink-faint">
-            Click a hidden unit to inspect its fold · mute to see what it contributes
+            Each hidden unit is one fold of feature space — click to inspect, mute to see what it contributes
           </p>
         </div>
       </div>

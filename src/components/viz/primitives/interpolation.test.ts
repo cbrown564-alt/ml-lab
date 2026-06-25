@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   clamp01,
+  easeOutCubic,
+  easeProgress,
   lerp,
   lerpRecord,
   reversibleProgress,
@@ -27,5 +29,12 @@ describe("interpolation helpers", () => {
   it("reversibleProgress mirrors scrub direction", () => {
     expect(reversibleProgress(0.25, "forward")).toBe(0.25);
     expect(reversibleProgress(0.25, "reverse")).toBe(0.75);
+  });
+
+  it("easeOutCubic and easeProgress follow the lab easing curve", () => {
+    expect(easeOutCubic(0)).toBe(0);
+    expect(easeOutCubic(1)).toBe(1);
+    expect(easeOutCubic(0.5)).toBeCloseTo(0.875, 3);
+    expect(easeProgress(240, 480)).toBeCloseTo(0.875, 3);
   });
 });

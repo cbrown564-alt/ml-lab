@@ -12,8 +12,7 @@ import { bestRuleAccuracy, whatIsMlData } from "@content/exhibits/what-is-ml/exp
  * cut on one feature), then as the examples handed to the machine, then as the learned
  * tilted rule. Each rule tints its decision zones (gold = predict 0, blue = predict 1)
  * and rings the points it gets wrong — so a dot's hue clashing with its zone IS a
- * mistake, the same grammar as the hero. The rules are computed once so beats are
- * deterministic.
+ * mistake, the same grammar as the hero.
  */
 const DOMAIN: [number, number] = [-3, 3];
 const BEST = bestRuleAccuracy(whatIsMlData);
@@ -25,11 +24,42 @@ const ZONE1 = "var(--viz-prediction)";
 const ZONE_OP = 0.1;
 const machinePredict = (p: { x1: number; x2: number }) => (proba(LEARNED, p.x1, p.x2) >= 0.5 ? 1 : 0);
 
+function PlotLabel({
+  x,
+  y,
+  anchor,
+  children,
+  fill = "var(--viz-neutral-ink)",
+}: {
+  x: number;
+  y: number;
+  anchor: "start" | "end" | "middle";
+  children: React.ReactNode;
+  fill?: string;
+}) {
+  return (
+    <text
+      x={x}
+      y={y}
+      textAnchor={anchor}
+      fontSize={11}
+      fontFamily="var(--font-mono)"
+      paintOrder="stroke"
+      stroke="var(--surface-bg)"
+      strokeWidth={4}
+      fill={fill}
+    >
+      {children}
+    </text>
+  );
+}
+
 function Graphic({ stage }: { stage: WhatIsMlFrame["stage"] }) {
   const { x, y } = usePlot();
   const clipId = useId();
   const showHand = stage === "hand";
   const showLearned = stage === "learned";
+  const showLearning = stage === "learning";
   const [xd0, xd1] = x.domain;
   const [yd0, yd1] = y.domain;
   const tx = x(BEST.t);
@@ -53,7 +83,12 @@ function Graphic({ stage }: { stage: WhatIsMlFrame["stage"] }) {
           <polygon points={[[x(xd0), y(yd0)], [x(xd1), y(yd0)], bB, bA].map((p) => p.join(",")).join(" ")} fill={topIs1 ? ZONE0 : ZONE1} opacity={ZONE_OP} />
         </g>
       )}
-      {showLearned &&
+      {showLearning && (
+        <PlotLabel x={x(xd0) + 12} y={y(yd1) + 18} anchor="start" fill="var(--viz-truth-ink)">
+          labelled examples →
+        </PlotLabel>
+      )}
+      {(showLearned || showLearning) &&
         whatIsMlData
           .filter((p) => (p.x1 > BEST.t ? 1 : 0) !== p.y)
           .map((p, i) => (
@@ -61,12 +96,12 @@ function Graphic({ stage }: { stage: WhatIsMlFrame["stage"] }) {
               key={`ghost-${i}`}
               cx={x(p.x1)}
               cy={y(p.x2)}
-              r={7}
+              r={8}
               fill="none"
               stroke="var(--viz-error)"
-              strokeWidth={1.75}
-              strokeDasharray="4 3"
-              opacity={0.5}
+              strokeWidth={2}
+              strokeDasharray="5 3"
+              opacity={showLearned ? 0.6 : 0.35}
               aria-hidden
             />
           ))}
@@ -77,17 +112,37 @@ function Graphic({ stage }: { stage: WhatIsMlFrame["stage"] }) {
             ? machinePredict(p) !== p.y
             : false;
         return (
-          <circle key={i} cx={x(p.x1)} cy={y(p.x2)} r={wrong ? 5.5 : 5} fill={p.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"} stroke={wrong ? "var(--viz-error)" : "var(--surface-bg)"} strokeWidth={wrong ? 2.75 : 1} />
+          <circle
+            key={i}
+            cx={x(p.x1)}
+            cy={y(p.x2)}
+            r={wrong ? 5.5 : 5}
+            fill={p.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"}
+            stroke={wrong ? "var(--viz-error)" : "var(--surface-bg)"}
+            strokeWidth={wrong ? 2.75 : 1}
+          />
         );
       })}
       {showHand && (
         <>
           <line x1={tx} x2={tx} y1={y(DOMAIN[1])} y2={y(DOMAIN[0])} stroke="var(--viz-neutral-ink)" strokeWidth={2.5} strokeDasharray="6 4" />
-          <text x={tx + 6} y={y(DOMAIN[1]) + 14} fontSize={11} fontFamily="var(--font-mono)" paintOrder="stroke" stroke="var(--surface-bg)" strokeWidth={3} fill="var(--viz-neutral-ink)">your rule</text>
+          <PlotLabel x={tx + 8} y={y(DOMAIN[0]) - 10} anchor="start">
+            your rule
+          </PlotLabel>
         </>
       )}
       {showLearned && (
-        <line x1={bA[0]} y1={bA[1]} x2={bB[0]} y2={bB[1]} stroke="var(--accent)" strokeWidth={3} />
+        <>
+          <line x1={bA[0]} y1={bA[1]} x2={bB[0]} y2={bB[1]} stroke="var(--accent)" strokeWidth={3} />
+          <PlotLabel
+            x={(bA[0] + bB[0]) / 2 + 10}
+            y={(bA[1] + bB[1]) / 2 - 8}
+            anchor="start"
+            fill="var(--accent)"
+          >
+            learned boundary
+          </PlotLabel>
+        </>
       )}
     </g>
   );

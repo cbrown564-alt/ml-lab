@@ -15,9 +15,9 @@ test.describe("classification-task exhibit", () => {
     await expect(page.getByTestId("mastery-badge")).toHaveText("seen"); // hydration
   });
 
-  test("the Story opens on the threshold strip", async ({ page }) => {
+  test("the Story opens on the decision conveyor", async ({ page }) => {
     await expect(page.getByRole("heading", { name: "Classification" })).toBeVisible();
-    await expect(panel(page).getByRole("img", { name: /predicted probability/i })).toBeVisible();
+    await expect(panel(page).getByRole("img", { name: /decision conveyor/i })).toBeVisible();
   });
 
   test("dragging the threshold flips between eager and cautious", async ({ page }) => {

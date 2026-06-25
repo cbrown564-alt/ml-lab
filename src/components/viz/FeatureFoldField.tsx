@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { linearScale } from "@/lib/viz/scale";
 import { halfSpaceLine, predictProbaMuted, type Net } from "@/lib/models/neural-net";
 import type { Sample } from "@/lib/models/neural-net";
+import { MOTION_QUICK } from "@/components/viz/primitives/shared";
 
 /**
  * Feature space with each hidden unit's half-space fold drawn on top — the
@@ -26,6 +27,17 @@ function fieldColor(p: number): string {
 }
 
 const clampPx = (v: number) => Math.max(-2000, Math.min(2000, v));
+
+function foldMidpoint(
+  line: NonNullable<ReturnType<typeof halfSpaceLine>>,
+  sx: (v: number) => number,
+  sy: (v: number) => number,
+) {
+  return {
+    x: (clampPx(sx(line.x1a)) + clampPx(sx(line.x1b))) / 2,
+    y: (clampPx(sy(line.x2a)) + clampPx(sy(line.x2b))) / 2,
+  };
+}
 
 export function FeatureFoldField({
   net,
@@ -96,6 +108,9 @@ export function FeatureFoldField({
     [points, predict],
   );
 
+  const foldCount = folds.length;
+  const activeFoldCount = folds.filter(({ unit }) => !muted.has(unit)).length;
+
   return (
     <div className="relative" style={{ aspectRatio: `${width} / ${height}` }}>
       <canvas
@@ -107,12 +122,13 @@ export function FeatureFoldField({
           top: `${(MARGIN.top / height) * 100}%`,
           width: `${((width - MARGIN.left - MARGIN.right) / width) * 100}%`,
           height: `${((height - MARGIN.top - MARGIN.bottom) / height) * 100}%`,
+          transition: `opacity ${MOTION_QUICK}`,
         }}
       />
       <svg
         viewBox={`0 0 ${width} ${height}`}
         role="img"
-        aria-label={`XOR data in feature space with ${folds.length} hidden-unit fold lines; the model classifies ${acc} of ${points.length} points correctly.`}
+        aria-label={`XOR data in feature space with ${foldCount} hidden-unit fold lines (${activeFoldCount} active); the model classifies ${acc} of ${points.length} points correctly.`}
         className="absolute inset-0 h-full w-full select-none"
       >
         {!bare && (
@@ -125,22 +141,77 @@ export function FeatureFoldField({
             stroke="var(--line)"
           />
         )}
+        {!bare && foldCount > 0 && (
+          <text
+            x={width - MARGIN.right}
+            y={MARGIN.top - 2}
+            textAnchor="end"
+            fontSize={9}
+            fontFamily="var(--font-mono)"
+            fill="var(--ink-faint)"
+          >
+            {activeFoldCount}/{foldCount} folds active
+          </text>
+        )}
         <g aria-hidden>
           {folds.map(({ unit, line }) => {
             const isSel = selectedUnit === unit;
             const isMuted = muted.has(unit);
+            const x1 = clampPx(sx(line.x1a));
+            const y1 = clampPx(sy(line.x2a));
+            const x2 = clampPx(sx(line.x1b));
+            const y2 = clampPx(sy(line.x2b));
+            const mid = foldMidpoint(line, sx, sy);
             return (
-              <line
-                key={unit}
-                x1={clampPx(sx(line.x1a))}
-                y1={clampPx(sy(line.x2a))}
-                x2={clampPx(sx(line.x1b))}
-                y2={clampPx(sy(line.x2b))}
-                stroke={isSel ? "var(--viz-param)" : "var(--viz-neutral)"}
-                strokeWidth={isSel ? 2.5 : 1.5}
-                strokeDasharray={isMuted ? "4 6" : "8 5"}
-                opacity={isMuted ? 0.35 : isSel ? 1 : 0.65}
-              />
+              <g key={unit}>
+                {isSel && (
+                  <line
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke="var(--viz-param)"
+                    strokeWidth={5}
+                    strokeOpacity={0.2}
+                    style={{ transition: `opacity ${MOTION_QUICK}` }}
+                  />
+                )}
+                <line
+                  x1={x1}
+                  y1={y1}
+                  x2={x2}
+                  y2={y2}
+                  stroke={isSel ? "var(--viz-param)" : "var(--viz-neutral-ink)"}
+                  strokeWidth={isSel ? 2.75 : 1.75}
+                  strokeDasharray={isMuted ? "3 7" : isSel ? undefined : "10 6"}
+                  opacity={isMuted ? 0.28 : isSel ? 1 : 0.72}
+                  style={{ transition: `opacity ${MOTION_QUICK}, stroke-width ${MOTION_QUICK}` }}
+                />
+                {isSel && (
+                  <g>
+                    <rect
+                      x={mid.x - 22}
+                      y={mid.y - 9}
+                      width={44}
+                      height={16}
+                      rx={4}
+                      fill="var(--surface-raised)"
+                      stroke="var(--viz-param)"
+                      strokeWidth={1}
+                    />
+                    <text
+                      x={mid.x}
+                      y={mid.y + 4}
+                      textAnchor="middle"
+                      fontSize={9}
+                      fontFamily="var(--font-mono)"
+                      fill="var(--viz-param-ink)"
+                    >
+                      fold {unit + 1}
+                    </text>
+                  </g>
+                )}
+              </g>
             );
           })}
         </g>

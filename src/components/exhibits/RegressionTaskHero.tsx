@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Plot, usePlot } from "@/components/viz/Plot";
+import { PlotContributionStack } from "@/components/viz/primitives";
 import { allExamples, regressionTrend } from "@content/exhibits/regression-task/experiment";
 
 /**
@@ -22,53 +23,13 @@ const DEMO = [...allExamples].sort(
 
 const residuals = allExamples.map((e) => Math.abs(e.y - regressionTrend(e.x)));
 
-/** ContributionStack — residual bars that accumulate into the metric readout. */
-function ErrorRuler({ t }: { t: number }) {
-  const { width, height } = usePlot();
-  const stackX = width - 72;
-  const stackW = 48;
-  const maxR = Math.max(...residuals);
-  const shown = Math.max(1, Math.round(t * allExamples.length));
-  const partial = residuals.slice(0, shown);
-  const mae = partial.reduce((s, r) => s + r, 0) / partial.length;
-  const barH = (height - 48) / allExamples.length;
-
-  return (
-    <g aria-hidden>
-      <text x={stackX + stackW / 2} y={14} textAnchor="middle" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
-        error ruler
-      </text>
-      {allExamples.map((_, i) => {
-        const r = residuals[i];
-        const visible = i < shown;
-        const h = (r / maxR) * (barH * 0.85);
-        return (
-          <rect
-            key={i}
-            x={stackX}
-            y={24 + i * barH + (barH - h) / 2}
-            width={visible ? (r / maxR) * stackW : 0}
-            height={h}
-            fill="var(--viz-error)"
-            opacity={visible ? 0.65 : 0.12}
-            rx={1}
-          />
-        );
-      })}
-      <rect x={stackX - 4} y={height - 36} width={stackW + 8} height={28} rx={4} fill="var(--surface-bg)" stroke="var(--line)" />
-      <text x={stackX + stackW / 2} y={height - 24} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
-        avg miss
-      </text>
-      <text x={stackX + stackW / 2} y={height - 10} textAnchor="middle" fontSize={13} fontFamily="var(--font-mono)" fontWeight={600} fill="var(--viz-error-ink)">
-        {mae.toFixed(1)}
-      </text>
-    </g>
-  );
-}
-
 function HeroGraphic({ t }: { t: number }) {
   const { x, y } = usePlot();
   const [x0, x1] = X_DOMAIN;
+  const shown = Math.max(1, Math.round(t * allExamples.length));
+  const partial = residuals.slice(0, shown);
+  const mae = partial.reduce((s, r) => s + r, 0) / partial.length;
+
   return (
     <g>
       <line
@@ -78,6 +39,7 @@ function HeroGraphic({ t }: { t: number }) {
         y2={y(regressionTrend(x1))}
         stroke="var(--viz-prediction)"
         strokeWidth={3}
+        strokeLinecap="round"
       />
       <text
         x={x(x1) - 6}
@@ -95,16 +57,17 @@ function HeroGraphic({ t }: { t: number }) {
       {allExamples.map((e, i) => {
         const yhat = regressionTrend(e.x);
         const isDemo = e === DEMO;
+        const landed = i < shown;
         return (
           <line
             key={i}
             x1={x(e.x)}
             y1={y(yhat)}
             x2={x(e.x)}
-            y2={y(yhat + (e.y - yhat) * t)}
+            y2={y(yhat + (e.y - yhat) * (landed ? 1 : 0))}
             stroke="var(--viz-error)"
-            strokeWidth={isDemo ? 2.5 : 1.25}
-            opacity={isDemo ? 0.9 : 0.5}
+            strokeWidth={isDemo ? 2.5 : 1.5}
+            opacity={isDemo ? 0.92 : landed ? 0.62 : 0.15}
           />
         );
       })}
@@ -113,10 +76,11 @@ function HeroGraphic({ t }: { t: number }) {
           key={`p${i}`}
           cx={x(e.x)}
           cy={y(e.y)}
-          r={5}
+          r={i < shown ? 5 : 4}
           fill="var(--viz-truth)"
           stroke="var(--surface-bg)"
           strokeWidth={1.5}
+          opacity={i < shown ? 1 : 0.35}
         />
       ))}
       {DEMO && (
@@ -134,7 +98,16 @@ function HeroGraphic({ t }: { t: number }) {
           error = distance
         </text>
       )}
-      <ErrorRuler t={t} />
+      <PlotContributionStack
+        values={residuals}
+        progress={t}
+        total={mae}
+        stackLabel="error ruler"
+        totalLabel="avg miss"
+        variant="bar"
+        width={48}
+        insetRight={20}
+      />
     </g>
   );
 }
@@ -179,7 +152,7 @@ export function RegressionTaskHero() {
           A regression task
         </span>
         <span className="hidden font-mono text-[11px] tracking-widest text-ink-faint uppercase sm:inline">
-          judged on how close · avg miss {meanAbs.toFixed(0)} pts
+          judged on how close · avg miss {meanAbs.toFixed(1)} pts
         </span>
       </figcaption>
       <div className="px-3 py-2">

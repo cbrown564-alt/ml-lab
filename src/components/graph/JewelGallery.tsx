@@ -79,7 +79,7 @@ export function JewelGallery({
                     <MicroSpecimen
                       id={j.id}
                       intent={isActive}
-                      className={`h-[78%] w-[78%] transition-transform duration-300 ease-out ${isActive ? "scale-110" : ""}`}
+                      className={`h-[78%] w-[78%] transition-transform duration-[var(--motion-move)] ease-[var(--ease-out)] ${isActive ? "scale-110" : ""}`}
                     />
                     <MasteryDot nodeId={j.id} />
                   </span>

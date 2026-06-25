@@ -24,22 +24,34 @@ const AXIS_MAX = Math.max(0.2, HI * 1.12);
 function CardSwarm({ dealt, total }: { dealt: number; total: number }) {
   const cardW = 22;
   const cardH = 14;
+  const visible = Math.min(dealt, 20);
   return (
     <div className="mb-3 flex flex-wrap items-end gap-1" aria-hidden>
-      {Array.from({ length: Math.min(dealt, 24) }, (_, i) => (
+      {Array.from({ length: visible }, (_, i) => {
+        const isNewest = i === visible - 1 && dealt > 0;
+        return (
+          <div
+            key={i}
+            className="rounded border bg-raised shadow-sm"
+            style={{
+              width: cardW,
+              height: cardH,
+              transform: `rotate(${(i % 5) - 2}deg) translateY(${-(i % 3) * 2}px)`,
+              opacity: 0.5 + (i / Math.max(1, visible)) * 0.5,
+              borderColor: isNewest ? "var(--accent)" : "var(--viz-prediction)",
+              borderWidth: isNewest ? 2 : 1,
+              transition: "border-color 240ms ease, opacity 240ms ease, transform 240ms ease",
+            }}
+          />
+        );
+      })}
+      {dealt < total && (
         <div
-          key={i}
-          className="rounded border border-line bg-raised shadow-sm transition-transform"
-          style={{
-            width: cardW,
-            height: cardH,
-            transform: `rotate(${(i % 5) - 2}deg) translateY(${-(i % 3) * 2}px)`,
-            opacity: 0.55 + (i / Math.max(1, dealt)) * 0.45,
-            borderColor: i < dealt ? "var(--viz-prediction)" : "var(--line)",
-          }}
+          className="rounded border border-dashed border-line bg-surface"
+          style={{ width: cardW, height: cardH, opacity: 0.35 }}
         />
-      ))}
-      <span className="ml-2 font-mono text-[10px] text-ink-faint">
+      )}
+      <span className="ml-2 font-mono text-[10px] tabular-nums text-ink-faint">
         {dealt}/{total} splits dealt
       </span>
     </div>
@@ -95,7 +107,15 @@ export function TrainTestHero() {
       </figcaption>
       <div className="px-4 py-5">
         <CardSwarm dealt={count} total={TEST_ERRS.length} />
-        <ErrorSpreadStrip errs={errs} marks={marks} axisMax={AXIS_MAX} bins={28} width={1200} height={300} />
+        <ErrorSpreadStrip
+          errs={errs}
+          marks={marks}
+          axisMax={AXIS_MAX}
+          bins={28}
+          width={1200}
+          height={300}
+          accentLatest={p < 1}
+        />
       </div>
     </figure>
   );

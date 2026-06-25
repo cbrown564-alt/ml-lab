@@ -1,61 +1,68 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef } from "react";
+import { useActHandoffFrame } from "@/components/exhibits/ActHandoffContext";
 import { Axes, FitLine, Plot, usePlot } from "@/components/viz/Plot";
+import { PointRowLink } from "@/components/viz/primitives/PointRowLink";
+import {
+  PortalView,
+  RepresentationPortal,
+  useRepresentationPortal,
+} from "@/components/viz/primitives/RepresentationPortal";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import { olsFit } from "@/lib/models/linear-regression";
 import { COLUMNS, houses, theDatasetScenario, toPoints, type House } from "@content/exhibits/the-dataset/experiment";
+import type { TheDatasetFrame } from "@content/exhibits/the-dataset/spine";
 
 /**
  * A dataset made tangible: the same twelve houses as a table and as a scatter, linked.
  * Hover a row and its point lights up; hover a point and its row does — the table and the
- * plot are one matrix seen two ways. Each row is an example; the target column (price) is
- * what the model learns to predict from the feature columns.
+ * plot are one matrix seen two ways.
  */
 const FIT = olsFit(toPoints(houses));
+const DEMO_ID = 5;
 
-function HousePoints({ highlightId, onHover }: { highlightId: number | null; onHover: (id: number | null) => void }) {
+function HousePoints() {
   const { x, y } = usePlot();
-  const highlighted = highlightId !== null ? houses.find((h) => h.id === highlightId) : null;
+  const { activeEntityId, setActiveEntityId, isHighlighted } = useRepresentationPortal();
+  const highlighted = activeEntityId ? houses.find((h) => String(h.id) === activeEntityId) : null;
+
   return (
     <g>
       {highlighted && (
-        <g aria-hidden>
-          <line
-            x1={x(highlighted.size)}
-            y1={y(highlighted.price)}
-            x2={x(highlighted.size) + 42}
-            y2={y(highlighted.price) - 28}
-            stroke="var(--accent)"
-            strokeWidth={1.5}
-            strokeDasharray="4 3"
-            opacity={0.8}
-          />
-          <rect
-            x={x(highlighted.size) + 44}
-            y={y(highlighted.price) - 44}
-            width={118}
-            height={40}
-            rx={5}
-            fill="var(--surface-bg)"
-            stroke="var(--accent)"
-            strokeWidth={1}
-          />
-          <text x={x(highlighted.size) + 52} y={y(highlighted.price) - 30} fontSize={10} fontFamily="var(--font-mono)" fill="var(--accent)">
-            row #{highlighted.id}
-          </text>
-          <text x={x(highlighted.size) + 52} y={y(highlighted.price) - 18} fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-muted)">
-            {highlighted.size} m² · €{highlighted.price}k
-          </text>
-        </g>
+        <PointRowLink
+          point={[x(highlighted.size), y(highlighted.price)]}
+          card={[x(highlighted.size) + 44, y(highlighted.price) - 44]}
+          kicker={`row #${highlighted.id}`}
+          lines={[`${highlighted.size} m² · €${highlighted.price}k`]}
+          tone="accent"
+        />
       )}
       {houses.map((h) => {
-        const on = highlightId === h.id;
+        const on = isHighlighted(String(h.id));
         return (
           <g key={h.id}>
-            <circle cx={x(h.size)} cy={y(h.price)} r={on ? 8 : 5} fill={on ? "var(--accent)" : "var(--viz-truth)"} stroke="var(--surface-bg)" strokeWidth={1.5} pointerEvents="none" />
-            {/* a generous invisible hit-target so a point is as easy to find as a row */}
-            <circle cx={x(h.size)} cy={y(h.price)} r={13} fill="transparent" className="cursor-pointer" onPointerEnter={() => onHover(h.id)} onPointerLeave={() => onHover(null)} />
+            <circle
+              cx={x(h.size)}
+              cy={y(h.price)}
+              r={on ? 8 : 5}
+              fill={on ? "var(--accent)" : "var(--viz-truth)"}
+              stroke="var(--surface-bg)"
+              strokeWidth={1.5}
+              pointerEvents="none"
+            />
+            <circle
+              cx={x(h.size)}
+              cy={y(h.price)}
+              r={13}
+              fill="transparent"
+              className="cursor-pointer"
+              onPointerEnter={() => {
+                whenHydrated(() => useLearner.getState().recordPractice("the-dataset"));
+                setActiveEntityId(String(h.id));
+              }}
+              onPointerLeave={() => setActiveEntityId(null)}
+            />
           </g>
         );
       })}
@@ -63,13 +70,59 @@ function HousePoints({ highlightId, onHover }: { highlightId: number | null; onH
   );
 }
 
-export function TheDatasetLab() {
-  const [highlightId, setHighlightId] = useState<number | null>(null);
+function HouseTable() {
+  const { setActiveEntityId, isHighlighted } = useRepresentationPortal();
 
-  const hover = (id: number | null) => {
-    if (id !== null) whenHydrated(() => useLearner.getState().recordPractice("the-dataset"));
-    setHighlightId(id);
-  };
+  return (
+    <div className="overflow-hidden rounded-lg border border-line">
+      <table className="w-full text-sm tabular-nums">
+        <thead>
+          <tr className="bg-sunken text-left font-mono text-[11px] tracking-wide text-ink-faint uppercase">
+            <th className="px-3 py-2 font-normal">#</th>
+            {COLUMNS.map((c) => (
+              <th
+                key={c.key}
+                className={`px-3 py-2 font-normal ${c.kind === "target" ? "text-[var(--viz-truth-ink)]" : ""}`}
+              >
+                {c.label}
+                <span className="ml-1 text-ink-faint">· {c.kind}</span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {houses.map((h: House) => (
+            <tr
+              key={h.id}
+              className={`cursor-pointer border-t border-line transition-colors ${isHighlighted(String(h.id)) ? "bg-accent/10" : "hover:bg-sunken"}`}
+              onMouseEnter={() => {
+                whenHydrated(() => useLearner.getState().recordPractice("the-dataset"));
+                setActiveEntityId(String(h.id));
+              }}
+              onMouseLeave={() => setActiveEntityId(null)}
+            >
+              <td className="px-3 py-1.5 font-mono text-ink-faint">{h.id}</td>
+              <td className="px-3 py-1.5">{h.size}</td>
+              <td className="px-3 py-1.5">{h.bedrooms}</td>
+              <td className="px-3 py-1.5 font-medium text-[var(--viz-truth-ink)]">{h.price}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function TheDatasetLabInner() {
+  const storyFrame = useActHandoffFrame<TheDatasetFrame>();
+  const appliedHandoff = useRef(false);
+  const { setActiveEntityId } = useRepresentationPortal();
+
+  useEffect(() => {
+    if (appliedHandoff.current || !storyFrame) return;
+    appliedHandoff.current = true;
+    if (storyFrame.highlight === "row") setActiveEntityId(String(DEMO_ID));
+  }, [storyFrame, setActiveEntityId]);
 
   return (
     <div className="rounded-xl border border-line bg-raised p-6">
@@ -84,51 +137,33 @@ export function TheDatasetLab() {
         </div>
 
         <div className="mt-6 flex flex-col gap-4 lg:mt-0">
-          <Plot
-            width={520}
-            height={300}
-            xDomain={[35, 130]}
-            yDomain={[60, 320]}
-            ariaLabel={`A scatter of house size against price for ${houses.length} houses, with the least-squares trend line. Each point is one row of the table.`}
-          >
-            <Axes />
-            <FitLine params={FIT} />
-            <HousePoints highlightId={highlightId} onHover={hover} />
-          </Plot>
-
-          <div className="overflow-hidden rounded-lg border border-line">
-            <table className="w-full text-sm tabular-nums">
-              <thead>
-                <tr className="bg-sunken text-left font-mono text-[11px] tracking-wide text-ink-faint uppercase">
-                  <th className="px-3 py-2 font-normal">#</th>
-                  {COLUMNS.map((c) => (
-                    <th key={c.key} className={`px-3 py-2 font-normal ${c.kind === "target" ? "text-[var(--viz-truth-ink)]" : ""}`}>
-                      {c.label}
-                      <span className="ml-1 text-ink-faint">· {c.kind}</span>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {houses.map((h: House) => (
-                  <tr
-                    key={h.id}
-                    className={`cursor-pointer border-t border-line transition-colors ${highlightId === h.id ? "bg-accent/10" : "hover:bg-sunken"}`}
-                    onMouseEnter={() => hover(h.id)}
-                    onMouseLeave={() => hover(null)}
-                  >
-                    <td className="px-3 py-1.5 font-mono text-ink-faint">{h.id}</td>
-                    <td className="px-3 py-1.5">{h.size}</td>
-                    <td className="px-3 py-1.5">{h.bedrooms}</td>
-                    <td className="px-3 py-1.5 font-medium text-[var(--viz-truth-ink)]">{h.price}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <PortalView label="scatter · size vs price">
+            <Plot
+              width={520}
+              height={300}
+              xDomain={[35, 130]}
+              yDomain={[60, 320]}
+              ariaLabel={`A scatter of house size against price for ${houses.length} houses, with the least-squares trend line. Each point is one row of the table.`}
+            >
+              <Axes />
+              <FitLine params={FIT} />
+              <HousePoints />
+            </Plot>
+          </PortalView>
+          <PortalView label="table · the matrix">
+            <HouseTable />
+          </PortalView>
         </div>
       </div>
     </div>
+  );
+}
+
+export function TheDatasetLab() {
+  return (
+    <RepresentationPortal>
+      <TheDatasetLabInner />
+    </RepresentationPortal>
   );
 }
 
@@ -139,7 +174,9 @@ function Row({ label, value, hue, note }: { label: string; value: string; hue: s
         <p className="font-mono text-[11px] tracking-wide text-ink-faint uppercase">{label}</p>
         <p className="text-xs text-ink-faint">{note}</p>
       </div>
-      <span className="font-mono text-sm" style={{ color: hue }}>{value}</span>
+      <span className="font-mono text-sm" style={{ color: hue }}>
+        {value}
+      </span>
     </div>
   );
 }

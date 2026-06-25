@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { precision, recall, type Scored } from "@/lib/models/classification-metrics";
+import { MOTION_MOVE, usePrefersReducedMotion } from "@/components/viz/primitives/shared";
 
 /**
  * Shared classification views — the decision conveyor, probability strip, and
@@ -20,10 +21,10 @@ function outcomeOf(s: Scored, threshold: number): Outcome {
 }
 
 const BIN_LAYOUT: Record<Outcome, { cx: number; cy: number; good: boolean; label: string }> = {
-  tp: { cx: 200, cy: 228, good: true, label: "TP" },
-  fp: { cx: 320, cy: 228, good: false, label: "FP" },
-  fn: { cx: 200, cy: 288, good: false, label: "FN" },
-  tn: { cx: 320, cy: 288, good: true, label: "TN" },
+  tp: { cx: 188, cy: 232, good: true, label: "TP" },
+  fp: { cx: 308, cy: 232, good: false, label: "FP" },
+  fn: { cx: 188, cy: 292, good: false, label: "FN" },
+  tn: { cx: 308, cy: 292, good: true, label: "TN" },
 };
 
 /**
@@ -34,15 +35,19 @@ export function DecisionConveyor({
   scored,
   threshold,
   animate = false,
+  showMetrics = true,
 }: {
   scored: Scored[];
   threshold: number;
   /** Hero load: stagger dots dropping into bins once. */
   animate?: boolean;
+  /** Hide inline precision/recall when StatGrid already shows them. */
+  showMetrics?: boolean;
 }) {
-  const W = 640;
+  const reduceMotion = usePrefersReducedMotion();
+  const W = showMetrics ? 640 : 560;
   const H = 320;
-  const m = { l: 56, r: 20, t: 32, b: 16 };
+  const m = { l: 56, r: showMetrics ? 20 : 24, t: 32, b: 16 };
   const beltY1 = m.t + 22;
   const beltY0 = m.t + 58;
   const beltW = W - m.l - m.r;
@@ -66,8 +71,7 @@ export function DecisionConveyor({
       setShown(scored.length);
       return;
     }
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
+    if (reduceMotion) {
       setShown(scored.length);
       return;
     }
@@ -77,24 +81,24 @@ export function DecisionConveyor({
       i += 1;
       setShown(i);
       if (i >= scored.length) window.clearInterval(id);
-    }, 55);
+    }, 48);
     return () => window.clearInterval(id);
-  }, [animate, scored.length, threshold]);
+  }, [animate, scored.length, reduceMotion]);
 
   const landed = scored.slice(0, shown);
+  const moveTransition = reduceMotion ? undefined : `cx 220ms ease-out, cy 260ms ease-out`;
 
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
       role="img"
-      aria-label={`Decision conveyor at threshold ${threshold.toFixed(2)}: observations cross the gate and land in true-positive, false-positive, false-negative, and true-negative bins. Precision ${prec.toFixed(2)}, recall ${rec.toFixed(2)}.`}
+      aria-label={`Decision conveyor at threshold ${threshold.toFixed(2)}: observations cross the gate and land in true-positive, false-positive, false-negative, and true-negative bins.${showMetrics ? ` Precision ${prec.toFixed(2)}, recall ${rec.toFixed(2)}.` : ""}`}
       className="h-auto w-full"
     >
-      {/* conveyor belts */}
-      {[beltY1, beltY0].map((by, row) => (
+      {[beltY1, beltY0].map((by) => (
         <g key={by}>
           <rect x={m.l} y={by - 10} width={beltW} height={20} rx={4} fill="var(--surface-sunken)" stroke="var(--line)" />
-          <line x1={m.l} x2={W - m.r} y1={by} y2={by} stroke="var(--line)" strokeDasharray="8 6" strokeOpacity={0.5} />
+          <line x1={m.l} x2={W - m.r} y1={by} y2={by} stroke="var(--line)" strokeDasharray="8 6" strokeOpacity={0.45} />
         </g>
       ))}
       <text x={m.l - 8} y={beltY1 + 4} textAnchor="end" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
@@ -104,33 +108,30 @@ export function DecisionConveyor({
         actual 0
       </text>
 
-      {/* threshold gate */}
       <rect x={tx - 3} y={m.t - 6} width={6} height={beltY0 - m.t + 26} fill="var(--ink)" rx={2} />
       <text x={tx} y={m.t - 12} textAnchor="middle" fontSize={11} fontFamily="var(--font-mono)" fill="var(--ink-muted)">
         t = {threshold.toFixed(2)}
       </text>
-      <text x={m.l} y={beltY0 + 22} fontSize={10} fill="var(--ink-faint)">
+      <text x={m.l} y={beltY0 + 22} fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
         ← predict 0
       </text>
-      <text x={W - m.r} y={beltY0 + 22} textAnchor="end" fontSize={10} fill="var(--ink-faint)">
+      <text x={W - m.r} y={beltY0 + 22} textAnchor="end" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
         predict 1 →
       </text>
 
-      {/* chutes to bins */}
       {([beltY1, beltY0] as const).map((by) => (
-        <line key={`ch${by}`} x1={tx} y1={by + 12} x2={tx} y2={200} stroke="var(--line)" strokeWidth={1.5} strokeDasharray="3 3" />
+        <line key={`ch${by}`} x1={tx} y1={by + 12} x2={tx} y2={204} stroke="var(--line)" strokeWidth={1.5} strokeDasharray="3 3" />
       ))}
 
-      {/* bins */}
       {(Object.keys(BIN_LAYOUT) as Outcome[]).map((key) => {
         const b = BIN_LAYOUT[key];
         const n = counts[key];
         return (
           <g key={key}>
             <rect
-              x={b.cx - 52}
+              x={b.cx - 48}
               y={b.cy - 28}
-              width={104}
+              width={96}
               height={52}
               rx={6}
               fill={b.good ? "color-mix(in oklab, var(--viz-prediction) 8%, transparent)" : "color-mix(in oklab, var(--viz-error) 8%, transparent)"}
@@ -147,58 +148,59 @@ export function DecisionConveyor({
               fontSize={18}
               fontFamily="var(--font-mono)"
               fill={b.good ? "var(--viz-prediction-ink)" : "var(--viz-error-ink)"}
+              style={{ transition: reduceMotion ? undefined : `opacity ${MOTION_MOVE}` }}
             >
               {n}
             </text>
           </g>
         );
       })}
-      <text x={260} y={212} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+      <text x={248} y={216} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
         actual 1
       </text>
-      <text x={380} y={212} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+      <text x={368} y={216} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
         actual 0
       </text>
 
-      {/* observations — on belt until they cross, then in bin stacks */}
       {landed.map((s, i) => {
         const out = outcomeOf(s, threshold);
         const bin = BIN_LAYOUT[out];
         const beltY = s.y === 1 ? beltY1 : beltY0;
         const onBelt = animate && i === shown - 1 && shown < scored.length;
         const stackIdx = landed.slice(0, i + 1).filter((p) => outcomeOf(p, threshold) === out).length - 1;
-        const cx = onBelt ? x(s.prob) : bin.cx + ((stackIdx % 4) - 1.5) * 10;
+        const cx = onBelt ? x(s.prob) : bin.cx + ((stackIdx % 4) - 1.5) * 9;
         const cy = onBelt ? beltY : bin.cy + 6 - Math.floor(stackIdx / 4) * 8;
-        const correct = (out === "tp" || out === "tn");
+        const correct = out === "tp" || out === "tn";
         return (
           <circle
-            key={i}
+            key={`${s.prob}-${s.y}-${i}`}
             cx={cx}
             cy={cy}
             r={correct ? 4.5 : 5.5}
             fill={s.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"}
             stroke={correct ? "var(--surface-bg)" : "var(--viz-error)"}
             strokeWidth={correct ? 1 : 2.5}
-            style={{ transition: animate ? "cx 280ms ease, cy 320ms ease" : undefined }}
+            style={{ transition: moveTransition }}
           />
         );
       })}
 
-      {/* live precision / recall */}
-      <g transform="translate(460, 228)">
-        <text x={0} y={0} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
-          PRECISION
-        </text>
-        <text x={0} y={22} fontSize={22} fontFamily="var(--font-mono)" fill="var(--viz-prediction-ink)">
-          {prec.toFixed(2)}
-        </text>
-        <text x={0} y={48} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
-          RECALL
-        </text>
-        <text x={0} y={70} fontSize={22} fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
-          {rec.toFixed(2)}
-        </text>
-      </g>
+      {showMetrics && (
+        <g transform="translate(448, 228)">
+          <text x={0} y={0} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+            PRECISION
+          </text>
+          <text x={0} y={22} fontSize={22} fontFamily="var(--font-mono)" fill="var(--viz-prediction-ink)">
+            {prec.toFixed(2)}
+          </text>
+          <text x={0} y={48} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+            RECALL
+          </text>
+          <text x={0} y={70} fontSize={22} fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
+            {rec.toFixed(2)}
+          </text>
+        </g>
+      )}
     </svg>
   );
 }
@@ -208,17 +210,14 @@ export function ProbabilityStrip({ scored, threshold }: { scored: Scored[]; thre
   const H = 146;
   const m = { l: 62, r: 14, t: 28, b: 26 };
   const x = (p: number) => m.l + p * (W - m.l - m.r);
-  const row1 = m.t + 18; // actual class 1 — top band
-  const row0 = H - m.b - 18; // actual class 0 — bottom band
+  const row1 = m.t + 18;
+  const row0 = H - m.b - 18;
   const rowOf = (y: 0 | 1) => (y === 1 ? row1 : row0);
   const tx = x(threshold);
   return (
     <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Each point at its predicted probability; the threshold at ${threshold.toFixed(2)} splits predict 0 (left) from predict 1 (right). The top row is actual class 1, the bottom row actual class 0; a point on the wrong side of the line for its row is ringed red — a misclassification.`} className="h-auto w-full">
-      {/* decision zones: a point's hue (actual class) matching its zone (predicted
-          class) is correct; a clash is an error. */}
       <rect x={m.l} y={m.t} width={tx - m.l} height={H - m.t - m.b} fill="var(--viz-truth)" opacity={0.1} />
       <rect x={tx} y={m.t} width={W - m.r - tx} height={H - m.t - m.b} fill="var(--viz-prediction)" opacity={0.1} />
-      {/* row guides + their true-class labels */}
       {([row1, row0] as const).map((ry) => (
         <line key={ry} x1={m.l} x2={W - m.r} y1={ry} y2={ry} stroke="var(--line)" strokeOpacity={0.6} />
       ))}
@@ -226,8 +225,8 @@ export function ProbabilityStrip({ scored, threshold }: { scored: Scored[]; thre
       <text x={m.l - 10} y={row0 + 3} textAnchor="end" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">actual 0</text>
       <line x1={tx} x2={tx} y1={m.t - 8} y2={H - m.b + 8} stroke="var(--ink)" strokeWidth={2.25} strokeDasharray="5 3" />
       <text x={tx} y={m.t - 12} textAnchor="middle" fontSize={11} fontFamily="var(--font-mono)" fill="var(--ink-muted)">t = {threshold.toFixed(2)}</text>
-      <text x={m.l} y={H - 7} fontSize={10} fill="var(--ink-faint)">← predict 0</text>
-      <text x={W - m.r} y={H - 7} textAnchor="end" fontSize={10} fill="var(--ink-faint)">predict 1 →</text>
+      <text x={m.l} y={H - 7} fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">← predict 0</text>
+      <text x={W - m.r} y={H - 7} textAnchor="end" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">predict 1 →</text>
       {scored.map((s, i) => {
         const pred = s.prob >= threshold ? 1 : 0;
         const correct = pred === s.y;

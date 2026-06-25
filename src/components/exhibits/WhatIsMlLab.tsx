@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useActHandoffFrame } from "@/components/exhibits/ActHandoffContext";
 import { Axes, Plot, usePlot } from "@/components/viz/Plot";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import { accuracy, boundaryX2, fitLogistic, type LogisticParams } from "@/lib/models/logistic";
 import { bestRuleAccuracy, ruleAccuracy, whatIsMlData, whatIsMlScenario } from "@content/exhibits/what-is-ml/experiment";
+import type { WhatIsMlFrame } from "@content/exhibits/what-is-ml/spine";
 
 /**
  * "Write the rule, or learn it." The learner first hand-writes a rule — a draggable
@@ -15,14 +17,15 @@ import { bestRuleAccuracy, ruleAccuracy, whatIsMlData, whatIsMlScenario } from "
  * That gap is the definition of machine learning.
  */
 const DOMAIN: [number, number] = [-3, 3];
-const BEST_T = bestRuleAccuracy(whatIsMlData).t; // start at the best hand rule, so the ceiling is felt at once
+const BEST_T = bestRuleAccuracy(whatIsMlData).t;
 
-function ClassPoints({ t }: { t: number }) {
+function ClassPoints({ t, learned }: { t: number; learned: LogisticParams | null }) {
   const { x, y } = usePlot();
+  const predictHand = (p: (typeof whatIsMlData)[0]) => (p.x1 > t ? 1 : 0);
   return (
     <g>
       {whatIsMlData.map((p, i) => {
-        const wrong = (p.x1 > t ? 1 : 0) !== p.y;
+        const wrong = learned ? false : predictHand(p) !== p.y;
         return (
           <circle
             key={i}
@@ -35,6 +38,23 @@ function ClassPoints({ t }: { t: number }) {
           />
         );
       })}
+      {learned &&
+        whatIsMlData
+          .filter((p) => (p.x1 > BEST_T ? 1 : 0) !== p.y)
+          .map((p, i) => (
+            <circle
+              key={`ghost-${i}`}
+              cx={x(p.x1)}
+              cy={y(p.x2)}
+              r={8}
+              fill="none"
+              stroke="var(--viz-error)"
+              strokeWidth={2}
+              strokeDasharray="5 3"
+              opacity={0.55}
+              aria-hidden
+            />
+          ))}
     </g>
   );
 }
@@ -47,9 +67,9 @@ function Rules({ t, learned, onDragT }: { t: number; learned: LogisticParams | n
     const px = ((clientX - rect.left) / rect.width) * width;
     return Math.max(DOMAIN[0], Math.min(DOMAIN[1], Math.round(x.invert(px) * 100) / 100));
   };
+  const labelY = y(DOMAIN[0]) - 10;
   return (
     <g>
-      {/* the learned rule — a tilted line through the plane */}
       {learned && (
         <line
           x1={x(DOMAIN[0])}
@@ -60,33 +80,59 @@ function Rules({ t, learned, onDragT }: { t: number; learned: LogisticParams | n
           strokeWidth={3}
         />
       )}
-      {/* your rule — a draggable vertical threshold */}
-      <line x1={x(t)} x2={x(t)} y1={y(DOMAIN[1])} y2={y(DOMAIN[0])} stroke="var(--viz-neutral-ink)" strokeWidth={2.5} strokeDasharray="6 4" />
-      <text x={x(t) + 6} y={y(DOMAIN[1]) + 14} fontSize={11} fontFamily="var(--font-mono)" fill="var(--viz-neutral-ink)">your rule</text>
-      {/* horizontal drag surface */}
-      <rect
-        x={x.range[0]}
-        y={0}
-        width={x.range[1] - x.range[0]}
-        height={height}
-        fill="transparent"
-        className="cursor-ew-resize"
-        onPointerDown={(e) => {
-          (e.currentTarget as Element).setPointerCapture?.(e.pointerId);
-          onDragT(toX1(e.clientX));
-        }}
-        onPointerMove={(e) => {
-          if (e.buttons !== 1) return;
-          onDragT(toX1(e.clientX));
-        }}
-      />
+      {!learned && (
+        <>
+          <line x1={x(t)} x2={x(t)} y1={y(DOMAIN[1])} y2={y(DOMAIN[0])} stroke="var(--viz-neutral-ink)" strokeWidth={2.5} strokeDasharray="6 4" />
+          <text
+            x={x(t) + 8}
+            y={labelY}
+            fontSize={11}
+            fontFamily="var(--font-mono)"
+            paintOrder="stroke"
+            stroke="var(--surface-bg)"
+            strokeWidth={4}
+            fill="var(--viz-neutral-ink)"
+          >
+            your rule
+          </text>
+        </>
+      )}
+      {!learned && (
+        <rect
+          x={x.range[0]}
+          y={0}
+          width={x.range[1] - x.range[0]}
+          height={height}
+          fill="transparent"
+          className="cursor-ew-resize"
+          onPointerDown={(e) => {
+            (e.currentTarget as Element).setPointerCapture?.(e.pointerId);
+            onDragT(toX1(e.clientX));
+          }}
+          onPointerMove={(e) => {
+            if (e.buttons !== 1) return;
+            onDragT(toX1(e.clientX));
+          }}
+        />
+      )}
     </g>
   );
 }
 
 export function WhatIsMlLab() {
+  const storyFrame = useActHandoffFrame<WhatIsMlFrame>();
+  const appliedHandoff = useRef(false);
   const [t, setT] = useState(BEST_T);
   const [learned, setLearned] = useState<LogisticParams | null>(null);
+
+  // See-it final frame carries to Run-it: learned boundary already visible.
+  useEffect(() => {
+    if (appliedHandoff.current || !storyFrame) return;
+    if (storyFrame.stage === "learned" || storyFrame.stage === "learning") {
+      appliedHandoff.current = true;
+      setLearned(fitLogistic(whatIsMlData));
+    }
+  }, [storyFrame]);
 
   const ruleAcc = ruleAccuracy(whatIsMlData, t);
   const learnedAcc = learned ? accuracy(whatIsMlData, learned) : null;
@@ -109,6 +155,7 @@ export function WhatIsMlLab() {
           <StatGrid
             direction="col"
             caption="Same data, two rules"
+            className="chrome-redundant-metrics"
             stats={[
               { label: "your hand-written rule", value: `${Math.round(ruleAcc * 100)}%`, hue: "var(--viz-neutral-ink)", note: "one feature, one threshold" },
               { label: "the learned rule", value: learnedAcc !== null ? `${Math.round(learnedAcc * 100)}%` : "—", hue: "var(--accent)", note: learnedAcc !== null ? "weighs both features, fit from data" : "press Learn" },
@@ -135,7 +182,7 @@ export function WhatIsMlLab() {
             interactive
           >
             <Axes />
-            <ClassPoints t={t} />
+            <ClassPoints t={t} learned={learned} />
             <Rules t={t} learned={learned} onDragT={setT} />
           </Plot>
         </div>

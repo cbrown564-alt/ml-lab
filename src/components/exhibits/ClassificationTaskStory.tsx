@@ -10,8 +10,8 @@ import { confusion, precision, recall, type Scored } from "@/lib/models/classifi
 import { logisticPoints } from "@content/exhibits/logistic-regression/experiment";
 
 /**
- * The See-it graphic: the probability strip + confusion matrix at the threshold the
- * active beat asserts — ½, then raised (precision↑/recall↓), then the extremes.
+ * The See-it graphic: the decision conveyor at the threshold the active beat
+ * asserts — ½, then raised (precision↑/recall↓), then the extremes.
  */
 const FIT = fitLogistic(logisticPoints, { steps: 4000, lr: 0.5 });
 const SCORED: Scored[] = logisticPoints
@@ -28,9 +28,10 @@ export function ClassificationTaskStory() {
       <figcaption className="mb-3 font-mono text-[11px] tracking-widest text-ink-faint uppercase">
         Threshold t = {threshold.toFixed(2)} — {threshold > 0.65 ? "cautious" : threshold < 0.35 ? "eager" : "balanced"}
       </figcaption>
-      <DecisionConveyor scored={SCORED} threshold={threshold} />
+      <DecisionConveyor scored={SCORED} threshold={threshold} showMetrics={false} />
       <div className="mt-5">
         <StatGrid
+          className="chrome-redundant-metrics"
           caption="Reading the decision"
           stats={[
             { label: "precision", value: precision(cm).toFixed(2), hue: "var(--viz-prediction)", note: "of called-positive, how many were" },

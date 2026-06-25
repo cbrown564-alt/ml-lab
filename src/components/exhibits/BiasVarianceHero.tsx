@@ -58,12 +58,13 @@ function TestPoints() {
   );
 }
 
+/** Plot-integrated variance fan — exhibit-specific; see `@/components/viz/primitives/VarianceSwarm` for the portable swarm/envelope primitive. */
 function VarianceSwarm({ degree, reveal }: { degree: number; reveal: number }) {
   const swarm = useMemo(() => bootstrapFits(degree), [degree]);
   return (
-    <g style={{ opacity: reveal * 0.35, transition: "opacity 400ms ease" }} aria-hidden>
+    <g style={{ opacity: reveal * 0.42, transition: "opacity 350ms ease" }} aria-hidden>
       {swarm.map((w, i) => (
-        <PolyCurve key={i} predict={(xv) => predictPoly(w, xv)} faint />
+        <PolyCurve key={`${degree}-${i}`} predict={(xv) => predictPoly(w, xv)} faint />
       ))}
     </g>
   );
@@ -85,9 +86,10 @@ export function BiasVarianceHero() {
       const id = requestAnimationFrame(() => setReveal(1));
       return () => cancelAnimationFrame(id);
     }
-    const t = window.setTimeout(() => setReveal(1), 360);
+    setReveal(0.15);
+    const t = window.setTimeout(() => setReveal(1), 120);
     return () => window.clearTimeout(t);
-  }, []);
+  }, [degree]);
 
   return (
     <figure className="overflow-hidden rounded-xl border border-line bg-raised">
@@ -130,7 +132,7 @@ export function BiasVarianceHero() {
             max={DEGREES.length - 1}
             value={degreeIdx}
             onChange={(e) => setDegreeIdx(Number(e.target.value))}
-            className="min-w-0 flex-1 accent-[var(--viz-prediction)]"
+            className="min-w-0 flex-1 accent-[var(--viz-prediction)] transition-[accent-color] duration-200"
             aria-label="Scrub model complexity (polynomial degree)"
           />
           <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">flexible</span>

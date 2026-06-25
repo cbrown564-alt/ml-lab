@@ -294,12 +294,19 @@ export function DataLeakageLab() {
 
         <div className="mt-6 flex flex-col items-center gap-4 lg:mt-0">
           <DataLeakageProvenancePipe leaky={mode === "leaky"} r2={runningMean} className="max-w-[640px]" />
-          <FoldScatter
-            prior={prior}
-            current={current}
-            animKey={`${mode}-${active}`}
-            label={`Predicted versus actual for held-out points, folds 1 to ${active + 1}. ${mode === "leaky" ? "Leaky selection: the cloud tracks the diagonal." : "Honest selection: the cloud scatters off the diagonal."}`}
-          />
+          {active >= FOLDS - 1 ? (
+            <FoldScatter
+              prior={prior}
+              current={current}
+              animKey={`${mode}-${active}`}
+              label={`Predicted versus actual for held-out points, folds 1 to ${active + 1}. ${mode === "leaky" ? "Leaky selection: the cloud tracks the diagonal." : "Honest selection: the cloud scatters off the diagonal."}`}
+            />
+          ) : (
+            <p className="max-w-[320px] text-center text-xs leading-snug text-ink-faint">
+              Step to fold {FOLDS} to see the full prediction cloud — the pipe above carries
+              the leak; the scatter is the receipt.
+            </p>
+          )}
           <div className="w-full max-w-[320px]">
             <div className="flex items-baseline justify-between px-1 pb-1">
               <span className="font-mono text-[10px] tracking-widest text-ink-faint uppercase">

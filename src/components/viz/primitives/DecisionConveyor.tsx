@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import type { VizHue } from "@/lib/exhibit/spine";
+import { classifyConveyorItems } from "@/lib/viz/decision-conveyor";
 import { hueInk, hueMark, MOTION_MOVE, usePrefersReducedMotion } from "./shared";
 
 export type ConveyorItem = {
@@ -39,7 +40,7 @@ export function DecisionConveyor({
   ariaLabel: string;
 }) {
   const reduceMotion = usePrefersReducedMotion();
-  const bins = useMemo(() => classifyItems(items, threshold), [items, threshold]);
+  const bins = useMemo(() => classifyConveyorItems(items, threshold), [items, threshold]);
 
   return (
     <div className="flex flex-col gap-4" aria-label={ariaLabel}>
@@ -78,31 +79,6 @@ export function DecisionConveyor({
       </dl>
     </div>
   );
-}
-
-function classifyItems(
-  items: ConveyorItem[],
-  threshold: number,
-): Record<BinKind, ConveyorItem[]> {
-  const out: Record<BinKind, ConveyorItem[]> = {
-    tp: [],
-    fp: [],
-    fn: [],
-    tn: [],
-  };
-  for (const item of items) {
-    const predicted = item.score >= threshold;
-    const kind: BinKind =
-      item.actualPositive && predicted
-        ? "tp"
-        : !item.actualPositive && predicted
-          ? "fp"
-          : item.actualPositive && !predicted
-            ? "fn"
-            : "tn";
-    out[kind].push(item);
-  }
-  return out;
 }
 
 function binHue(kind: BinKind): VizHue {

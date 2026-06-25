@@ -194,6 +194,7 @@ export function LinearRegressionLab() {
               )}
               <StatGrid
                 direction="col"
+                className="chrome-redundant-metrics"
                 caption="The fit, live"
                 stats={[
                   { label: "slope ŵ", value: fit.slope.toFixed(2), hue: "var(--viz-prediction)" },

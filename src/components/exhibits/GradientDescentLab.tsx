@@ -66,6 +66,7 @@ export function GradientDescentLab() {
   const learningRate = params.learningRate;
   const storyFrame = useActHandoffFrame<GradientDescentFrame>();
   const appliedHandoff = useRef(false);
+  const [handoffVisible, setHandoffVisible] = useState(false);
 
   const runRef = useRef<GradientDescentRun | null>(null);
   const lrRef = useRef(learningRate);
@@ -99,6 +100,7 @@ export function GradientDescentLab() {
     loadScenario(storyFrame.scenarioId);
     if (storyFrame.microscope) setView("microscope");
     else setView(storyFrame.view);
+    setHandoffVisible(true);
   }, [storyFrame, loadScenario, spec.scenarios]);
 
   // A new dataset identity (scenario load or reset) means a new loss surface:
@@ -206,6 +208,20 @@ export function GradientDescentLab() {
 
   return (
     <div className="rounded-xl border border-line bg-raised p-6">
+      {handoffVisible && storyFrame && (
+        <p
+          className="mb-4 rounded-lg border px-3 py-2 font-mono text-[11px] leading-relaxed tracking-wide"
+          style={{
+            borderColor: "color-mix(in oklab, var(--viz-param) 35%, var(--line))",
+            background: "color-mix(in oklab, var(--viz-param) 8%, var(--surface-raised))",
+            color: "var(--viz-param-ink)",
+          }}
+          role="status"
+        >
+          Continuing from See it — scenario &ldquo;{storyFrame.scenarioId.replace(/-/g, " ")}&rdquo;
+          {storyFrame.microscope ? " · microscope view" : ` · ${storyFrame.view} view`}
+        </p>
+      )}
       <ScenarioBar
         scenarios={spec.scenarios}
         activeId={scenario.id}

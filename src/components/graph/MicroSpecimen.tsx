@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { easeProgress } from "@/components/viz/primitives/interpolation";
+import { usePrefersReducedMotion } from "@/components/viz/primitives/shared";
 
 /**
  * Live micro-specimen for each exhibit — a warm, diagrammatic preview in the
@@ -17,35 +19,48 @@ export function MicroSpecimen({
   intent?: boolean;
   className?: string;
 }) {
-  const [t, setT] = useState(intent ? 0 : 1);
+  const reduceMotion = usePrefersReducedMotion();
+  const [t, setT] = useState(intent && !reduceMotion ? 0 : 1);
 
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!intent) {
-      setT(1);
-      return;
-    }
-    if (reduce) {
+    if (!intent || reduceMotion) {
       setT(1);
       return;
     }
     setT(0);
     let raf = 0;
     let start = 0;
+    const DURATION = 400;
     const tick = (now: number) => {
       if (!start) start = now;
-      const p = Math.min(1, (now - start) / 900);
-      setT(1 - Math.pow(1 - p, 2));
-      if (p < 1) raf = requestAnimationFrame(tick);
+      setT(easeProgress(now - start, DURATION));
+      if (now - start < DURATION) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [intent, id]);
+  }, [intent, id, reduceMotion]);
 
   return (
     <svg viewBox="0 0 120 96" className={className} aria-hidden role="img">
+      <WarmPlate />
       <Specimen id={id} t={t} />
     </svg>
+  );
+}
+
+/** Soft raised plate so specimens read warm/diagrammatic, not abstract empty gems. */
+function WarmPlate() {
+  return (
+    <rect
+      x="8"
+      y="10"
+      width="104"
+      height="76"
+      rx="10"
+      fill="color-mix(in oklch, var(--surface-raised) 88%, var(--viz-truth) 12%)"
+      stroke="var(--line)"
+      strokeWidth="1"
+    />
   );
 }
 
@@ -54,7 +69,7 @@ function Specimen({ id, t }: { id: string; t: number }) {
     case "what-is-ml":
       return <WhatIsMl t={t} />;
     case "the-dataset":
-      return <TheDataset />;
+      return <TheDataset t={t} />;
     case "regression-task":
       return <RegressionTask />;
     case "linear-regression":
@@ -82,8 +97,21 @@ function Specimen({ id, t }: { id: string; t: number }) {
     case "neural-network-fundamentals":
       return <NeuralNet t={t} />;
     default:
-      return <circle cx="60" cy="48" r="18" fill="none" stroke="var(--line)" strokeWidth="2" />;
+      return <FallbackSpecimen id={id} />;
   }
+}
+
+function FallbackSpecimen({ id }: { id: string }) {
+  return (
+    <>
+      <line x1="28" y1="72" x2="92" y2="72" stroke="var(--line)" strokeWidth="1.5" />
+      <line x1="28" y1="72" x2="28" y2="28" stroke="var(--line)" strokeWidth="1.5" />
+      <circle cx="60" cy="48" r="14" fill="none" stroke="var(--viz-neutral)" strokeWidth="2" strokeDasharray="4 3" />
+      <text x="60" y="52" textAnchor="middle" fontSize="8" fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+        {id.slice(0, 3)}
+      </text>
+    </>
+  );
 }
 
 function WhatIsMl({ t }: { t: number }) {
@@ -100,19 +128,64 @@ function WhatIsMl({ t }: { t: number }) {
         strokeWidth="2.5"
         strokeLinecap="round"
       />
+      {t > 0.4 &&
+        [[40, 70], [54, 50]].map(([x, y0], i) => (
+          <circle
+            key={`g${i}`}
+            cx={x}
+            cy={y0}
+            r="5"
+            fill="none"
+            stroke="var(--viz-error)"
+            strokeWidth="1.5"
+            strokeDasharray="3 2"
+            opacity={(t - 0.4) / 0.6}
+          />
+        ))}
     </>
   );
 }
 
-function TheDataset() {
+function TheDataset({ t }: { t: number }) {
+  const slopeClean = 0.55;
+  const slopeDirty = 0.22;
+  const slope = slopeClean + (slopeDirty - slopeClean) * t;
+  const x0 = 24;
+  const x1 = 96;
+  const y0 = 72;
+  const yAt = (x: number) => y0 - slope * (x - x0);
   return (
     <>
-      {[0, 1, 2, 3].map((r) =>
-        [0, 1, 2].map((c) => (
-          <circle key={`${r}-${c}`} cx={32 + c * 16} cy={32 + r * 12} r="2.5" fill="var(--viz-truth)" />
-        )),
-      )}
-      <rect x="78" y="26" width="12" height="48" rx="6" fill="none" stroke="var(--viz-error)" strokeWidth="2" />
+      {[
+        [36, 58],
+        [48, 52],
+        [58, 46],
+        [68, 40],
+        [78, 36],
+      ].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="2.5" fill="var(--viz-truth)" />
+      ))}
+      <line
+        x1={x0}
+        y1={yAt(x0)}
+        x2={x1}
+        y2={yAt(x1)}
+        stroke="var(--viz-prediction)"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+      <g opacity={t}>
+        <circle cx={32} cy={58} r="5" fill="var(--viz-error)" stroke="var(--surface-bg)" strokeWidth="1.5" />
+        <line x1={32} y1={58} x2={32} y2={yAt(32)} stroke="var(--viz-error)" strokeWidth="1.5" strokeDasharray="3 2" opacity={0.7} />
+        <line x1={32} y1={58} x2={52} y2={42} stroke="var(--viz-error)" strokeWidth="1" strokeDasharray="3 2" opacity={0.6} />
+        <rect x={52} y={34} width={44} height={22} rx={4} fill="var(--surface-bg)" stroke="var(--viz-error)" strokeWidth="1" />
+        <text x={56} y={44} fontSize="6" fontFamily="var(--font-mono)" fill="var(--viz-error-ink)">
+          12 m² typo
+        </text>
+        <text x={56} y={52} fontSize="6" fontFamily="var(--font-mono)" fill="var(--ink-muted)">
+          row · provenance
+        </text>
+      </g>
     </>
   );
 }
@@ -125,7 +198,7 @@ function RegressionTask() {
       {[[36, 66], [50, 58], [64, 52], [78, 40]].map(([x, y], i) => (
         <circle key={i} cx={x} cy={y} r="3" fill="var(--viz-truth)" />
       ))}
-      <path d="M32 68 L96 32" stroke="var(--viz-prediction)" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M32 68 L96 32" fill="none" stroke="var(--viz-prediction)" strokeWidth="2.5" strokeLinecap="round" />
     </>
   );
 }

@@ -20,7 +20,16 @@ export {
 } from "./ExplorableSentence";
 export { MicroSpecimen } from "./MicroSpecimen";
 export { PinAndCompare } from "./PinAndCompare";
+export {
+  PlotContributionStack,
+} from "./PlotContributionStack";
+export {
+  PINNED_GHOST_OPACITY,
+  PlotPinGhost,
+} from "./PlotPinGhost";
+export { PointRowLink } from "./PointRowLink";
 export { ProbeLens } from "./ProbeLens";
+export { SigmoidSlice } from "./SigmoidSlice";
 export { ProvenancePipe, type ProvenanceStage } from "./ProvenancePipe";
 export {
   PortalEntity,
@@ -39,6 +48,8 @@ export {
 } from "./shared";
 export {
   clamp01,
+  easeOutCubic,
+  easeProgress,
   lerp,
   lerpRecord,
   reversibleProgress,

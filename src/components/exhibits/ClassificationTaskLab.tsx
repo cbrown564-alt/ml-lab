@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { DecisionConveyor } from "@/components/exhibits/ClassificationViews";
+import { useActHandoffOptional } from "@/components/exhibits/ActHandoffContext";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import { fitLogistic, proba } from "@/lib/models/logistic";
 import {
@@ -29,6 +30,9 @@ const SCORED: Scored[] = logisticPoints
 
 export function ClassificationTaskLab() {
   const [threshold, setThreshold] = useState(0.5);
+  const handoff = useActHandoffOptional();
+  const showConveyorMetrics =
+    handoff?.chromeImmersed === true && handoff.activeActId === "run";
   const cm = useMemo(() => confusion(SCORED, threshold), [threshold]);
   const regime = threshold > 0.7 ? "cautious — few, sure positives" : threshold < 0.3 ? "eager — catch every positive" : "balanced";
 
@@ -61,6 +65,7 @@ export function ClassificationTaskLab() {
 
           <StatGrid
             direction="col"
+            className="chrome-redundant-metrics"
             caption="Reading the same model four ways"
             stats={[
               { label: "precision", value: precision(cm).toFixed(2), hue: "var(--viz-prediction)", note: "of called-positive, how many were" },
@@ -72,7 +77,7 @@ export function ClassificationTaskLab() {
         </div>
 
         <div className="mt-6 flex flex-col gap-6 lg:mt-0">
-          <DecisionConveyor scored={SCORED} threshold={threshold} />
+          <DecisionConveyor scored={SCORED} threshold={threshold} showMetrics={showConveyorMetrics} />
         </div>
       </div>
     </div>

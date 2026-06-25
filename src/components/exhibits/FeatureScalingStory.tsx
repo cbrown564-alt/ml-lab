@@ -42,25 +42,26 @@ export function FeatureScalingStory() {
   const stdWalk = useMemo(() => walk(STD), []);
 
   useEffect(() => {
-    if (morphT === targetT) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
       setMorphT(targetT);
       return;
     }
     const from = morphT;
-    const to = targetT;
+    if (Math.abs(from - targetT) < 0.001) return;
     let start = 0;
     const tick = (now: number) => {
       if (!start) start = now;
       const p = Math.min(1, (now - start) / MORPH_MS);
       const eased = 1 - Math.pow(1 - p, 2);
-      setMorphT(from + (to - from) * eased);
+      setMorphT(from + (targetT - from) * eased);
       if (p < 1) morphRaf.current = requestAnimationFrame(tick);
     };
     morphRaf.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(morphRaf.current);
-  }, [targetT, morphT]);
+    // morphT captured once per target change — intentional
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targetT]);
 
   const points = standardised ? STD : RAW;
   const { trace, steps } = standardised ? stdWalk : rawWalk;

@@ -69,7 +69,9 @@ export function ProbeLens({
         updatePos(e.clientX, e.clientY);
       }}
       onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseLeave={() => {
+        if (controlledOpen === undefined) setOpen(false);
+      }}
     >
       {children}
       <button

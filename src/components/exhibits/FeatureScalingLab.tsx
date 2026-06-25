@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { LossSurface } from "@/components/viz/LossSurface";
 import { StatGrid } from "@/components/viz/StatGrid";
+import { useActHandoffFrame } from "@/components/exhibits/ActHandoffContext";
+import type { FeatureScalingFrame } from "@content/exhibits/feature-scaling/spine";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import {
   createGradientDescent,
@@ -35,6 +37,9 @@ function walk(points: Point[]): { trace: DescentStep[]; lr: number; steps: numbe
 }
 
 export function FeatureScalingLab() {
+  const storyFrame = useActHandoffFrame<FeatureScalingFrame>();
+  const appliedHandoff = useRef(false);
+  const [handoffVisible, setHandoffVisible] = useState(false);
   const [scaling, setScaling] = useState<Scaling>("raw");
   const [morphT, setMorphT] = useState(0);
   const morphRaf = useRef(0);
@@ -51,25 +56,34 @@ export function FeatureScalingLab() {
   const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
-    if (morphT === targetT) return;
+    if (appliedHandoff.current || !storyFrame) return;
+    appliedHandoff.current = true;
+    setScaling(storyFrame.scaling);
+    setMorphT(storyFrame.scaling === "standardised" ? 1 : 0);
+    setHandoffVisible(true);
+  }, [storyFrame]);
+
+  useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
       setMorphT(targetT);
       return;
     }
     const from = morphT;
-    const to = targetT;
+    if (Math.abs(from - targetT) < 0.001) return;
     let start = 0;
     const tick = (now: number) => {
       if (!start) start = now;
       const p = Math.min(1, (now - start) / MORPH_MS);
       const eased = 1 - Math.pow(1 - p, 2);
-      setMorphT(from + (to - from) * eased);
+      setMorphT(from + (targetT - from) * eased);
       if (p < 1) morphRaf.current = requestAnimationFrame(tick);
     };
     morphRaf.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(morphRaf.current);
-  }, [targetT, morphT]);
+    // morphT captured once per target change — intentional
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targetT]);
 
   const handoffScaling = (next: Scaling) => {
     if (next === scaling) return;
@@ -107,6 +121,19 @@ export function FeatureScalingLab() {
 
   return (
     <div className="rounded-xl border border-line bg-raised p-6">
+      {handoffVisible && storyFrame && (
+        <p
+          className="mb-4 rounded-lg border px-3 py-2 font-mono text-[11px] leading-relaxed tracking-wide"
+          style={{
+            borderColor: "color-mix(in oklab, var(--viz-param) 35%, var(--line))",
+            background: "color-mix(in oklab, var(--viz-param) 8%, var(--surface-raised))",
+            color: "var(--viz-param-ink)",
+          }}
+          role="status"
+        >
+          Continuing from See it — {storyFrame.scaling === "standardised" ? "standardised bowl" : "raw stretched valley"}
+        </p>
+      )}
       <div className="lg:grid lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:items-start lg:gap-8">
         <div className="flex flex-col gap-5">
           <p className="leading-relaxed text-ink-muted">

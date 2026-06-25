@@ -34,3 +34,14 @@ export function reversibleProgress(
   const t = clamp01(progress);
   return direction === "reverse" ? 1 - t : t;
 }
+
+/** Lab-wide ease-out curve — matches globals.css --ease-out feel. */
+export function easeOutCubic(t: number): number {
+  const u = clamp01(t);
+  return 1 - Math.pow(1 - u, 3);
+}
+
+/** Map elapsed ms to eased 0–1 progress for hero / specimen morphs. */
+export function easeProgress(elapsedMs: number, durationMs: number): number {
+  return easeOutCubic(elapsedMs / Math.max(1, durationMs));
+}
