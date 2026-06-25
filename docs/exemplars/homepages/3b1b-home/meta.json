@@ -1,0 +1,17 @@
+{
+  "slug": "3b1b-home",
+  "title": "3Blue1Brown — lessons index",
+  "url": "https://www.3blue1brown.com/",
+  "concept": "deep catalog organized by series; thumbnail per lesson",
+  "teaches": [
+    "catalog-by-series",
+    "thumbnail grid",
+    "wayfinding at scale"
+  ],
+  "capturedAt": "2026-06-25T16:45:20.595Z",
+  "pageHeight": 4386,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  }
+}

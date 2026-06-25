@@ -1,0 +1,72 @@
+
+[roadmap-sh-index] https://roadmap.sh/
+  ✓ 00-viewport.png
+  ✓ 01-scroll-20pct.png
+  ✓ 02-scroll-40pct.png
+  ✓ 03-scroll-60pct.png
+  ✓ 04-scroll-80pct.png
+  ✓ full.png (5346px)
+
+[roadmap-sh-graph] https://roadmap.sh/ai-data-scientist
+  ✓ 00-viewport.png
+  ✓ 01-scroll-20pct.png
+  ✓ 02-scroll-40pct.png
+  ✓ 03-scroll-60pct.png
+  ✓ 04-scroll-80pct.png
+  ✓ full.png (5136px)
+
+[explorables] https://explorabl.es/
+  ✓ 00-viewport.png
+  ✓ 01-scroll-20pct.png
+  ✓ 02-scroll-40pct.png
+  ✓ 03-scroll-60pct.png
+  ✓ 04-scroll-80pct.png
+  ✓ full.png (2886px)
+
+[neal-fun] https://neal.fun/
+  ✓ 00-viewport.png
+  ✓ 01-scroll-20pct.png
+  ✓ 02-scroll-40pct.png
+  ✓ 03-scroll-60pct.png
+  ✓ 04-scroll-80pct.png
+  ✓ full.png (3103px)
+
+[pudding-home] https://pudding.cool/
+  ✓ 00-viewport.png
+  ✓ 01-scroll-20pct.png
+  ✓ 02-scroll-40pct.png
+  ✓ 03-scroll-60pct.png
+  ✓ 04-scroll-80pct.png
+  ✓ full.png (6741px)
+
+[distill-home] https://distill.pub/
+  ✓ 00-viewport.png
+  ✓ 01-scroll-20pct.png
+  ✓ 02-scroll-40pct.png
+  ✓ 03-scroll-60pct.png
+  ✓ 04-scroll-80pct.png
+  ✓ full.png (7980px)
+
+[3b1b-home] https://www.3blue1brown.com/
+  ✓ 00-viewport.png
+  ✓ 01-scroll-20pct.png
+  ✓ 02-scroll-40pct.png
+  ✓ 03-scroll-60pct.png
+  ✓ 04-scroll-80pct.png
+  ✓ full.png (4386px)
+
+[seeing-theory-home] https://seeing-theory.brown.edu/
+  ✓ 00-viewport.png
+  ✓ 01-scroll-20pct.png
+  ✓ 02-scroll-40pct.png
+  ✓ 03-scroll-60pct.png
+  ✓ 04-scroll-80pct.png
+  ✓ full.png (3669px)
+
+[brilliant-home] https://brilliant.org/
+  ✓ 00-viewport.png
+  ✓ 01-scroll-20pct.png
+  ✓ 02-scroll-40pct.png
+  ✓ 03-scroll-60pct.png
+  ✓ 04-scroll-80pct.png
+  ✓ full.png (7695px)

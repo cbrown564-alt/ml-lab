@@ -1,0 +1,17 @@
+{
+  "slug": "pudding-home",
+  "title": "The Pudding — home (visual-essay gallery)",
+  "url": "https://pudding.cool/",
+  "concept": "editorial gallery; each story a visually distinct tile",
+  "teaches": [
+    "thumbnail/card identity",
+    "editorial composition",
+    "browse-first layout"
+  ],
+  "capturedAt": "2026-06-25T16:45:01.714Z",
+  "pageHeight": 6741,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "slug": "roadmap-sh-graph",
+  "title": "roadmap.sh — AI / Data Scientist roadmap (the graph itself)",
+  "url": "https://roadmap.sh/ai-data-scientist",
+  "concept": "a node-graph IS the navigation surface — the atlas pattern, directly",
+  "teaches": [
+    "graph-as-navigation",
+    "node states (done/learning)",
+    "spatial reading order"
+  ],
+  "capturedAt": "2026-06-25T16:44:32.432Z",
+  "pageHeight": 5136,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  }
+}

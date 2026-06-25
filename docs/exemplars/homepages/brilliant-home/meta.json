@@ -1,0 +1,17 @@
+{
+  "slug": "brilliant-home",
+  "title": "Brilliant — marketing home",
+  "url": "https://brilliant.org/",
+  "concept": "live interactive hero + course grid (conversion register)",
+  "teaches": [
+    "interactive-in-hero",
+    "social proof",
+    "category grid"
+  ],
+  "capturedAt": "2026-06-25T16:45:49.689Z",
+  "pageHeight": 7695,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  }
+}

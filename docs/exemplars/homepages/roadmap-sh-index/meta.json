@@ -1,0 +1,17 @@
+{
+  "slug": "roadmap-sh-index",
+  "title": "roadmap.sh — index of developer roadmaps",
+  "url": "https://roadmap.sh/",
+  "concept": "front door to a collection of structured learning graphs",
+  "teaches": [
+    "catalog hierarchy",
+    "node-graph as the product",
+    "card identity"
+  ],
+  "capturedAt": "2026-06-25T16:44:21.770Z",
+  "pageHeight": 5346,
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  }
+}
