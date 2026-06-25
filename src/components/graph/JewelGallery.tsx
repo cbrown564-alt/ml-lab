@@ -60,11 +60,14 @@ export function JewelGallery({
     >
       {wings.map((wing) => (
         <section key={wing.title} className="flex flex-col">
-          <header className="mb-5 min-h-[4.25rem] border-t border-line pt-4 text-center">
+          <header className="mb-5 border-t border-line pt-4 text-center">
             <h3 className="font-mono text-[11px] font-semibold tracking-[0.16em] text-ink uppercase">
               {wing.title}
             </h3>
-            <p className="mx-auto mt-2 max-w-[22ch] text-xs leading-relaxed text-balance text-ink-faint">
+            {/* Two reserved lines (same rule as the titles) so a one-line blurb
+                keeps an empty line beneath and the first jewel of every column
+                lines up. */}
+            <p className="mx-auto mt-2 block h-10 max-w-[22ch] overflow-hidden text-xs leading-relaxed text-balance text-ink-faint">
               {wing.blurb}
             </p>
           </header>
