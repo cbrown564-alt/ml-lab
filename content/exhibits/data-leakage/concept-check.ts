@@ -61,27 +61,27 @@ export const dataLeakageCheck: ConceptCheck = {
     {
       id: "sealed-set-predict",
       kind: "predict",
-      setup: "You suspect a pipeline has a subtle leak somewhere, but everything looks fine in cross-validation.",
-      prompt: "What's the most reliable way to catch a hidden leak?",
+      setup: "Cross-validation looks strong, but the final untouched test score is much lower.",
+      prompt: "What does that result justify?",
       options: [
         {
-          label: "Keep one test set sealed until the very end; if its score is far below CV, there's a leak",
+          label: "Investigate leakage, distribution shift, repeated tuning, split mismatch, and pipeline differences before drawing a conclusion",
           correct: true,
           feedback:
-            "Right. A truly untouched holdout, scored once, is the gold standard — a big gap between CV and the sealed-set score is the surest sign information leaked into training.",
+            "Right. The sealed test set reveals that the earlier estimate did not transfer. It does not identify the cause on its own; the pipeline and data-generating process still need to be audited.",
+        },
+        {
+          label: "Conclude there is a leak — a big gap below CV is proof information leaked into training",
+          feedback:
+            "A gap is a warning, not a diagnosis. Distribution shift, sampling variability, repeated tuning, label mismatch, and implementation differences can produce the same symptom.",
         },
         {
           label: "Re-run cross-validation a few more times and average the scores",
           feedback:
-            "Averaging a leaky CV just gives a stable wrong answer. The leak inflates every run; only data the pipeline never touched can expose it.",
-        },
-        {
-          label: "Add regularisation until the CV score drops to something believable",
-          feedback:
-            "That hides the symptom without finding the cause. Regularisation can't undo a leak; a sealed holdout reveals whether one exists.",
+            "Averaging a leaky or optimistic CV just gives a stable wrong answer. The sealed holdout shows the estimate did not transfer — the next step is to audit why, not to re-average.",
         },
       ],
-      verify: "Conceptually: a sealed test set scored once is the most reliable leak detector.",
+      verify: "Conceptually: a sealed test set scored once shows whether the estimate transferred; investigate before concluding leakage.",
       difficulty: 3,
       targets: ["leak:sealed-set"],
     },
@@ -106,7 +106,7 @@ export const dataLeakageCheck: ConceptCheck = {
         placeholder:
           "e.g. fitting the scaler on all the data let it see … so the validation score … the fix is … and dropping scaling is wrong because …",
         answer:
-          "Fitting the scaler on the full dataset before splitting let it see the test rows' statistics (their mean and variance) — the same leak as selecting features on all the data — so the validation score was optimistic and didn't hold up on truly unseen data. The fix isn't to drop standardisation; the transform is fine, its timing was the leak. Fit the scaler on the training split only (e.g. inside a Pipeline so it's re-fit on each fold) and re-evaluate. The deployment gap is the leak's signature, not distribution shift.",
+          "Fitting the scaler on the full dataset before splitting let it see the test rows' statistics (their mean and variance) — the same leak as selecting features on all the data — so the validation score was optimistic and didn't hold up on truly unseen data. The fix isn't to drop standardization; the transform is fine, its timing was the leak. Fit the scaler on the training split only (e.g. inside a Pipeline so it's re-fit on each fold) and re-evaluate. Fitting the scaler before the split is a leak and should be corrected with a pipeline. Re-evaluate after the repair; if a deployment gap remains, investigate distribution shift and implementation differences rather than assuming the scaler was the sole cause.",
       },
       difficulty: 3,
       targets: ["leak:transfer-scaling"],

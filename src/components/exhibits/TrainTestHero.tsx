@@ -63,7 +63,7 @@ export function TrainTestHero() {
           One split is a lottery
         </span>
         <span className="hidden font-mono text-[11px] tracking-widest text-ink-faint uppercase sm:inline">
-          test error {LO.toFixed(2)}–{HI.toFixed(2)} · CV pins it at {CV.toFixed(2)}
+          validation error {LO.toFixed(2)}–{HI.toFixed(2)} · CV pins it at {CV.toFixed(2)}
         </span>
       </figcaption>
       <div className="px-4 py-5">

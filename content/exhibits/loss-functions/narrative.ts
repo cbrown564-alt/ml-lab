@@ -17,7 +17,7 @@ export const lossFunctionsNarrative: ExhibitNarrative = {
       id: "penalty-shapes",
       heading: "Three ways to score a miss",
       paragraphs: [
-        "Every loss takes a residual — how far a point sits from the line — and turns it into a penalty. Squared error charges the square of the miss: a point twice as far off pays four times as much. Absolute error charges the miss itself, flat. Huber is a diplomat — squared for the small misses it treats as honest noise, then linear once a miss is large enough to look like an outlier.",
+        "Every loss takes a residual — how far a point sits from the line — and turns it into a penalty. Squared error charges the square of the miss: a point twice as far off pays four times as much. Absolute error grows linearly with the size of the miss. Huber is a diplomat — squared for the small misses it treats as honest noise, then linear once a miss is large enough to look like an outlier.",
         "Look at the tails. Squared error's curve rockets upward; the others rise in a straight line. That single difference in shape is the whole story of how each judge behaves when something extreme is on the table.",
       ],
     },
@@ -32,19 +32,19 @@ export const lossFunctionsNarrative: ExhibitNarrative = {
       id: "robust-judges",
       heading: "The robust judges hold the line",
       paragraphs: [
-        "Switch the judge to absolute error or Huber and the same rogue points lose their power. Out in the tail their penalty grows only one-for-one, so a far point is just one more vote, not a tyrant. The line settles back onto the trend the bulk of the data actually supports. Same points, same misses — a calmer judge, a truer line.",
+        "Switch the judge to absolute error or Huber and the same rogue points lose their outsized power. Out in the tail their penalty grows only one-for-one, so a far point's influence grows linearly rather than quadratically. The line settles back onto the trend the bulk of the data actually supports. Same points, same misses — a less outlier-sensitive loss, a fit closer to the main trend.",
       ],
     },
     {
       id: "choosing",
       heading: "So which judge?",
       paragraphs: [
-        "It depends on what your outliers are. If the extremes are noise — a fat-fingered entry, a sensor glitch — a robust loss protects you. If the extremes are the signal — the fraud, the rare failure you exist to catch — squared error's obsession is a feature, not a bug. Huber is the common compromise: trust small misses, distrust large ones, and set the crossover where “large” begins.",
+        "It depends on what your outliers are. If the extremes are noise — a fat-fingered entry, a sensor glitch — a robust loss protects you. If the extremes are the signal — the fraud, the rare failure you exist to catch — emphasizing large errors may be appropriate when their cost is genuinely disproportionate. Huber is the common compromise: trust small misses, distrust large ones, and set the crossover where “large” begins.",
       ],
     },
   ],
   fieldNotes: [
-    "Mean-squared error is the default in almost every regression library because it has a clean closed form and a smooth gradient — not because it is always the right judge. Reaching for a robust loss is one of the first moves a practitioner makes when a fit looks hostage to a few points.",
+    "Mean-squared error is the default in almost every regression library because it is smooth, has a convenient statistical interpretation under Gaussian noise, and gives a closed-form solution for ordinary least-squares regression — not because it is always the right judge. Reaching for a robust loss is one of the first moves a practitioner makes when a fit looks hostage to a few points.",
     "The same idea reappears everywhere a model is trained: cross-entropy for classifiers, pinball loss for quantiles, the Huber-like clipping inside reinforcement learning. Choosing the loss is choosing what the model is allowed to ignore.",
   ],
 };

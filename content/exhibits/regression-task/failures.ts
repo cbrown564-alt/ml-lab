@@ -11,12 +11,12 @@ export const regressionTaskFailures: FailureGallery = {
     {
       id: "accuracy-on-regression",
       primitive: "metric-mismatch",
-      title: "Accuracy on a regression task",
+      title: "Accuracy without a justified tolerance",
       trigger: "Score a continuous-valued model with exact-match (or “within ±k”) accuracy.",
       symptom: "An excellent model reads only a fraction “correct”, and a generous tolerance band can inflate the score to anything — tighten it toward exact and it collapses to near zero. The score is whatever band you pick.",
       diagnosis: "Accuracy needs a notion of “correct”, which for a continuous target requires an arbitrary cutoff. The metric doesn't fit the target's type, so its number is meaningless.",
       repair: "Score by distance — mean absolute or squared error — which needs no threshold and reflects how far off the model actually is.",
-      boundary: "Accuracy is exactly right for the classification version (pass/fail), where a prediction genuinely is right or wrong. Match the metric to the target.",
+      boundary: "A predeclared tolerance can be useful when the application genuinely treats errors inside that band as equivalent. The failure is inventing the band after seeing the predictions or treating it as a universal definition of correctness.",
     },
     {
       id: "needless-binarisation",

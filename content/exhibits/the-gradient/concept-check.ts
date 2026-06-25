@@ -17,7 +17,7 @@ export const theGradientCheck: ConceptCheck = {
           label: "You're at a stationary point — a peak, a valley, or a saddle — not necessarily the global best",
           correct: true,
           feedback:
-            "Right. ∇f = 0 means no direction is uphill locally. That's true at the global summit, but equally at a lower local peak or a saddle — the gradient can't tell them apart.",
+            "Right. ∇f = 0 means the first-order slope is zero in every direction. The point may be a local maximum, local minimum, or saddle; at a saddle, nearby directions still rise and fall even though the gradient itself is zero.",
         },
         {
           label: "You've reached the highest point on the whole surface",
@@ -116,7 +116,7 @@ export const theGradientCheck: ConceptCheck = {
         placeholder:
           "e.g. gradient ≈ 0 means … the different final losses mean … so the team should …",
         answer:
-          "A near-zero gradient means each run reached a stationary point — flat ground where there's no downhill step to take — but a stationary point is not necessarily the global minimum. That the five runs settle at different final losses says the loss landscape is non-convex, with many basins, and each random start was captured by a different one. That justifies the standard response: run several initialisations and keep the best. It isn't a learning-rate problem (overshoot shows as unstable or rising loss, not a vanishing gradient) and it isn't a data-volume problem (more data reshapes the landscape but doesn't remove its many stationary points).",
+          "A near-zero gradient means each run reached a stationary region — flat ground where first-order information gives no descent direction — but that does not prove each run landed in a distinct local minimum. Plateaus, saddle neighborhoods, numerical tolerances, and optimization settings can also matter. Different final losses with small gradient norms suggest different stationary regions worth comparing. The practical response: run several initializations, compare validation performance and diagnostics, and keep the best — not simply the lowest training loss. It isn't a learning-rate problem (overshoot shows as unstable or rising loss, not a vanishing gradient) and it isn't a data-volume problem alone (more data reshapes the landscape but doesn't remove its many stationary points).",
       },
       difficulty: 3,
       targets: ["grad:transfer-nonconvex"],

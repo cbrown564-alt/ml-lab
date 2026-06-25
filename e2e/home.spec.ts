@@ -12,9 +12,9 @@ test.describe("home", () => {
 
   test("orients: hero, the cabinet, its wings, the journey", async ({ page }) => {
     await expect(
-      page.getByRole("heading", { name: "Get your hands on machine learning." }),
+      page.getByRole("heading", { name: "Build intuition by running the model." }),
     ).toBeVisible();
-    await expect(page.getByText(/Now showing · \d+ exhibits/)).toBeVisible();
+    await expect(page.getByText(/\d+ interactive exhibits/)).toBeVisible();
     // The cabinet is curated into wings — the grouping is on the page as headings.
     await expect(page.getByRole("heading", { name: "The first models" })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Journey · Foundations/ })).toBeVisible();

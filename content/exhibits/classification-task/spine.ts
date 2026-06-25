@@ -43,7 +43,7 @@ export const classificationTaskSpine: Spine<ClassificationFrame> = [
     sectionId: "the-tradeoff",
     frame: { threshold: 0.85 },
     terms: [
-      { phrase: "precision rises", hue: "prediction" },
+      { phrase: "precision often rises", hue: "prediction" },
       { phrase: "recall falls", hue: "param" },
       { phrase: "in opposition", hue: "error" },
     ],

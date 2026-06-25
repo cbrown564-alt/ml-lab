@@ -41,7 +41,7 @@ export function ErrorSpreadStrip({
   const bw = plotW / bins;
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Distribution of test error across ${errs.length} random splits; ${marks.map((mk) => `${mk.label} at ${mk.value.toFixed(3)}`).join(", ")}.`} className="h-auto w-full">
+    <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Distribution of validation error across ${errs.length} random splits; ${marks.map((mk) => `${mk.label} at ${mk.value.toFixed(3)}`).join(", ")}.`} className="h-auto w-full">
       <line x1={m.l} x2={width - m.r} y1={height - m.b} y2={height - m.b} stroke="var(--line)" />
       {counts.map((c, i) =>
         c === 0 ? null : (

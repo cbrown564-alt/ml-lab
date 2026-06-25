@@ -221,7 +221,7 @@ test.describe("linear-regression exhibit", () => {
     await evictExtreme("max");
 
     await openTab(page, "Explain it");
-    await expect(task.getByText(/Done — the experiment felt it/)).toBeVisible();
+    await expect(task.getByText(/Complete — the experiment registered it/)).toBeVisible();
     await expect(task.getByText(/snapped back to the crowd/)).toBeVisible();
   });
 

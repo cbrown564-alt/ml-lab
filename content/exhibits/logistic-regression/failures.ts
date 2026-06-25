@@ -12,7 +12,7 @@ export const logisticRegressionFailures: FailureGallery = {
       id: "linear-cant-bend",
       primitive: "underfitting",
       title: "A straight line can't bend",
-      trigger: "Train logistic regression on a problem whose true boundary is curved — a parabola, a circle, one class encircling another.",
+      trigger: "Train logistic regression on a problem whose boundary is curved — a parabola, a circle, one class encircling another.",
       symptom: "It nails the easy middle but is confidently wrong wherever the boundary curves away from the line; accuracy plateaus well short and no setting of the weights helps.",
       diagnosis: "Logistic regression draws one straight line (the score is linear in the features) — it's too rigid to follow a curve. High bias, and the optimiser isn't at fault.",
       repair: "Engineer features that bend: add x₁², x₁x₂, … so a straight line in the expanded space is a curve in the original — or switch to a model that bends on its own (trees, kernels, networks).",

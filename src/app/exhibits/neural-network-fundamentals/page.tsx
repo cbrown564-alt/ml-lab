@@ -26,23 +26,22 @@ export default function NeuralNetworkFundamentalsExhibit() {
       experiment={<NeuralNetLab />}
       lede={
         <p>
-          A single neuron can only draw a straight line — and some patterns have no line.
-          The fix that started deep learning is almost too simple: stack neurons, put a
-          squiggle between them, and let the boundary bend into any shape at all.
+          A neural network composes weighted sums with nonlinear activations. A single linear
+          unit draws one straight boundary; hidden units and nonlinearities let the model
+          represent more complex shapes.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll watch a network <em>learn</em> XOR from
-          scratch — the boundary bending into the X, the weights thickening and flipping —
-          and you&apos;ll know why the nonlinearity between the layers is the whole trick.
+          You&apos;ll watch a small network learn XOR, see why the activation matters, and
+          test how too little or too much capacity changes generalization.
         </>
       }
       experimentLede={
         <>
-          Guardrails off. Press Train and watch a small network bend its decision boundary
-          into the XOR X in real time; change the hidden-unit count to feel how much shape
-          it can afford — drop to one and watch it stall.
+          Train the network and inspect the boundary and weights as they change. Vary the
+          hidden-unit count to compare underfitting, a workable fit, and overfitting on
+          noisy data.
         </>
       }
     />

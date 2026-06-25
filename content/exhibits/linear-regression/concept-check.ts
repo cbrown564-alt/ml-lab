@@ -38,7 +38,7 @@ export const linearRegressionCheck: ConceptCheck = {
       id: "why-outliers-tyrannize",
       kind: "choice",
       prompt:
-        "In the outlier scenario, one rogue point dragged the whole line off the trend. What gives a single point that much power?",
+        "In the outlier scenario, one extreme point dragged the whole line off the trend. What gives a single point that much power?",
       options: [
         {
           label: "Squaring makes a big error count far more than several small ones",
@@ -89,9 +89,9 @@ export const linearRegressionCheck: ConceptCheck = {
       id: "double-the-distance",
       kind: "predict",
       setup:
-        "Load “The tyranny of the outlier” and switch the error view to Squares. Find the biggest penalty square.",
+        "Load the outlier scenario and switch the error view to Squares. Find the biggest penalty square.",
       prompt:
-        "If that rogue point wanders twice as far from the line, the area of its penalty square will be…",
+        "If that extreme point wanders twice as far from the line, the area of its penalty square will be…",
       options: [
         {
           label: "About twice as big — twice the miss, twice the penalty",
@@ -102,7 +102,7 @@ export const linearRegressionCheck: ConceptCheck = {
           label: "About four times as big — the penalty is the square of the miss",
           correct: true,
           feedback:
-            "Right — side doubles, area quadruples. That's why the line capitulates to outliers: pleasing one point at residual 20 is worth disappointing four hundred points at residual 1.",
+            "Right — side doubles, area quadruples. That's why the line capitulates to outliers: pleasing one point at residual 20 costs as much as disappointing four hundred points at residual 1.",
         },
         {
           label: "About the same — the line refits to absorb the move",
@@ -111,7 +111,7 @@ export const linearRegressionCheck: ConceptCheck = {
         },
       ],
       verify:
-        "Drag that rogue point to twice its distance from the line and watch its square. (The line will chase it a little — that's the tyranny part.)",
+        "Drag that extreme point to twice its distance from the line and watch its square. (The line will chase it a little — that's the outlier-influence part.)",
       difficulty: 2,
       targets: ["linreg:squared-error-sensitivity"],
     },
@@ -119,10 +119,10 @@ export const linearRegressionCheck: ConceptCheck = {
       id: "evict-the-outliers",
       kind: "experiment-task",
       prompt:
-        "Make the tyranny stop: on “The tyranny of the outlier,” deal with both rogue points — drag them back to the trend, or double-click them out — until the MSE drops below 2.",
+        "Make the outlier influence stop: in the outlier scenario, deal with both extreme points — drag them back to the trend, or double-click them out — until the MSE drops below 2.",
       taskEvent: "linear-regression:outliers-tamed",
       feedback:
-        "The line snapped back to the crowd the moment the giant penalties vanished — squared error's obsession works in reverse, too. (In real work you'd investigate an outlier before deleting it; sometimes the rogue point is the discovery.)",
+        "The line snapped back to the main cluster the moment the giant penalties vanished — large residuals had been pulling the fit. (In real work you'd investigate an outlier before deleting it; sometimes the extreme point is the discovery.)",
       difficulty: 2,
       targets: ["linreg:outlier-influence"],
     },
@@ -137,7 +137,7 @@ export const linearRegressionCheck: ConceptCheck = {
         placeholder:
           "e.g. squared error makes the mansions' misses… so the line… the fix is… more features/data won't help because…",
         answer:
-          "It's the residual-square mechanism from the hero, in the wild: squared error scores a miss by its area, so each mansion's enormous residual dwarfs the ordinary homes' and outvotes the crowd — the line tilts up to appease a few extremes. The cleanest fix is to stop those extremes from dominating the loss: a robust loss (Huber / absolute), or model the mansions as a separate segment. More features won't help — squared error still over-weights the mansions' residuals — and collecting more mansion sales makes it worse, pulling the fit even harder toward the extremes.",
+          "It's the residual-square mechanism from the exhibit, in the wild: squared error scores a miss by its area, so each mansion's enormous residual can dominate the ordinary homes' and pull the fit toward the extremes. First decide whether mansions are contamination, a real segment, or evidence that price should be modeled on a log scale. Depending on that diagnosis, useful responses include a robust loss, a transformed target, segment-specific models, or features that explain the price regime. More representative mansion data can improve the model if mansions are part of the population you need to predict.",
       },
       difficulty: 3,
       targets: ["linreg:transfer-robustness"],

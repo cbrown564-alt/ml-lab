@@ -64,10 +64,10 @@ export const theDatasetCheck: ConceptCheck = {
       prompt: "Can the model learn to use location?",
       options: [
         {
-          label: "No — if it isn't a column in the table, the model can't use it, no matter how important it is",
+          label: "Not directly — the model can use location only if it is represented in the table or partly encoded by another feature that acts as a proxy",
           correct: true,
           feedback:
-            "Right. The table is the model's entire world. A factor that isn't a column simply doesn't exist to it; its effect shows up only as unexplained noise.",
+            "Right. A factor absent from the columns can't be used directly; its effect may show up only as unexplained noise unless another recorded feature proxies for it.",
         },
         {
           label: "Yes — a good model infers location from the other columns",
@@ -77,10 +77,10 @@ export const theDatasetCheck: ConceptCheck = {
         {
           label: "Yes, if you give it enough rows",
           feedback:
-            "More rows of the same columns won't conjure a missing one. Without a location column, every row lacks that information, so no amount of them supplies it.",
+            "More rows cannot create a variable that was never measured. They can, however, make relationships among the recorded variables easier to estimate.",
         },
       ],
-      verify: "The model can only use columns that are in the table — missing variables are invisible to it.",
+      verify: "The model can use a variable only if it is in the table or partly encoded by a proxy feature.",
       difficulty: 2,
       targets: ["ds:missing-column"],
     },
@@ -105,7 +105,7 @@ export const theDatasetCheck: ConceptCheck = {
         placeholder:
           "e.g. to the model a −9999 row is just… so it… the fix is… a bigger model would…",
         answer:
-          "To the model a −9999 row is just another example — it can't tell an error code from a temperature — so each one is a massive high-leverage outlier that drags the fit, exactly like the one mistyped house here. The fix is upstream, in the data: detect and remove the error-coded rows and guard against the code on the way in. A more powerful model wouldn't help — it would fit the −9999 points even more faithfully — and 'collect more data' won't either, because −9999 is systematic, not zero-mean noise that averages away.",
+          "To the model a −9999 row is just another example — it can't tell an error code from a temperature — so each one is a massive high-leverage outlier that drags the fit, like the one mistyped house here. The fix is upstream, in the data: detect and handle the error code before fitting, then reassess whether robust methods are also useful. Changing model capacity does not repair a sentinel value encoded as a real temperature. Collecting more rows with the same error code won't help either.",
       },
       difficulty: 3,
       targets: ["ds:transfer-quality"],

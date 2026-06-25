@@ -69,7 +69,7 @@ function Card({ card }: { card: FailureCard }) {
 
       {card.scenarioId && (
         <p className="mt-4 font-mono text-[11px] tracking-[0.1em] text-ink-faint uppercase">
-          Reproduce it live in the Experiment tab
+          Reproduce it in Run it
         </p>
       )}
     </article>
@@ -94,7 +94,7 @@ export function FailureGallery({
               The field guide
             </p>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight">
-              Every way it breaks
+              Failure modes to recognize
             </h2>
             <p className="mt-2 leading-relaxed text-ink-muted">
               {gallery.intro ??

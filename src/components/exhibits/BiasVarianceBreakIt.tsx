@@ -113,7 +113,7 @@ function Guidance({ phase }: { phase: Phase }) {
       <div>
         <p className="font-mono text-[11px] tracking-[0.16em] text-[var(--viz-error-ink)] uppercase">Symptom · it broke</p>
         <p className="mt-2 leading-relaxed text-ink">
-          Training error has nearly vanished — the curve threads every gold dot — but the
+          Training error has nearly vanished — the curve tracks every training point closely — but the
           test error has <span className="font-medium text-[var(--viz-error-ink)]">climbed</span>. The fit lunges between the points,
           missing the held-out rings entirely.
         </p>

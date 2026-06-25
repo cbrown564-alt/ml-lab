@@ -26,23 +26,22 @@ export default function WhatIsMlExhibit() {
       experiment={<WhatIsMlLab />}
       lede={
         <p>
-          For seventy years, programming meant a human writing the rules. Machine learning
-          is the inversion: you show examples, and the machine writes the rule — finding
-          patterns you could never spell out by hand.
+          In conventional programming, you write the rules. In supervised machine learning,
+          you provide examples with answers, choose a model and objective, and an algorithm
+          fits a rule that can predict new cases.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll have hand-written a rule, watched it top out,
-          then watched a machine learn a better one from the same examples — and you&apos;ll
-          hold the one definition the whole field rests on.
+          You&apos;ll be able to explain what the data supplies, what the learner chooses,
+          and why a model can only be as reliable as the examples and objective behind it.
         </>
       }
       experimentLede={
         <>
-          Guardrails off. Be the programmer first: drag a threshold to hand-write a rule and
-          see how far one feature gets you. Then press Learn and watch the machine fit a
-          rule from the labelled examples that beats your best cut.
+          Write a one-feature rule by hand, then train a model on the same labeled examples.
+          Compare what each rule can represent—and how biased examples bend the learned
+          boundary.
         </>
       }
     />

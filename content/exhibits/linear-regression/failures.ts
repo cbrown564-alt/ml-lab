@@ -12,8 +12,8 @@ export const linearRegressionFailures: FailureGallery = {
     {
       id: "outlier-tyranny",
       primitive: "outliers",
-      title: "The tyranny of the outlier",
-      trigger: "Drag one or two points far off the trend — or load the “tyranny of the outlier” scenario.",
+      title: "One outlier, outsized influence",
+      trigger: "Drag one or two points far off the trend — or load the outlier scenario.",
       symptom: "The whole fit line swings toward the strays, and one giant residual square dwarfs every other.",
       diagnosis: "Squared error penalises a miss by its square, so a handful of far points outvote the crowd — is the model wrong, or is squared error the wrong judge for this data?",
       repair: "Switch to a robust loss (absolute error or Huber), or remove points you can confirm are recording errors.",

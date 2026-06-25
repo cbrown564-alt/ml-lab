@@ -16,19 +16,19 @@ export const trainTestGeneralizationMath: MathDrawerContent = {
       blocks: [
         {
           kind: "equation",
-          lines: ["fit chosen to minimise L_train   ⟹   E[L_train] ≤ E[L_test]"],
+          lines: ["fit chosen to minimise L_train   ⟹   E[L_train] ≤ E[L_val]"],
           caption: "The model's parameters were tuned to make L_train small, so it underestimates the error on fresh data — the gap is the optimism.",
           highlights: [
             { text: "L_train", hue: "neutral" },
-            { text: "L_test", hue: "prediction" },
+            { text: "L_val", hue: "prediction" },
           ],
         },
         {
           kind: "prose",
-          text: "The more flexible the model, the wider this gap: a model with enough capacity can drive L_train to zero while L_test stays high — which is exactly overfitting, seen here through the lens of the score rather than the fit.",
+          text: "The more flexible the model, the wider this gap: a model with enough capacity can drive L_train to zero while L_val stays high — which is exactly overfitting, seen here through the lens of the score rather than the fit.",
           highlights: [
             { text: "L_train", hue: "neutral" },
-            { text: "L_test", hue: "prediction" },
+            { text: "L_val", hue: "prediction" },
           ],
         },
       ],

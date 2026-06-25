@@ -99,10 +99,10 @@ function ItemHeader({
 }) {
   const chip =
     status === "resolved"
-      ? { text: "Resolved", cls: "border-accent text-accent" }
+      ? { text: "Correct", cls: "border-accent text-accent" }
       : status === "revisit"
-        ? { text: "Revisit", cls: "border-[var(--viz-error)] text-[var(--viz-error-ink)]" }
-        : { text: "Open", cls: "border-line text-ink-faint" };
+        ? { text: "Try again", cls: "border-[var(--viz-error)] text-[var(--viz-error-ink)]" }
+        : { text: "Not answered", cls: "border-line text-ink-faint" };
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
       <span className="font-mono text-xs tracking-widest text-ink-faint tabular-nums">
@@ -231,7 +231,7 @@ function ExperimentTaskView({
       {done ? (
         <p className="mt-3 max-w-[65ch] text-sm leading-relaxed" role="status">
           <span className="font-semibold" style={{ color: "var(--accent)" }}>
-            Done — the experiment felt it.{" "}
+            Complete — the experiment registered it.{" "}
           </span>
           <span className="text-ink-muted">{item.feedback}</span>
         </p>
@@ -296,7 +296,7 @@ function OpenTransferView({
           disabled={answer.trim().length < 12}
           className="rounded-full border border-accent px-5 py-1.5 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-accent-ink disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {revealed ? "Model answer shown" : "Commit & reveal model answer"}
+          {revealed ? "Model answer shown" : "Save my answer and compare"}
         </button>
         {!revealed && (
           <span className="font-mono text-[11px] tracking-wide text-ink-faint">
@@ -363,10 +363,9 @@ export function ConceptCheckSection({
         <div className="max-w-[60ch]">
           <h2 className="text-2xl font-semibold tracking-tight">Explain it</h2>
           <p className="mt-2 leading-relaxed text-ink-muted">
-            The real test isn&apos;t recall — it&apos;s whether you could rebuild
-            this at a whiteboard. Work the checks (the latest answer counts), then
-            the closing transfer: a case you haven&apos;t seen, that only the
-            intuition can solve.
+            Use the live model and the checks below to test whether the idea
+            transfers to a new case. You can revise an answer after seeing the
+            feedback.
           </p>
         </div>
         {/* The live meter — the bench read as an instrument. */}
@@ -426,23 +425,21 @@ export function ConceptCheckSection({
       <div className="mt-8 rounded-xl border border-line bg-raised p-6">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
-            {allResolved ? "Bench cleared" : "Your standing"}
+            {allResolved ? "Checks complete" : "Progress"}
           </span>
           <EarnedLevel nodeId={check.nodeId} />
         </div>
         <p className="mt-3 max-w-[60ch] leading-relaxed text-ink-muted">
           {allResolved ? (
             <>
-              All {total} resolved — you could now reconstruct
-              {nodeTitle ? ` ${nodeTitle}` : " this"} at a whiteboard: what it does,
-              why, how it breaks, and where it transfers. The mastery model has the
-              receipts.
+              All {total} checks complete. Before moving on, explain
+              {nodeTitle ? ` ${nodeTitle}` : " this concept"} in your own words:
+              what it does, when it helps, and one way it can fail.
             </>
           ) : (
             <>
-              Resolve all {total} to lock in mastery for
-              {nodeTitle ? ` ${nodeTitle}` : " this exhibit"} — the meter above
-              tracks what&apos;s left.
+              Complete the remaining checks to finish this exhibit. The meter above
+              shows what is left.
             </>
           )}
         </p>
@@ -453,14 +450,14 @@ export function ConceptCheckSection({
                 href={next.href}
                 className="font-medium text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2"
               >
-                {next.live ? `Next: ${next.title} →` : "Browse the map →"}
+                {next.live ? `Next: ${next.title} →` : "Browse all exhibits →"}
               </Link>
             ) : (
               <Link
-                href="/#map"
+                href="/#exhibits"
                 className="font-medium text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2"
               >
-                Back to the map →
+                Browse all exhibits →
               </Link>
             )}
           </p>

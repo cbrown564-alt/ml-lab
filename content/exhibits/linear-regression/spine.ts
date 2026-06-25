@@ -66,7 +66,7 @@ export const linearRegressionSpine: Spine<LinearRegressionFrame> = [
     sectionId: "the-outlier",
     frame: { scenarioId: "tyranny-of-the-outlier", errorView: "squares" },
     terms: [
-      { phrase: "Two rogue points", hue: "error" },
+      { phrase: "Two extreme points", hue: "error" },
       { phrase: "The biggest square", hue: "error" },
       { phrase: "the outliers", hue: "error" },
     ],

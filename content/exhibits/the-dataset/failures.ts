@@ -13,8 +13,8 @@ export const theDatasetFailures: FailureGallery = {
       title: "One bad row dominates",
       trigger: "Leave a corrupted, high-leverage row in the data — a mistyped value at the edge of the range.",
       symptom: "The least-squares trend tips toward the single point and flattens; predictions for ordinary cases go badly wrong, even though every other row is fine.",
-      diagnosis: "The model honours every row equally — it can't tell a typo from a fact. A point far from the rest, especially at the extremes, pulls the whole fit toward itself.",
-      repair: "Find and fix or drop the bad row (and consider a robust loss that down-weights outliers). Cleaning the data is the fix; no model setting undoes a typo.",
+      diagnosis: "Under least squares, the model honors every row equally — it can't tell a typo from a fact. A point far from the rest, especially at the extremes, pulls the whole fit toward itself.",
+      repair: "Find and fix or drop the bad row (and consider a robust loss that down-weights outliers). Cleaning the data is the fix; model settings are not the primary repair for a known data error.",
       boundary: "Not every outlier is an error — a genuinely unusual but real example is data worth keeping. The skill is telling a mistake from a true extreme.",
     },
     {

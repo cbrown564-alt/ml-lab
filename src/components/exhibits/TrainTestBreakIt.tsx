@@ -56,7 +56,7 @@ export function TrainTestBreakIt() {
             </label>
             <input
               type="range"
-              aria-label="Number of held-out test points"
+              aria-label="Number of held-out validation points"
               min={3}
               max={20}
               step={1}
@@ -91,7 +91,7 @@ export function TrainTestBreakIt() {
             height={180}
           />
           <p className="mt-3 text-sm leading-relaxed text-ink-faint">
-            The blue histogram is the test error from {SEEDS.length} random splits at this
+            The blue histogram is the validation error from {SEEDS.length} random splits at this
             holdout size. With a tiny holdout it sprawls wide; enlarge it and the splits
             agree, collapsing to a tall spike — while the cross-validation mark holds steady.
           </p>
@@ -107,7 +107,7 @@ function Guidance({ phase }: { phase: Phase }) {
       <div>
         <p className="font-mono text-[11px] tracking-[0.16em] text-accent uppercase">Repaired ✓</p>
         <p className="mt-2 leading-relaxed text-ink">
-          Enlarge the holdout and the histogram <span className="font-medium text-accent">collapses to a spike</span> — a bigger test
+          Enlarge the holdout and the histogram <span className="font-medium text-accent">collapses to a spike</span> — a bigger validation
           set is a less noisy sample, so the score you read off any one split is close to
           the truth. And the cross-validation mark was steady the whole time.
         </p>
@@ -123,12 +123,12 @@ function Guidance({ phase }: { phase: Phase }) {
     <div>
       <p className="font-mono text-[11px] tracking-[0.16em] text-[var(--viz-error-ink)] uppercase">Symptom · it broke</p>
       <p className="mt-2 leading-relaxed text-ink">
-        Hold out just a handful of points and a single split&apos;s test error is a{" "}
+        Hold out just a handful of points and a single split&apos;s validation error is a{" "}
         <span className="font-medium text-[var(--viz-error-ink)]">coin flip</span> — across random splits the histogram sprawls from
         near-zero to large, for the very same model.
       </p>
       <p className="mt-3 leading-relaxed text-ink-muted">
-        <span className="font-medium text-ink">Diagnose:</span> a small test set is a tiny,
+        <span className="font-medium text-ink">Diagnose:</span> a small validation set is a tiny,
         noisy sample of the model&apos;s skill, so any one number off it is mostly luck.{" "}
         <span className="font-medium text-ink">Repair:</span> enlarge the holdout, or read the
         cross-validation estimate that barely moves.

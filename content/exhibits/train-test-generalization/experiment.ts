@@ -40,5 +40,5 @@ export const trainTestScenario = {
   id: "the-split",
   title: "Score it on what it hasn't seen",
   prompt:
-    "Here is one pool of points. The model is fit on the gold training points and scored on the hollow held-out ones — the only honest test. Press Reshuffle to draw a new random split and watch the test error jump around while the training error barely moves: a single split is a lottery. Then read the cross-validation score, which averages over every fold to pin the number down.",
+    "Here is one pool of points. The model is fit on the gold training points and scored on the hollow held-out ones — an honest validation score. Press Reshuffle to draw a new random split and watch the validation error jump around while the training error barely moves: a single split is a lottery. Then read the cross-validation score, which averages over every fold to pin the number down.",
 };

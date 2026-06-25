@@ -11,7 +11,7 @@ export const classificationTaskCheck: ConceptCheck = {
     {
       id: "why-accuracy-misleads",
       kind: "choice",
-      prompt: "On the fraud data, a do-nothing model scored 95% accuracy. Why is that accuracy meaningless?",
+      prompt: "On the fraud data, a do-nothing model scored 95% accuracy. Why is accuracy alone inadequate here?",
       options: [
         {
           label: "95% of the points are negative, so predicting 'negative' always is right 95% of the time — and catches zero fraud",
@@ -39,10 +39,10 @@ export const classificationTaskCheck: ConceptCheck = {
       prompt: "A cancer screening test should be tuned for high recall. What does that prioritise, and at what cost?",
       options: [
         {
-          label: "Catching as many true cancers as possible (few false negatives), accepting more false alarms (lower precision)",
+          label: "Prioritize high recall (sensitivity) while setting an acceptable limit on false positives — a missed cancer is worse than a follow-up test on a healthy person",
           correct: true,
           feedback:
-            "Right. Recall is the share of real positives caught; maximising it means missing few cancers, at the cost of more false positives (follow-up tests on healthy people) — the right trade when a miss is deadly.",
+            "Right. Recall is the share of real positives caught; for screening you want few missed cancers, accepting more false positives — as long as the downstream testing pathway can support that operating point.",
         },
         {
           label: "Making sure every positive prediction is correct, even if some cancers are missed",
@@ -78,7 +78,7 @@ export const classificationTaskCheck: ConceptCheck = {
         {
           label: "Yes — ½ is always optimal because it's unbiased",
           feedback:
-            "½ is only optimal when the two errors cost the same and the classes are balanced. Neither holds here, so each deployment needs its own threshold.",
+            "A threshold of 0.5 is natural only when the score is a well-calibrated probability and the two error costs are treated as equal. Many deployments do not satisfy those assumptions.",
         },
       ],
       verify: "Conceptually: the threshold is set by the cost of each error, which differs by deployment.",
@@ -91,7 +91,7 @@ export const classificationTaskCheck: ConceptCheck = {
       prompt: "Break it on purpose: on the imbalanced data, find a threshold where accuracy is ~95% but recall is zero — the model that does nothing and looks great.",
       taskEvent: "classification-task:accuracy-trap",
       feedback:
-        "You've reproduced the single most common way a classifier 'works' on paper and fails in the world. The confusion matrix and recall are the antidote — never trust accuracy alone on skewed classes.",
+        "You've reproduced a common trap: a classifier that looks strong on accuracy and fails on the class that matters. The confusion matrix and recall are the antidote — don't trust accuracy alone on skewed classes.",
       difficulty: 1,
       targets: ["cls:break"],
     },
@@ -106,7 +106,7 @@ export const classificationTaskCheck: ConceptCheck = {
         placeholder:
           "e.g. with 2% defective, predicting 'good' always scores … so accuracy hides … they should report …",
         answer:
-          "With only 2% of parts defective, a model that predicts 'good' every time already scores 98% — so 97% accuracy reflects the majority class, not skill at the job that matters, and it hid that the model catches almost no defects. They should report recall on the defective class (of the actual defects, how many were caught — here likely near zero) alongside precision. 'Get higher accuracy' won't help: chasing accuracy chases the majority, and you can hit 99% by flagging nothing while still shipping every defect. The defect rate isn't the metric's flaw — using accuracy on imbalanced classes is.",
+          "With only 2% of parts defective, a model that predicts 'good' every time already scores 98% — so 97% accuracy reflects the majority class, not skill at catching defects. Accuracy alone does not reveal recall. Report the confusion matrix, defective-class recall, and precision before deciding whether the model catches defects. Chasing higher accuracy favors the majority — you can hit 98% by flagging nothing while still shipping every defect. Using accuracy alone on imbalanced classes is the problem.",
       },
       difficulty: 3,
       targets: ["cls:transfer-imbalance"],

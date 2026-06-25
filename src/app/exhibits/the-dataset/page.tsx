@@ -26,23 +26,23 @@ export default function TheDatasetExhibit() {
       experiment={<TheDatasetLab />}
       lede={
         <p>
-          Before the algorithm, before the maths, there is the table. A dataset is rows of
-          experience — features and a target — and it is the entire world the model gets to
-          learn from. Read it the way a model does.
+          Every supervised model starts with a table: rows are examples, feature columns are
+          the inputs, and the target is the answer to predict. The model can use only what
+          the table represents, so omissions, errors, and sampling choices become part of
+          the model.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and a dataset will stop being a spreadsheet and become what it
-          is to a model: a matrix of examples whose every row, column, and typo shapes what
-          gets learned.
+          You&apos;ll learn to read a dataset as a model does—and to spot how one missing
+          variable, bad row, or unrepresentative sample can distort what it learns.
         </>
       }
       experimentLede={
         <>
-          Guardrails off. Hover a row to find its point, or a point to find its row — the
-          table and the scatter are one matrix. See the features, the target, and how each
-          example sits in the data.
+          Move between the table and scatterplot: each row and point is the same example.
+          Inspect the features and target, then introduce a bad row and watch the fitted
+          trend change.
         </>
       }
     />

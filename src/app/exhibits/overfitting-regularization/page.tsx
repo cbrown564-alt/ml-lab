@@ -26,24 +26,22 @@ export default function OverfittingRegularizationExhibit() {
       experiment={<RegularizationLab />}
       lede={
         <p>
-          When a model overfits, you don&apos;t have to make it simpler — you can make
-          it pay. Regularisation keeps the over-powered model but penalises big
-          weights, reining the wiggle into the smooth shape underneath without ever
-          changing the degree.
+          Regularization adds a cost for large or complex parameter values. It reduces a
+          model&apos;s effective flexibility without necessarily changing its nominal
+          architecture or polynomial degree.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll watch one penalty knob walk a frantic
-          degree-12 curve from overfit, to just right, to crushed — and read the U it
-          traces.
+          You&apos;ll tune the regularization strength from under-penalized to well-balanced
+          to over-penalized—and see how validation error reveals the useful middle.
         </>
       }
       experimentLede={
         <>
-          Guardrails off. Slide the penalty λ across decades, watch the same degree-12
-          model relax from wiggle to smooth and then go limp, and read the error-vs-λ U
-          — then the ridge maths underneath.
+          Move λ across several orders of magnitude. Watch the coefficients shrink, the
+          curve smooth, and training and validation error trade places, then connect the
+          behavior to the ridge penalty.
         </>
       }
     />

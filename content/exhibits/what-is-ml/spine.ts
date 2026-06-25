@@ -21,7 +21,7 @@ export const whatIsMlSpine: Spine<WhatIsMlFrame> = [
     sectionId: "the-rule-it-learns",
     frame: { stage: "learned" },
     terms: [
-      { phrase: "the labelled examples", hue: "truth" },
+      { phrase: "the labeled examples", hue: "truth" },
       { phrase: "the tilted line", hue: "prediction" },
     ],
   },
@@ -37,7 +37,7 @@ export const whatIsMlSpine: Spine<WhatIsMlFrame> = [
         "Machine learning flips programming around. What do you give the machine so it can find the rule itself?",
       options: [
         {
-          label: "Examples labelled with the right answers",
+          label: "Examples labeled with the right answers",
           correct: true,
           feedback:
             "Right. You supply the inputs paired with their correct outputs; the machine searches for the rule that reproduces them. That's supervised learning — examples in, rule out.",
@@ -50,7 +50,7 @@ export const whatIsMlSpine: Spine<WhatIsMlFrame> = [
         {
           label: "Raw inputs, with no answers attached",
           feedback:
-            "Inputs alone only let it find structure (clusters), not the labelled rule you want. To learn “class 1 vs class 0” it needs the answers — the labels — on your examples.",
+            "Inputs alone let it find structure (clusters), not the labeled rule you want. To learn “class 1 vs class 0” it needs the answers — the labels — on your examples.",
         },
       ],
     },

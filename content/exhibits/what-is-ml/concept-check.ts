@@ -11,7 +11,7 @@ export const whatIsMlCheck: ConceptCheck = {
     {
       id: "the-inversion",
       kind: "choice",
-      prompt: "What's the essential difference between traditional programming and machine learning?",
+      prompt: "What is the essential difference between conventional programming and supervised machine learning?",
       options: [
         {
           label: "Programming: you write the rule and apply it to data. ML: you give data and answers, and the machine finds the rule",
@@ -22,7 +22,7 @@ export const whatIsMlCheck: ConceptCheck = {
         {
           label: "Machine learning is just faster, automatically-generated traditional code",
           feedback:
-            "It's not faster code-writing — it's a different input. You never write the rule; you supply labelled examples and let the search find a rule, often one no human could write.",
+            "It's not faster code-writing — it's a different input. You do not specify every decision rule directly; you specify the data, representation, model family, and objective from which a rule is fitted.",
         },
         {
           label: "Machine learning doesn't use data; it reasons from first principles",
@@ -42,7 +42,7 @@ export const whatIsMlCheck: ConceptCheck = {
           label: "The model has no notion of truth beyond the examples — it faithfully learns whatever pattern the data contains, bias and all",
           correct: true,
           feedback:
-            "Right. Learning means reproducing the examples; if the examples are skewed, the best fit is the skewed rule. The fix has to be the data, not the model.",
+            "Right. Learning means reproducing the examples; if the examples are skewed, the best fit is the skewed rule. The training objective rewards agreement with the labels, not an external ground truth — so the fix has to be the data, not the model.",
         },
         {
           label: "The algorithm was too simple — a neural network would have ignored the bias",
@@ -106,7 +106,7 @@ export const whatIsMlCheck: ConceptCheck = {
         placeholder:
           "e.g. the model learned its rule from… so the high accuracy means… the real fix is…",
         answer:
-          "The model writes its rule from its examples — and the examples are a decade of biased human decisions, so it learned the bias. High held-out accuracy is no defence: it only measures agreement with those same biased labels, so a biased model scores well by reproducing the bias. A bigger model or regularisation won't help — those fix how well it fits, not what it was taught. The real work is upstream: audit and correct the labels and the objective (what counts as a 'good' hire), because the model is a mirror of the data it's shown.",
+          "The model writes its rule from its examples — and biased historical labels are one likely cause, though sampling, proxy variables, the target definition, threshold choice, or deployment shift can also produce group disparities. High held-out accuracy is no defense: it measures agreement with those same labels, so a model that reproduces past bias can score well. A bigger model or regularization won't fix a skewed objective — those change how well it fits, not what it was taught. The real work is upstream: audit labels, sampling, and the objective (what counts as a 'good' hire), because the model reflects the examples and choices behind it.",
       },
       difficulty: 3,
       targets: ["wml:transfer-bias"],

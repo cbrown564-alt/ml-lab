@@ -9,7 +9,7 @@ import type { ExhibitNarrative } from "@/lib/narrative/schema";
 export const theDatasetNarrative: ExhibitNarrative = {
   nodeId: "the-dataset",
   hook: [
-    "Every model is only ever as good as the table you hand it. Before the algorithm, before the maths, there's the dataset: rows of experience the machine learns from. It feels like the boring part, but in practice most of machine learning is getting this table right — and most of the famous failures are getting it wrong.",
+    "Every model is only as good as the table you hand it. Before the algorithm, before the math, there's the dataset: rows of experience the machine learns from. It feels like the boring part, but in practice data collection and cleaning often determine the practical quality of the result — and many famous failures trace back to the table.",
     "Here's a small one: twelve houses, three columns. Let's read it the way a model does.",
   ],
   story: [
@@ -31,14 +31,14 @@ export const theDatasetNarrative: ExhibitNarrative = {
       id: "the-matrix",
       heading: "The table is all it sees",
       paragraphs: [
-        "Here's the part that's easy to forget: this matrix of numbers is the model's entire world. It doesn't see the houses, the street, or your intentions — only the rows and columns you handed it. If a column that matters (the neighbourhood, say) isn't in the table, the model simply can't use it. What's in the table is everything; what's left out doesn't exist.",
+        "Here's the part that's easy to forget: this matrix of numbers is the model's entire world. It doesn't see the houses, the street, or your intentions — only the rows and columns you handed it. The model cannot use an omitted variable directly; it may only recover part of its effect when another recorded feature acts as a proxy. What's in the table is everything it can use; what's left out doesn't exist as a column.",
       ],
     },
     {
       id: "quality-is-everything",
       heading: "Quality decides the result",
       paragraphs: [
-        "Because the table is all there is, its quality is decisive. Representative rows, correct values, the right columns — get those right and a simple model shines; get them wrong and the fanciest algorithm faithfully learns the mess. A single mistyped price can drag the whole trend (you'll do exactly that next door). “Garbage in, garbage out” isn't a slogan here; it's the reason data work is most of the job.",
+        "Because the table is all there is, its quality is decisive. Representative rows, correct values, the right columns — get those right and a simple model shines; get them wrong and a more flexible algorithm may fit the mess more closely rather than correct it. A single mistyped price can drag the whole trend (you'll do that next). “Garbage in, garbage out” isn't a slogan here; it's the reason data collection and cleaning often determine the practical quality of the result.",
       ],
     },
   ],

@@ -108,7 +108,7 @@ export function LinearRegressionBreakIt() {
                 at={worstPoint}
                 dx={worstPoint.x > 8 ? -16 : 16}
                 dy={-16}
-                label="this one square outweighs the crowd"
+                label="this one square costs as much as the crowd"
                 color="var(--viz-error)"
               />
             )}

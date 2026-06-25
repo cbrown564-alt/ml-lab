@@ -24,22 +24,25 @@ export default function GradientDescentExhibit() {
       hero={<GradientDescentHero />}
       lede={
         <p>
-          The engine under nearly everything. A model starts out wrong,
-          measures exactly how wrong, and takes one small step downhill — then
-          does it again, a few thousand times. Here you hold the clock: step,
-          play, scrub back through time, and turn the one knob that decides
-          whether the walk converges, crawls, or explodes.
+          Gradient descent updates parameters by stepping against the gradient. The learning
+          rate controls the step: too small is slow; too large can oscillate or diverge.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll see why too timid a step never
-          arrives and too bold a step blows up — the same misstep behind most
-          training runs that die.
+          You&apos;ll connect the update rule to the path on the loss surface and diagnose
+          whether a slow or unstable run is caused by step size, conditioning, or a flat
+          region.
         </>
       }
       story={<GradientDescentStory />}
       experiment={<GradientDescentLab />}
+      experimentLede={
+        <>
+          Play, pause, and scrub the optimization path. Change the learning rate and surface
+          shape, then compare steady convergence, slow progress, oscillation, and divergence.
+        </>
+      }
     />
   );
 }

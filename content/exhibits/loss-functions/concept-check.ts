@@ -43,7 +43,7 @@ export const lossFunctionsCheck: ConceptCheck = {
           label: "Quadratic near zero, linear in the tails — smooth to optimise, robust to outliers",
           correct: true,
           feedback:
-            "Right. Near the fit it behaves like squared error (curved, easy to settle into); past a threshold it switches to absolute-style linear growth, so far points can't dominate.",
+            "Right. Near the fit it behaves like squared error (curved, differentiable at the transition); past a threshold it switches to absolute-style linear growth, so far points have less influence than under squared loss.",
         },
         {
           label: "Linear near zero, quadratic in the tails — gentle up close, strict far out",
@@ -67,15 +67,15 @@ export const lossFunctionsCheck: ConceptCheck = {
       prompt: "On clean data, the squared, absolute, and Huber lines will be…",
       options: [
         {
-          label: "Nearly identical — the choice of loss barely matters here",
+          label: "Nearly identical on this clean, roughly symmetric dataset — the choice of loss barely matters here",
           correct: true,
           feedback:
-            "Right. With no extremes to argue over, all three judges read the same trend. The choice of loss only bites when something far off is at stake.",
+            "Right. With no extremes to argue over on this dataset, all three judges read the same trend. Different noise distributions and asymmetric costs can still matter without visually obvious outliers.",
         },
         {
           label: "Still far apart — the three losses always give different lines",
           feedback:
-            "They only diverge when outliers pull squared error away. Remove the rogues and the disagreement nearly vanishes.",
+            "They mainly diverge when outliers pull squared error away. On this clean dataset, the disagreement nearly vanishes.",
         },
         {
           label: "Absolute and Huber agree, but squared error is always different",
@@ -109,7 +109,7 @@ export const lossFunctionsCheck: ConceptCheck = {
         placeholder:
           "e.g. squared error lets the mansions… so switch to… but first check… more training won't help because…",
         answer:
-          "Squared error scores a miss by its area, so the handful of mansions — huge residuals — dominate the loss and hijack the fit toward themselves. The fix is a robust loss (Huber, or absolute) that stops far points from dominating. But check the boundary first: if mansions are a real segment you must predict well, down-weighting them is the wrong move — robustness assumes they're genuine outliers, not a population you care about. More training won't help: squared error is doing exactly what it's designed to do, weighting big misses heavily — the loss is the lever, not the training time. And don't just delete the mansions; that's metric-gaming, and a robust loss down-weights them without discarding them.",
+          "Squared error scores a miss by its area, so the handful of mansions — huge residuals — dominate the loss and hijack the fit toward themselves. The fix is a robust loss (Huber, or absolute) that stops far points from dominating. But check the boundary first: if mansions are a real segment you must predict well, down-weighting them is the wrong move — robustness assumes they're genuine outliers, not a population you care about. More training won't help: squared error is doing what it's designed to do, weighting big misses heavily — the loss is the lever, not the training time. A robust loss down-weights extreme residuals without discarding them.",
       },
       difficulty: 3,
       targets: ["loss:transfer-robust"],

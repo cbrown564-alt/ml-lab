@@ -16,7 +16,7 @@ import fixtures from "@/lib/models/fixtures/polynomial.json";
  * Bias–variance bench: one knob, the polynomial degree, sweeps from underfit to
  * overfit. The fit plot shows the curve fighting (or memorising) the training
  * points; the error-vs-complexity chart shows training error falling while test
- * error — the honest score — bottoms out in the middle and climbs again.
+ * error — validation error — often bottoms out in the middle and climbs again.
  */
 const TRAIN: Point[] = fixtures.train as Point[];
 const TEST: Point[] = fixtures.test as Point[];

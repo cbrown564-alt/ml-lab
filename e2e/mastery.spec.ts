@@ -50,7 +50,7 @@ test.describe("concept check + mastery", () => {
     await check
       .getByRole("textbox")
       .fill("Their steps are tiny, so raise the learning rate to cover more ground each step.");
-    await check.getByRole("button", { name: /Commit & reveal model answer/ }).click();
+    await check.getByRole("button", { name: /Save my answer and compare/ }).click();
 
     // The lab task is the last gate: mastery requires actually diverging — and the
     // divergence happens over in the Experiment tab; the task bus carries it back.
@@ -61,7 +61,7 @@ test.describe("concept check + mastery", () => {
     await expect(page.getByText(/This is divergence/)).toBeVisible({ timeout: 15000 });
 
     await page.getByRole("tab", { name: "Explain it" }).click();
-    await expect(check.getByText(/Done — the experiment felt it/)).toBeVisible();
+    await expect(check.getByText(/Complete — the experiment registered it/)).toBeVisible();
 
     await expect(badge).toHaveText("mastered");
 

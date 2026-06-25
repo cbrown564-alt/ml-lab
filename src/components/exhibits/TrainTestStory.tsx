@@ -41,10 +41,10 @@ export function TrainTestStory() {
             stage === "split"
               ? [
                   { label: "training error", value: SCORES[0].trainErr.toFixed(3), hue: "var(--viz-neutral-ink)", note: "seen — flatters" },
-                  { label: "test error", value: SCORES[0].testErr.toFixed(3), hue: "var(--viz-prediction)", note: "honest" },
+                  { label: "validation error", value: SCORES[0].testErr.toFixed(3), hue: "var(--viz-prediction)", note: "honest" },
                 ]
               : [
-                  { label: "test error range", value: `${Math.min(...TEST_ERRS).toFixed(2)}–${Math.max(...TEST_ERRS).toFixed(2)}`, hue: "var(--viz-error)", note: "single-split lottery" },
+                  { label: "validation error range", value: `${Math.min(...TEST_ERRS).toFixed(2)}–${Math.max(...TEST_ERRS).toFixed(2)}`, hue: "var(--viz-error)", note: "single-split lottery" },
                   { label: "5-fold CV", value: CV.toFixed(3), hue: "var(--accent)", note: "stable estimate" },
                 ]
           }

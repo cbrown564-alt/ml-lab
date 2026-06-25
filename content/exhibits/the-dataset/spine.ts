@@ -37,12 +37,12 @@ export const theDatasetSpine: Spine<TheDatasetFrame> = [
           label: "Only the rows and columns in the table — the numbers you handed it",
           correct: true,
           feedback:
-            "Right. The model's whole world is this matrix. It never sees the houses or the market — only the values in the table, and only the columns you included.",
+            "Right. The model learns from this matrix of numbers. It doesn't see the houses or the market — only the values in the table, and only the columns you included.",
         },
         {
           label: "The real houses and the wider property market",
           feedback:
-            "It has no access to any of that — only the table. If a fact isn't a column in the data, the model literally cannot use it, however obvious it is to you.",
+            "It has no access to any of that — only the table. If a fact isn't a column in the data, the model can't use it directly, however obvious it is to you — unless another feature proxies for it.",
         },
         {
           label: "The column names and what you intended them to mean",

@@ -13,7 +13,7 @@ export const linearRegressionNarrative: ExhibitNarrative = {
   nodeId: "linear-regression",
   hook: [
     "In 1885, Francis Galton plotted the heights of nearly a thousand adult children against their parents' and found something gentle and strange: tall parents had tall children, but a little shorter; short parents had short children, but a little taller. To capture how strongly one number pulls on another, he drew a straight line through the cloud — and stumbled into the most-used statistical tool of the next century.",
-    "That line is now in your hands, on the right. Each gold dot is one real observation; the blue line is a single claim about all of them at once. Grab a point and drag it — the line answers on the very next frame. The rule that decides where it lands is the rest of this story.",
+    "That line is now in your hands, on the right. Each gold dot is one observed point in this dataset; the blue line is a single claim about all of them at once. Grab a point and drag it — the line answers on the very next frame. The rule that decides where it lands is the rest of this story.",
   ],
   story: [
     {
@@ -29,16 +29,16 @@ export const linearRegressionNarrative: ExhibitNarrative = {
       heading: "Why the errors get squared",
       paragraphs: [
         "Switch the errors from lines to squares. Each residual becomes a literal square whose area is the penalty the line pays there, and the fit is the line that makes the total area smallest — the mean squared error in the readout.",
-        "Squaring does two jobs. It ignores direction: overshooting by three is exactly as bad as undershooting by three. And it punishes large misses out of all proportion — one residual of ten outweighs a hundred residuals of one. That second habit is squared error's whole personality, and the next beat shows its dark side.",
+        "Squaring does two jobs. It ignores direction: overshooting by three is exactly as bad as undershooting by three. And it punishes large misses out of all proportion — one residual of ten contributes the same squared penalty as one hundred residuals of one: 10² = 100 × 1². That second habit is squared error's whole personality, and the next beat shows its dark side.",
       ],
     },
     {
       id: "the-outlier",
-      heading: "The tyranny of one outlier",
+      heading: "The influence of one outlier",
       paragraphs: [
-        "Two rogue points have crept into otherwise sensible data. Squared error does not merely notice them — it obsesses. The biggest square dwarfs every other penalty on the plot, and to shrink that one square the line abandons the honest crowd and lurches toward the outliers.",
-        "Try it with your own hand: drag that high rogue point further out and watch the MSE in the readout climb while the line tips away from the honest crowd to chase it. One point in thirty, dictating the line.",
-        "This is not a bug. Squared error is doing exactly what it was told: make the largest miss small, whatever it costs the rest. Whether that is what you wanted is a different question — and it is the reason other loss functions exist.",
+        "Two extreme points have crept into otherwise sensible data. Squared error does not merely notice them — it weights them heavily. The biggest square dwarfs every other penalty on the plot, and to shrink that one square the fitted line shifts toward the high-leverage points.",
+        "Try it with your own hand: drag that high point further out and watch the MSE in the readout climb while the line tips away from the main cluster to chase it. One point in thirty, pulling the fit.",
+        "This is not a bug. Squared error minimizes the total quadratic penalty, which gives large residuals disproportionate influence. Whether that is what you wanted is a different question — and it is the reason other loss functions exist.",
       ],
     },
     {

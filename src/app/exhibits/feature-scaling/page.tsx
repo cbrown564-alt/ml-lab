@@ -26,23 +26,23 @@ export default function FeatureScalingExhibit() {
       experiment={<FeatureScalingLab />}
       lede={
         <p>
-          A model that ignores units doesn&apos;t get the wrong answer — it takes a
-          thousand steps to reach an answer it should have found in ten. Here&apos;s
-          that slowness made visible on the loss surface, and the one-line fix.
+          Features measured on very different scales can make gradient-based optimization
+          zig-zag and distance-based models let one variable dominate. Scaling puts features
+          on comparable numeric ranges; it often improves conditioning, but it does not
+          remove correlation.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll see why the same data can be easy or
-          agonising to fit — and reach for the one preprocessing step that rounds the
-          bowl.
+          You&apos;ll see how scale changes the optimization landscape, when standardization
+          helps, and which models barely care about it.
         </>
       }
       experimentLede={
         <>
-          Guardrails off. Flip between raw and standardised units, play and scrub the
-          descent, and read the condition number and step count change — then the
-          conditioning maths underneath.
+          Compare raw and standardized features on the same problem. Watch the path, safe
+          learning-rate range, and condition number change—without assuming standardization
+          always makes the surface perfectly round.
         </>
       }
     />

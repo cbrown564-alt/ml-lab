@@ -24,26 +24,23 @@ export default function LinearRegressionExhibit() {
       hero={<LinearRegressionHero />}
       lede={
         <p>
-          The straight line that started it all. Before the math, get your
-          hands on it: every point below is data the line must answer to, and
-          the line you see is always the best one available — for a very
-          particular meaning of &ldquo;best.&rdquo;
+          Linear regression fits a straight-line relationship between inputs and a numeric
+          target. Here, &ldquo;best&rdquo; means the line that minimizes the sum of squared
+          vertical residuals.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll see why a single stray point can
-          wrench the whole line off true — and what that word &ldquo;best&rdquo;
-          is really buying.
+          You&apos;ll see how residuals determine the fit, why squaring makes large misses
+          influential, and when a robust loss may be a better choice.
         </>
       }
       story={<LinearRegressionStory />}
       experiment={<LinearRegressionLab />}
       experimentLede={
         <>
-          Guardrails off. Drag the data, paint your own points, watch the fit
-          chase every move — or flip to Code and run the very same least-squares
-          model in Python, verified against the lab.
+          Drag or add points and watch the least-squares line refit instantly. Switch to
+          code to run the same calculation, then compare the result with the visual.
         </>
       }
     />

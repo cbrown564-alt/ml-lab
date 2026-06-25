@@ -26,23 +26,23 @@ export default function RegressionTaskExhibit() {
       experiment={<RegressionTaskLab />}
       lede={
         <p>
-          Before a single line is fit, one decision shapes everything: what are you
-          predicting? A regression task answers with a continuous number — and asks to be
-          judged not on right-or-wrong, but on how close.
+          A regression task predicts a quantity on a numeric scale: price, demand,
+          temperature, or time. Because near and far misses are different, you evaluate the
+          size of the errors—not just whether a prediction crossed an arbitrary cutoff.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll have <em>been</em> the model — predicting
-          continuous values by hand, feeling the loss as distance — and you&apos;ll tell a
-          regression task from a classification one on sight, by its target.
+          You&apos;ll be able to recognize a regression task from its target, choose a
+          distance-based metric, and explain what is lost when a continuous outcome is forced
+          into yes/no labels.
         </>
       }
       experimentLede={
         <>
-          Guardrails off. You&apos;re the model: for each student you see only the hours —
-          drag your predicted score, reveal the truth, and watch the error stack up as
-          distance. The total is the loss a real model would minimise.
+          Predict each score yourself, reveal the observed value, and watch the errors
+          accumulate. Then change the scoring rule to see why the metric must match the
+          decision.
         </>
       }
     />

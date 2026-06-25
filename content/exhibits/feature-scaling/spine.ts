@@ -59,7 +59,7 @@ export const featureScalingSpine: Spine<FeatureScalingFrame> = [
     frame: { scaling: "standardised" },
     terms: [
       { phrase: "a bowl", hue: "neutral" },
-      { phrase: "condition number near one", hue: "error" },
+      { phrase: "often improves conditioning", hue: "error" },
       { phrase: "a few strides", hue: "param" },
     ],
   },

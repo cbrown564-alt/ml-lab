@@ -37,10 +37,10 @@ import { journeys } from "@content/journeys/foundations";
 /** The four modes' purpose lines — lab-wide, so the promise reads identically
  * on every page. */
 const ACT_PURPOSE = {
-  see: "Form the mental model",
-  run: "Inspect the implementation",
-  break: "Learn the operating envelope",
-  explain: "Prove transfer",
+  see: "Build the picture",
+  run: "Try the model",
+  break: "Find its limits",
+  explain: "Apply the idea",
 } as const;
 
 export function ExhibitFrame({
@@ -175,10 +175,9 @@ export function ExhibitFrame({
         <p className="text-lg leading-relaxed text-ink-muted">
           {experimentLede ?? (
             <>
-              Guardrails off. Switch scenarios, build your own data, and turn the
-              knobs — the same instrument from the story, now yours to push past
-              where the walk-through stopped. Then read the very same model as the
-              maths underneath it.
+              Take control of the experiment. Change the scenario, edit the data,
+              and move the controls. Then connect what you see to the equations
+              underneath.
             </>
           )}
         </p>
@@ -199,10 +198,10 @@ export function ExhibitFrame({
     ? nextStop
       ? {
           title: nextStop.title,
-          href: isLive(nextStop.id) ? liveExhibits[nextStop.id].href : "/#map",
+          href: isLive(nextStop.id) ? liveExhibits[nextStop.id].href : "/#exhibits",
           live: isLive(nextStop.id),
         }
-      : { title: "the map", href: undefined, live: false }
+      : { title: "all exhibits", href: undefined, live: false }
     : undefined;
 
   // The four-act spine. See it and Run it are always present; Break it and Explain
@@ -220,10 +219,8 @@ export function ExhibitFrame({
               <div>
                 <div className="max-w-[68ch]">
                   <p className="text-lg leading-relaxed text-ink-muted">
-                    A concept isn&apos;t yours until you know its operating envelope.
-                    Drive it past the edge with your own hands, watch exactly how it
-                    breaks, name the cause, then repair it — the loop that turns a
-                    fact into intuition.
+                    Trigger the failure yourself. Watch the symptom, identify the
+                    cause, then repair it.
                   </p>
                 </div>
                 {breakIt && <div className="mt-6">{breakIt}</div>}
@@ -309,7 +306,7 @@ export function ExhibitFrame({
           exhibit in four passes — see it, run it, break it, explain it. */}
       <div className="mt-14">
         <p className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
-          Work it in four passes
+          Work through four stages
         </p>
         <div className="mt-4">
           <ExhibitSpine acts={acts} />
@@ -338,10 +335,10 @@ export function ExhibitFrame({
                   Next: <span className="text-ink">{nextStop.title}</span>
                   {" isn’t open yet — "}
                   <Link
-                    href="/#map"
+                    href="/#exhibits"
                     className="text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2"
                   >
-                    browse the map →
+                    browse all exhibits →
                   </Link>
                 </>
               )
@@ -349,10 +346,10 @@ export function ExhibitFrame({
               <>
                 Journey complete —{" "}
                 <Link
-                  href="/#map"
+                  href="/#exhibits"
                   className="text-accent underline decoration-1 underline-offset-4 transition-colors hover:decoration-2"
                 >
-                  back to the map →
+                  browse all exhibits →
                 </Link>
               </>
             )}

@@ -14,7 +14,7 @@ export const logisticRegressionCheck: ConceptCheck = {
       prompt: "On the parabola-split data, logistic regression plateaus around 78% and can't do better. Why can't more training rescue it?",
       options: [
         {
-          label: "The model draws one straight line, and no straight line follows a curve — it's a shape limit, not an optimiser one",
+          label: "More epochs cannot overcome the representational limit — with a suitable optimizer, training can find the best boundary in the current feature space, but that boundary is still straight",
           correct: true,
           feedback:
             "Right. The score b + w·x is linear, so the boundary is always straight. The true split is a parabola; gradient descent finds the best straight line, which miscuts the arms.",
@@ -22,7 +22,7 @@ export const logisticRegressionCheck: ConceptCheck = {
         {
           label: "The learning rate is too low; a bigger step would converge to the right boundary",
           feedback:
-            "There is no right straight boundary to converge to. Any learning rate finds the best line, and the best line still cuts straight across a curved split.",
+            "There is no curved straight boundary to converge to. A learning rate only changes how training gets there — any rate finds the best line available, and that line still cuts straight across a curved split.",
         },
         {
           label: "It needs more data; with enough points the line would follow the curve",
@@ -64,7 +64,7 @@ export const logisticRegressionCheck: ConceptCheck = {
       prompt: "Logistic regression trains on log-loss but you report accuracy. Why not just train on accuracy directly?",
       options: [
         {
-          label: "Accuracy is flat and full of ties — it gives gradient descent no slope; log-loss is smooth and rewards calibrated confidence",
+          label: "Accuracy is flat and full of ties — it gives gradient descent no slope; log-loss is smooth and rewards well-calibrated confidence when calibration holds",
           correct: true,
           feedback:
             "Right. Nudging the weights usually doesn't flip any label, so accuracy's gradient is zero almost everywhere. Log-loss changes smoothly with confidence, so descent has a direction to follow.",
@@ -104,7 +104,7 @@ export const logisticRegressionCheck: ConceptCheck = {
         placeholder:
           "e.g. failure vs temperature is … so a straight boundary … the cheap fix is … more data won't help because …",
         answer:
-          "Failure is a U-shaped (curved) function of temperature — high at both extremes, low in the comfortable middle — and a model linear in temperature alone can only draw a straight boundary, so it can't separate 'middle' from 'both ends'. The cheapest fix is the x₁² move from the parabola: add a temperature-squared feature so the boundary can bend, and keep the interpretable logistic model. A deep network would work but is overkill for one known curve, and more failure examples won't help — a structurally linear model can't represent 'high at both ends' at any sample size.",
+          "Failure is a U-shaped (curved) function of temperature — high at both extremes, low in the comfortable middle — and a model linear in temperature alone can only draw a straight boundary, so it can't separate 'middle' from 'both ends'. The cheapest fix is the x₁² move from the parabola: add a temperature-squared feature so the boundary can bend, and keep the interpretable logistic model. More training on the same one-feature linear model won't help; a larger or differently featured model could. A deep network would work but is overkill for one known curve.",
       },
       difficulty: 3,
       targets: ["logreg:transfer-curve"],

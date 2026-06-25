@@ -30,7 +30,7 @@ export const regressionTaskSpine: Spine<RegressionTaskFrame> = [
     frame: { mode: "classification" },
     terms: [
       { phrase: "pass or fail", hue: "prediction" },
-      { phrase: "accuracy, not distance", hue: "truth" },
+      { phrase: "error types and costs", hue: "truth" },
     ],
     predict: {
       prompt:
@@ -60,7 +60,7 @@ export const regressionTaskSpine: Spine<RegressionTaskFrame> = [
     frame: { mode: "regression" },
     terms: [
       { phrase: "predict a number", hue: "prediction" },
-      { phrase: "score by distance", hue: "error" },
+      { phrase: "evaluate the size of the errors", hue: "error" },
     ],
   },
 ];

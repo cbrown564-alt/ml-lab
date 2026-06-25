@@ -44,7 +44,7 @@ export const lossFunctionsSpine: Spine<LossFunctionsFrame> = [
         {
           label: "The absolute-error line — it treats every point the same",
           feedback:
-            "Equal treatment is exactly why it won't lunge — a far point is just one more unit of penalty, not a tyrant. Step on and see which line actually moves.",
+            "A far point's influence grows linearly rather than quadratically — so the absolute-error line won't lunge the way squared error does. Step on and see which line actually moves.",
         },
         {
           label: "All three move the same — it's the same data",

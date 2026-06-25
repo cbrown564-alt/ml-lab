@@ -14,10 +14,10 @@ export const regressionTaskCheck: ConceptCheck = {
       prompt: "Scoring the good model by accuracy, the number swung from a quarter to 100% as you slid the “close enough” band. Why is that damning?",
       options: [
         {
-          label: "Accuracy on a continuous target depends on an arbitrary cutoff, so the score is whatever band you pick — it tells you nothing about the model",
+          label: "Accuracy on a continuous target depends on an arbitrary cutoff unless the tolerance is defined by the real decision before evaluation — so the score can be whatever band you pick",
           correct: true,
           feedback:
-            "Right. “Correct” needs a threshold the data doesn't supply; choose it and you choose the score. A metric you can dial to any value can't be measuring the model — distance can't be gamed this way.",
+            "Right. “Correct” needs a threshold the data doesn't supply; choose it after the fact and you choose the score. A clinically or commercially meaningful tolerance can be a valid secondary metric, but it isn't a universal default.",
         },
         {
           label: "The model genuinely got better as the band widened",
@@ -39,10 +39,10 @@ export const regressionTaskCheck: ConceptCheck = {
       prompt: "What makes a supervised problem a regression task rather than a classification one?",
       options: [
         {
-          label: "The target is a continuous quantity, so a prediction is scored by distance, not right/wrong",
+          label: "The target is a continuous quantity, so a prediction is scored by how far off it is, not simply right or wrong",
           correct: true,
           feedback:
-            "Exactly. The target's type defines the task: continuous → regression → distance; categorical → classification → accuracy. The model you choose comes after.",
+            "Right. The target's type defines the task: continuous → regression → distance-based metrics; categorical → classification → error-type metrics. The model you choose comes after.",
         },
         {
           label: "Regression uses a straight line and classification uses curves",
@@ -106,7 +106,7 @@ export const regressionTaskCheck: ConceptCheck = {
         placeholder:
           "e.g. price is continuous, so 'accuracy within $1,000' is… the honest number is…",
         answer:
-          "Price is a continuous target, so judging it right-or-wrong against a $1,000 band is the wrong frame entirely — the '3% accurate' figure is an artefact of an arbitrarily tight threshold (widen the band and you can report any 'accuracy' you like). Regression is judged on distance, not a verdict. The honest summary is the average miss — mean absolute error, ~$9,000, ideally as a percentage of price (~2% on $400k homes) — which here suggests the model is fine and only the metric was broken.",
+          "Price is a continuous target, so judging it right-or-wrong against a $1,000 band is the wrong frame — the '3% accurate' figure is an artifact of an arbitrarily tight threshold (widen the band and you can report any 'accuracy' you like). Regression is judged on distance, not a verdict. The more interpretable summary is the average miss — mean absolute error, ~$9,000, ideally as a percentage of price (~2% on $400k homes) — but whether that is good enough depends on the baseline and the decision the estimate supports.",
       },
       difficulty: 3,
       targets: ["rt:transfer-metric"],

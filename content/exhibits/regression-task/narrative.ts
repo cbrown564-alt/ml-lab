@@ -24,26 +24,26 @@ export const regressionTaskNarrative: ExhibitNarrative = {
       id: "distance",
       heading: "“Good” means close",
       paragraphs: [
-        "Because the answer is a number, a prediction is rarely exactly right — and that's fine. What matters is how far off it is. The error of one prediction is the distance between it and the truth; the quality of the whole model is the total of those distances. That's what you felt predicting by hand: not right-or-wrong, but near-or-far. Minimising that total distance is the entire job of a regression model.",
+        "Because the answer is a number, a prediction is rarely exactly right — and that's fine. What matters is how far off it is. The error of one prediction is the distance between it and the truth; a regression metric aggregates the misses — for example with absolute or squared error. That's what you felt predicting by hand: not right-or-wrong, but near-or-far. Minimizing that aggregate distance is the core job of a regression model.",
       ],
     },
     {
       id: "classification-contrast",
       heading: "Change the target, change the task",
       paragraphs: [
-        "Now split the same scores at a pass line. The question becomes pass or fail: a category, not a number. The prediction is no longer a point on a scale but one of two labels, and “off by 4 points” stops meaning anything — a guess is simply right or wrong. That's a classification task, and accuracy, not distance, is its score. Same students, same features; the target's type is what made it a different problem.",
+        "Now split the same scores at a pass line. The question becomes pass or fail: a category, not a number. The prediction is no longer a point on a scale but one of two labels, and “off by 4 points” stops meaning anything — a categorical prediction creates different error types, and the useful metric depends on their costs. That's a classification task. Same students, same features; the target's type is what made it a different problem.",
       ],
     },
     {
       id: "framing-first",
       heading: "The framing dictates everything",
       paragraphs: [
-        "Continuous target → regression → predict a number → score by distance. Categorical target → classification → predict a class → score by accuracy. The choice isn't cosmetic: it sets what the model outputs, which loss it minimises, and which metric tells you whether it's any good. Choosing the framing — and the metric that matches it — is a decision you make before training anything.",
+        "Continuous target → regression → predict a quantity → evaluate the size and pattern of the errors. Categorical target → classification → predict a class or probability → evaluate the error types and decision costs. The choice isn't cosmetic: it sets what the model outputs, which loss it minimizes, and which metric tells you whether it's any good. Choosing the framing — and the metric that matches it — is a decision you make before training anything.",
       ],
     },
   ],
   fieldNotes: [
     "The line between the two tasks can be a judgement call. “How many days until churn?” is regression; “will they churn this month?” is classification — same underlying reality, framed by what decision you need. Pick the framing the decision actually requires, not the one that's easiest to score.",
-    "Mismatching the metric to the task is a classic own-goal: grading a regression model by exact-match accuracy makes an excellent model look worthless (it's almost never exactly right), and grading a classifier by distance is meaningless. The metric has to measure the kind of error the task can make.",
+    "Mismatching the metric to the task is a classic own-goal: grading a regression model by exact-match accuracy makes an excellent model look worthless (it's almost never exactly right), and grading a classifier by distance is meaningless. The metric has to measure the kind of error the task can make and the decision it supports.",
   ],
 };

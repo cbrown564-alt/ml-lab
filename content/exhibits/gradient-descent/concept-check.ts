@@ -122,7 +122,7 @@ export const gradientDescentCheck: ConceptCheck = {
         "Break it on purpose: find a learning rate that makes the descent diverge, press play, and watch the first overshoot happen.",
       taskEvent: "gradient-descent:diverged",
       feedback:
-        "You've met the failure mode that haunts every real training run — loss climbing by powers of ten, each step landing higher than the last. Now you know its face, and the knob that causes it.",
+        "You've met a common optimization failure — loss climbing by powers of ten, each step landing higher than the last. Now you know its face, and the knob that often causes it.",
       difficulty: 1,
       targets: ["gd:divergence"],
     },
@@ -137,7 +137,7 @@ export const gradientDescentCheck: ConceptCheck = {
         placeholder:
           "e.g. the step size is probably… I'd… but the risk is…",
         answer:
-          "A slow-but-steady fall is the “too timid” regime — the learning rate is too small, so every step inches downhill. The fix is a larger learning rate for bigger strides. The one risk: push it past the surface's stability ceiling and the steps overshoot the valley, so the loss climbs by powers of ten instead — the exact divergence you triggered in “over the edge.” So raise it, but stay under that cliff (and if unsure, raise it gradually and watch the loss curve).",
+          "A slow-but-steady fall is one plausible cause — the learning rate may be too small — but first inspect the gradient norm, feature scaling, conditioning, batch noise, and whether the model has reached a plateau. If the evidence points to step size, increase it carefully and watch for oscillation or divergence. The risk in raising it: push past the surface's stability ceiling and the steps overshoot the valley, so the loss climbs by powers of ten instead. So raise it gradually and watch the loss curve.",
       },
       difficulty: 3,
       targets: ["gd:transfer-step-size"],

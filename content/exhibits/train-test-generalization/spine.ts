@@ -23,14 +23,14 @@ export const trainTestGeneralizationSpine: Spine<TrainTestFrame> = [
     frame: { stage: "lottery" },
     terms: [
       { phrase: "a coin toss", hue: "prediction" },
-      { phrase: "a different test error", hue: "error" },
+      { phrase: "a different validation error", hue: "error" },
     ],
     predict: {
       prompt:
-        "One split gave a particular test error. You reshuffle to a new random split — same model, same data, different held-out points. What does the test error do?",
+        "One split gave a particular validation error. You reshuffle to a new random split — same model, same data, different held-out points. What does the validation error do?",
       options: [
         {
-          label: "It jumps around — with a small holdout, which points you test on swings the score",
+          label: "It jumps around — with a small holdout, which points you validate on swings the score",
           correct: true,
           feedback:
             "Right. A single split is one noisy sample of the model's skill. Reshuffle and the score scatters — sometimes a lot. Step on and watch the spread.",
@@ -38,7 +38,7 @@ export const trainTestGeneralizationSpine: Spine<TrainTestFrame> = [
         {
           label: "It stays the same — the model didn't change, so its error can't either",
           feedback:
-            "The model is fixed, but the test error depends on which points it's measured against, and that changed. Step on and watch it jump.",
+            "The model is fixed, but the validation error depends on which points it's measured against, and that changed. Step on and watch it jump.",
         },
         {
           label: "It always goes up — a new split is harder than the first",

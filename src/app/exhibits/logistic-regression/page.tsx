@@ -26,24 +26,21 @@ export default function LogisticRegressionExhibit() {
       experiment={<LogisticRegressionLab />}
       lede={
         <p>
-          When the answer isn&apos;t a number but a which-one, you reach for
-          classification. Logistic regression is its workhorse — and linear
-          regression&apos;s closest cousin: the same linear score, bent through one
-          function into a probability, split by one line.
+          Logistic regression turns a linear score into an estimated probability for a binary
+          outcome. The score stays linear in the features; the sigmoid maps it into 0–1,
+          and a threshold turns it into a decision.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll watch gradient descent swing a line into
-          the gap between two classes — and read off not just a verdict but how sure the
-          model is, everywhere.
+          You&apos;ll trace the path from linear score to probability to boundary—and see
+          exactly why a straight boundary fails on a curved problem.
         </>
       }
       experimentLede={
         <>
-          Guardrails off. Press Train and scrub the descent, toggle the probability
-          field, and watch the boundary settle into the overlap the data won&apos;t let
-          it cross — then read the same model as the maths underneath.
+          Train the model and scrub through the updates. Toggle the probability field, then
+          add a nonlinear feature to compare a straight boundary with a curved one.
         </>
       }
     />

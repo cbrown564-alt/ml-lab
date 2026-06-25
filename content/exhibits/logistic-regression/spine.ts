@@ -16,7 +16,7 @@ export const logisticRegressionSpine: Spine<LogisticFrame> = [
     terms: [
       { phrase: "the sigmoid", hue: "prediction" },
       { phrase: "confident", hue: "prediction" },
-      { phrase: "a coin flip", hue: "neutral" },
+      { phrase: "probability 0.5", hue: "neutral" },
     ],
   },
   {
@@ -61,7 +61,7 @@ export const logisticRegressionSpine: Spine<LogisticFrame> = [
     sectionId: "probabilities",
     frame: { step: 220, showProb: true },
     terms: [
-      { phrase: "a probability everywhere", hue: "prediction" },
+      { phrase: "an estimated probability everywhere", hue: "prediction" },
       { phrase: "the wrong side", hue: "error" },
       { phrase: "where it isn't sure", hue: "neutral" },
     ],

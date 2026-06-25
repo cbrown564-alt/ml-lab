@@ -26,23 +26,21 @@ export default function ClassificationTaskExhibit() {
       experiment={<ClassificationTaskLab />}
       lede={
         <p>
-          A classifier gives you a probability; turning it into a decision is a separate
-          task — and where you draw the line trades catching every positive against
-          crying wolf. Accuracy alone hides that trade; the confusion matrix shows it.
+          A classifier often produces a score or estimated probability. Turning that score
+          into an action requires a threshold—and moving it changes the balance between
+          false alarms and missed positives.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll drag one threshold and watch precision and
-          recall pull apart — and know why the right line depends on what a mistake costs,
-          not on the model.
+          You&apos;ll read a confusion matrix, distinguish precision from recall, and choose
+          a threshold from the cost of each error—not from a default.
         </>
       }
       experimentLede={
         <>
-          Guardrails off. Drag the decision threshold across the probability strip, watch
-          the confusion matrix re-count and precision, recall, accuracy, and F1 move — then
-          the metrics as the maths underneath.
+          Drag the threshold across the score distribution. Watch the confusion matrix and
+          metrics update, then connect each number to the counts it summarizes.
         </>
       }
     />

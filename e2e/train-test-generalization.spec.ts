@@ -16,7 +16,7 @@ test.describe("train-test-generalization exhibit", () => {
   });
 
   test("the Story opens on the split graphic", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "Train, Test & Generalization" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Train, Validate, Test & Generalize" })).toBeVisible();
     await expect(panel(page).getByText(/One split — one number/i)).toBeVisible();
   });
 
@@ -28,7 +28,7 @@ test.describe("train-test-generalization exhibit", () => {
     await reshuffle.click();
     // three splits drawn now (the initial + two reshuffles) — the spread strip is live
     await expect(panel(page).getByText(/3 splits drawn/i)).toBeVisible();
-    await expect(panel(page).getByRole("img", { name: /Distribution of test error across .* random splits/i })).toBeVisible();
+    await expect(panel(page).getByRole("img", { name: /Distribution of validation error across .* random splits/i })).toBeVisible();
   });
 
   test("See it enforces a committed prediction before the reveal", async ({ page }) => {
@@ -48,6 +48,6 @@ test.describe("train-test-generalization exhibit", () => {
   test("Explain it pairs the check with a live companion", async ({ page }) => {
     await openTab(page, "Explain it");
     await expect(panel(page).getByText(/Answer against the spread/i)).toBeVisible();
-    await expect(panel(page).getByText(/the same model.s test error swung/i)).toBeVisible();
+    await expect(panel(page).getByText(/the same model.s validation error swung/i)).toBeVisible();
   });
 });

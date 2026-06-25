@@ -11,11 +11,11 @@ export const classificationTaskFailures: FailureGallery = {
     {
       id: "accuracy-on-imbalance",
       primitive: "class-imbalance",
-      title: "95% accurate, and useless",
+      title: "High accuracy, zero recall",
       trigger: "Report accuracy on a dataset where one class is rare (fraud, a rare disease), or tune the threshold to maximise it.",
       symptom: "A model that predicts the majority class for everything scores ~95%+ accuracy while catching none of the rare positives — recall 0.",
-      diagnosis: "Accuracy rewards getting the majority right, and the majority is negative, so it hides total failure on the class you actually care about. Is the model skilled, or just lazy?",
-      repair: "Judge with recall, precision, F1, and the confusion matrix; resample, reweight, or move the threshold to surface the rare class.",
+      diagnosis: "Accuracy alone is inadequate here: it rewards getting the majority right, and the majority is negative, so it hides total failure on the class you actually care about.",
+      repair: "Judge with recall, precision, F1, and the confusion matrix; resample or reweight during training, or move the threshold at decision time to surface the rare class.",
       boundary: "On balanced classes where both errors cost the same, accuracy is a perfectly reasonable summary — the trap is specifically imbalance.",
     },
     {

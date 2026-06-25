@@ -9,7 +9,7 @@ import type { ExhibitNarrative } from "@/lib/narrative/schema";
 export const trainTestGeneralizationNarrative: ExhibitNarrative = {
   nodeId: "train-test-generalization",
   hook: [
-    "The most natural way to check a model is also the most misleading: score it on the data you trained it on. Of course it does well there — it has seen every one of those points. The only question that matters is how it does on data it hasn't seen, and answering it honestly turns out to be its own small discipline.",
+    "The most natural way to check a model is also the most misleading: score it on the data you trained it on. Of course it does well there — it has seen every one of those points. The question a generalizing model must answer is how it does on data it hasn't seen, and answering it honestly turns out to be its own small discipline.",
     "Here is one pool of points and one model. Everything you change is how the data is split and scored — and how much that choice moves the verdict.",
   ],
   story: [
@@ -17,21 +17,21 @@ export const trainTestGeneralizationNarrative: ExhibitNarrative = {
       id: "training-flatters",
       heading: "The training score flatters",
       paragraphs: [
-        "Fit the model on the gold training points and it threads them closely — the training error is low. But that number is the model grading its own homework: it was tuned to fit exactly those points. Score it instead on the hollow held-out points, which it never saw during fitting, and the error is higher and honest. The gap between the two is the model's optimism made visible.",
+        "Fit the model on the gold training points and it threads them closely — the training error is low. But that number is the model grading its own homework: it was tuned to fit exactly those points. Score it instead on the hollow held-out points, which it never saw during fitting, and the error is often higher — though on a small or easier holdout it may be lower by chance. The gap between the two is the model's optimism made visible.",
       ],
     },
     {
       id: "the-lottery",
       heading: "A single split is a lottery",
       paragraphs: [
-        "So hold some data out and report the test error — done? Not quite. Which points land in the test set was a coin toss, and with a small holdout that toss matters enormously. Reshuffle the split and the very same model on the very same data posts a different test error, sometimes wildly so. One split gives you one sample of the model's true skill, with a generous helping of luck baked in.",
+        "So hold some data out and report the validation error — done? Not quite. Which points land in the validation set was a coin toss, and with a small holdout that toss matters enormously. Reshuffle the split and the very same model on the very same data posts a different validation error, sometimes wildly so. One split gives you one sample of the model's true skill, with a generous helping of luck baked in.",
       ],
     },
     {
       id: "cross-validation",
       heading: "Cross-validation averages the luck out",
       paragraphs: [
-        "The fix is to stop trusting any single split. Cross-validation splits the data into k folds, then takes turns: train on k−1 folds, test on the one held out, and rotate until every point has been a test point exactly once. Average the k test errors and the luck of any one split washes out — the estimate barely moves when you reshuffle. That stable number, not a lucky single split, is what you report and compare models by.",
+        "The fix is to stop trusting any single split. K-fold cross-validation rotates the validation fold: fit on k−1 folds, score on the remaining fold, and repeat. Averaging the fold scores uses the training data more efficiently and reveals how sensitive the estimate is to the split. It reduces dependence on one lucky holdout; it does not remove uncertainty. Use cross-validation for model selection, and reserve a final untouched test set for the final estimate.",
       ],
     },
     {

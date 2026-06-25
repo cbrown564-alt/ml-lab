@@ -88,7 +88,7 @@ export const nodes: ConceptNode[] = [
   },
   {
     id: "train-test-generalization",
-    title: "Train, Test & Generalization",
+    title: "Train, Validate, Test & Generalize",
     oneLiner: "The only score that matters is on data the model has never seen.",
     domain: "ml-practice",
     tags: ["evaluation"],

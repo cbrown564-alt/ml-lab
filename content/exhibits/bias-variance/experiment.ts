@@ -6,7 +6,7 @@ import fixtures from "@/lib/models/fixtures/polynomial.json";
  * Bias–variance experiment spec. One control — the polynomial degree — sweeps the
  * model from too-simple (high bias, underfits) to too-flexible (high variance,
  * overfits). The training points are the spec's dataset; the held-out test points
- * (the only honest score) are read straight from the fixture by the lab. Both come
+ * (validation error for model selection) are read straight from the fixture by the lab. Both come
  * from a smooth target + noise, so the U-shaped test error is real, not staged.
  */
 export const biasVarianceExperiment: ExperimentSpec = {
@@ -36,7 +36,7 @@ export const biasVarianceExperiment: ExperimentSpec = {
       id: "the-tradeoff",
       title: "The bias–variance tradeoff",
       prompt:
-        "Sweep the degree from 1 upward. At low degree the model is too stiff to follow the curve — it underfits, and both training and test error are high (that's bias). Crank it up and the curve wriggles through every training point — training error vanishes, but it has memorised the noise, so test error climbs (that's variance). The honest score, on data it never saw, is lowest somewhere in the middle.",
+        "Sweep the degree from 1 upward. At low degree the model is too stiff to follow the curve — it underfits, and both training and validation error are high (that's bias). Crank it up and the curve tracks the training points closely — training error vanishes, but it has memorized the noise, so validation error climbs (that's variance). Validation error, on held-out data used for selection, is often lowest somewhere in the middle.",
       datasetId: "train",
     },
   ],

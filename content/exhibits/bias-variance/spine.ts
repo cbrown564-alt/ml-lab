@@ -34,7 +34,7 @@ export const biasVarianceSpine: Spine<BiasVarianceFrame> = [
           label: "Drops, bottoms out, then climbs again — a U",
           correct: true,
           feedback:
-            "Exactly. Too stiff is bias, too flexible is variance, and the honest score is lowest in between. Step on and watch the U appear.",
+            "Exactly. Too stiff is bias, too flexible is variance, and validation error is often lowest in between. Step on and watch the U appear.",
         },
         {
           label: "Stays flat — test error doesn't care about degree",

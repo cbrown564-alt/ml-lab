@@ -26,23 +26,21 @@ export default function DataLeakageExhibit() {
       experiment={<DataLeakageLabLazy />}
       lede={
         <p>
-          The most dangerous number in machine learning is a validation score that
-          looks great and is a lie. Here&apos;s one manufactured from pure noise — and
-          the one discipline that makes it vanish.
+          Data leakage happens when information unavailable at prediction time influences
+          training or evaluation. The result is an optimistic score that can collapse on
+          truly unseen data.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll watch a model &ldquo;explain&rdquo; half
-          the variance of random noise — and learn to spot, and close, the side channel
-          that let it.
+          You&apos;ll manufacture a strong score from pure noise, locate the leak in the
+          pipeline, and rebuild the evaluation so every fold is genuinely held out.
         </>
       }
       experimentLede={
         <>
-          Guardrails off. Flip between selecting features on all the data and selecting
-          inside each fold, and watch the cross-validation R² — and the predicted-vs-actual
-          scatter — swing between confident skill and the honest nothing.
+          Compare feature selection performed before cross-validation with selection fitted
+          inside each fold. Watch the apparent R² vanish when the pipeline stops peeking.
         </>
       }
     />

@@ -22,27 +22,27 @@ const openExhibits = nodes.filter((n) => isLive(n.id));
 const WINGS: { title: string; blurb: string; ids: string[] }[] = [
   {
     title: "Groundwork",
-    blurb: "What learning from data even means.",
+    blurb: "What learning from data means—and what a model can actually see.",
     ids: ["what-is-ml", "the-dataset"],
   },
   {
     title: "The first models",
-    blurb: "Fit a line, draw a boundary.",
+    blurb: "Predict a number. Draw a boundary.",
     ids: ["regression-task", "linear-regression", "classification-task", "logistic-regression"],
   },
   {
     title: "How models learn",
-    blurb: "The machinery that does the fitting.",
+    blurb: "Turn error into an update.",
     ids: ["loss-functions", "the-gradient", "gradient-descent", "feature-scaling"],
   },
   {
     title: "Keeping it honest",
-    blurb: "Why a model fails — and how to tell.",
+    blurb: "Measure what generalizes and spot what misleads.",
     ids: ["train-test-generalization", "overfitting-regularization", "bias-variance", "data-leakage"],
   },
   {
     title: "Going deeper",
-    blurb: "Simple parts, stacked into something powerful.",
+    blurb: "Combine simple units into flexible models.",
     ids: ["neural-network-fundamentals"],
   },
 ];
@@ -88,28 +88,29 @@ export default function Home() {
       <main className="mx-auto w-full max-w-6xl px-8">
         <section className="pt-20 pb-32 text-center">
           <p className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
-            An interactive atlas of machine learning
+            Interactive machine-learning exhibits
           </p>
           <h1 className="mx-auto mt-5 max-w-[20ch] text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
-            Get your hands on machine learning.
+            Build intuition by running the model.
           </h1>
           <p className="mx-auto mt-6 max-w-[58ch] text-xl leading-relaxed text-balance text-ink-muted">
-            A laboratory, not a course. Every concept is an exhibit with a live
-            experiment at its heart — drag the data, turn the knobs, break the
-            model on purpose. Pick a jewel and step inside.
+            ML Lab turns core machine-learning ideas into hands-on exhibits. See
+            the idea, change the inputs, push the model until it fails, then
+            explain what happened. Explore freely or follow the Foundations
+            journey.
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
             <Link
-              href={liveExhibits["linear-regression"].href}
+              href={liveExhibits["what-is-ml"].href}
               className="rounded-full bg-accent px-6 py-2.5 font-medium text-accent-ink transition-opacity hover:opacity-90"
             >
-              Enter the first exhibit
+              Start with What Is Machine Learning
             </Link>
             <a
-              href="#foundations"
+              href="#exhibits"
               className="rounded-full border border-line px-6 py-2.5 text-ink-muted transition-colors hover:border-ink-faint hover:text-ink"
             >
-              Follow the Foundations path
+              Browse all exhibits
             </a>
           </div>
         </section>
@@ -125,7 +126,7 @@ export default function Home() {
         >
           <div className="mx-auto max-w-6xl px-8">
             <h2 className="mb-12 text-center font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
-              Now showing · {openExhibits.length} exhibits, all open
+              {openExhibits.length} interactive exhibits
             </h2>
             <JewelGallery wings={wings} edges={jewelEdges} />
           </div>
@@ -140,10 +141,10 @@ export default function Home() {
           <ol className="mt-6 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
             {(
               [
-                ["See it", "Form the mental model — the visual intuition, before the math."],
-                ["Run it", "Inspect the implementation — drive the model, read it as code and maths."],
-                ["Break it", "Learn the operating envelope — trigger the failures and diagnose them."],
-                ["Explain it", "Prove transfer — reconstruct the idea on a fresh, unseen case."],
+                ["See it", "Build a visual intuition."],
+                ["Run it", "Change the inputs and inspect the model."],
+                ["Break it", "Trigger a failure and diagnose the cause."],
+                ["Explain it", "Apply the idea to a new case."],
               ] as const
             ).map(([verb, gloss], i) => (
               <li key={verb} className="flex gap-3">
@@ -166,10 +167,9 @@ export default function Home() {
 
       <footer className="border-t border-line">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-baseline justify-between gap-4 px-8 py-8 text-sm text-ink-faint">
-          <span>ML Lab — an interactive museum of machine learning.</span>
+          <span>ML Lab — hands-on exhibits for building machine-learning intuition.</span>
           <span>
-            {openExhibits.length} of {nodes.length} exhibits open · best on a big
-            screen
+            {openExhibits.length} exhibits · designed for laptop and desktop
           </span>
         </div>
       </footer>

@@ -26,23 +26,23 @@ export default function TheGradientExhibit() {
       experiment={<GradientLab />}
       lede={
         <p>
-          To go downhill you first have to know which way is down — and on a surface over
-          many variables, that&apos;s a real question. The gradient is the answer: one
-          arrow that points the steepest way up, from anywhere.
+          On a differentiable surface, the gradient collects one partial derivative per
+          variable. It points in the direction of steepest local increase; its negative
+          points toward steepest local decrease.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll read a slope off a single arrow — its
-          direction, its steepness, why it&apos;s square to the contour — and see exactly
-          what gradient descent steps against.
+          You&apos;ll read a gradient&apos;s direction and magnitude, see why it is
+          perpendicular to a level curve at regular points, and learn why a zero gradient
+          does not prove you found the best point.
         </>
       }
       experimentLede={
         <>
-          Guardrails off. Drag the point anywhere on the landscape and watch the gradient
-          arrow swing to point uphill, stretch where it&apos;s steep, and vanish at a peak;
-          flip to descent to see the step itself — then the maths of why underneath.
+          Drag the point across the surface and watch the gradient change. Flip to descent
+          to see a local step, then inspect what happens at peaks, valleys, saddles, and
+          flat regions.
         </>
       }
     />

@@ -38,7 +38,7 @@ export const neuralNetworkFundamentalsCheck: ConceptCheck = {
       prompt: "A big network hit 97% on the training set but only 82% on held-out data, while a small one got ~90% on both. What happened?",
       options: [
         {
-          label: "The big network had the capacity to memorise the training noise — it overfit; the small one learned the rule and generalised",
+          label: "The big network had the capacity to memorize the training noise — it overfit; the small one learned the rule and generalized",
           correct: true,
           feedback:
             "Exactly. The train-test gap is the tell. Extra capacity let the big net fit individual noisy points (islands in the boundary), which doesn't transfer. More units is the wrong fix here.",
@@ -46,7 +46,7 @@ export const neuralNetworkFundamentalsCheck: ConceptCheck = {
         {
           label: "The big network just needs more training to close the gap",
           feedback:
-            "More training widens the gap, not closes it — it lets the big net memorise the noise even more thoroughly. The fix is less capacity or regularisation, not more epochs.",
+            "More training can widen the gap once the network is fitting noise — it lets the big net memorize the noise even more thoroughly. The fix is less capacity or regularization, not more epochs.",
         },
         {
           label: "The held-out set was simply harder than the training set",
@@ -72,7 +72,7 @@ export const neuralNetworkFundamentalsCheck: ConceptCheck = {
         {
           label: "100% — one hidden unit is still a full network, so it can learn anything",
           feedback:
-            "Being a network isn't enough — XOR needs more than one hidden unit to carve the X (a few train it reliably). One unit lacks the capacity and tops out around 75%, a coin flip better than chance.",
+            "Being a network isn't enough — XOR needs more than one hidden unit to carve the X (a few train it reliably). One unit lacks the capacity and tops out at about 75% in this XOR setup.",
         },
         {
           label: "50% — one hidden unit is no better than guessing",
@@ -90,7 +90,7 @@ export const neuralNetworkFundamentalsCheck: ConceptCheck = {
       prompt: "Break it on purpose: push the hidden units up on the noisy data and watch the boundary grow islands around individual points while the held-out score drops — overfitting in real time.",
       taskEvent: "neural-network-fundamentals:overfitting",
       feedback:
-        "You've seen capacity cut both ways: enough to learn the rule is good, enough to memorise the noise is overfitting. The held-out gap, not the train score, is what tells you which.",
+        "You've seen capacity cut both ways: enough to learn the rule is good, enough to memorize the noise is overfitting. The held-out gap, not the train score, is what tells you which.",
       difficulty: 1,
       targets: ["nn:break"],
     },
@@ -105,7 +105,7 @@ export const neuralNetworkFundamentalsCheck: ConceptCheck = {
         placeholder:
           "e.g. training loss near zero but worse validation means … so more capacity … the fix is …",
         answer:
-          "Near-zero training loss with a worsening validation score is overfitting — the network has enough capacity to memorise the training set, including its noise, so it fits what it has seen too well and generalises worse. Doubling the size again gives it even more room to memorise, widening the gap. The fix is the opposite move: reduce capacity or add regularisation, and judge every change by the held-out score, not the training loss — training loss hitting zero is the warning, not the goal.",
+          "Near-zero training loss with a worsening validation score is overfitting — the network has enough capacity to memorize the training set, including its noise, so it fits what it has seen too well and generalizes worse. Doubling the size again gives it even more room to memorize, widening the gap. The fix is the opposite move: reduce capacity or add regularization, and judge every change by the held-out score, not the training loss — in this small noisy dataset, near-zero training loss paired with worse validation is the warning.",
       },
       difficulty: 3,
       targets: ["nn:transfer-capacity"],

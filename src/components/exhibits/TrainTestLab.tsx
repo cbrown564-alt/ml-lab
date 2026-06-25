@@ -66,16 +66,16 @@ export function TrainTestLab() {
 
           <StatGrid
             direction="col"
-            caption={`${split.train.length} train · ${split.test.length} test · ${history.length} splits drawn`}
+            caption={`${split.train.length} train · ${split.test.length} validation · ${history.length} splits drawn`}
             stats={[
               { label: "training error", value: score.trainErr.toFixed(3), hue: "var(--viz-neutral-ink)", note: "on data it has seen — flatters" },
-              { label: "test error (this split)", value: score.testErr.toFixed(3), hue: "var(--viz-prediction)", note: "honest, but jumps every reshuffle" },
+              { label: "validation error (this split)", value: score.testErr.toFixed(3), hue: "var(--viz-prediction)", note: "honest, but jumps every reshuffle" },
               { label: "5-fold CV error", value: CV.toFixed(3), hue: "var(--viz-truth-ink)", note: "averaged over folds — stable" },
             ]}
           />
 
           <p className="text-sm leading-relaxed text-ink-faint">
-            Keep reshuffling: the blue test-error histogram spreads as the splits disagree,
+            Keep reshuffling: the blue validation-error histogram spreads as the splits disagree,
             but the cross-validation mark barely moves. That spread is why you never trust a
             single split.
           </p>
@@ -87,7 +87,7 @@ export function TrainTestLab() {
             height={440}
             xDomain={[-0.02, 1.02]}
             yDomain={[-1.8, 1.8]}
-            ariaLabel={`A degree-${TT_DEGREE} polynomial fit on ${split.train.length} training points (gold) and scored on ${split.test.length} held-out points (hollow blue); training error ${score.trainErr.toFixed(3)}, test error ${score.testErr.toFixed(3)}.`}
+            ariaLabel={`A degree-${TT_DEGREE} polynomial fit on ${split.train.length} training points (gold) and scored on ${split.test.length} held-out points (hollow blue); training error ${score.trainErr.toFixed(3)}, validation error ${score.testErr.toFixed(3)}.`}
           >
             <Axes />
             <TestPoints points={split.test} />
@@ -95,7 +95,7 @@ export function TrainTestLab() {
             <DataPoints points={split.train} />
           </Plot>
           <figure className="mt-4 rounded-xl border border-line bg-raised p-3">
-            <figcaption className="mb-1 font-mono text-[11px] tracking-widest text-ink-faint uppercase">Test error across splits</figcaption>
+            <figcaption className="mb-1 font-mono text-[11px] tracking-widest text-ink-faint uppercase">Validation error across splits</figcaption>
             <ErrorSpreadStrip
               errs={history}
               axisMax={0.2}

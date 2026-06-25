@@ -9,7 +9,7 @@ import type { ExhibitNarrative } from "@/lib/narrative/schema";
 export const featureScalingNarrative: ExhibitNarrative = {
   nodeId: "feature-scaling",
   hook: [
-    "Two features — age in years, income in dollars — and the model treats a one-dollar change as the same size as a one-year change, because to gradient descent a number is just a number. The result isn't a wrong answer; it's a model that takes thousands of steps to find an answer it should have reached in ten.",
+    "Two features — age in years, income in dollars — and the raw numerical scales determine how changes in each feature affect distances and gradients. The result isn't a wrong answer; it's a model that takes thousands of steps to find an answer it should have reached in ten.",
     "Here is that slowness made visible. The same data, the same line being learned — but watch the surface the descent has to cross, and what one small change to the input does to it.",
   ],
   story: [
@@ -32,19 +32,19 @@ export const featureScalingNarrative: ExhibitNarrative = {
       id: "standardise",
       heading: "Round the bowl",
       paragraphs: [
-        "Now standardise the input — subtract its mean, divide by its spread, so it has mean zero and unit variance. The data hasn't changed; their description has. And the trough becomes a bowl: steepness equal in every direction, condition number near one. The biggest safe step jumps an order of magnitude, the zig-zag straightens out, and the walk is over in a few strides.",
+        "Now standardize the input — subtract its mean, divide by its spread, so it has mean zero and unit variance. The information is the same, but the coordinates and parameterization have changed. Standardization often reduces scale-driven anisotropy and raises the range of stable learning rates. Correlation between features can still leave the surface elongated, but the zig-zag often straightens and the walk finishes in far fewer strides.",
       ],
     },
     {
       id: "everywhere",
       heading: "Why it shows up everywhere",
       paragraphs: [
-        "Anything that compares features by magnitude inherits this: gradient descent's conditioning, the distances behind k-nearest-neighbours and k-means, the penalty in ridge and lasso that shrinks big-unit weights less. Standardising (or min-max scaling) is the cheap first move that makes all of them behave — and one of the few preprocessing steps you do almost without thinking.",
+        "Anything that compares features by magnitude inherits this: gradient descent's conditioning, the distances behind k-nearest-neighbors and k-means, the penalty in ridge and lasso that shrinks big-unit weights less. Standardizing (or min-max scaling) is a common first fix that often makes all of them behave better — and one of the few preprocessing steps you do almost without thinking.",
       ],
     },
   ],
   fieldNotes: [
-    "Tree-based models — decision trees, random forests, gradient boosting — split one feature at a time and never compare magnitudes, so they're immune: scaling buys them nothing. Knowing which models care is half of knowing when to bother.",
+    "Tree-based models — decision trees, random forests, gradient boosting — split one feature at a time and are largely invariant to monotonic rescaling in exact arithmetic, so scaling often buys them little. Knowing which models care is half of knowing when to bother.",
     "Fit the scaler on the training data only, then apply it to validation and test. Scaling on the whole dataset first quietly leaks the test set's distribution into training — the next exhibit's failure mode.",
   ],
 };

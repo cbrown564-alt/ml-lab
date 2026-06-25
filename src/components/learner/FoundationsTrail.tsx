@@ -208,14 +208,14 @@ export function FoundationsTrail() {
             You&rsquo;ve walked every stop.
           </p>
           <p className="mt-2 leading-relaxed text-ink-muted">
-            That&rsquo;s the whole Foundations trail behind you. Wander back through
-            the cabinet, or follow a connection somewhere new.
+            That&rsquo;s the whole Foundations trail behind you. Browse the exhibits
+            again, or follow a connection somewhere new.
           </p>
           <a
             href="#exhibits"
             className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-line px-5 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-ink-faint hover:text-ink"
           >
-            Back to the cabinet →
+            Browse all exhibits →
           </a>
         </div>
       )}

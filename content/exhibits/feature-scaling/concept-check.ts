@@ -38,10 +38,10 @@ export const featureScalingCheck: ConceptCheck = {
       prompt: "Standardising the input subtracts its mean and divides by its spread. What does that do to the loss surface?",
       options: [
         {
-          label: "It rounds the bowl — equal curvature in every direction, condition number near 1",
+          label: "It puts feature axes on comparable marginal scales, which often improves the condition number. It does not guarantee equal curvature because correlated features can still stretch the bowl.",
           correct: true,
           feedback:
-            "Right. Centring removes the tilt and unit variance equalises the steepness, so the stretched valley becomes a round bowl the descent can walk straight down.",
+            "Right. Centering and scaling remove unit mismatch. Decorrelation or whitening is a separate transformation.",
         },
         {
           label: "It moves the minimum closer to the start so there's less ground to cover",
@@ -105,7 +105,7 @@ export const featureScalingCheck: ConceptCheck = {
         placeholder:
           "e.g. lot size's range is ~500× age's, so in the distance it… the fix is… more data won't help because…",
         answer:
-          "Lot size ranges 0–50,000 while age ranges 0–100, so in the Euclidean distance k-NN uses, lot size's magnitude swamps age entirely — 'nearest' is decided almost only by lot size. The fix is the same one-line move the bowl needed: standardise both features (subtract the mean, divide by the spread) so they weigh comparably. Switching models or collecting more data won't help — k-NN doesn't learn feature weights, and any method that compares features by magnitude (distances, gradients, ridge penalties) inherits the same scaling problem.",
+          "Lot size ranges 0–50,000 while age ranges 0–100, so in the Euclidean distance k-NN uses, lot size's magnitude swamps age entirely — 'nearest' is decided almost only by lot size. Scaling is the first repair for a Euclidean-distance model: standardize both features (subtract the mean, divide by the spread) so they weigh comparably. Feature relevance and the distance metric still matter after that. A model that does not compare raw magnitudes — such as a tree — may behave differently, and more representative data can still improve the estimate once the metric is fixed.",
       },
       difficulty: 3,
       targets: ["scaling:transfer-distance"],

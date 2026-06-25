@@ -26,23 +26,21 @@ export default function BiasVarianceExhibit() {
       experiment={<BiasVarianceLab />}
       lede={
         <p>
-          You can fit the training data perfectly — and still build a worse model.
-          One knob, the model&apos;s flexibility, decides whether it&apos;s too stiff
-          to see the shape or flexible enough to memorise the noise. The honest score
-          is lowest in between.
+          As model flexibility grows, training error usually falls. Validation error often
+          falls at first, then rises when the model starts fitting noise. Bias and variance
+          name the two pressures behind that trade-off.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll watch training error and test error part
-          ways — and know why the best model is rarely the one that fits the data best.
+          You&apos;ll recognize underfitting and overfitting from train–validation behavior,
+          then choose model capacity without touching the final test set.
         </>
       }
       experimentLede={
         <>
-          Guardrails off. Drag the degree from a stiff line to a frantic wiggle, watch
-          the fit chase the training dots and miss the held-out rings, and read the
-          U-shaped test error — then the bias–variance decomposition underneath.
+          Change polynomial degree and compare training with validation error. Watch the
+          fitted curve move from too rigid to suitably flexible to overly sensitive.
         </>
       }
     />

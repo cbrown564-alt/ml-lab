@@ -5,7 +5,7 @@ export const foundations: Journey = {
   title: "Foundations",
   audience: "Engineers and analysts starting machine learning from zero",
   description:
-    "From 'what even is learning from data' to your first trained models — the shortest honest path through the core ideas.",
+    "Start with the basic question—what does it mean to learn from data?—then build your first models, learn how they are optimized, and test whether they generalize.",
   stops: [
     { nodeId: "what-is-ml" },
     { nodeId: "the-dataset" },

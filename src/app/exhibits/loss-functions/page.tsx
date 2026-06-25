@@ -26,22 +26,21 @@ export default function LossFunctionsExhibit() {
       experiment={<LossFunctionsLab />}
       lede={
         <p>
-          How a model knows it&apos;s wrong — and why that choice quietly decides
-          what it&apos;s willing to ignore. The loss is the judge; change the judge
-          and the same data declares a different line &ldquo;best.&rdquo;
+          A loss function turns prediction error into the number a model minimizes. Change
+          that function and you change which mistakes matter most—and therefore which fit
+          counts as best.
         </p>
       }
       promise={
         <>
-          Stay twenty minutes and you&apos;ll see why one cloud of points fits three
-          different lines — and learn which judge to trust when a few points go rogue.
+          You&apos;ll compare squared, absolute, and Huber loss, then choose among them by
+          the cost and plausibility of large errors.
         </>
       }
       experimentLede={
         <>
-          Guardrails off. Switch the judge between squared, absolute, and Huber, drag
-          the data or add your own points, and watch all three verdicts at once — then
-          read the same losses as the maths underneath.
+          Use the same dataset with three losses. Add or move extreme points and watch each
+          fitted line respond, then inspect the penalty curves underneath.
         </>
       }
     />

@@ -11,23 +11,23 @@ export const biasVarianceCheck: ConceptCheck = {
     {
       id: "test-error-shape",
       kind: "choice",
-      prompt: "As you raise the degree, training error falls steadily toward zero. What does the test error do?",
+      prompt: "As you raise the degree, training error falls steadily toward zero. What does the validation error do?",
       options: [
         {
           label: "Falls, bottoms out, then climbs — a U",
           correct: true,
           feedback:
-            "Right. Too stiff is bias (both errors high); too flexible is variance (training low, test high); the honest test error is lowest in between.",
+            "Right. Too stiff is bias (both errors high); too flexible is variance (training low, validation high); validation error is often lowest in between in this classical setting.",
         },
         {
           label: "Falls steadily too, just more slowly than training error",
           feedback:
-            "Only at first. Once the model has enough flexibility to catch the real shape, the extra capacity chases noise and test error turns back up — the U.",
+            "Only at first. Once the model has enough flexibility to catch the real shape, the extra capacity chases noise and validation error turns back up — often a U in this setting.",
         },
         {
           label: "Stays flat — only training error responds to capacity",
           feedback:
-            "Test error responds strongly: it falls, then climbs as the model starts memorising noise. That climb is the whole reason the best degree is finite.",
+            "Validation error responds strongly: it often falls, then climbs as the model starts memorizing noise. That climb is the whole reason the best degree is finite.",
         },
       ],
       difficulty: 2,
@@ -36,10 +36,10 @@ export const biasVarianceCheck: ConceptCheck = {
     {
       id: "what-is-overfitting",
       kind: "choice",
-      prompt: "A degree-12 fit has near-zero training error but high test error. What's going wrong?",
+      prompt: "A degree-12 fit has near-zero training error but high validation error. What's going wrong?",
       options: [
         {
-          label: "The model memorised the training sample's noise, so it generalises poorly — high variance",
+          label: "The model memorized the training sample's noise, so it generalizes poorly — high variance",
           correct: true,
           feedback:
             "Exactly. The capacity went into threading every training point, including its noise, so the fit swings wildly between them and misses unseen data.",
@@ -78,7 +78,7 @@ export const biasVarianceCheck: ConceptCheck = {
         {
           label: "Underfit instead — more data makes models too cautious",
           feedback:
-            "More data doesn't add bias. It reduces variance, so the overfit eases; it never flips a flexible model into underfitting.",
+            "More data doesn't add bias. It often reduces estimation variance, so the overfit eases; with the model class held fixed, it generally won't flip a flexible model into underfitting.",
         },
       ],
       verify: "Conceptually: more data shrinks the variance term, easing the overfit at fixed capacity.",
@@ -88,10 +88,10 @@ export const biasVarianceCheck: ConceptCheck = {
     {
       id: "break-overfit",
       kind: "experiment-task",
-      prompt: "Break it on purpose: raise the degree until the model overfits — training error near zero, test error climbing.",
+      prompt: "Break it on purpose: raise the degree until the model overfits — training error near zero, validation error climbing.",
       taskEvent: "bias-variance:overfit",
       feedback:
-        "You've driven the model past the sweet spot into pure memorisation — the failure mode behind a model that aces validation and flops in the world. Now you know its shape.",
+        "You've driven the model past the sweet spot into pure memorization — a model that fits training data but performs poorly on held-out data. Now you know its shape.",
       difficulty: 1,
       targets: ["bv:break"],
     },
@@ -106,7 +106,7 @@ export const biasVarianceCheck: ConceptCheck = {
         placeholder:
           "e.g. a near-perfect train score with a much lower test score is the … arm, so they should … not …",
         answer:
-          "A near-perfect training score with a much lower held-out score is a huge train–test gap — the variance (overfitting) arm of the U, where the model has memorised the training noise. Making it bigger and training harder moves them further up the wrong arm, widening the gap. The fix is to reduce effective capacity (a simpler model, or regularisation) or get more data, so the fit captures the shape instead of the noise. Underfitting would look different — high error on both train and test — which isn't the case here.",
+          "A near-perfect training score with a much lower validation score is a large train–validation gap — strong evidence of overfitting (variance), though split mismatch, leakage, or distribution differences can also widen the gap. Making the model bigger and training harder moves them further up the wrong arm, widening the gap. The fix is to reduce effective capacity (a simpler model, or regularization) or get more data, so the fit captures the shape instead of the noise. Underfitting would look different — high error on both train and validation — which isn't the case here.",
       },
       difficulty: 3,
       targets: ["bv:transfer"],
