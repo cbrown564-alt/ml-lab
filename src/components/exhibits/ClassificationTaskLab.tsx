@@ -65,7 +65,6 @@ export function ClassificationTaskLab() {
 
           <StatGrid
             direction="col"
-            className="chrome-redundant-metrics"
             caption="Reading the same model four ways"
             stats={[
               { label: "precision", value: precision(cm).toFixed(2), hue: "var(--viz-prediction)", note: "of called-positive, how many were" },

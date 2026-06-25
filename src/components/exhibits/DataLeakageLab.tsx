@@ -143,43 +143,6 @@ function FeatureStrip({ cols }: { cols: number[] }) {
   );
 }
 
-function FoldBars({ foldR2, active }: { foldR2: number[]; active: number }) {
-  const W = 320;
-  const H = 96;
-  const m = { l: 30, r: 8, t: 10, b: 16 };
-  const lim = 1;
-  const zero = m.t + (H - m.t - m.b) / 2;
-  const bw = (W - m.l - m.r) / foldR2.length;
-  const barH = (v: number) => (Math.max(-lim, Math.min(lim, v)) / lim) * ((H - m.t - m.b) / 2);
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="R² for each fold stepped through so far." className="h-auto w-full max-w-[320px]">
-      <line x1={m.l} x2={W - m.r} y1={zero} y2={zero} stroke="var(--line)" />
-      <text x={m.l - 4} y={zero + 3} textAnchor="end" fontSize={9} fill="var(--ink-faint)" fontFamily="var(--font-mono)">
-        0
-      </text>
-      {foldR2.map((v, i) => {
-        const shown = i <= active;
-        const h = barH(v);
-        return (
-          <g key={i} opacity={shown ? 1 : 0.18}>
-            <rect
-              x={m.l + i * bw + bw * 0.2}
-              y={h >= 0 ? zero - h : zero}
-              width={bw * 0.6}
-              height={Math.abs(h)}
-              fill={v >= 0 ? "var(--viz-prediction)" : "var(--viz-error)"}
-              stroke={i === active ? "var(--accent)" : "none"}
-              strokeWidth={i === active ? 1.5 : 0}
-            />
-            <text x={m.l + i * bw + bw / 2} y={H - 4} textAnchor="middle" fontSize={9} fill="var(--ink-faint)" fontFamily="var(--font-mono)">
-              {i + 1}
-            </text>
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
 
 export function DataLeakageLab() {
   const [mode, setMode] = useState<Mode>("leaky");
@@ -318,7 +281,6 @@ export function DataLeakageLab() {
             </div>
             <FeatureStrip cols={folds[active].cols} />
           </div>
-          <FoldBars foldR2={folds.map((f) => f.r2)} active={active} />
         </div>
       </div>
     </div>

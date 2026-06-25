@@ -40,8 +40,8 @@ const BASE = `http://localhost:${PORT}`;
  *   The three-view lab (line / surface / microscope) is the run-it pedagogy.
  * - linear-regression: back to 700 after StatGrid removal from BiasVarianceLab
  *   reorganized the shared chunk (was 708, now 675).
- * - neural-network-fundamentals, data-leakage: 700 → 705. Nominal prose growth
- *   from copy audit; content, not a stray dependency.
+ * - neural-network-fundamentals: 700 → 705. Nominal prose growth from copy audit.
+ * - data-leakage: raised to 705 then reverted — FoldBars removal freed 57 KB.
  */
 const BUDGETS = [
   { route: "/", jsKb: 680, htmlKb: 100 },
@@ -51,7 +51,7 @@ const BUDGETS = [
   { route: "/exhibits/feature-scaling", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/bias-variance", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/overfitting-regularization", jsKb: 700, htmlKb: 110 },
-  { route: "/exhibits/data-leakage", jsKb: 705, htmlKb: 110 },
+  { route: "/exhibits/data-leakage", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/logistic-regression", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/classification-task", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/train-test-generalization", jsKb: 700, htmlKb: 110 },

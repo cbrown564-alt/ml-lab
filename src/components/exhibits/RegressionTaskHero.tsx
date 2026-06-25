@@ -71,18 +71,34 @@ function HeroGraphic({ t }: { t: number }) {
           />
         );
       })}
-      {allExamples.map((e, i) => (
-        <circle
-          key={`p${i}`}
-          cx={x(e.x)}
-          cy={y(e.y)}
-          r={i < shown ? 5 : 4}
-          fill="var(--viz-truth)"
-          stroke="var(--surface-bg)"
-          strokeWidth={1.5}
-          opacity={i < shown ? 1 : 0.35}
-        />
-      ))}
+      {allExamples.map((e, i) => {
+        const isDemo = e === DEMO;
+        const landed = i < shown;
+        return (
+          <g key={`p${i}`}>
+            {isDemo && landed && (
+              <circle
+                cx={x(e.x)}
+                cy={y(e.y)}
+                r={11}
+                fill="none"
+                stroke="var(--viz-error)"
+                strokeWidth={1.5}
+                opacity={0.55}
+              />
+            )}
+            <circle
+              cx={x(e.x)}
+              cy={y(e.y)}
+              r={isDemo ? 6.5 : (landed ? 5 : 4)}
+              fill="var(--viz-truth)"
+              stroke={isDemo && landed ? "var(--viz-error)" : "var(--surface-bg)"}
+              strokeWidth={isDemo && landed ? 2 : 1.5}
+              opacity={landed ? 1 : 0.35}
+            />
+          </g>
+        );
+      })}
       {DEMO && (
         <text
           x={x(DEMO.x) + 10}
