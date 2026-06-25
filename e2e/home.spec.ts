@@ -10,30 +10,32 @@ test.describe("home", () => {
     await page.goto("/");
   });
 
-  test("orients: hero, open exhibits, map, journey", async ({ page }) => {
+  test("orients: hero, the cabinet, its wings, the journey", async ({ page }) => {
     await expect(
       page.getByRole("heading", { name: "Get your hands on machine learning." }),
     ).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Now showing" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "The map" })).toBeVisible();
+    await expect(page.getByText(/Now showing · \d+ exhibits/)).toBeVisible();
+    // The cabinet is curated into wings — the grouping is on the page as headings.
+    await expect(page.getByRole("heading", { name: "The first models" })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Journey · Foundations/ })).toBeVisible();
     await expect(page).toHaveScreenshot("home.png", { fullPage: true });
   });
 
-  test("exhibit cards enter the exhibits", async ({ page }) => {
+  test("the jewels enter the exhibits", async ({ page }) => {
     await page
-      .getByRole("link", { name: /Linear Regression.*Enter exhibit/s })
+      .locator("#exhibits")
+      .getByRole("link", { name: /Linear Regression/ })
       .click();
     await expect(
       page.getByRole("heading", { name: "Linear Regression" }),
     ).toBeVisible();
   });
 
-  test("the map's doors all navigate — every node is now live", async ({ page }) => {
-    const map = page.locator("#map");
-    await expect(map.getByRole("link", { name: /Gradient Descent/ })).toBeVisible();
+  test("every jewel is a live door — every node now has an exhibit", async ({ page }) => {
+    const cabinet = page.locator("#exhibits");
+    await expect(cabinet.getByRole("link", { name: /Gradient Descent/ })).toBeVisible();
     // Every foundations node now has a live exhibit — including the last one to land.
-    await map.getByRole("link", { name: /The Dataset/ }).click();
+    await cabinet.getByRole("link", { name: /The Dataset/ }).click();
     await expect(page.getByRole("heading", { name: "The Dataset" })).toBeVisible();
   });
 

@@ -121,6 +121,66 @@ body {
   color: var(--ink);
 }
 
+/* The cabinet of jewels (docs/exemplars/homepages/SYNTHESIS.md): each exhibit
+   is a deep gem-plate holding its own luminous glyph — after Seeing Theory's
+   chapter circles. The plate is top-lit for depth; on hover/focus it blooms and
+   glows with the lab's accent (the chosen path), exhibits it connects to gain a
+   quiet accent ring (structure revealed without resting lines), and the rest
+   recede via inline opacity. Reduced motion flattens the transitions globally. */
+.jewel-plate {
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 36% 28%,
+    oklch(33% 0.03 265),
+    oklch(18% 0.022 265)
+  );
+  box-shadow:
+    0 10px 26px -14px oklch(18% 0.02 265 / 0.7),
+    inset 0 1px 0 0 oklch(100% 0 0 / 0.08),
+    inset 0 0 0 1px oklch(100% 0 0 / 0.06);
+  transition:
+    transform 240ms var(--ease-out),
+    box-shadow 240ms var(--ease-out);
+}
+.jewel-plate[data-active] {
+  transform: scale(1.06) translateY(-2px);
+  box-shadow:
+    0 20px 42px -16px oklch(18% 0.02 265 / 0.8),
+    0 0 30px -4px color-mix(in oklch, var(--accent) 55%, transparent),
+    inset 0 1px 0 0 oklch(100% 0 0 / 0.12),
+    inset 0 0 0 1px color-mix(in oklch, var(--accent) 55%, transparent);
+}
+.jewel-plate[data-linked] {
+  box-shadow:
+    0 10px 26px -14px oklch(18% 0.02 265 / 0.7),
+    inset 0 1px 0 0 oklch(100% 0 0 / 0.08),
+    inset 0 0 0 1px color-mix(in oklch, var(--accent) 48%, transparent);
+}
+.jewel {
+  transition: opacity 240ms var(--ease-out);
+}
+.jewel-enter {
+  opacity: 0;
+  transition: opacity 200ms var(--ease-out);
+}
+.jewel a:hover .jewel-enter,
+.jewel a:focus-visible .jewel-enter {
+  opacity: 1;
+}
+
+/* The cabinet's atmosphere: a soft pool of light over a faintly sunken field,
+   so the dark gems read as specimens on a lit stage — the front door's one
+   composed, moody moment, kept inside the light system. */
+.jewel-field {
+  background:
+    radial-gradient(
+      130% 90% at 50% -8%,
+      oklch(98.5% 0.012 76),
+      transparent 58%
+    ),
+    var(--surface-sunken);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

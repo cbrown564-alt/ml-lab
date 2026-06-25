@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { GraphExplorer } from "@/components/graph/GraphExplorer";
+import { JewelGallery, type Wing } from "@/components/graph/JewelGallery";
 import { MasteryBadge } from "@/components/learner/MasteryBadge";
 import { NextStep } from "@/components/learner/NextStep";
-import { domainLabel, statusLabel } from "@/lib/graph/labels";
+import { domainLabel } from "@/lib/graph/labels";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
+import { edges } from "@content/graph/edges";
 import { foundations } from "@content/journeys/foundations";
 
 /**
@@ -16,9 +17,57 @@ import { foundations } from "@content/journeys/foundations";
 const nodeById = new Map(nodes.map((n) => [n.id, n]));
 const openExhibits = nodes.filter((n) => isLive(n.id));
 
+// The cabinet is curated into wings — a deliberate learning progression, so the
+// grouping is explicit and the order is intentional rather than a scatter. The
+// hover still lights connections *across* wings, so the graph structure is felt
+// without lines. (Edit the wings here to re-curate the front door.)
+const WINGS: { title: string; blurb: string; ids: string[] }[] = [
+  {
+    title: "Groundwork",
+    blurb: "What learning from data even means.",
+    ids: ["what-is-ml", "the-dataset"],
+  },
+  {
+    title: "The first models",
+    blurb: "Fit a line, draw a boundary.",
+    ids: ["regression-task", "linear-regression", "classification-task", "logistic-regression"],
+  },
+  {
+    title: "How models learn",
+    blurb: "The machinery that does the fitting.",
+    ids: ["loss-functions", "the-gradient", "gradient-descent", "feature-scaling"],
+  },
+  {
+    title: "Keeping it honest",
+    blurb: "Why a model fails — and how to tell.",
+    ids: ["train-test-generalization", "overfitting-regularization", "bias-variance", "data-leakage"],
+  },
+  {
+    title: "Going deeper",
+    blurb: "Stacking simple parts into something powerful.",
+    ids: ["neural-network-fundamentals"],
+  },
+];
+const wings: Wing[] = WINGS.map((w) => ({
+  title: w.title,
+  blurb: w.blurb,
+  jewels: w.ids.map((id) => {
+    const node = nodeById.get(id)!;
+    return {
+      id,
+      title: node.title,
+      domain: node.domain,
+      domainLabel: domainLabel(node.domain),
+      live: isLive(id),
+      href: isLive(id) ? liveExhibits[id].href : null,
+    };
+  }),
+}));
+const jewelEdges = edges.map((e) => ({ from: e.from, to: e.to, type: e.type }));
+
 export default function Home() {
   return (
-    <>
+    <div className="overflow-x-clip">
       <header className="border-b border-line">
         <div className="mx-auto flex w-full max-w-6xl items-baseline justify-between px-8 py-5">
           <span className="font-mono text-sm font-semibold tracking-widest uppercase">
@@ -28,8 +77,8 @@ export default function Home() {
             <a href="#exhibits" className="transition-colors hover:text-ink">
               Exhibits
             </a>
-            <a href="#map" className="transition-colors hover:text-ink">
-              The map
+            <a href="#how" className="transition-colors hover:text-ink">
+              How it works
             </a>
             <a href="#foundations" className="transition-colors hover:text-ink">
               Journeys
@@ -39,18 +88,19 @@ export default function Home() {
       </header>
 
       <main className="mx-auto w-full max-w-6xl px-8">
-        <section className="grid items-center gap-12 py-24 lg:grid-cols-[3fr_2fr]">
-          <div>
-          <h1 className="max-w-[18ch] text-6xl font-semibold tracking-tight text-balance">
+        <section className="pt-20 pb-24 text-center">
+          <p className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
+            An interactive atlas of machine learning
+          </p>
+          <h1 className="mx-auto mt-5 max-w-[20ch] text-5xl font-semibold tracking-tight text-balance sm:text-6xl">
             Get your hands on machine learning.
           </h1>
-          <p className="mt-6 max-w-[58ch] text-xl leading-relaxed text-ink-muted">
+          <p className="mx-auto mt-6 max-w-[58ch] text-xl leading-relaxed text-balance text-ink-muted">
             A laboratory, not a course. Every concept is an exhibit with a live
             experiment at its heart — drag the data, turn the knobs, break the
-            model on purpose — until the intuition practitioners build over
-            years is sitting in your hands.
+            model on purpose. Pick a jewel and step inside.
           </p>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
+          <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
             <Link
               href={liveExhibits["linear-regression"].href}
               className="rounded-full bg-accent px-6 py-2.5 font-medium text-accent-ink transition-opacity hover:opacity-90"
@@ -58,89 +108,34 @@ export default function Home() {
               Enter the first exhibit
             </Link>
             <a
-              href="#map"
+              href="#foundations"
               className="rounded-full border border-line px-6 py-2.5 text-ink-muted transition-colors hover:border-ink-faint hover:text-ink"
             >
-              Browse the map
+              Follow the Foundations path
             </a>
           </div>
-          </div>
+        </section>
 
-          {/* The lab's signature in one glance: data you can grab, the line
-              that chases it, the penalty it pays — drawn in the same visual
-              grammar every exhibit speaks. */}
-          <svg
-            viewBox="0 0 380 280"
-            aria-hidden
-            className="hidden h-auto w-full max-w-md justify-self-end lg:block"
-          >
-            <line
-              x1="20"
-              y1="232"
-              x2="372"
-              y2="56"
-              stroke="var(--viz-prediction)"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            />
-            {/* one big miss, squared */}
-            <rect
-              x="178"
-              y="42"
-              width="76"
-              height="76"
-              fill="var(--viz-error)"
-              fillOpacity="0.12"
-              stroke="var(--viz-error)"
-              strokeOpacity="0.55"
-            />
-            <line
-              x1="254"
-              y1="42"
-              x2="254"
-              y2="118"
-              stroke="var(--viz-error)"
-              strokeWidth="1.5"
-              strokeOpacity="0.7"
-              strokeDasharray="3 3"
-            />
-            {[
-              [44, 212],
-              [86, 202],
-              [118, 176],
-              [152, 170],
-              [196, 140],
-              [254, 42],
-              [262, 116],
-              [300, 86],
-              [340, 78],
-            ].map(([cx, cy], i) => (
-              <circle
-                key={i}
-                cx={cx}
-                cy={cy}
-                r={i === 5 ? 8 : 6.5}
-                fill="var(--viz-truth)"
-                stroke="var(--surface-bg)"
-                strokeWidth="1.5"
-              />
-            ))}
-            <text
-              x="244"
-              y="32"
-              textAnchor="end"
-              fontSize="13"
-              fontStyle="italic"
-              fill="var(--viz-error)"
-            >
-              the one that got away
-            </text>
-          </svg>
+        {/* The cabinet of jewels (homepages/SYNTHESIS.md): the collection as a
+            wall of luminous specimens, set in its own atmospheric field. This is
+            both the showcase and the map — hovering a jewel lights what it
+            connects to. Full-bleed; the w-screen overhang is clipped by the
+            overflow-x-clip wrapper around the page. */}
+        <section
+          id="exhibits"
+          className="jewel-field relative left-1/2 w-screen -translate-x-1/2 scroll-mt-8 border-y border-line pt-16 pb-24"
+        >
+          <div className="mx-auto max-w-6xl px-8">
+            <p className="mb-16 text-center font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
+              Now showing · {openExhibits.length} exhibits, all open
+            </p>
+            <JewelGallery wings={wings} edges={jewelEdges} />
+          </div>
         </section>
 
         {/* The method, made visible at the front door: every exhibit is worked in
             four passes. The product's promise, not a tagline. */}
-        <section className="border-t border-line py-12">
+        <section id="how" className="scroll-mt-8 border-t border-line py-12">
           <p className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
             How every exhibit works
           </p>
@@ -169,48 +164,6 @@ export default function Home() {
         </section>
 
         <NextStep />
-
-        <section id="exhibits" className="scroll-mt-8 border-t border-line py-16">
-          <h2 className="font-mono text-sm tracking-widest text-ink-faint uppercase">
-            Now showing
-          </h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2">
-            {openExhibits.map((n) => (
-              <Link
-                key={n.id}
-                href={liveExhibits[n.id].href}
-                className="group rounded-xl border border-line bg-raised p-7 transition-colors hover:border-accent"
-              >
-                <p className="font-mono text-xs tracking-widest text-ink-faint uppercase">
-                  {domainLabel(n.domain)} · {statusLabel(n.status)}
-                </p>
-                <h3 className="mt-3 text-2xl font-semibold tracking-tight">{n.title}</h3>
-                <p className="mt-2 leading-relaxed text-ink-muted">{n.oneLiner}</p>
-                <p className="mt-5 text-sm font-medium text-accent">
-                  Enter exhibit{" "}
-                  <span className="inline-block transition-transform group-hover:translate-x-1">
-                    →
-                  </span>
-                </p>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <section id="map" className="scroll-mt-8 border-t border-line py-16">
-          <h2 className="font-mono text-sm tracking-widest text-ink-faint uppercase">
-            The map
-          </h2>
-          <p className="mt-4 max-w-[58ch] leading-relaxed text-ink-muted">
-            The lab is a connected territory, not a syllabus. Concepts point to
-            what they require and what they unlock; wander freely, or follow a
-            journey. Two doors are open today — the rest of the wing is under
-            construction.
-          </p>
-          <div className="mt-10">
-            <GraphExplorer />
-          </div>
-        </section>
 
         <section id="foundations" className="scroll-mt-8 border-t border-line py-16">
           <h2 className="font-mono text-sm tracking-widest text-ink-faint uppercase">
@@ -279,6 +232,6 @@ export default function Home() {
           </span>
         </div>
       </footer>
-    </>
+    </div>
   );
 }
