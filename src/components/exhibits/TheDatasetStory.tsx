@@ -14,10 +14,27 @@ import { COLUMNS, houses, toPoints } from "@content/exhibits/the-dataset/experim
 const FIT = olsFit(toPoints(houses));
 const DEMO_ID = 5; // the example highlighted on the "row" beat
 
-function StoryPoints({ rowMode }: { rowMode: boolean }) {
+function StoryPoints({ rowMode, highlight }: { rowMode: boolean; highlight: TheDatasetFrame["highlight"] }) {
   const { x, y } = usePlot();
+  const demo = houses.find((h) => h.id === DEMO_ID);
   return (
     <g>
+      {highlight === "row" && demo && (
+        <g aria-hidden>
+          <line
+            x1={x(demo.size)}
+            y1={y(demo.price)}
+            x2={x(demo.size) + 36}
+            y2={y(demo.price) - 24}
+            stroke="var(--accent)"
+            strokeWidth={1.5}
+            strokeDasharray="4 3"
+          />
+          <rect x={x(demo.size) + 38} y={y(demo.price) - 38} width={100} height={32} rx={4} fill="var(--surface-bg)" stroke="var(--accent)" strokeWidth={1} />
+          <text x={x(demo.size) + 44} y={y(demo.price) - 24} fontSize={9} fontFamily="var(--font-mono)" fill="var(--accent)">row #{demo.id}</text>
+          <text x={x(demo.size) + 44} y={y(demo.price) - 14} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-muted)">{demo.size} m² · €{demo.price}k</text>
+        </g>
+      )}
       {houses.map((h) => {
         const on = rowMode && h.id === DEMO_ID;
         return <circle key={h.id} cx={x(h.size)} cy={y(h.price)} r={on ? 8 : 5} fill={on ? "var(--accent)" : "var(--viz-truth)"} stroke="var(--surface-bg)" strokeWidth={1.5} />;
@@ -38,7 +55,7 @@ export function TheDatasetStory() {
       <Plot width={520} height={260} xDomain={[35, 130]} yDomain={[60, 320]} ariaLabel={`Size vs price for ${houses.length} houses with the trend line; ${caption}.`}>
         <Axes />
         <FitLine params={FIT} />
-        <StoryPoints rowMode={highlight === "row"} />
+        <StoryPoints rowMode={highlight === "row"} highlight={highlight} />
       </Plot>
       <div className="overflow-hidden rounded-lg border border-line">
         <table className="w-full text-sm tabular-nums">

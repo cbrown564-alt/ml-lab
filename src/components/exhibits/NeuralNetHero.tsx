@@ -1,67 +1,64 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { DecisionField } from "@/components/viz/DecisionField";
-import { accuracy, initNet, predictProba, train, type Net } from "@/lib/models/neural-net";
+import { useEffect, useMemo, useState } from "react";
+import { FeatureFoldField } from "@/components/viz/FeatureFoldField";
+import { accuracy, initNet, train, type Net } from "@/lib/models/neural-net";
 import { NN_LR, xorData } from "@content/exhibits/neural-network-fundamentals/experiment";
 
 /**
- * The specimen hero — why a network needs a hidden layer, as a before/after on XOR.
- * One neuron can only draw a straight line, and no straight line separates XOR, so
- * it tops out (~75%). Give it a hidden layer and the boundary bends into the X the
- * problem needs (~100%). Same data, a linear cut vs a learned curve. The nets are
- * trained once at module load (deterministic seeds); fields fade in on load.
+ * The specimen hero — hidden units as half-space folds that progressively bend
+ * feature space into the XOR X. On load each fold line appears in turn; the
+ * decision boundary morphs from a useless straight split into the solved shape.
+ * One living field, not a before/after diptych.
  */
 
-const NEURON: Net = train(initNet(1, 2), xorData, NN_LR, 500).net;
-const SOLVED: Net = train(initNet(6, 6), xorData, NN_LR, 900).net;
-const ACC_NEURON = Math.round(accuracy(NEURON, xorData) * 100);
-const ACC_SOLVED = Math.round(accuracy(SOLVED, xorData) * 100);
-
-function Panel({
-  kicker,
-  acc,
-  accHue,
-  net,
-  reveal,
-}: {
-  kicker: string;
-  acc: number;
-  accHue: string;
-  net: Net;
-  reveal: number;
-}) {
-  return (
-    <div className="min-w-0 flex-1">
-      <div className="flex items-baseline justify-between gap-2 px-1 pb-1">
-        <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">{kicker}</span>
-        <span className="font-mono text-[11px] tabular-nums" style={{ color: accHue }}>
-          {acc}% on XOR
-        </span>
-      </div>
-      <div style={{ opacity: reveal, transition: "opacity 500ms ease" }}>
-        <DecisionField
-          points={xorData}
-          predictProba={(x1, x2) => predictProba(net, x1, x2)}
-          width={520}
-          height={400}
-        />
-      </div>
-    </div>
-  );
-}
+const SOLVED: Net = train(initNet(4, 6), xorData, NN_LR, 900).net;
+const ACC = Math.round(accuracy(SOLVED, xorData) * 100);
+const UNIT_COUNT = SOLVED.W1.length;
+const DURATION = 1600;
 
 export function NeuralNetHero() {
+  const [foldCount, setFoldCount] = useState(0);
   const [reveal, setReveal] = useState(0);
+
+  const visibleUnits = useMemo(() => {
+    const s = new Set<number>();
+    for (let j = 0; j < foldCount; j++) s.add(j);
+    return s;
+  }, [foldCount]);
+
+  const muted = useMemo(() => {
+    const s = new Set<number>();
+    for (let j = foldCount; j < UNIT_COUNT; j++) s.add(j);
+    return s;
+  }, [foldCount]);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
-      const id = requestAnimationFrame(() => setReveal(1));
+      const id = requestAnimationFrame(() => {
+        setFoldCount(UNIT_COUNT);
+        setReveal(1);
+      });
       return () => cancelAnimationFrame(id);
     }
-    const t = window.setTimeout(() => setReveal(1), 360);
-    return () => window.clearTimeout(t);
+    let raf = 0;
+    let start = 0;
+    const tick = (now: number) => {
+      if (!start) start = now;
+      const p = Math.min(1, (now - start) / DURATION);
+      const eased = 1 - Math.pow(1 - p, 2.2);
+      setFoldCount(Math.min(UNIT_COUNT, Math.ceil(eased * UNIT_COUNT)));
+      setReveal(eased);
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    const arm = window.setTimeout(() => {
+      raf = requestAnimationFrame(tick);
+    }, 320);
+    return () => {
+      window.clearTimeout(arm);
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
   return (
@@ -71,13 +68,23 @@ export function NeuralNetHero() {
           Neural networks
         </span>
         <span className="hidden font-mono text-[11px] tracking-widest text-ink-faint uppercase sm:inline">
-          a straight line can&apos;t solve XOR
+          {foldCount < UNIT_COUNT ? "each hidden unit folds the space" : `${ACC}% on XOR`}
         </span>
       </figcaption>
-      <div className="flex flex-col gap-4 px-3 py-3 sm:flex-row">
-        <Panel kicker="one neuron — a straight line" acc={ACC_NEURON} accHue="var(--viz-error-ink)" net={NEURON} reveal={reveal} />
-        <Panel kicker="a hidden layer — the bent X" acc={ACC_SOLVED} accHue="var(--viz-truth-ink)" net={SOLVED} reveal={reveal} />
+      <div className="px-3 py-3" style={{ opacity: 0.35 + reveal * 0.65, transition: "opacity 400ms ease" }}>
+        <FeatureFoldField
+          net={SOLVED}
+          points={xorData}
+          muted={muted}
+          visibleUnits={visibleUnits}
+          width={1200}
+          height={400}
+          bare
+        />
       </div>
+      <p className="sr-only">
+        {foldCount} of {UNIT_COUNT} hidden-unit folds revealed. With all folds active the network reaches {ACC}% accuracy on XOR.
+      </p>
     </figure>
   );
 }

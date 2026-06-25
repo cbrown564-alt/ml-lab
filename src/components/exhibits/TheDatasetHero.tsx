@@ -10,8 +10,9 @@ import { corruptedRows, houses, toPoints } from "@content/exhibits/the-dataset/e
  * houses set an upward size→price trend (the dashed reference). Then, on load, one
  * mistyped row drops in — a 112 m² flat fat-fingered to 12 m² — and the fitted line
  * visibly flattens toward it: the model only sees the table, so one bad row drags
- * the whole rule. Mechanism in the picture: leverage. Reduced motion renders it
- * already dragged. The honest trend stays on as the ghost it fell from.
+ * the whole rule. A provenance lens tethers the outlier point to its table row so
+ * leverage reads as a data-entry mistake, not a stray dot. Reduced motion renders
+ * it already dragged.
  */
 
 const CLEAN = olsFit(toPoints(houses));
@@ -21,6 +22,49 @@ const X_DOMAIN: [number, number] = [0, 132];
 const Y_DOMAIN: [number, number] = [0, 400];
 
 const at = (p: LinearParams, x: number) => p.slope * x + p.intercept;
+
+/** ProvenancePipe — tether + lens linking the scatter point to its table row. */
+function ProvenanceLens({ t }: { t: number }) {
+  const { x, y } = usePlot();
+  const px = x(OUTLIER.size);
+  const py = y(OUTLIER.price);
+  const lx = px + 52;
+  const ly = py - 38;
+  return (
+    <g opacity={t} aria-hidden>
+      <line
+        x1={px}
+        y1={py}
+        x2={lx - 8}
+        y2={ly + 22}
+        stroke="var(--viz-error)"
+        strokeWidth={1.5}
+        strokeDasharray="5 4"
+        opacity={0.75}
+      />
+      <rect
+        x={lx}
+        y={ly}
+        width={148}
+        height={52}
+        rx={6}
+        fill="var(--surface-bg)"
+        stroke="var(--viz-error)"
+        strokeWidth={1.25}
+        opacity={0.95}
+      />
+      <text x={lx + 8} y={ly + 16} fontSize={10} fontFamily="var(--font-mono)" fill="var(--viz-error-ink)" fontWeight={600}>
+        row · provenance
+      </text>
+      <text x={lx + 8} y={ly + 30} fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-muted)">
+        size {OUTLIER.size} m² (typo)
+      </text>
+      <text x={lx + 8} y={ly + 42} fontSize={10} fontFamily="var(--font-mono)" fill="var(--viz-truth-ink)">
+        price €{OUTLIER.price}k
+      </text>
+    </g>
+  );
+}
 
 function HeroGraphic({ t }: { t: number }) {
   const { x, y } = usePlot();
@@ -42,7 +86,6 @@ function HeroGraphic({ t }: { t: number }) {
           strokeWidth={1.5}
         />
       ))}
-      {/* The honest trend — the line the twelve good rows alone would draw. */}
       <line
         x1={x(x0)}
         y1={y(at(CLEAN, x0))}
@@ -65,7 +108,6 @@ function HeroGraphic({ t }: { t: number }) {
       >
         the honest trend
       </text>
-      {/* The dragged line — what the model actually fits once the bad row is in. */}
       <line
         x1={x(x0)}
         y1={y(at(dragged, x0))}
@@ -74,8 +116,6 @@ function HeroGraphic({ t }: { t: number }) {
         stroke="var(--viz-prediction)"
         strokeWidth={3}
       />
-      {/* The one mistyped row — high leverage at the left edge. A dotted leader
-          ties it to the line it pulls, so it reads as the cause, not a stray dot. */}
       <g opacity={t}>
         <line
           x1={x(OUTLIER.size)}
@@ -95,18 +135,7 @@ function HeroGraphic({ t }: { t: number }) {
           stroke="var(--surface-bg)"
           strokeWidth={2}
         />
-        <text
-          x={x(OUTLIER.size) + 13}
-          y={y(OUTLIER.price) + 4}
-          fontSize={12}
-          fontFamily="var(--font-mono)"
-          paintOrder="stroke"
-          stroke="var(--surface-bg)"
-          strokeWidth={3}
-          fill="var(--viz-error-ink)"
-        >
-          one mistyped row
-        </text>
+        <ProvenanceLens t={t} />
       </g>
     </g>
   );
@@ -157,7 +186,7 @@ export function TheDatasetHero() {
           height={360}
           xDomain={X_DOMAIN}
           yDomain={Y_DOMAIN}
-          ariaLabel={`Twelve houses scatter size against price along an upward trend (dashed). One mistyped row — a 112 m² flat recorded as 12 m² at a high price — drags the fitted line flat: its slope falls from ${CLEAN.slope.toFixed(1)} to ${DIRTY.slope.toFixed(1)}. The model only sees the table, so the single bad row moves the whole rule.`}
+          ariaLabel={`Twelve houses scatter size against price along an upward trend (dashed). One mistyped row — a 112 m² flat recorded as 12 m² at a high price — drags the fitted line flat: its slope falls from ${CLEAN.slope.toFixed(1)} to ${DIRTY.slope.toFixed(1)}. A provenance lens tethers the outlier to its table row.`}
         >
           <HeroGraphic t={t} />
         </Plot>

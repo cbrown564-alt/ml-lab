@@ -115,11 +115,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* The cabinet of jewels (homepages/SYNTHESIS.md): the collection as a
-            wall of luminous specimens, set in its own atmospheric field. This is
-            both the showcase and the map — hovering a jewel lights what it
-            connects to. Full-bleed; the w-screen overhang is clipped by the
-            overflow-x-clip wrapper around the page. */}
+        {/* The cabinet of jewels: live micro-specimens in warm diagrammatic plates,
+            the collection as a gallery you can wander. Hover lights connections. */}
         <section
           id="exhibits"
           className="jewel-field relative left-1/2 w-screen -translate-x-1/2 scroll-mt-8 border-y border-line pt-20 pb-24"

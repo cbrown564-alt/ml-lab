@@ -1,17 +1,14 @@
 "use client";
 
-import { ConfusionMatrix, ProbabilityStrip } from "@/components/exhibits/ClassificationViews";
+import { ConfusionMatrix, DecisionConveyor } from "@/components/exhibits/ClassificationViews";
 import { fitLogistic, proba } from "@/lib/models/logistic";
 import { confusion, precision, recall, type Scored } from "@/lib/models/classification-metrics";
 import { logisticPoints } from "@content/exhibits/logistic-regression/experiment";
 
 /**
- * The specimen hero — what classification adds to a probability: a decision. Every
- * point sits at its predicted probability along the strip; the threshold line cuts
- * it into "predict 0" (left) and "predict 1" (right), and the points that fall on
- * the wrong side are ringed red. Those four outcomes — TP / FP / FN / TN — are the
- * confusion matrix beside it, from which precision and recall are read. The whole
- * mechanism, scores → threshold → verdict, in one frame.
+ * The specimen hero — a decision conveyor: observations ride to the threshold gate
+ * and drop into TP/FP/FN/TN bins while precision and recall update live. The
+ * mechanism is one frame — not a dashboard of adjacent widgets.
  */
 
 const FIT = fitLogistic(logisticPoints, { steps: 4000, lr: 0.5 });
@@ -29,25 +26,17 @@ export function ClassificationTaskHero() {
           A classification task
         </span>
         <span className="hidden font-mono text-[11px] tracking-widest text-ink-faint uppercase sm:inline">
-          a threshold turns scores into a decision
+          threshold → bins → metrics
         </span>
       </figcaption>
-      <div className="px-5 py-4">
-        <ProbabilityStrip scored={SCORED} threshold={T} />
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-x-10 gap-y-5 sm:justify-between">
-          <ConfusionMatrix tp={CM.tp} fp={CM.fp} fn={CM.fn} tn={CM.tn} large />
-          <div className="flex flex-col gap-3">
-            <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
-              read off at t = {T.toFixed(2)}
-            </span>
-            <div className="flex gap-8">
-              <Metric label="precision" value={precision(CM)} hue="var(--viz-prediction-ink)" note="of predicted +" />
-              <Metric label="recall" value={recall(CM)} hue="var(--viz-param-ink)" note="of actual +" />
-            </div>
-            <p className="max-w-[28ch] text-xs leading-snug text-ink-faint">
-              Slide the line and the two trade: catch more positives, or be surer of the ones you call.
-            </p>
+      <div className="px-4 py-4">
+        <DecisionConveyor scored={SCORED} threshold={T} animate />
+        <div className="mt-4 flex flex-wrap items-end justify-between gap-4 px-1">
+          <div className="flex gap-8">
+            <Metric label="precision" value={precision(CM)} hue="var(--viz-prediction-ink)" note="of predicted +" />
+            <Metric label="recall" value={recall(CM)} hue="var(--viz-param-ink)" note="of actual +" />
           </div>
+          <ConfusionMatrix tp={CM.tp} fp={CM.fp} fn={CM.fn} tn={CM.tn} />
         </div>
       </div>
     </figure>

@@ -1,67 +1,23 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { DataLeakageProvenancePipe } from "@/components/exhibits/DataLeakageProvenancePipe";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
-import { crossValR2, type HeldOut, type Matrix } from "@/lib/models/leakage";
+import { crossValR2, type Matrix } from "@/lib/models/leakage";
 import fixtures from "@/lib/models/fixtures/leakage.json";
 
 /**
- * The interactive "Break it" lab for data leakage. The learner takes the tempting
- * shortcut — select the best features using all the data, then cross-validate — and
- * watches pure noise manufacture a confident R². The break here looks like success,
- * which is the whole danger. Move the selection inside each fold and the score
- * collapses to the truth. Trigger → symptom → diagnose → repair.
+ * Break it — counterfactual replay on the provenance pipe. Trigger the leak and
+ * watch test information cross the wall; repair by sealing selection inside each
+ * fold and watch the score clean itself.
  */
+
 const X = fixtures.X as Matrix;
 const Y = fixtures.y as number[];
 const { kSelect: K, folds: FOLDS } = fixtures.generator;
 
 type Phase = "arming" | "broken" | "repaired";
-
-function Scatter({ points, leaky }: { points: HeldOut[]; leaky: boolean }) {
-  const W = 440;
-  const H = 380;
-  const m = 34;
-  const ext = 2.8;
-  const sx = (v: number) => m + ((v + ext) / (2 * ext)) * (W - 2 * m);
-  const sy = (v: number) => H - m - ((v + ext) / (2 * ext)) * (H - 2 * m);
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Predicted versus actual for the held-out points. ${leaky ? "The points lean along the diagonal as if predictable — but the data is pure noise." : "The points form a shapeless cloud off the diagonal — the honest truth."}`} className="h-auto w-full">
-      <rect x={m} y={m} width={W - 2 * m} height={H - 2 * m} fill="none" stroke="var(--line)" />
-      <line x1={sx(-ext)} y1={sy(-ext)} x2={sx(ext)} y2={sy(ext)} stroke="var(--ink-faint)" strokeDasharray="4 4" />
-      <text x={sx(ext) - 4} y={sy(ext) + 14} textAnchor="end" fontSize={11} fill="var(--ink-faint)" fontStyle="italic">predicted = actual</text>
-      {points.map((p, i) => (
-        <circle key={i} cx={sx(p.actual)} cy={sy(Math.max(-ext, Math.min(ext, p.predicted)))} r={4.5} fill="var(--viz-prediction)" fillOpacity={0.7} />
-      ))}
-      {/* The composed focal: name what the cloud is, so the scatter is a verdict, not a blob. */}
-      <text
-        x={m + 8}
-        y={m + 20}
-        fontSize={13}
-        fontWeight={600}
-        paintOrder="stroke"
-        stroke="var(--surface-bg)"
-        strokeWidth={3}
-        fill={leaky ? "var(--viz-error-ink)" : "var(--ink-muted)"}
-      >
-        {leaky ? "Leans on the diagonal…" : "A shapeless cloud"}
-      </text>
-      <text
-        x={m + 8}
-        y={m + 38}
-        fontSize={11}
-        paintOrder="stroke"
-        stroke="var(--surface-bg)"
-        strokeWidth={3}
-        fill="var(--ink-faint)"
-      >
-        {leaky ? "…on data that is pure noise" : "no signal — the honest truth"}
-      </text>
-      <text x={W / 2} y={H - 8} textAnchor="middle" fontSize={11} fill="var(--ink-faint)" fontFamily="var(--font-mono)">actual target →</text>
-    </svg>
-  );
-}
 
 export function DataLeakageBreakIt() {
   const [leaky, setLeaky] = useState(false);
@@ -106,7 +62,7 @@ export function DataLeakageBreakIt() {
                 leaky ? "border-[var(--viz-error)] text-[var(--viz-error-ink)]" : hasBroken ? "border-accent text-accent" : "border-line text-ink-faint"
               }`}
             >
-              {leaky ? "Skill from nowhere" : hasBroken ? "The honest nothing" : "No signal"}
+              {leaky ? "Wall breached" : hasBroken ? "Pipe cleaned" : "Wall sealed"}
             </span>
             <span className="font-mono text-xs text-ink-faint tabular-nums">
               CV R² {result.meanR2.toFixed(2)} · true signal 0
@@ -115,7 +71,7 @@ export function DataLeakageBreakIt() {
         </div>
 
         <div className="mt-6 flex flex-col items-center lg:mt-0">
-          <Scatter points={result.points} leaky={leaky} />
+          <DataLeakageProvenancePipe leaky={leaky} r2={result.meanR2} />
         </div>
       </div>
     </div>
@@ -128,15 +84,12 @@ function Guidance({ phase }: { phase: Phase }) {
       <div>
         <p className="font-mono text-[11px] tracking-[0.16em] text-[var(--viz-error-ink)] uppercase">Symptom · it broke</p>
         <p className="mt-2 leading-relaxed text-ink">
-          Cross-validation now reports a confident <span className="font-medium text-[var(--viz-error-ink)]">positive R²</span> — on data
-          that is pure noise. The held-out points line up along the diagonal as if the
-          model could really predict them. It can&apos;t.
+          The pipe reports a confident <span className="font-medium text-[var(--viz-error-ink)]">positive R²</span> — on pure
+          noise. Watch the red back-flow: test folds informed feature selection before they were held out.
         </p>
         <p className="mt-3 leading-relaxed text-ink-muted">
-          <span className="font-medium text-ink">Diagnose:</span> the ten features were
-          chosen using the whole dataset, so the selection peeked at every test fold —
-          they were never truly held out. <span className="font-medium text-ink">Repair:</span>{" "}
-          move the selection back inside each fold.
+          <span className="font-medium text-ink">Diagnose:</span> selection peeked across the wall.{" "}
+          <span className="font-medium text-ink">Repair:</span> move selection inside each fold and seal the boundary.
         </p>
       </div>
     );
@@ -146,14 +99,12 @@ function Guidance({ phase }: { phase: Phase }) {
       <div>
         <p className="font-mono text-[11px] tracking-[0.16em] text-accent uppercase">Repaired ✓</p>
         <p className="mt-2 leading-relaxed text-ink">
-          With selection inside each fold, the diagonal dissolves into a shapeless cloud
-          and R² falls back to ~0 — the truth. The skill was never in the data; it was in
-          the leak.
+          The back-flow vanishes, the wall seals, and R² falls to ~0 — the honest truth. The skill was in the leak,
+          not the data.
         </p>
         <p className="mt-3 leading-relaxed text-ink-muted">
-          <span className="font-medium text-ink">Boundary:</span> selection is just one
-          door. Scaling, imputing, or encoding on the full dataset leaks the same way —
-          any step that learns from the data belongs inside the split.
+          <span className="font-medium text-ink">Boundary:</span> scaling, imputing, or encoding on the full dataset
+          leaks the same way — any step that learns belongs inside the split.
         </p>
       </div>
     );
@@ -162,13 +113,11 @@ function Guidance({ phase }: { phase: Phase }) {
     <div>
       <p className="font-mono text-[11px] tracking-[0.16em] text-ink-faint uppercase">Trigger · break it on purpose</p>
       <p className="mt-2 leading-relaxed text-ink">
-        Selecting inside each fold, this noise scores ~0 — correctly. Now take the
-        tempting shortcut almost everyone reaches for: pick the best features using{" "}
+        With selection inside each fold, this noise scores ~0. Now take the shortcut: pick features using{" "}
         <span className="font-medium text-[var(--viz-error-ink)]">all the data</span> first, then cross-validate.
       </p>
       <p className="mt-3 leading-relaxed text-ink-muted">
-        Predict first: can a score climb above zero on data with genuinely nothing to
-        predict — if you let selection peek?
+        Predict first: can forbidden information crossing the wall manufacture skill where there is none?
       </p>
     </div>
   );

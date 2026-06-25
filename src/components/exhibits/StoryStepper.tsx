@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useActHandoffOptional } from "@/components/exhibits/ActHandoffContext";
 import { NarratedSection } from "@/components/narrative/NarratedSection";
 import { FrameContext } from "@/components/exhibits/story-frame";
 import type { BeatPredict, BeatView } from "@/lib/exhibit/spine";
@@ -26,6 +27,8 @@ import type { BeatPredict, BeatView } from "@/lib/exhibit/spine";
  * its real-world payoff and nothing scrolls below it.
  */
 
+export type StoryStepperLayout = "diptych" | "continuous";
+
 type Step<Frame> =
   | { kind: "beat"; heading?: string; beat: BeatView<Frame>; frame: Frame }
   | { kind: "notes"; heading: string; notes: string[]; frame: Frame };
@@ -34,12 +37,18 @@ export function StoryStepper<Frame>({
   beats,
   graphic,
   fieldNotes,
+  layout = "diptych",
 }: {
   beats: BeatView<Frame>[];
   /** The persistent interactive. Reads its frame with useActiveFrame(). */
   graphic: ReactNode;
   /** Real-world notes; rendered as the closing "In the wild" step when present. */
   fieldNotes?: string[];
+  /**
+   * Composition mode. `diptych` (default) keeps prose beside the sticky graphic
+   * from 700px up; `continuous` stacks one canvas the learner reads top-to-bottom.
+   */
+  layout?: StoryStepperLayout;
 }) {
   const steps: Step<Frame>[] = [
     ...beats.map((beat) => ({
@@ -65,9 +74,17 @@ export function StoryStepper<Frame>({
   const count = steps.length;
   const step = steps[active];
   const segs = useRef<(HTMLButtonElement | null)[]>([]);
+  const handoff = useActHandoffOptional();
+  const isContinuous = layout === "continuous";
+
+  // Hand the active frame to later acts (Run-it can seed from the story's last beat).
+  useEffect(() => {
+    handoff?.setStoryFrame(step.frame);
+  }, [handoff, step.frame]);
 
   const go = (i: number, focusSeg = false) => {
     const next = Math.max(0, Math.min(count - 1, i));
+    if (next !== active) handoff?.markStoryInteraction();
     setActive(next);
     if (focusSeg) segs.current[next]?.focus();
   };
@@ -84,21 +101,32 @@ export function StoryStepper<Frame>({
     }
   };
 
+  const gridClass = isContinuous
+    ? "story-continuous flex flex-col gap-8"
+    : "story-diptych min-[700px]:grid min-[700px]:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] min-[700px]:items-start min-[700px]:gap-8 lg:gap-12 xl:gap-16";
+
+  const graphicClass = isContinuous
+    ? "story-graphic"
+    : "story-graphic min-[700px]:order-2 min-[700px]:col-start-2 min-[700px]:sticky min-[700px]:top-8";
+
+  const panelClass = isContinuous
+    ? "story-panel"
+    : "story-panel mt-8 min-[700px]:order-1 min-[700px]:col-start-1 min-[700px]:mt-0";
+
   return (
-    <div className="min-[700px]:grid min-[700px]:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] min-[700px]:items-start min-[700px]:gap-8 lg:gap-12 xl:gap-16">
-      {/* The persistent graphic. First in source order so it leads when stacked;
-          stays side-by-side and pinned from 700px up — half a wide monitor — so
-          the graphic and its current beat never lose sight of each other. */}
-      <div className="min-[700px]:order-2 min-[700px]:col-start-2 min-[700px]:sticky min-[700px]:top-8">
+    <div className={gridClass}>
+      {/* The persistent graphic. First in source order when stacked; side-by-side
+          and pinned from 700px up in diptych mode. */}
+      <div className={graphicClass}>
         <FrameContext.Provider value={step.frame}>{graphic}</FrameContext.Provider>
       </div>
 
       {/* The beat panel: rail, then the current step. */}
-      <div className="mt-8 min-[700px]:order-1 min-[700px]:col-start-1 min-[700px]:mt-0">
+      <div className={panelClass}>
         <nav
           aria-label="Story beats"
           onKeyDown={onRailKey}
-          className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-line pb-5"
+          className="chrome-story-rail flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-line pb-5"
         >
           <ol className="flex min-w-0 flex-wrap items-center gap-1.5">
             {steps.map((s, i) => {
@@ -128,8 +156,8 @@ export function StoryStepper<Frame>({
             })}
           </ol>
 
-          <div className="flex shrink-0 items-center gap-3">
-            <span className="font-mono text-xs tracking-widest whitespace-nowrap text-ink-faint uppercase tabular-nums">
+          <div className="chrome-story-transport flex shrink-0 items-center gap-3">
+            <span className="chrome-story-counter font-mono text-xs tracking-widest whitespace-nowrap text-ink-faint uppercase tabular-nums">
               {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
             </span>
             <div className="flex gap-1.5">
@@ -176,7 +204,12 @@ export function StoryStepper<Frame>({
                   {step.beat.equation}
                 </div>
               )}
-              {step.beat.predict && <BeatPrediction predict={step.beat.predict} />}
+              {step.beat.predict && (
+                <BeatPrediction
+                  predict={step.beat.predict}
+                  onInteract={() => handoff?.markStoryInteraction()}
+                />
+              )}
             </>
           ) : (
             <>
@@ -205,7 +238,13 @@ export function StoryStepper<Frame>({
  * first-class in the template, so every exhibit enforces it rather than narrating it.
  * State is per-beat (the step remounts on advance), so a prediction resets if revisited.
  */
-function BeatPrediction({ predict }: { predict: BeatPredict }) {
+function BeatPrediction({
+  predict,
+  onInteract,
+}: {
+  predict: BeatPredict;
+  onInteract?: () => void;
+}) {
   const [picked, setPicked] = useState<number | null>(null);
   const chosen = picked !== null ? predict.options[picked] : null;
   return (
@@ -222,7 +261,10 @@ function BeatPrediction({ predict }: { predict: BeatPredict }) {
             <button
               key={i}
               type="button"
-              onClick={() => setPicked(i)}
+              onClick={() => {
+                onInteract?.();
+                setPicked(i);
+              }}
               aria-pressed={isPicked}
               className={`rounded-lg border px-4 py-2.5 text-left text-sm leading-relaxed transition-colors ${
                 state === "correct"

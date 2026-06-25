@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DataPoints, Plot, usePlot } from "@/components/viz/Plot";
 import { PolyCurve } from "@/components/viz/PolyCurve";
 import {
@@ -14,38 +14,16 @@ import fixtures from "@/lib/models/fixtures/polynomial.json";
 import type { Point } from "@/lib/models/linear-regression";
 
 /**
- * The specimen hero — regularisation as one dial on one model. The SAME
- * degree-12 model, fit two ways: with no penalty (λ≈0) it contorts through every
- * training point — train error ≈ 0 — yet flings between them and misses the
- * held-out points (test 0.43); with a penalty (λ=0.3) the same model is pulled
- * smooth, pays a little train error (0.01) and tracks the real shape (test 0.11).
- * Not a smaller model — the same one, reined in. Two bounded split-screen panels
- * (matching the neural-net hero) so the off-frame fling reads against a clean
- * frame; curves fade in on load.
+ * The specimen hero — regularisation as one dial on one model. CausalTrace shrinkage:
+ * λ increases → coefficients contract → curve smooths → test error responds in chain.
+ * Two panels compare no-penalty vs penalised; a hero scrubber animates the causal link.
  */
 
 const TRAIN = fixtures.train as Point[];
 const TEST = fixtures.test as Point[];
-const PANELS = [
-  { lambda: 1e-4, kicker: "no penalty (λ≈0) — overfits" },
-  { lambda: 0.3, kicker: "penalised (λ=0.3) — smooth" },
-].map((p) => {
-  const model = ridgeFitCheb(TRAIN, REG_DEGREE, p.lambda);
-  return {
-    ...p,
-    model,
-    trainErr: chebMSE(TRAIN, model),
-    testErr: chebMSE(TEST, model),
-  };
-});
+const LAMBDA_LOW = 1e-4;
+const LAMBDA_HIGH = 0.3;
 
-/**
- * The framed plot interior + its contents, drawn from the live scales (so the
- * frame and the curve's clip always match Plot's margins). The bounding rect is
- * the same chrome the neural-net DecisionField uses; the curve is clipped to it
- * so an overfit fling stops cleanly at the frame instead of trailing into the
- * page. Test points sit under the curve; train points (the ones it fits) on top.
- */
 function PanelBody({
   model,
   clipId,
@@ -57,7 +35,7 @@ function PanelBody({
 }) {
   const { x, y } = usePlot();
   const [rxA, rxB] = x.range;
-  const [ryBottom, ryTop] = y.range; // y range is inverted (pixel space)
+  const [ryBottom, ryTop] = y.range;
   const fx = Math.min(rxA, rxB);
   const fy = Math.min(ryTop, ryBottom);
   const fw = Math.abs(rxB - rxA);
@@ -69,15 +47,7 @@ function PanelBody({
           <rect x={fx} y={fy} width={fw} height={fh} />
         </clipPath>
       </defs>
-      <rect
-        x={fx}
-        y={fy}
-        width={fw}
-        height={fh}
-        fill="var(--surface-bg)"
-        stroke="var(--line)"
-      />
-      {/* held-out checkpoints — under the curve, so the curve missing them reads */}
+      <rect x={fx} y={fy} width={fw} height={fh} fill="var(--surface-bg)" stroke="var(--line)" />
       <g aria-hidden>
         {TEST.map((p, i) => (
           <circle
@@ -92,10 +62,7 @@ function PanelBody({
           />
         ))}
       </g>
-      <g
-        clipPath={`url(#${clipId})`}
-        style={{ opacity: reveal, transition: "opacity 500ms ease" }}
-      >
+      <g clipPath={`url(#${clipId})`} style={{ opacity: reveal, transition: "opacity 500ms ease" }}>
         <PolyCurve predict={(xv) => predictCheb(model, xv)} />
       </g>
       <DataPoints points={TRAIN} />
@@ -103,14 +70,35 @@ function PanelBody({
   );
 }
 
+/** CausalTrace — coefficient bars that shrink as λ rises. */
+function CoefTrace({ model, lambdaT }: { model: ChebModel; lambdaT: number }) {
+  const maxW = Math.max(...model.weights.map(Math.abs), 0.01);
+  return (
+    <div className="flex items-end gap-0.5 px-1" aria-hidden>
+      {model.weights.slice(1).map((w, i) => (
+        <div
+          key={i}
+          className="w-3 rounded-t bg-[var(--viz-prediction)] transition-all duration-300"
+          style={{
+            height: `${Math.max(4, (Math.abs(w) / maxW) * 36 * (1 - lambdaT * 0.15))}px`,
+            opacity: 0.45 + (1 - lambdaT) * 0.55,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function Panel({
   panel,
   clipId,
   reveal,
+  lambdaT,
 }: {
-  panel: (typeof PANELS)[number];
+  panel: { lambda: number; kicker: string; model: ChebModel; trainErr: number; testErr: number };
   clipId: string;
   reveal: number;
+  lambdaT: number;
 }) {
   return (
     <div className="min-w-0 flex-1">
@@ -120,19 +108,20 @@ function Panel({
         </div>
         <div className="mt-1 flex items-baseline gap-4 font-mono text-[11px] tabular-nums">
           <span style={{ color: "var(--viz-truth-ink)" }}>
-            train error {panel.trainErr.toFixed(2)}
+            train {panel.trainErr.toFixed(2)}
           </span>
           <span style={{ color: "var(--viz-error-ink)" }}>
-            test error {panel.testErr.toFixed(2)}
+            test {panel.testErr.toFixed(2)}
           </span>
         </div>
+        <CoefTrace model={panel.model} lambdaT={lambdaT} />
       </div>
       <Plot
         width={400}
         height={270}
         xDomain={[-0.02, 1.02]}
         yDomain={[-1.55, 1.55]}
-        ariaLabel={`A degree-${REG_DEGREE} fit, ${panel.kicker}: train error ${panel.trainErr.toFixed(2)} on the fitted points, test error ${panel.testErr.toFixed(2)} on held-out points.`}
+        ariaLabel={`A degree-${REG_DEGREE} fit, ${panel.kicker}: train ${panel.trainErr.toFixed(2)}, test ${panel.testErr.toFixed(2)}.`}
       >
         <PanelBody model={panel.model} clipId={clipId} reveal={reveal} />
       </Plot>
@@ -142,11 +131,37 @@ function Panel({
 
 export function RegularizationHero() {
   const [reveal, setReveal] = useState(0);
+  const [lambdaT, setLambdaT] = useState(0);
+
+  const scrubLambda = LAMBDA_LOW * Math.pow(LAMBDA_HIGH / LAMBDA_LOW, lambdaT);
+  const scrubModel = useMemo(() => ridgeFitCheb(TRAIN, REG_DEGREE, scrubLambda), [scrubLambda]);
+  const scrubTrain = useMemo(() => chebMSE(TRAIN, scrubModel), [scrubModel]);
+  const scrubTest = useMemo(() => chebMSE(TEST, scrubModel), [scrubModel]);
+
+  const panels = useMemo(
+    () =>
+      [
+        { lambda: LAMBDA_LOW, kicker: "no penalty (λ≈0) — overfits" },
+        { lambda: LAMBDA_HIGH, kicker: "penalised (λ=0.3) — smooth" },
+      ].map((p) => {
+        const model = ridgeFitCheb(TRAIN, REG_DEGREE, p.lambda);
+        return {
+          ...p,
+          model,
+          trainErr: chebMSE(TRAIN, model),
+          testErr: chebMSE(TEST, model),
+        };
+      }),
+    [],
+  );
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
-      const id = requestAnimationFrame(() => setReveal(1));
+      const id = requestAnimationFrame(() => {
+        setReveal(1);
+        setLambdaT(1);
+      });
       return () => cancelAnimationFrame(id);
     }
     const t = window.setTimeout(() => setReveal(1), 360);
@@ -160,32 +175,47 @@ export function RegularizationHero() {
           Overfitting &amp; regularisation
         </span>
         <span className="hidden font-mono text-[11px] tracking-widest text-ink-faint uppercase sm:inline">
-          same model, penalty off vs on
+          λ {scrubLambda.toFixed(3)} · test {scrubTest.toFixed(2)}
         </span>
       </figcaption>
       <div className="flex flex-col gap-4 px-3 py-3 sm:flex-row">
-        {PANELS.map((panel, i) => (
+        {panels.map((panel, i) => (
           <Panel
             key={panel.lambda}
             panel={panel}
             clipId={`reg-clip-${i}`}
             reveal={reveal}
+            lambdaT={lambdaT}
           />
         ))}
       </div>
-      {/* Decode the two dot styles once for both panels — the train/test split is
-          the whole mechanic, so it earns a line. */}
+      {reveal > 0 && (
+        <div className="border-t border-line px-4 py-3">
+          <label className="flex items-center gap-3">
+            <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">λ low</span>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={Math.round(lambdaT * 100)}
+              onChange={(e) => setLambdaT(Number(e.target.value) / 100)}
+              className="min-w-0 flex-1 accent-[var(--accent)]"
+              aria-label="Causal trace: increase penalty lambda to shrink coefficients and smooth the curve"
+            />
+            <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">λ high</span>
+          </label>
+          <p className="mt-2 text-center font-mono text-[10px] text-ink-faint">
+            causal chain: λ ↑ → weights shrink → curve smooths → train {scrubTrain.toFixed(2)} · test {scrubTest.toFixed(2)}
+          </p>
+        </div>
+      )}
       <div className="flex items-center justify-center gap-6 border-t border-line px-3 py-2 font-mono text-[11px] text-ink-faint">
         <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden style={{ color: "var(--viz-truth)" }}>
-            ●
-          </span>
+          <span aria-hidden style={{ color: "var(--viz-truth)" }}>●</span>
           train — the points it fits
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden style={{ color: "var(--viz-truth)" }}>
-            ○
-          </span>
+          <span aria-hidden style={{ color: "var(--viz-truth)" }}>○</span>
           test — held-out, where error is judged
         </span>
       </div>

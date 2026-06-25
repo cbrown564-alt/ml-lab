@@ -16,8 +16,39 @@ const FIT = olsFit(toPoints(houses));
 
 function HousePoints({ highlightId, onHover }: { highlightId: number | null; onHover: (id: number | null) => void }) {
   const { x, y } = usePlot();
+  const highlighted = highlightId !== null ? houses.find((h) => h.id === highlightId) : null;
   return (
     <g>
+      {highlighted && (
+        <g aria-hidden>
+          <line
+            x1={x(highlighted.size)}
+            y1={y(highlighted.price)}
+            x2={x(highlighted.size) + 42}
+            y2={y(highlighted.price) - 28}
+            stroke="var(--accent)"
+            strokeWidth={1.5}
+            strokeDasharray="4 3"
+            opacity={0.8}
+          />
+          <rect
+            x={x(highlighted.size) + 44}
+            y={y(highlighted.price) - 44}
+            width={118}
+            height={40}
+            rx={5}
+            fill="var(--surface-bg)"
+            stroke="var(--accent)"
+            strokeWidth={1}
+          />
+          <text x={x(highlighted.size) + 52} y={y(highlighted.price) - 30} fontSize={10} fontFamily="var(--font-mono)" fill="var(--accent)">
+            row #{highlighted.id}
+          </text>
+          <text x={x(highlighted.size) + 52} y={y(highlighted.price) - 18} fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-muted)">
+            {highlighted.size} m² · €{highlighted.price}k
+          </text>
+        </g>
+      )}
       {houses.map((h) => {
         const on = highlightId === h.id;
         return (

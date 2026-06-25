@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
+import { DataLeakageProvenancePipe } from "@/components/exhibits/DataLeakageProvenancePipe";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import { fitFold, foldBounds, topKFeatures, type HeldOut, type Matrix } from "@/lib/models/leakage";
@@ -292,6 +293,7 @@ export function DataLeakageLab() {
         </div>
 
         <div className="mt-6 flex flex-col items-center gap-4 lg:mt-0">
+          <DataLeakageProvenancePipe leaky={mode === "leaky"} r2={runningMean} className="max-w-[640px]" />
           <FoldScatter
             prior={prior}
             current={current}

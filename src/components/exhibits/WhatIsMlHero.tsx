@@ -11,10 +11,9 @@ import { bestRuleAccuracy, whatIsMlData } from "@content/exhibits/what-is-ml/exp
  * one vertical cut — its decision zones tinted, its mistakes ringed red and left
  * stranded on the wrong side. Right (easing in on load): the rule the MACHINE
  * learns from the same dots — both features, a tilted boundary — whose zones catch
- * almost everything, leaving only a couple of reds. A dot's hue is its true class,
- * the zone is the rule's verdict, so a clash is a mistake; the count of reds drops
- * from many to nearly none. The doorway's claim — the machine writes a rule you
- * couldn't spell out — reads before a word of prose. Reduced motion shows both at rest.
+ * almost everything, leaving only a couple of reds. A scrubber replays the morph
+ * hand → learned; mistake ghosts from the hand rule persist as faint rings so the
+ * learner sees what the machine fixed. Reduced motion shows both at rest.
  */
 
 const XD: [number, number] = [-3.3, 3.3];
@@ -28,10 +27,33 @@ const LEARNED_PCT = Math.round(accuracy(whatIsMlData, LEARNED) * 100);
 type Pt = { x1: number; x2: number; y: 0 | 1 };
 const handPredict = (p: Pt) => (p.x1 > T ? 1 : 0);
 const machinePredict = (p: Pt) => (proba(LEARNED, p.x1, p.x2) >= 0.5 ? 1 : 0);
+const HAND_MISTAKES = (whatIsMlData as Pt[]).filter((p) => handPredict(p) !== p.y);
 
-const ZONE0 = "var(--viz-truth)"; // predict-0 zone + class-0 dot (gold)
-const ZONE1 = "var(--viz-prediction)"; // predict-1 zone + class-1 dot (blue)
+const ZONE0 = "var(--viz-truth)";
+const ZONE1 = "var(--viz-prediction)";
 const ZONE_OP = 0.1;
+
+/** Persistent mistake ghosts — hand-rule errors that stay visible as faint rings. */
+function MistakeGhosts({ opacity = 0.55 }: { opacity?: number }) {
+  const { x, y } = usePlot();
+  return (
+    <g aria-hidden opacity={opacity}>
+      {HAND_MISTAKES.map((p, i) => (
+        <circle
+          key={i}
+          cx={x(p.x1)}
+          cy={y(p.x2)}
+          r={8}
+          fill="none"
+          stroke="var(--viz-error)"
+          strokeWidth={2}
+          strokeDasharray="4 3"
+          opacity={0.7}
+        />
+      ))}
+    </g>
+  );
+}
 
 function Dots({ predict }: { predict: (p: Pt) => number }) {
   const { x, y } = usePlot();
@@ -75,18 +97,34 @@ function HandGraphic() {
   );
 }
 
-function MachineGraphic({ reveal }: { reveal: number }) {
+function MachineGraphic({ morph }: { morph: number }) {
   const { x, y } = usePlot();
   const clipId = useId();
   const x0 = x(XD[0]);
   const x1 = x(XD[1]);
   const yT = y(YD[1]);
   const yB = y(YD[0]);
-  const A = [x0, y(boundaryX2(LEARNED, XD[0]))];
-  const B = [x1, y(boundaryX2(LEARNED, XD[1]))];
-  const topIs1 = machinePredict({ x1: 0, x2: YD[1], y: 1 }) === 1;
+  // CounterfactualReplay: morph boundary from hand vertical cut → learned tilted line.
+  const handTop = y(YD[1]);
+  const handBot = y(YD[0]);
+  const learnedA = [x0, y(boundaryX2(LEARNED, XD[0]))];
+  const learnedB = [x1, y(boundaryX2(LEARNED, XD[1]))];
+  const bx0 = x(T);
+  const A: [number, number] = [bx0 + (learnedA[0] - bx0) * morph, handTop + (learnedA[1] - handTop) * morph];
+  const B: [number, number] = [bx0 + (learnedB[0] - bx0) * morph, handBot + (learnedB[1] - handBot) * morph];
+  const predictAtMorph = (p: Pt) => {
+    if (morph < 0.02) return handPredict(p);
+    if (morph > 0.98) return machinePredict(p);
+    // Mid-morph: use the interpolated boundary as a soft classifier.
+    const bx = boundaryX2(LEARNED, p.x1);
+    const handSide = p.x1 > T ? 1 : 0;
+    const machSide = p.x2 > bx ? 1 : 0;
+    return Math.round(handSide * (1 - morph) + machSide * morph);
+  };
+  const topIs1 = predictAtMorph({ x1: 0, x2: YD[1], y: 1 }) === 1;
   const top = [[x0, yT], [x1, yT], B, A].map((p) => p.join(",")).join(" ");
   const bot = [[x0, yB], [x1, yB], B, A].map((p) => p.join(",")).join(" ");
+  const ghostOpacity = 0.35 + 0.4 * morph;
   return (
     <g>
       <defs>
@@ -94,17 +132,16 @@ function MachineGraphic({ reveal }: { reveal: number }) {
           <rect x={x0} y={yT} width={x1 - x0} height={yB - yT} />
         </clipPath>
       </defs>
-      <g clipPath={`url(#${clipId})`} opacity={reveal}>
+      <g clipPath={`url(#${clipId})`}>
         <polygon points={top} fill={topIs1 ? ZONE1 : ZONE0} opacity={ZONE_OP} />
         <polygon points={bot} fill={topIs1 ? ZONE0 : ZONE1} opacity={ZONE_OP} />
       </g>
-      <Dots predict={machinePredict} />
-      <g opacity={reveal} clipPath={`url(#${clipId})`}>
+      <MistakeGhosts opacity={ghostOpacity} />
+      <Dots predict={predictAtMorph} />
+      <g clipPath={`url(#${clipId})`}>
         <line x1={A[0]} y1={A[1]} x2={B[0]} y2={B[1]} stroke="var(--accent)" strokeWidth={3} />
       </g>
-      {/* Label appears at full opacity once the boundary is mostly drawn — never
-          faded as low-opacity text (which would dip below the contrast floor). */}
-      {reveal > 0.55 && (
+      {morph > 0.55 && (
         <text x={x1 - 8} y={yT + 16} textAnchor="end" fontSize={12} fontFamily="var(--font-mono)" paintOrder="stroke" stroke="var(--surface-bg)" strokeWidth={3} fill="var(--accent)">
           the machine&apos;s boundary
         </text>
@@ -125,8 +162,6 @@ function Panel({
   pct: number;
   tone: "neutral" | "accent";
   note: string;
-  /** Reveal transform for the machine panel — a transform, never opacity, so the
-   * panel's text never animates through a low-contrast state. */
   style?: React.CSSProperties;
   children: React.ReactNode;
 }) {
@@ -148,12 +183,16 @@ function Panel({
 }
 
 export function WhatIsMlHero() {
-  const [reveal, setReveal] = useState(0);
+  const [morph, setMorph] = useState(0);
+  const [autoPlayed, setAutoPlayed] = useState(false);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
-      const id = requestAnimationFrame(() => setReveal(1));
+      const id = requestAnimationFrame(() => {
+        setMorph(1);
+        setAutoPlayed(true);
+      });
       return () => cancelAnimationFrame(id);
     }
     let raf = 0;
@@ -162,10 +201,10 @@ export function WhatIsMlHero() {
     const tick = (t: number) => {
       if (!start) start = t;
       const p = Math.min(1, (t - start) / DURATION);
-      setReveal(1 - Math.pow(1 - p, 3));
+      setMorph(1 - Math.pow(1 - p, 3));
       if (p < 1) raf = requestAnimationFrame(tick);
+      else setAutoPlayed(true);
     };
-    // Let the hand panel land first, then the machine's rule eases in beside it.
     const arm = window.setTimeout(() => {
       raf = requestAnimationFrame(tick);
     }, 360);
@@ -174,6 +213,8 @@ export function WhatIsMlHero() {
       cancelAnimationFrame(raf);
     };
   }, []);
+
+  const morphPct = Math.round((HAND_PCT + (LEARNED_PCT - HAND_PCT) * morph) * 10) / 10;
 
   return (
     <figure className="overflow-hidden rounded-xl border border-line bg-raised">
@@ -193,16 +234,31 @@ export function WhatIsMlHero() {
             <HandGraphic />
           </Plot>
         </Panel>
-        <Panel kicker="the machine · learned" pct={LEARNED_PCT} tone="accent" style={{ transform: `translateY(${((1 - reveal) * 8).toFixed(2)}px)` }} note="both features, a tilted boundary — learned from the same dots, almost no reds left">
+        <Panel kicker="the machine · learned" pct={Math.round(morphPct)} tone="accent" note="both features, a tilted boundary — mistake ghosts show what the hand rule got wrong">
           <Plot
             width={460}
             height={380}
             xDomain={XD}
             yDomain={YD}
-            ariaLabel={`The same dots. The rule a machine learns — a tilted boundary using both features — scores ${LEARNED_PCT}%, leaving only a couple ringed red.`}
+            ariaLabel={`The same dots. Scrub to replay the morph from your vertical cut to the machine's tilted boundary. Faint red rings are persistent mistake ghosts from the hand rule.`}
           >
-            <MachineGraphic reveal={reveal} />
+            <MachineGraphic morph={morph} />
           </Plot>
+          {autoPlayed && (
+            <label className="mt-2 flex items-center gap-3 px-1">
+              <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">replay</span>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={Math.round(morph * 100)}
+                onChange={(e) => setMorph(Number(e.target.value) / 100)}
+                className="min-w-0 flex-1 accent-[var(--accent)]"
+                aria-label="Replay morph from hand rule to learned rule"
+              />
+              <span className="shrink-0 font-mono text-[10px] tabular-nums text-ink-faint">{Math.round(morph * 100)}%</span>
+            </label>
+          )}
         </Panel>
       </div>
     </figure>

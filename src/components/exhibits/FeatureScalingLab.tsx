@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LossSurface } from "@/components/viz/LossSurface";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
@@ -15,18 +15,17 @@ import { conditionNumber, stableLearningRate, standardizeX } from "@/lib/models/
 import { featureScalingExperiment } from "@content/exhibits/feature-scaling/experiment";
 
 /**
- * Feature scaling, made visible on the loss surface. Raw units give a long, thin,
- * tilted bowl that descent must zig-zag down with tiny steps; standardising x
- * rounds the bowl, so the same walk takes a big confident step almost straight to
- * the floor. The toggle is the whole lesson — same data, a kinder surface.
+ * Feature scaling on the loss surface. Toggling raw ↔ standardised morphs the bowl
+ * (axis deformation) while the descent path straightens — CounterfactualReplay in one
+ * coordinated view instead of a before/after swap.
  */
 const RAW: Point[] = featureScalingExperiment.datasets[0].points;
 const MAX_STEPS = 300;
 const PLAY_MS = 90;
+const MORPH_MS = 480;
 
 type Scaling = "raw" | "standardised";
 
-/** Run descent to convergence (or the budget) at this surface's best stable rate. */
 function walk(points: Point[]): { trace: DescentStep[]; lr: number; steps: number } {
   const lr = stableLearningRate(points);
   const run = createGradientDescent(points, { learningRate: lr });
@@ -37,20 +36,48 @@ function walk(points: Point[]): { trace: DescentStep[]; lr: number; steps: numbe
 
 export function FeatureScalingLab() {
   const [scaling, setScaling] = useState<Scaling>("raw");
-  const points = useMemo(() => (scaling === "raw" ? RAW : standardizeX(RAW)), [scaling]);
-  const { trace, lr, steps } = useMemo(() => walk(points), [points]);
+  const [morphT, setMorphT] = useState(0);
+  const morphRaf = useRef(0);
+
+  const rawWalk = useMemo(() => walk(RAW), []);
+  const stdWalk = useMemo(() => walk(standardizeX(RAW)), []);
+
+  const targetT = scaling === "standardised" ? 1 : 0;
+  const points = scaling === "raw" ? RAW : standardizeX(RAW);
+  const { trace, lr, steps } = useMemo(() => (scaling === "raw" ? rawWalk : stdWalk), [scaling, rawWalk, stdWalk]);
   const kappa = useMemo(() => conditionNumber(points), [points]);
 
   const [cursor, setCursor] = useState(0);
   const [playing, setPlaying] = useState(false);
 
-  // New surface (toggle): rewind so the walk replays from the flat line.
-  const [prevTrace, setPrevTrace] = useState(trace);
-  if (trace !== prevTrace) {
-    setPrevTrace(trace);
+  useEffect(() => {
+    if (morphT === targetT) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setMorphT(targetT);
+      return;
+    }
+    const from = morphT;
+    const to = targetT;
+    let start = 0;
+    const tick = (now: number) => {
+      if (!start) start = now;
+      const p = Math.min(1, (now - start) / MORPH_MS);
+      const eased = 1 - Math.pow(1 - p, 2);
+      setMorphT(from + (to - from) * eased);
+      if (p < 1) morphRaf.current = requestAnimationFrame(tick);
+    };
+    morphRaf.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(morphRaf.current);
+  }, [targetT, morphT]);
+
+  const handoffScaling = (next: Scaling) => {
+    if (next === scaling) return;
+    whenHydrated(() => useLearner.getState().recordPractice("feature-scaling"));
+    setScaling(next);
     setCursor(0);
     setPlaying(false);
-  }
+  };
 
   useEffect(() => {
     if (!playing) return;
@@ -67,6 +94,16 @@ export function FeatureScalingLab() {
   }, [playing, trace.length]);
 
   const atEnd = cursor >= trace.length - 1;
+  const isMorphing = Math.abs(morphT - targetT) > 0.02;
+  const morphProp = isMorphing
+    ? {
+        t: morphT,
+        fromPoints: RAW,
+        toPoints: standardizeX(RAW),
+        fromTrace: rawWalk.trace,
+        toTrace: stdWalk.trace,
+      }
+    : undefined;
 
   return (
     <div className="rounded-xl border border-line bg-raised p-6">
@@ -87,10 +124,7 @@ export function FeatureScalingLab() {
                 key={value}
                 type="button"
                 aria-pressed={scaling === value}
-                onClick={() => {
-                  whenHydrated(() => useLearner.getState().recordPractice("feature-scaling"));
-                  setScaling(value);
-                }}
+                onClick={() => handoffScaling(value)}
                 className={`rounded-full px-4 py-1 transition-colors ${
                   scaling === value ? "bg-accent text-accent-ink" : "text-ink-muted hover:text-ink"
                 }`}
@@ -111,14 +145,23 @@ export function FeatureScalingLab() {
           />
 
           <p className="text-sm leading-relaxed text-ink-faint">
-            {scaling === "raw"
-              ? "The bowl is stretched, so the biggest safe step is tiny and the walk has to zig-zag — many steps to reach the floor."
-              : "Round bowl: one big step points almost at the floor, and the walk is over in a handful of steps."}
+            {isMorphing
+              ? "Watch the axes deform — the valley rounds out and the path straightens."
+              : scaling === "raw"
+                ? "The bowl is stretched, so the biggest safe step is tiny and the walk zig-zags."
+                : "Round bowl: one big step points almost at the floor."}
           </p>
         </div>
 
         <div className="mt-6 lg:mt-0">
-          <LossSurface points={points} trace={trace} cursor={cursor} width={720} height={560} />
+          <LossSurface
+            points={points}
+            trace={trace}
+            cursor={cursor}
+            width={720}
+            height={560}
+            morph={morphProp}
+          />
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button
               type="button"
@@ -127,7 +170,7 @@ export function FeatureScalingLab() {
                 if (atEnd) setCursor(0);
                 setPlaying((p) => !p);
               }}
-              disabled={trace.length < 2}
+              disabled={trace.length < 2 || isMorphing}
               className="rounded-full border border-accent px-5 py-1.5 text-sm font-medium text-accent hover:bg-accent hover:text-accent-ink disabled:cursor-not-allowed disabled:opacity-40"
             >
               {playing ? "Pause" : atEnd ? "Replay" : "Play"}
@@ -142,7 +185,7 @@ export function FeatureScalingLab() {
                 setPlaying(false);
                 setCursor(Number(e.target.value));
               }}
-              disabled={trace.length < 2}
+              disabled={trace.length < 2 || isMorphing}
               className="flex-1 accent-[var(--accent)] disabled:opacity-40"
             />
           </div>

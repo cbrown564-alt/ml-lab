@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { StatGrid } from "@/components/viz/StatGrid";
-import { ConfusionMatrix, ProbabilityStrip } from "@/components/exhibits/ClassificationViews";
+import { DecisionConveyor } from "@/components/exhibits/ClassificationViews";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import { fitLogistic, proba } from "@/lib/models/logistic";
 import {
@@ -72,10 +72,7 @@ export function ClassificationTaskLab() {
         </div>
 
         <div className="mt-6 flex flex-col gap-6 lg:mt-0">
-          <ProbabilityStrip scored={SCORED} threshold={threshold} />
-          <div className="max-w-[360px]">
-            <ConfusionMatrix tp={cm.tp} fp={cm.fp} fn={cm.fn} tn={cm.tn} />
-          </div>
+          <DecisionConveyor scored={SCORED} threshold={threshold} />
         </div>
       </div>
     </div>

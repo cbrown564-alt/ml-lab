@@ -116,45 +116,78 @@ body {
   animation: lift-fog 600ms var(--ease-out);
 }
 
+/* Prose measure variants (Batch 2): width responds to content where allowed. */
+.prose-measure {
+  max-width: 68ch;
+}
+.prose-measure-content {
+  width: fit-content;
+  max-width: min(68ch, 100%);
+}
+.prose-measure-wide {
+  max-width: 80ch;
+}
+.prose-measure-masthead {
+  max-width: 58ch;
+}
+
+/* Chrome discipline (Batch 2): redundant template chrome folds once engaged.
+   ActHandoffProvider sets data-chrome-engaged / data-chrome-immersed on
+   .act-handoff-root. Opt in with the chrome-* marker classes below. */
+[data-chrome-engaged] .chrome-placard-detail {
+  display: none;
+}
+[data-chrome-engaged] .chrome-compact-placard {
+  align-self: start;
+}
+[data-chrome-engaged] .chrome-story-counter {
+  display: none;
+}
+[data-chrome-immersed] .chrome-spine-purpose {
+  display: none;
+}
+[data-chrome-immersed] .chrome-spine-rail {
+  gap-y: 0;
+}
+/* Hide metric strips in Run-it when See-it already surfaced the same readouts.
+   Labs mark duplicate strips with chrome-redundant-metrics. */
+[data-chrome-immersed][data-active-act="run"] .chrome-redundant-metrics {
+  display: none;
+}
+
 [data-surface] {
   background: var(--surface-bg);
   color: var(--ink);
 }
 
-/* The cabinet of jewels (docs/exemplars/homepages/SYNTHESIS.md): each exhibit
-   is a deep gem-plate holding its own luminous glyph — after Seeing Theory's
-   chapter circles. The plate is top-lit for depth; on hover/focus it blooms and
-   glows with the lab's accent (the chosen path), exhibits it connects to gain a
-   quiet accent ring (structure revealed without resting lines), and the rest
-   recede via inline opacity. Reduced motion flattens the transitions globally. */
+/* The cabinet of jewels: warm raised plates holding live micro-specimens in the
+   lab's semantic viz grammar — diagrammatic previews, not abstract dark gems.
+   On hover/focus the plate blooms and the specimen scales toward its hero motion. */
 .jewel-plate {
-  border-radius: 9999px;
-  background: radial-gradient(
-    circle at 36% 28%,
-    oklch(33% 0.03 265),
-    oklch(18% 0.022 265)
-  );
+  border-radius: 1rem;
+  border: 1px solid var(--line);
+  background: var(--surface-raised);
   box-shadow:
-    0 10px 26px -14px oklch(18% 0.02 265 / 0.7),
-    inset 0 1px 0 0 oklch(100% 0 0 / 0.08),
-    inset 0 0 0 1px oklch(100% 0 0 / 0.06);
+    0 4px 14px -8px oklch(18% 0.02 265 / 0.25),
+    inset 0 1px 0 0 oklch(100% 0 0 / 0.6);
   transition:
     transform 240ms var(--ease-out),
-    box-shadow 240ms var(--ease-out);
+    box-shadow 240ms var(--ease-out),
+    border-color 240ms var(--ease-out);
 }
 .jewel-plate[data-active] {
   transform: scale(1.06) translateY(-2px);
+  border-color: color-mix(in oklch, var(--accent) 45%, var(--line));
   box-shadow:
-    0 20px 42px -16px oklch(18% 0.02 265 / 0.8),
-    0 0 30px -4px color-mix(in oklch, var(--accent) 55%, transparent),
-    inset 0 1px 0 0 oklch(100% 0 0 / 0.12),
-    inset 0 0 0 1px color-mix(in oklch, var(--accent) 55%, transparent);
+    0 12px 28px -10px oklch(18% 0.02 265 / 0.35),
+    0 0 0 1px color-mix(in oklch, var(--accent) 35%, transparent),
+    inset 0 1px 0 0 oklch(100% 0 0 / 0.8);
 }
 .jewel-plate[data-linked] {
+  border-color: color-mix(in oklch, var(--accent) 38%, var(--line));
   box-shadow:
-    0 10px 26px -14px oklch(18% 0.02 265 / 0.7),
-    inset 0 1px 0 0 oklch(100% 0 0 / 0.08),
-    inset 0 0 0 1px color-mix(in oklch, var(--accent) 48%, transparent);
+    0 4px 14px -8px oklch(18% 0.02 265 / 0.25),
+    inset 0 0 0 1px color-mix(in oklch, var(--accent) 30%, transparent);
 }
 .jewel {
   transition: opacity 240ms var(--ease-out);

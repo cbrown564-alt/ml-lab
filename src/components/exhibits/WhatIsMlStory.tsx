@@ -53,6 +53,23 @@ function Graphic({ stage }: { stage: WhatIsMlFrame["stage"] }) {
           <polygon points={[[x(xd0), y(yd0)], [x(xd1), y(yd0)], bB, bA].map((p) => p.join(",")).join(" ")} fill={topIs1 ? ZONE0 : ZONE1} opacity={ZONE_OP} />
         </g>
       )}
+      {showLearned &&
+        whatIsMlData
+          .filter((p) => (p.x1 > BEST.t ? 1 : 0) !== p.y)
+          .map((p, i) => (
+            <circle
+              key={`ghost-${i}`}
+              cx={x(p.x1)}
+              cy={y(p.x2)}
+              r={7}
+              fill="none"
+              stroke="var(--viz-error)"
+              strokeWidth={1.75}
+              strokeDasharray="4 3"
+              opacity={0.5}
+              aria-hidden
+            />
+          ))}
       {whatIsMlData.map((p, i) => {
         const wrong = showHand
           ? (p.x1 > BEST.t ? 1 : 0) !== p.y

@@ -1,11 +1,12 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ActHandoffProvider } from "@/components/exhibits/ActHandoffContext";
 import { ConceptCheckSection, type CheckNext } from "@/components/assessment/ConceptCheckSection";
 import { ExhibitSpine, type ExhibitAct } from "@/components/exhibits/ExhibitSpine";
 import { FailureGallery } from "@/components/exhibits/FailureGallery";
 import { MathView } from "@/components/exhibits/MathView";
 import { SpecimenPlacard } from "@/components/exhibits/SpecimenPlacard";
-import { StoryStepper } from "@/components/exhibits/StoryStepper";
+import { StoryStepper, type StoryStepperLayout } from "@/components/exhibits/StoryStepper";
 import { RecordVisit } from "@/components/learner/RecordVisit";
 import type { ConceptCheck } from "@/lib/assessment/schema";
 import type { Beat, BeatView } from "@/lib/exhibit/spine";
@@ -43,6 +44,25 @@ const ACT_PURPOSE = {
   explain: "Apply the idea",
 } as const;
 
+/** Optional layout variance — defaults preserve every live exhibit page. */
+export type ExhibitLayoutVariant = {
+  /** Prose column measure. `content` shrinks to fit short ledes. */
+  prose?: "standard" | "content" | "wide";
+  /** See-it composition. `continuous` stacks one canvas instead of diptych. */
+  story?: StoryStepperLayout;
+};
+
+function proseMeasure(variant: ExhibitLayoutVariant["prose"] = "standard") {
+  switch (variant) {
+    case "content":
+      return "prose-measure-content";
+    case "wide":
+      return "prose-measure-wide";
+    default:
+      return "prose-measure";
+  }
+}
+
 export function ExhibitFrame({
   nodeId,
   lede,
@@ -58,6 +78,7 @@ export function ExhibitFrame({
   failures,
   breakIt,
   checkCompanion,
+  layout,
 }: {
   nodeId: string;
   /** The exhibit's opening prose — the one part of the chrome that is content. */
@@ -107,6 +128,8 @@ export function ExhibitFrame({
    * canvas is composed, not a void. Optional; without it the checks fill one column.
    */
   checkCompanion?: ReactNode;
+  /** Composition variance without breaking existing pages. */
+  layout?: ExhibitLayoutVariant;
 }) {
   const node = nodes.find((n) => n.id === nodeId);
   if (!node) throw new Error(`ExhibitFrame: no graph node with id "${nodeId}"`);
@@ -160,10 +183,18 @@ export function ExhibitFrame({
       ? lookup.get(journey.stops[stopIndex + 1].nodeId)
       : undefined;
 
+  const proseClass = proseMeasure(layout?.prose);
+  const storyLayout = layout?.story ?? "diptych";
+
   // The stepper is the page's main event and its end; field notes close the walk
   // as its final "In the wild" step rather than scrolling below it.
   const storyView = (
-    <StoryStepper beats={beats} graphic={story} fieldNotes={narrative.fieldNotes} />
+    <StoryStepper
+      beats={beats}
+      graphic={story}
+      fieldNotes={narrative.fieldNotes}
+      layout={storyLayout}
+    />
   );
 
   // Run it — inspect the implementation. The open bench leads (drive it, and read
@@ -171,7 +202,7 @@ export function ExhibitFrame({
   // maths: coordinated representations of one canonical state, not separate views.
   const runView = (
     <div>
-      <div className="max-w-[68ch]">
+      <div className={proseClass}>
         <p className="text-lg leading-relaxed text-ink-muted">
           {experimentLede ?? (
             <>
@@ -217,7 +248,7 @@ export function ExhibitFrame({
             purpose: ACT_PURPOSE.break,
             content: (
               <div>
-                <div className="max-w-[68ch]">
+                <div className={proseClass}>
                   <p className="text-lg leading-relaxed text-ink-muted">
                     Trigger the failure yourself. Watch the symptom, identify the
                     cause, then repair it.
@@ -251,7 +282,7 @@ export function ExhibitFrame({
                 <div className="mt-10 lg:mt-0 lg:sticky lg:top-8">{checkCompanion}</div>
               </div>
             ) : (
-              <div className="max-w-[68ch]">
+              <div className={proseClass}>
                 <ConceptCheckSection check={check} nodeTitle={node.title} next={checkNext} />
               </div>
             ),
@@ -274,44 +305,46 @@ export function ExhibitFrame({
           the exhibit before any chrome — you meet the thing, then read its tag. */}
       {hero && <div className="mb-10">{hero}</div>}
 
-      {/* Masthead: under the specimen, the title and the placard sit as a pair —
-          the exhibit's name and its catalogue record, orienting the learner in
-          the knowledge graph before the interactive. */}
-      <header className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)] lg:items-start lg:gap-12">
-        <div className="max-w-[58ch]">
-          <h1 className="text-4xl font-semibold tracking-tight text-balance">
-            {node.title}
-          </h1>
-          <div className="mt-5 text-lg leading-relaxed text-ink-muted">{lede}</div>
-          {promise && (
-            <p className="mt-6 border-l-2 border-accent pl-4 text-[15px] leading-relaxed text-ink">
-              {promise}
-            </p>
-          )}
-        </div>
-        <SpecimenPlacard
-          node={node}
-          buildsOn={buildsOn}
-          leadsTo={unlocks}
-          related={related}
-          journey={
-            journey
-              ? { title: journey.title, stopIndex, count: journey.stops.length }
-              : undefined
-          }
-        />
-      </header>
+      <ActHandoffProvider initialActId="see">
+        {/* Masthead: under the specimen, the title and the placard sit as a pair —
+            the exhibit's name and its catalogue record, orienting the learner in
+            the knowledge graph before the interactive. */}
+        <header className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)] lg:items-start lg:gap-12">
+          <div className="prose-measure-masthead">
+            <h1 className="text-4xl font-semibold tracking-tight text-balance">
+              {node.title}
+            </h1>
+            <div className="mt-5 text-lg leading-relaxed text-ink-muted">{lede}</div>
+            {promise && (
+              <p className="mt-6 border-l-2 border-accent pl-4 text-[15px] leading-relaxed text-ink">
+                {promise}
+              </p>
+            )}
+          </div>
+          <SpecimenPlacard
+            node={node}
+            buildsOn={buildsOn}
+            leadsTo={unlocks}
+            related={related}
+            journey={
+              journey
+                ? { title: journey.title, stopIndex, count: journey.stops.length }
+                : undefined
+            }
+          />
+        </header>
 
-      {/* The spine: the product promise made structural. The learner works the
-          exhibit in four passes — see it, run it, break it, explain it. */}
-      <div className="mt-14">
-        <p className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
-          Work through four stages
-        </p>
-        <div className="mt-4">
-          <ExhibitSpine acts={acts} />
+        {/* The spine: the product promise made structural. The learner works the
+            exhibit in four passes — see it, run it, break it, explain it. */}
+        <div className="mt-14">
+          <p className="font-mono text-xs tracking-[0.18em] text-ink-faint uppercase">
+            Work through four stages
+          </p>
+          <div className="mt-4">
+            <ExhibitSpine acts={acts} />
+          </div>
         </div>
-      </div>
+      </ActHandoffProvider>
 
       {/* The coda is the forward motion — where to go next, as one thin strip so
           the story (above) stays the page's main event. Where this sits in the

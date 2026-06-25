@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Axes, DataPoints, FitLine, Plot, usePlot } from "@/components/viz/Plot";
 import { LossSurface } from "@/components/viz/LossSurface";
+import { GradientDescentMicroscope } from "@/components/exhibits/GradientDescentMicroscope";
 import { TrainingCurve } from "@/components/viz/TrainingCurve";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { useActiveFrame } from "@/components/exhibits/story-frame";
@@ -133,6 +134,7 @@ export function GradientDescentStory() {
   // The spine sets scene + face. Reload only on a real scenario change.
   const frame = useActiveFrame<GradientDescentFrame>();
   const view = frame?.view ?? "line";
+  const microscopeBeat = frame?.microscope === true;
   useEffect(() => {
     if (!frame) return;
     if (frame.scenarioId !== useExperiment.getState().scenarioId) {
@@ -176,16 +178,24 @@ export function GradientDescentStory() {
     <figure className="flex flex-col rounded-xl border border-line bg-raised p-5">
       <figcaption className="mb-3 flex items-baseline justify-between gap-4">
         <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
-          {view === "line"
-            ? "Watch the line learn"
-            : "The loss surface it is crossing"}
+          {microscopeBeat && cursor > 0
+            ? "Freeze one update"
+            : view === "line"
+              ? "Watch the line learn"
+              : "The loss surface it is crossing"}
         </span>
         <span className="hidden text-[11px] text-ink-faint sm:inline">
           press play · scrub through time
         </span>
       </figcaption>
 
-      {view === "line" ? (
+      {microscopeBeat && cursor > 0 ? (
+        <GradientDescentMicroscope
+          before={trace[cursor - 1]}
+          after={trace[cursor]}
+          learningRate={learningRate}
+        />
+      ) : view === "line" ? (
         <div className="flex flex-col gap-2">
           <Plot
             width={640}

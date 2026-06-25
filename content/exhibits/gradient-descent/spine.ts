@@ -13,6 +13,8 @@ export type GradientDescentFrame = {
   scenarioId: string;
   /** Which face of the graphic this beat shows. */
   view: "line" | "surface";
+  /** Freeze one update and show the step microscope decomposition. */
+  microscope?: boolean;
 };
 
 export const gradientDescentSpine: Spine<GradientDescentFrame> = [
@@ -36,7 +38,7 @@ export const gradientDescentSpine: Spine<GradientDescentFrame> = [
   },
   {
     sectionId: "slope-step-repeat",
-    frame: { scenarioId: "watch-it-learn", view: "surface" },
+    frame: { scenarioId: "watch-it-learn", view: "surface", microscope: true },
     equation: "θ ← θ − α · ∇L(θ)",
     terms: [
       { phrase: "the gradient", hue: "param" },

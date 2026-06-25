@@ -6,6 +6,7 @@ import { LossSurface } from "@/components/viz/LossSurface";
 import { ParamSlider } from "@/components/viz/ParamSlider";
 import { TrainingCurve } from "@/components/viz/TrainingCurve";
 import { StatGrid } from "@/components/viz/StatGrid";
+import { GradientDescentMicroscope } from "@/components/exhibits/GradientDescentMicroscope";
 import { ScenarioBar } from "@/components/exhibits/ScenarioBar";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { createExperimentStore } from "@/lib/experiment/store";
@@ -77,7 +78,7 @@ export function GradientDescentLab() {
   // stack beneath the line in a pinned sticky panel, so it is a switch, not a
   // reveal — and the swap from data space to parameter space is itself the
   // "lift the fog" beat.
-  const [view, setView] = useState<"line" | "surface">("line");
+  const [view, setView] = useState<"line" | "surface" | "microscope">("line");
 
   // Declared before the run-creation effect: when a scenario load changes
   // points and learning rate in one commit, the ref must sync first.
@@ -214,6 +215,7 @@ export function GradientDescentLab() {
               [
                 ["line", "The line"],
                 ["surface", "The surface"],
+                ["microscope", "One step"],
               ] as const
             ).map(([value, label]) => (
               <button
@@ -285,7 +287,7 @@ export function GradientDescentLab() {
               </Plot>
               <TrainingCurve trace={trace} cursor={cursor} width={640} height={168} />
             </div>
-          ) : (
+          ) : view === "surface" ? (
             <div className="lift-fog">
               <LossSurface
                 points={points}
@@ -295,6 +297,18 @@ export function GradientDescentLab() {
                 height={560}
               />
             </div>
+          ) : cursor > 0 ? (
+            <div className="lift-fog">
+              <GradientDescentMicroscope
+                before={trace[cursor - 1]}
+                after={trace[cursor]}
+                learningRate={learningRate}
+              />
+            </div>
+          ) : (
+            <p className="text-sm leading-relaxed text-ink-muted">
+              Step once (or scrub past step 0) to freeze an update and inspect its gradient, parameter delta, and loss change.
+            </p>
           )}
           {transport}
         </div>

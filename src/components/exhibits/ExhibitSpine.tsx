@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useActHandoffOptional } from "@/components/exhibits/ActHandoffContext";
 
 /**
  * The exhibit's spine — the product promise made structural: See it · Run it ·
@@ -29,11 +30,13 @@ export function ExhibitSpine({ acts }: { acts: ExhibitAct[] }) {
   const baseId = useId();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const count = acts.length;
+  const handoff = useActHandoffOptional();
 
   const go = (i: number, focusTab = false) => {
     const next = Math.max(0, Math.min(count - 1, i));
     setVisited((prev) => (prev.has(next) ? prev : new Set(prev).add(next)));
     setActive(next);
+    handoff?.setActiveAct(acts[next].id);
     if (focusTab) tabRefs.current[next]?.focus();
   };
 
@@ -53,7 +56,7 @@ export function ExhibitSpine({ acts }: { acts: ExhibitAct[] }) {
         aria-label="The four ways through this exhibit: see it, run it, break it, explain it"
         aria-orientation="horizontal"
         onKeyDown={onRailKey}
-        className="grid grid-cols-1 gap-x-3 gap-y-2 border-y border-line py-1 sm:grid-cols-2 lg:grid-cols-4"
+        className="chrome-spine-rail grid grid-cols-1 gap-x-3 gap-y-2 border-y border-line py-1 sm:grid-cols-2 lg:grid-cols-4"
       >
         {acts.map((act, i) => {
           const state = i === active ? "active" : visited.has(i) ? "visited" : "ahead";
@@ -97,7 +100,7 @@ export function ExhibitSpine({ acts }: { acts: ExhibitAct[] }) {
                 >
                   {act.label}
                 </span>
-                <span className="mt-0.5 block text-[13px] leading-snug text-ink-faint">
+                <span className="chrome-spine-purpose mt-0.5 block text-[13px] leading-snug text-ink-faint">
                   {act.purpose}
                 </span>
               </span>
@@ -140,6 +143,7 @@ export function ExhibitSpine({ acts }: { acts: ExhibitAct[] }) {
             aria-labelledby={`${baseId}-tab-${act.id}`}
             hidden={i !== active}
             className="pt-10"
+            data-act-panel={act.id}
           >
             {act.content}
           </div>

@@ -1,12 +1,207 @@
 "use client";
 
-import type { Scored } from "@/lib/models/classification-metrics";
+import { useEffect, useMemo, useState } from "react";
+import { precision, recall, type Scored } from "@/lib/models/classification-metrics";
 
 /**
- * Shared classification views — the probability strip and the confusion matrix — used
- * by both the classification-task lab and its See-it graphic, so the threshold reads
- * the same in the guided story and the open bench.
+ * Shared classification views — the decision conveyor, probability strip, and
+ * confusion matrix — used by the classification-task hero, lab, and story so the
+ * threshold reads the same everywhere.
  */
+
+type Outcome = "tp" | "fp" | "fn" | "tn";
+
+function outcomeOf(s: Scored, threshold: number): Outcome {
+  const pred = s.prob >= threshold ? 1 : 0;
+  if (pred === 1 && s.y === 1) return "tp";
+  if (pred === 1 && s.y === 0) return "fp";
+  if (pred === 0 && s.y === 1) return "fn";
+  return "tn";
+}
+
+const BIN_LAYOUT: Record<Outcome, { cx: number; cy: number; good: boolean; label: string }> = {
+  tp: { cx: 200, cy: 228, good: true, label: "TP" },
+  fp: { cx: 320, cy: 228, good: false, label: "FP" },
+  fn: { cx: 200, cy: 288, good: false, label: "FN" },
+  tn: { cx: 320, cy: 288, good: true, label: "TN" },
+};
+
+/**
+ * Decision conveyor — observations ride the belt to the threshold gate and drop
+ * into TP/FP/FN/TN bins; precision and recall update from what's landed.
+ */
+export function DecisionConveyor({
+  scored,
+  threshold,
+  animate = false,
+}: {
+  scored: Scored[];
+  threshold: number;
+  /** Hero load: stagger dots dropping into bins once. */
+  animate?: boolean;
+}) {
+  const W = 640;
+  const H = 320;
+  const m = { l: 56, r: 20, t: 32, b: 16 };
+  const beltY1 = m.t + 22;
+  const beltY0 = m.t + 58;
+  const beltW = W - m.l - m.r;
+  const x = (p: number) => m.l + p * beltW;
+  const tx = x(threshold);
+
+  const counts = useMemo(() => {
+    const c = { tp: 0, fp: 0, fn: 0, tn: 0 };
+    for (const s of scored) c[outcomeOf(s, threshold)]++;
+    return c;
+  }, [scored, threshold]);
+
+  const cm = { tp: counts.tp, fp: counts.fp, fn: counts.fn, tn: counts.tn };
+  const prec = precision(cm);
+  const rec = recall(cm);
+
+  const [shown, setShown] = useState(animate ? 0 : scored.length);
+
+  useEffect(() => {
+    if (!animate) {
+      setShown(scored.length);
+      return;
+    }
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      setShown(scored.length);
+      return;
+    }
+    setShown(0);
+    let i = 0;
+    const id = window.setInterval(() => {
+      i += 1;
+      setShown(i);
+      if (i >= scored.length) window.clearInterval(id);
+    }, 55);
+    return () => window.clearInterval(id);
+  }, [animate, scored.length, threshold]);
+
+  const landed = scored.slice(0, shown);
+
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      role="img"
+      aria-label={`Decision conveyor at threshold ${threshold.toFixed(2)}: observations cross the gate and land in true-positive, false-positive, false-negative, and true-negative bins. Precision ${prec.toFixed(2)}, recall ${rec.toFixed(2)}.`}
+      className="h-auto w-full"
+    >
+      {/* conveyor belts */}
+      {[beltY1, beltY0].map((by, row) => (
+        <g key={by}>
+          <rect x={m.l} y={by - 10} width={beltW} height={20} rx={4} fill="var(--surface-sunken)" stroke="var(--line)" />
+          <line x1={m.l} x2={W - m.r} y1={by} y2={by} stroke="var(--line)" strokeDasharray="8 6" strokeOpacity={0.5} />
+        </g>
+      ))}
+      <text x={m.l - 8} y={beltY1 + 4} textAnchor="end" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+        actual 1
+      </text>
+      <text x={m.l - 8} y={beltY0 + 4} textAnchor="end" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+        actual 0
+      </text>
+
+      {/* threshold gate */}
+      <rect x={tx - 3} y={m.t - 6} width={6} height={beltY0 - m.t + 26} fill="var(--ink)" rx={2} />
+      <text x={tx} y={m.t - 12} textAnchor="middle" fontSize={11} fontFamily="var(--font-mono)" fill="var(--ink-muted)">
+        t = {threshold.toFixed(2)}
+      </text>
+      <text x={m.l} y={beltY0 + 22} fontSize={10} fill="var(--ink-faint)">
+        ← predict 0
+      </text>
+      <text x={W - m.r} y={beltY0 + 22} textAnchor="end" fontSize={10} fill="var(--ink-faint)">
+        predict 1 →
+      </text>
+
+      {/* chutes to bins */}
+      {([beltY1, beltY0] as const).map((by) => (
+        <line key={`ch${by}`} x1={tx} y1={by + 12} x2={tx} y2={200} stroke="var(--line)" strokeWidth={1.5} strokeDasharray="3 3" />
+      ))}
+
+      {/* bins */}
+      {(Object.keys(BIN_LAYOUT) as Outcome[]).map((key) => {
+        const b = BIN_LAYOUT[key];
+        const n = counts[key];
+        return (
+          <g key={key}>
+            <rect
+              x={b.cx - 52}
+              y={b.cy - 28}
+              width={104}
+              height={52}
+              rx={6}
+              fill={b.good ? "color-mix(in oklab, var(--viz-prediction) 8%, transparent)" : "color-mix(in oklab, var(--viz-error) 8%, transparent)"}
+              stroke={b.good ? "var(--viz-prediction)" : "var(--viz-error)"}
+              strokeWidth={1.25}
+            />
+            <text x={b.cx} y={b.cy - 10} textAnchor="middle" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+              {b.label}
+            </text>
+            <text
+              x={b.cx}
+              y={b.cy + 14}
+              textAnchor="middle"
+              fontSize={18}
+              fontFamily="var(--font-mono)"
+              fill={b.good ? "var(--viz-prediction-ink)" : "var(--viz-error-ink)"}
+            >
+              {n}
+            </text>
+          </g>
+        );
+      })}
+      <text x={260} y={212} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+        actual 1
+      </text>
+      <text x={380} y={212} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+        actual 0
+      </text>
+
+      {/* observations — on belt until they cross, then in bin stacks */}
+      {landed.map((s, i) => {
+        const out = outcomeOf(s, threshold);
+        const bin = BIN_LAYOUT[out];
+        const beltY = s.y === 1 ? beltY1 : beltY0;
+        const onBelt = animate && i === shown - 1 && shown < scored.length;
+        const stackIdx = landed.slice(0, i + 1).filter((p) => outcomeOf(p, threshold) === out).length - 1;
+        const cx = onBelt ? x(s.prob) : bin.cx + ((stackIdx % 4) - 1.5) * 10;
+        const cy = onBelt ? beltY : bin.cy + 6 - Math.floor(stackIdx / 4) * 8;
+        const correct = (out === "tp" || out === "tn");
+        return (
+          <circle
+            key={i}
+            cx={cx}
+            cy={cy}
+            r={correct ? 4.5 : 5.5}
+            fill={s.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"}
+            stroke={correct ? "var(--surface-bg)" : "var(--viz-error)"}
+            strokeWidth={correct ? 1 : 2.5}
+            style={{ transition: animate ? "cx 280ms ease, cy 320ms ease" : undefined }}
+          />
+        );
+      })}
+
+      {/* live precision / recall */}
+      <g transform="translate(460, 228)">
+        <text x={0} y={0} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+          PRECISION
+        </text>
+        <text x={0} y={22} fontSize={22} fontFamily="var(--font-mono)" fill="var(--viz-prediction-ink)">
+          {prec.toFixed(2)}
+        </text>
+        <text x={0} y={48} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+          RECALL
+        </text>
+        <text x={0} y={70} fontSize={22} fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
+          {rec.toFixed(2)}
+        </text>
+      </g>
+    </svg>
+  );
+}
 
 export function ProbabilityStrip({ scored, threshold }: { scored: Scored[]; threshold: number }) {
   const W = 560;

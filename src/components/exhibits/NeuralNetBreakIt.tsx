@@ -1,19 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { DecisionField } from "@/components/viz/DecisionField";
+import { FeatureFoldField } from "@/components/viz/FeatureFoldField";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
-import { accuracy, initNet, predictProba, train } from "@/lib/models/neural-net";
+import { accuracy, initNet, train } from "@/lib/models/neural-net";
 import { BREAK_HIDDEN_CHOICES, breakTest, breakTrain, NN_LR } from "@content/exhibits/neural-network-fundamentals/experiment";
 
 /**
- * The interactive "Break it": capacity is a double-edged sword. The train set carries
- * ~12% label noise. A small network learns the underlying curve and ignores the noise —
- * train and held-out test agree. Crank the hidden units up and the network has the
- * capacity to memorise every noisy point: the boundary sprouts islands around them, train
- * accuracy climbs, and the held-out score drops. Perfect on what it's seen, worse on what
- * it hasn't — that's overfitting, and more units is exactly the wrong fix.
+ * Capacity is a double-edged sword: too many hidden units mean too many folds chasing
+ * noise. When overfit, inspect the fold lines — they sprout around individual noisy
+ * points instead of tracing one smooth rule.
  */
 const EPOCHS = 1500;
 const OVERFIT_GAP = 0.08;
@@ -23,6 +20,7 @@ export function NeuralNetBreakIt() {
   const [hidden, setHidden] = useState(32);
   const [seed, setSeed] = useState(3);
   const [hasSeen, setHasSeen] = useState(false);
+  const [showFolds, setShowFolds] = useState(false);
 
   const net = useMemo(() => train(initNet(hidden, seed), breakTrain, NN_LR, EPOCHS).net, [hidden, seed]);
   const trainAcc = accuracy(net, breakTrain);
@@ -49,30 +47,28 @@ export function NeuralNetBreakIt() {
             <div>
               <p className="font-mono text-[11px] tracking-[0.16em] text-accent uppercase">Repaired ✓</p>
               <p className="mt-2 leading-relaxed text-ink">
-                With only {hidden} units there isn&apos;t capacity to chase every point, so the network draws the{" "}
+                With only {hidden} folds there isn&apos;t capacity to chase every point, so the network draws the{" "}
                 <span className="font-medium text-accent">smooth rule</span> and shrugs off the noise. Train and held-out test now
                 agree — it generalises.
               </p>
               <p className="mt-3 leading-relaxed text-ink-muted">
-                <span className="font-medium text-ink">Boundary:</span> too few units would
+                <span className="font-medium text-ink">Boundary:</span> too few folds would
                 underfit — it couldn&apos;t learn the real curve at all. The art is enough
-                capacity for the signal, not the noise (and regularisation lets you keep
-                capacity while penalising the wiggles).
+                capacity for the signal, not the noise.
               </p>
             </div>
           ) : broken ? (
             <div>
               <p className="font-mono text-[11px] tracking-[0.16em] text-[var(--viz-error-ink)] uppercase">Symptom · it broke</p>
               <p className="mt-2 leading-relaxed text-ink">
-                {hidden} units is enough capacity to <span className="font-medium text-[var(--viz-error-ink)]">memorise the noise</span>.
+                {hidden} folds is enough capacity to <span className="font-medium text-[var(--viz-error-ink)]">memorise the noise</span>.
                 The boundary sprouts islands around individual points; train accuracy looks
                 great, but on data it hasn&apos;t seen it drops {Math.round(gap * 100)} points.
               </p>
               <p className="mt-3 leading-relaxed text-ink-muted">
-                <span className="font-medium text-ink">Diagnose:</span> it learned the noise,
-                not the rule — the held-out gap is the tell.{" "}
-                <span className="font-medium text-ink">Repair:</span> drop the hidden units
-                (or regularise). More capacity is the wrong fix.
+                <span className="font-medium text-ink">Diagnose:</span> toggle{" "}
+                <span className="font-medium text-ink">show folds</span> — each extra unit adds a half-space line that can hug a noisy point.{" "}
+                <span className="font-medium text-ink">Repair:</span> drop the hidden units.
               </p>
             </div>
           ) : (
@@ -99,6 +95,16 @@ export function NeuralNetBreakIt() {
             </div>
           </div>
 
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-ink-muted">
+            <input
+              type="checkbox"
+              checked={showFolds}
+              onChange={(e) => setShowFolds(e.target.checked)}
+              className="accent-[var(--accent)]"
+            />
+            Show fold lines (half-space boundaries)
+          </label>
+
           <div className="flex items-center justify-between gap-3">
             <span role="status" className={`rounded-full border px-2.5 py-0.5 font-mono text-[11px] tracking-wide ${broken ? "border-[var(--viz-error)] text-[var(--viz-error-ink)]" : repaired ? "border-accent text-accent" : "border-line text-ink-faint"}`}>
               {broken ? "Overfit — memorising noise" : repaired ? "Generalising" : "Settling"}
@@ -116,11 +122,17 @@ export function NeuralNetBreakIt() {
         </div>
 
         <div className="mt-6 lg:mt-0">
-          <DecisionField points={breakTrain} predictProba={(x1, x2) => predictProba(net, x1, x2)} width={520} height={440} />
+          <FeatureFoldField
+            net={net}
+            points={breakTrain}
+            visibleUnits={showFolds ? null : new Set()}
+            width={520}
+            height={440}
+          />
           <p className="mt-2 text-sm leading-relaxed text-ink-faint">
-            The points are the noisy training set; the shaded field is what the network
-            believes. Watch the boundary go from a clean curve to a lumpy one chasing
-            individual points as the capacity grows.
+            {showFolds
+              ? "Each fold line is one hidden unit's half-space — when overfit, they multiply to hug noisy points."
+              : "The shaded field is what the network believes. Toggle folds to see the half-space lines underneath."}
           </p>
         </div>
       </div>

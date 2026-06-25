@@ -2,8 +2,10 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { lossSurfaceGrid } from "@/lib/viz/loss-surface";
+import { lerpGrids, morphDescentTrace } from "@/lib/viz/loss-surface-morph";
 import { linearScale } from "@/lib/viz/scale";
 import type { DescentStep, Point } from "@/lib/models/linear-regression";
+import type { LossSurfaceGrid } from "@/lib/viz/loss-surface";
 
 /**
  * The loss surface — the territory gradient descent walks (docs/06, B3/B6).
@@ -69,6 +71,7 @@ export function LossSurface({
   height = 460,
   bare = false,
   legend = true,
+  morph,
 }: {
   points: Point[];
   trace: ReadonlyArray<DescentStep>;
@@ -82,11 +85,32 @@ export function LossSurface({
   /** Show the bare-mode loss legend. Off for the right of a paired before/after,
    *  where one shared legend reads cleaner. */
   legend?: boolean;
+  /** Axis-deformation morph between raw and standardised surfaces (t ∈ [0, 1]). */
+  morph?: {
+    t: number;
+    fromPoints: Point[];
+    toPoints: Point[];
+    fromTrace: ReadonlyArray<DescentStep>;
+    toTrace: ReadonlyArray<DescentStep>;
+  };
 }) {
-  // A much finer grid than the default keeps the upscaled field and its contour
-  // lines crisp instead of blocky (the old 110×80 read as stair-stepped at full
-  // width). Memoized per dataset, so the extra samples are paid once.
-  const grid = useMemo(() => lossSurfaceGrid(points, 300, 200), [points]);
+  const fromGrid = useMemo(
+    () => (morph ? lossSurfaceGrid(morph.fromPoints, 300, 200) : null),
+    [morph],
+  );
+  const toGrid = useMemo(
+    () => (morph ? lossSurfaceGrid(morph.toPoints, 300, 200) : null),
+    [morph],
+  );
+  const grid = useMemo((): LossSurfaceGrid => {
+    if (morph && fromGrid && toGrid) return lerpGrids(fromGrid, toGrid, morph.t);
+    return lossSurfaceGrid(points, 300, 200);
+  }, [morph, fromGrid, toGrid, points]);
+  const displayTrace = useMemo(() => {
+    if (morph) return morphDescentTrace(morph.fromTrace, morph.toTrace, morph.t);
+    return [...trace];
+  }, [morph, trace]);
+  const displayCursor = morph ? displayTrace.length - 1 : cursor;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const sx = linearScale(grid.slopeRange, [MARGIN.left, width - MARGIN.right]);
@@ -169,8 +193,8 @@ export function LossSurface({
     ctx.putImageData(img, 0, 0);
   }, [grid]);
 
-  const current = trace[Math.min(cursor, Math.max(0, trace.length - 1))];
-  const path = trace
+  const current = displayTrace[Math.min(displayCursor, Math.max(0, displayTrace.length - 1))];
+  const path = displayTrace
     .map(
       (s) =>
         `${clampPx(sx(s.params.slope))},${clampPx(sy(s.params.intercept))}`,
@@ -195,7 +219,7 @@ export function LossSurface({
         role="img"
         aria-label={
           current
-            ? `Map of the loss surface over slope and intercept. Darker shading is higher loss; the minimum sits at slope ${grid.minimum.slope.toFixed(2)}, intercept ${grid.minimum.intercept.toFixed(2)}. The descent path so far has ${trace.length - 1} steps; the current position is slope ${current.params.slope.toFixed(2)}, intercept ${current.params.intercept.toFixed(2)}.`
+            ? `Map of the loss surface over slope and intercept. Darker shading is higher loss; the minimum sits at slope ${grid.minimum.slope.toFixed(2)}, intercept ${grid.minimum.intercept.toFixed(2)}. The descent path so far has ${displayTrace.length - 1} steps; the current position is slope ${current.params.slope.toFixed(2)}, intercept ${current.params.intercept.toFixed(2)}.`
             : "Map of the loss surface over slope and intercept."
         }
         className="absolute inset-0 h-full w-full select-none"
@@ -294,8 +318,8 @@ export function LossSurface({
 
           {/* Where the walk begins — labelled in the graphic, Distill-style (in
               bare/hero mode too, so the mechanism reads without adjacent prose). */}
-          {trace[0] && (
-            <g transform={`translate(${clampPx(sx(trace[0].params.slope))},${clampPx(sy(trace[0].params.intercept))})`}>
+          {displayTrace[0] && (
+            <g transform={`translate(${clampPx(sx(displayTrace[0].params.slope))},${clampPx(sy(displayTrace[0].params.intercept))})`}>
               <circle r={4} fill="none" stroke="var(--surface-bg)" strokeWidth={3} />
               <circle r={4} fill="none" stroke="var(--viz-param)" strokeWidth={1.75} />
               {/* Above-right of the ring, clear of the descent path's first stride. */}
@@ -336,7 +360,7 @@ export function LossSurface({
             </text>
           </g>
 
-          {trace.length > 1 && (
+          {displayTrace.length > 1 && (
             <>
               {/* A surface-coloured halo lifts the purple trail off the red
                   bowl so the path reads at any band depth (FINDINGS F11). */}
@@ -360,9 +384,9 @@ export function LossSurface({
                   bowl), and the dots bunching toward the valley *are* the
                   self-throttling the narrative names. Subsampled for long walks. */}
               {(() => {
-                const stride = Math.max(1, Math.ceil(trace.length / 64));
-                return trace
-                  .filter((_, i) => i % stride === 0 || i === trace.length - 1)
+                const stride = Math.max(1, Math.ceil(displayTrace.length / 64));
+                return displayTrace
+                  .filter((_, i) => i % stride === 0 || i === displayTrace.length - 1)
                   .map((s, i) => (
                     <circle
                       key={i}

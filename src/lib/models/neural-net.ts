@@ -52,6 +52,47 @@ export function forward(net: Net, x1: number, x2: number): { h: number[]; y: num
 /** P(class 1 | x) — the override DecisionField needs to draw a curved boundary. */
 export const predictProba = (net: Net, x1: number, x2: number): number => forward(net, x1, x2).y;
 
+/** Forward with some hidden units muted (zero activation) — for inspecting each fold. */
+export function forwardMuted(
+  net: Net,
+  x1: number,
+  x2: number,
+  muted: ReadonlySet<number>,
+): { h: number[]; y: number } {
+  const h = net.W1.map((w, j) =>
+    muted.has(j) ? 0 : Math.tanh(w[0] * x1 + w[1] * x2 + net.b1[j]),
+  );
+  const z2 = h.reduce((s, hj, j) => s + net.W2[j] * hj, net.b2);
+  return { h, y: sigmoid(z2) };
+}
+
+export const predictProbaMuted = (net: Net, x1: number, x2: number, muted: ReadonlySet<number>): number =>
+  forwardMuted(net, x1, x2, muted).y;
+
+/** Endpoints of hidden unit j's half-space boundary (w·x + b = 0) across x₁ ∈ domain. */
+export function halfSpaceLine(
+  net: Net,
+  unit: number,
+  domain: [number, number],
+): { x1a: number; x2a: number; x1b: number; x2b: number } | null {
+  const w = net.W1[unit];
+  const b = net.b1[unit];
+  if (!w) return null;
+  const [d0, d1] = domain;
+  const eps = 1e-6;
+  if (Math.abs(w[1]) > eps) {
+    const x2AtD0 = -(w[0] * d0 + b) / w[1];
+    const x2AtD1 = -(w[0] * d1 + b) / w[1];
+    return { x1a: d0, x2a: x2AtD0, x1b: d1, x2b: x2AtD1 };
+  }
+  if (Math.abs(w[0]) > eps) {
+    const x1 = -b / w[0];
+    if (x1 < d0 || x1 > d1) return null;
+    return { x1a: x1, x2a: d0, x1b: x1, x2b: d1 };
+  }
+  return null;
+}
+
 const EPS = 1e-9;
 const clamp01 = (p: number) => Math.min(1 - EPS, Math.max(EPS, p));
 

@@ -7,29 +7,70 @@ import { allExamples, regressionTrend } from "@content/exhibits/regression-task/
 /**
  * The specimen hero — what a regression task is, in one picture. The model's rule
  * is a line through study-hours → exam-score; each student's actual score sits off
- * it by some amount, and on load those gaps draw in as vertical error-hued stems:
- * regression is judged not right-or-wrong but on *how close* — the error is a
- * distance. One residual is called out as "error = distance". Reduced motion
- * renders the stems already drawn.
+ * it by some amount, and on load those gaps draw in as vertical error-hued stems.
+ * An error ruler and ContributionStack on the right accumulate the residuals into
+ * a running mean absolute error as they grow. Reduced motion renders stems drawn.
  */
 
 const XS = allExamples.map((e) => e.x);
 const YS = allExamples.map((e) => e.y);
 const X_DOMAIN: [number, number] = [Math.min(...XS) - 0.7, Math.max(...XS) + 0.7];
-// Frame the data band, not 0–100, so the line rises across the panel and the
-// residual gaps read at a useful size instead of squashing into the lower strip.
 const Y_DOMAIN: [number, number] = [Math.min(...YS) - 10, Math.max(...YS) + 10];
-// A representative point with a clear, readable gap to label.
 const DEMO = [...allExamples].sort(
   (a, b) => Math.abs(b.y - regressionTrend(b.x)) - Math.abs(a.y - regressionTrend(a.x)),
 )[2];
+
+const residuals = allExamples.map((e) => Math.abs(e.y - regressionTrend(e.x)));
+
+/** ContributionStack — residual bars that accumulate into the metric readout. */
+function ErrorRuler({ t }: { t: number }) {
+  const { width, height } = usePlot();
+  const stackX = width - 72;
+  const stackW = 48;
+  const maxR = Math.max(...residuals);
+  const shown = Math.max(1, Math.round(t * allExamples.length));
+  const partial = residuals.slice(0, shown);
+  const mae = partial.reduce((s, r) => s + r, 0) / partial.length;
+  const barH = (height - 48) / allExamples.length;
+
+  return (
+    <g aria-hidden>
+      <text x={stackX + stackW / 2} y={14} textAnchor="middle" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+        error ruler
+      </text>
+      {allExamples.map((_, i) => {
+        const r = residuals[i];
+        const visible = i < shown;
+        const h = (r / maxR) * (barH * 0.85);
+        return (
+          <rect
+            key={i}
+            x={stackX}
+            y={24 + i * barH + (barH - h) / 2}
+            width={visible ? (r / maxR) * stackW : 0}
+            height={h}
+            fill="var(--viz-error)"
+            opacity={visible ? 0.65 : 0.12}
+            rx={1}
+          />
+        );
+      })}
+      <rect x={stackX - 4} y={height - 36} width={stackW + 8} height={28} rx={4} fill="var(--surface-bg)" stroke="var(--line)" />
+      <text x={stackX + stackW / 2} y={height - 24} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
+        avg miss
+      </text>
+      <text x={stackX + stackW / 2} y={height - 10} textAnchor="middle" fontSize={13} fontFamily="var(--font-mono)" fontWeight={600} fill="var(--viz-error-ink)">
+        {mae.toFixed(1)}
+      </text>
+    </g>
+  );
+}
 
 function HeroGraphic({ t }: { t: number }) {
   const { x, y } = usePlot();
   const [x0, x1] = X_DOMAIN;
   return (
     <g>
-      {/* The model's prediction — a continuous line, not a class boundary. */}
       <line
         x1={x(x0)}
         y1={y(regressionTrend(x0))}
@@ -51,7 +92,6 @@ function HeroGraphic({ t }: { t: number }) {
       >
         the prediction
       </text>
-      {/* Each miss, as a distance — the residual stems grow in on load. */}
       {allExamples.map((e, i) => {
         const yhat = regressionTrend(e.x);
         const isDemo = e === DEMO;
@@ -79,7 +119,6 @@ function HeroGraphic({ t }: { t: number }) {
           strokeWidth={1.5}
         />
       ))}
-      {/* Name the mechanism on the one called-out residual. */}
       {DEMO && (
         <text
           x={x(DEMO.x) + 10}
@@ -95,6 +134,7 @@ function HeroGraphic({ t }: { t: number }) {
           error = distance
         </text>
       )}
+      <ErrorRuler t={t} />
     </g>
   );
 }
@@ -148,7 +188,7 @@ export function RegressionTaskHero() {
           height={360}
           xDomain={X_DOMAIN}
           yDomain={Y_DOMAIN}
-          ariaLabel={`Students' exam scores against study hours, with the model's prediction line through them. Each student's score sits off the line by some distance — that gap, not a right-or-wrong verdict, is the error a regression task is judged on. The average miss is about ${meanAbs.toFixed(0)} points.`}
+          ariaLabel={`Students' exam scores against study hours, with the model's prediction line through them. Each student's score sits off the line by some distance — that gap accumulates into the average miss readout on the right. The average miss is about ${meanAbs.toFixed(0)} points.`}
         >
           <HeroGraphic t={t} />
         </Plot>

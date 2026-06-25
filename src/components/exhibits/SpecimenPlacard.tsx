@@ -1,4 +1,7 @@
+"use client";
+
 import type { ComponentProps, ReactNode } from "react";
+import { useActHandoffOptional } from "@/components/exhibits/ActHandoffContext";
 import { NodeChip } from "@/components/graph/NodeChip";
 import { MasteryBadge } from "@/components/learner/MasteryBadge";
 import { domainLabel, edgeRelationLabel, kindLabel } from "@/lib/graph/labels";
@@ -19,11 +22,14 @@ type RelatedNeighbor = { node: GraphNode; type: EdgeType; note?: string };
  * standing — in the same precise mono-label-over-data voice the live readouts
  * speak. It fills the masthead and orients the learner before the interactive;
  * the forward motion (continue the journey) stays at the foot of the page.
+ *
+ * After the learner engages the story or advances the spine, graph-detail rows
+ * fold away (`chrome-compact-placard`) so the masthead yields space to the canvas.
  */
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="px-5 py-3">
+    <div className="chrome-placard-detail px-5 py-3">
       <dt className="font-mono text-[10px] tracking-[0.18em] text-ink-faint uppercase">
         {label}
       </dt>
@@ -38,17 +44,23 @@ export function SpecimenPlacard({
   leadsTo,
   related = [],
   journey,
+  compact: compactProp,
 }: {
   node: GraphNode;
   buildsOn: GraphNode[];
   leadsTo: GraphNode[];
   related?: RelatedNeighbor[];
   journey?: { title: string; stopIndex: number; count: number };
+  /** Force compact catalogue chrome. Defaults to act-handoff engaged state. */
+  compact?: boolean;
 }) {
+  const handoff = useActHandoffOptional();
+  const compact = compactProp ?? handoff?.chromeEngaged ?? false;
+
   return (
     <aside
       aria-label="This exhibit's place in the collection"
-      className="rounded-xl border border-line bg-raised"
+      className={`rounded-xl border border-line bg-raised transition-[padding] duration-[var(--motion-move)] ${compact ? "chrome-compact-placard" : ""}`}
     >
       {/* The classification + the learner's standing, the way a museum tag pairs
           a specimen's catalogue class with its acquisition note. A single accent
@@ -104,14 +116,17 @@ export function SpecimenPlacard({
         )}
 
         {journey && (
-          <Row label="Journey">
-            <span className="font-mono text-sm tabular-nums text-ink">
+          <div className="px-5 py-3">
+            <dt className="font-mono text-[10px] tracking-[0.18em] text-ink-faint uppercase">
+              Journey
+            </dt>
+            <dd className="mt-1.5 font-mono text-sm tabular-nums text-ink">
               {journey.title}
               <span className="text-ink-faint">
                 {" · "}stop {journey.stopIndex + 1} of {journey.count}
               </span>
-            </span>
-          </Row>
+            </dd>
+          </div>
         )}
       </dl>
     </aside>

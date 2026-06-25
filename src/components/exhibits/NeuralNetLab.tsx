@@ -1,18 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { DecisionField } from "@/components/viz/DecisionField";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { FeatureFoldField } from "@/components/viz/FeatureFoldField";
 import { NetworkDiagram } from "@/components/viz/NetworkDiagram";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
-import { accuracy, initNet, logLoss, predictProba, step, type Net } from "@/lib/models/neural-net";
+import { initNet, logLoss, predictProbaMuted, step, type Net } from "@/lib/models/neural-net";
 import { DEFAULT_HIDDEN, HIDDEN_CHOICES, NN_LR, neuralNetScenario, xorData } from "@content/exhibits/neural-network-fundamentals/experiment";
 
 /**
- * Watch a small network learn XOR. Press Train and a hidden layer bends the decision
- * field from a useless straight split into the X that XOR needs, while the wiring diagram
- * shows the weights thicken and flip. Drop to one hidden unit and it can only draw a line
- * — it gets stuck. The same model, as a surface and as a circuit, learning in real time.
+ * Watch a small network learn XOR. The RepresentationPortal links each hidden unit
+ * in the wiring diagram to its half-space fold in feature space — click to inspect,
+ * mute to see what that fold contributes. Press Train and folds thicken while the
+ * boundary bends into the X XOR needs.
  */
 const STEPS_PER_TICK = 14;
 const MAX_EPOCHS = 1400;
@@ -23,6 +23,8 @@ export function NeuralNetLab() {
   const [net, setNet] = useState<Net>(() => initNet(DEFAULT_HIDDEN, 2));
   const [epoch, setEpoch] = useState(0);
   const [training, setTraining] = useState(false);
+  const [selectedUnit, setSelectedUnit] = useState<number | null>(null);
+  const [muted, setMuted] = useState<Set<number>>(() => new Set());
 
   const reset = (h: number, s: number) => {
     setTraining(false);
@@ -30,6 +32,8 @@ export function NeuralNetLab() {
     setSeed(s);
     setNet(initNet(h, s));
     setEpoch(0);
+    setSelectedUnit(null);
+    setMuted(new Set());
   };
 
   useEffect(() => {
@@ -49,8 +53,25 @@ export function NeuralNetLab() {
     return () => clearInterval(id);
   }, [training]);
 
+  const toggleMute = useCallback((unit: number) => {
+    setMuted((prev) => {
+      const next = new Set(prev);
+      if (next.has(unit)) next.delete(unit);
+      else next.add(unit);
+      return next;
+    });
+    whenHydrated(() => useLearner.getState().recordPractice("neural-network-fundamentals"));
+  }, []);
+
+  const predict = useMemo(
+    () => (x1: number, x2: number) => predictProbaMuted(net, x1, x2, muted),
+    [net, muted],
+  );
   const loss = logLoss(net, xorData);
-  const acc = accuracy(net, xorData);
+  const acc = useMemo(
+    () => xorData.filter((d) => (predict(d.x1, d.x2) >= 0.5 ? 1 : 0) === d.y).length / xorData.length,
+    [predict],
+  );
 
   return (
     <div className="rounded-xl border border-line bg-raised p-6">
@@ -91,27 +112,60 @@ export function NeuralNetLab() {
             </div>
             {hidden === 1 && (
               <p className="mt-2 text-xs leading-relaxed text-[var(--viz-error-ink)]">
-                One unit can only bend the space once — it can&apos;t draw the X, so it stalls near a single line.
+                One unit = one fold — it can&apos;t draw the X, so it stalls near a single line.
               </p>
             )}
           </div>
+
+          {selectedUnit !== null && (
+            <div className="rounded-lg border border-[var(--viz-param)] bg-sunken p-3">
+              <p className="font-mono text-[11px] tracking-wide text-[var(--viz-param-ink)] uppercase">
+                Fold {selectedUnit + 1} · half-space boundary
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-ink-muted">
+                The dashed line is where this unit&apos;s pre-activation crosses zero — one fold of feature space.
+              </p>
+              <button
+                type="button"
+                onClick={() => toggleMute(selectedUnit)}
+                className="mt-2 rounded-full border border-line px-3 py-1 text-xs text-ink-muted hover:bg-raised"
+              >
+                {muted.has(selectedUnit) ? "Unmute this fold" : "Mute this fold"}
+              </button>
+            </div>
+          )}
 
           <StatGrid
             direction="col"
             caption={`${epoch} training steps`}
             stats={[
               { label: "loss", value: loss.toFixed(3), hue: "var(--viz-error-ink)", note: "cross-entropy, falling as it learns" },
-              { label: "accuracy on XOR", value: `${Math.round(acc * 100)}%`, hue: "var(--viz-truth-ink)", note: hidden === 1 ? "one unit tops out ~75%" : acc >= 0.9 ? "a hidden layer reaches the X" : "training — the boundary is bending" },
-              { label: "weights", value: `${hidden * 2 + hidden + hidden + 1}`, hue: "var(--viz-param)", note: "numbers backprop tunes" },
+              { label: "accuracy on XOR", value: `${Math.round(acc * 100)}%`, hue: "var(--viz-truth-ink)", note: hidden === 1 ? "one fold tops out ~75%" : acc >= 0.9 ? "folds reach the X" : "training — folds are bending" },
+              { label: "active folds", value: `${hidden - muted.size}/${hidden}`, hue: "var(--viz-param)", note: "muted units contribute zero" },
             ]}
           />
         </div>
 
         <div className="mt-6 lg:mt-0">
-          <DecisionField points={xorData} predictProba={(x1, x2) => predictProba(net, x1, x2)} width={520} height={420} />
+          <FeatureFoldField
+            net={net}
+            points={xorData}
+            muted={muted}
+            selectedUnit={selectedUnit}
+            width={520}
+            height={420}
+          />
           <div className="mx-auto mt-4 w-full max-w-[320px]">
-            <NetworkDiagram net={net} />
+            <NetworkDiagram
+              net={net}
+              selectedUnit={selectedUnit}
+              mutedUnits={muted}
+              onSelectUnit={setSelectedUnit}
+            />
           </div>
+          <p className="mt-2 text-center text-xs text-ink-faint">
+            Click a hidden unit to inspect its fold · mute to see what it contributes
+          </p>
         </div>
       </div>
     </div>
