@@ -67,7 +67,7 @@ export function TheGradientHero() {
         <ProbeLens
           open={lensOpen}
           onOpenChange={setLensOpen}
-          lensSize={148}
+          lensSize={176}
           ariaLabel="Gradient landscape with draggable probe; tangent-plane detail in the lens."
           probe={<TangentReadout gx={g.x} gy={g.y} mag={slope} />}
         >
@@ -77,10 +77,10 @@ export function TheGradientHero() {
             descent={false}
             interactive
             showComponents
-            xDomain={[-5.7, 5.7]}
-            yDomain={[-2, 2]}
+            xDomain={[-4.8, 4.8]}
+            yDomain={[-2.6, 2.6]}
             width={1200}
-            height={420}
+            height={650}
           />
         </ProbeLens>
         <p className="max-w-[78ch] px-1 pt-2 text-sm leading-relaxed text-ink-muted">
