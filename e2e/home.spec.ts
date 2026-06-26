@@ -7,6 +7,9 @@ import { expect, test } from "@playwright/test";
 
 test.describe("home", () => {
   test.beforeEach(async ({ page }) => {
+    // Rest looping motion (the hero fit motif) on its fitted frame so the
+    // full-page screenshot is deterministic rather than catching a random frame.
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
   });
 

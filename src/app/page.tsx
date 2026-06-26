@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HeroFitMotif } from "@/components/graph/HeroFitMotif";
 import { JewelGallery, type Wing } from "@/components/graph/JewelGallery";
 import { FoundationsTrail } from "@/components/learner/FoundationsTrail";
 import { domainLabel } from "@/lib/graph/labels";
@@ -99,7 +100,10 @@ export default function Home() {
             explain what happened. Explore freely or follow the Foundations
             journey.
           </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-12" aria-hidden>
+            <HeroFitMotif />
+          </div>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link
               href={liveExhibits["what-is-ml"].href}
               className="rounded-full bg-accent px-6 py-2.5 font-medium text-accent-ink transition-opacity hover:opacity-90"
