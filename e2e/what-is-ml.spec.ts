@@ -26,7 +26,7 @@ test.describe("what-is-ml exhibit", () => {
     await expect(panel(page).getByText(/the learned rule/i)).toBeVisible();
     await panel(page).getByRole("button", { name: /Learn from the examples/i }).click();
     // the learned rule beats the hand rule by a margin
-    await expect(panel(page).getByText(/That's machine learning/i)).toBeVisible();
+    await expect(panel(page).getByText(/rule came from the data/i)).toBeVisible();
   });
 
   test("See it enforces a committed prediction on the inversion beat", async ({ page }) => {

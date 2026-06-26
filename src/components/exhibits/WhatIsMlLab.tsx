@@ -19,9 +19,10 @@ import type { WhatIsMlFrame } from "@content/exhibits/what-is-ml/spine";
 const DOMAIN: [number, number] = [-3, 3];
 const BEST_T = bestRuleAccuracy(whatIsMlData).t;
 
-function ClassPoints({ t, learned }: { t: number; learned: LogisticParams | null }) {
+function ClassPoints({ t, learned, ghostT }: { t: number; learned: LogisticParams | null; ghostT: number }) {
   const { x, y } = usePlot();
   const predictHand = (p: (typeof whatIsMlData)[0]) => (p.x1 > t ? 1 : 0);
+  const predictGhost = (p: (typeof whatIsMlData)[0]) => (p.x1 > ghostT ? 1 : 0);
   return (
     <g>
       {whatIsMlData.map((p, i) => {
@@ -40,7 +41,7 @@ function ClassPoints({ t, learned }: { t: number; learned: LogisticParams | null
       })}
       {learned &&
         whatIsMlData
-          .filter((p) => (p.x1 > BEST_T ? 1 : 0) !== p.y)
+          .filter((p) => predictGhost(p) !== p.y)
           .map((p, i) => (
             <circle
               key={`ghost-${i}`}
@@ -80,23 +81,29 @@ function Rules({ t, learned, onDragT }: { t: number; learned: LogisticParams | n
           strokeWidth={3}
         />
       )}
-      {!learned && (
-        <>
-          <line x1={x(t)} x2={x(t)} y1={y(DOMAIN[1])} y2={y(DOMAIN[0])} stroke="var(--viz-neutral-ink)" strokeWidth={2.5} strokeDasharray="6 4" />
-          <text
-            x={x(t) + 8}
-            y={labelY}
-            fontSize={11}
-            fontFamily="var(--font-mono)"
-            paintOrder="stroke"
-            stroke="var(--surface-bg)"
-            strokeWidth={4}
-            fill="var(--viz-neutral-ink)"
-          >
-            your rule
-          </text>
-        </>
-      )}
+      {/* Hand rule — kept as a faint ghost after learning so the before/after
+          comparison stays visible on the canvas rather than vanishing. */}
+      <line
+        x1={x(t)} x2={x(t)} y1={y(DOMAIN[1])} y2={y(DOMAIN[0])}
+        stroke="var(--viz-neutral-ink)" strokeWidth={2.5} strokeDasharray="6 4"
+        opacity={learned ? 0.28 : 1}
+        style={{ transition: "opacity var(--motion-move)" }}
+      />
+      <text
+        x={x(t) + 8}
+        y={labelY}
+        fontSize={11}
+        fontFamily="var(--font-mono)"
+        paintOrder="stroke"
+        stroke="var(--surface-bg)"
+        strokeWidth={4}
+        fill="var(--viz-neutral-ink)"
+        opacity={learned ? 0.28 : 1}
+        style={{ transition: "opacity var(--motion-move)" }}
+        aria-hidden={!!learned}
+      >
+        {learned ? "your ceiling" : "your rule"}
+      </text>
       {!learned && (
         <rect
           x={x.range[0]}
@@ -123,6 +130,7 @@ export function WhatIsMlLab() {
   const storyFrame = useActHandoffFrame<WhatIsMlFrame>();
   const appliedHandoff = useRef(false);
   const [t, setT] = useState(BEST_T);
+  const [lastT, setLastT] = useState(BEST_T);
   const [learned, setLearned] = useState<LogisticParams | null>(null);
 
   // See-it final frame carries to Run-it: learned boundary already visible.
@@ -139,6 +147,7 @@ export function WhatIsMlLab() {
 
   const learn = () => {
     whenHydrated(() => useLearner.getState().recordPractice("what-is-ml"));
+    setLastT(t);
     setLearned(fitLogistic(whatIsMlData));
   };
 
@@ -164,9 +173,8 @@ export function WhatIsMlLab() {
           {learnedAcc !== null && (
             <p className="text-sm leading-relaxed text-ink-faint">
               The machine never saw your rule. It read the labelled examples and found how to
-              weigh <em>both</em> features — the tilted line — beating your best single cut by{" "}
-              <span className="font-mono text-accent">{Math.round((learnedAcc - ruleAcc) * 100)}</span>{" "}points. That&apos;s machine
-              learning: the rule comes from the data, not from you.
+              weigh <em>both</em> features — that tilted line. The rule came from the data, not
+              from you.
             </p>
           )}
         </div>
@@ -181,7 +189,7 @@ export function WhatIsMlLab() {
             interactive
           >
             <Axes />
-            <ClassPoints t={t} learned={learned} />
+            <ClassPoints t={t} learned={learned} ghostT={lastT} />
             <Rules t={t} learned={learned} onDragT={setT} />
           </Plot>
         </div>
