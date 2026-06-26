@@ -52,7 +52,7 @@ export function StepMicroscope({
         </div>
         <span
           className="mt-1 block text-center font-mono text-[9px] tracking-wider uppercase"
-          style={{ color: paramInk }}
+          style={{ color: '#5c3080' }}
         >
           {updateLabel}
         </span>

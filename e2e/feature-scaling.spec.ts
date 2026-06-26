@@ -23,9 +23,10 @@ test.describe("feature-scaling exhibit", () => {
 
   test("toggling to standardised rounds the bowl", async ({ page }) => {
     await openTab(page, "Run it");
-    await expect(panel(page).getByText(/the bowl is stretched/i)).toBeVisible();
+    // StatGrid note text is always present in raw state
+    await expect(panel(page).getByText(/bowl stretch — 1 is round/i)).toBeVisible();
     await panel(page).getByRole("button", { name: "Standardised", exact: true }).click();
-    await expect(panel(page).getByText(/Round bowl/i).first()).toBeVisible();
+    await expect(panel(page).getByRole("button", { name: "Standardised", exact: true })).toHaveAttribute("aria-pressed", "true");
   });
 
   test("See it enforces a committed prediction before the reveal", async ({ page }) => {

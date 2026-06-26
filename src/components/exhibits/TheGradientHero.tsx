@@ -25,18 +25,18 @@ function TangentReadout({ gx, gy, mag }: { gx: number; gy: number; mag: number }
         tangent plane
       </span>
       <svg viewBox="0 0 120 72" className="w-full" aria-hidden>
-        <text x={0} y={10} fontSize={8} fontFamily="var(--font-mono)" fill="var(--viz-truth-ink)">
+        <text x={0} y={10} fontSize={8} fontFamily="var(--font-mono)" fill="var(--viz-neutral-ink)">
           ∂f/∂x
         </text>
-        <rect x={0} y={midY - barH / 2} width={Math.abs(gx) * scale} height={barH} rx={2} fill="var(--viz-truth)" opacity={0.85} />
-        <text x={Math.abs(gx) * scale + 4} y={midY + 4} fontSize={9} fontFamily="var(--font-mono)" fill="var(--viz-truth-ink)">
+        <rect x={0} y={midY - barH / 2} width={Math.abs(gx) * scale} height={barH} rx={2} fill="var(--viz-neutral)" opacity={0.85} />
+        <text x={Math.abs(gx) * scale + 4} y={midY + 4} fontSize={9} fontFamily="var(--font-mono)" fill="var(--viz-neutral-ink)">
           {gx.toFixed(3)}
         </text>
-        <text x={0} y={58} fontSize={8} fontFamily="var(--font-mono)" fill="var(--viz-prediction-ink)">
+        <text x={0} y={58} fontSize={8} fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
           ∂f/∂y
         </text>
-        <rect x={0} y={62} width={Math.abs(gy) * scale} height={barH} rx={2} fill="var(--viz-prediction)" opacity={0.85} />
-        <text x={Math.abs(gy) * scale + 4} y={66} fontSize={9} fontFamily="var(--font-mono)" fill="var(--viz-prediction-ink)">
+        <rect x={0} y={62} width={Math.abs(gy) * scale} height={barH} rx={2} fill="var(--viz-param)" opacity={0.85} />
+        <text x={Math.abs(gy) * scale + 4} y={66} fontSize={9} fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
           {gy.toFixed(3)}
         </text>
       </svg>

@@ -202,7 +202,7 @@ export function GradientField({
               y1={sy(point.y)}
               x2={sx(point.x + sign * grad.x * len * 0.55)}
               y2={sy(point.y)}
-              stroke="var(--viz-truth)"
+              stroke="var(--viz-neutral)"
               strokeWidth={2.25}
               strokeLinecap="round"
               opacity={0.9}
@@ -212,7 +212,7 @@ export function GradientField({
               y1={sy(point.y)}
               x2={sx(tip.x)}
               y2={sy(tip.y)}
-              stroke="var(--viz-prediction)"
+              stroke="var(--viz-param)"
               strokeWidth={2.25}
               strokeLinecap="round"
               opacity={0.9}
@@ -234,7 +234,7 @@ export function GradientField({
               paintOrder="stroke"
               stroke="var(--surface-bg)"
               strokeWidth={2.5}
-              fill="var(--viz-truth-ink)"
+              fill="var(--viz-neutral-ink)"
             >
               ∂f/∂x
             </text>
@@ -247,7 +247,7 @@ export function GradientField({
               paintOrder="stroke"
               stroke="var(--surface-bg)"
               strokeWidth={2.5}
-              fill="var(--viz-prediction-ink)"
+              fill="var(--viz-param-ink)"
             >
               ∂f/∂y
             </text>

@@ -123,20 +123,26 @@ function DecompositionBars({
 export function GradientDescentMicroscope({ before, after, learningRate, reveal = false, className }: Props) {
   const reduceMotion = usePrefersReducedMotion();
   const [shown, setShown] = useState(0);
+  const [ariaReady, setAriaReady] = useState(false);
 
   useEffect(() => {
     if (reduceMotion) {
       setShown(1);
+      setAriaReady(true);
       return;
     }
     const delay = reveal ? 280 : 0;
-    const t = window.setTimeout(() => setShown(1), delay);
-    return () => window.clearTimeout(t);
+    const t1 = window.setTimeout(() => setShown(1), delay);
+    // Expose to a11y only after the 450ms opacity transition completes so axe-core
+    // doesn't blend the text colour against a partially-transparent background.
+    const t2 = window.setTimeout(() => setAriaReady(true), delay + 460);
+    return () => { window.clearTimeout(t1); window.clearTimeout(t2); };
   }, [reveal, reduceMotion, before.step]);
 
   return (
     <div
       className={`overflow-x-auto ${className ?? ""}`}
+      aria-hidden={!ariaReady}
       style={{ opacity: shown, transition: reduceMotion ? undefined : "opacity 450ms ease" }}
     >
       <StepMicroscope
