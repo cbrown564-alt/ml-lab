@@ -81,9 +81,6 @@ export function BiasVarianceCheckLab() {
         <DataPoints points={TRAIN} />
       </Plot>
       <div className="mt-3 border-t border-line pt-3">
-        <p className="mb-1 font-mono text-[10px] tracking-widest text-ink-faint uppercase">
-          error vs complexity
-        </p>
         <ErrorCurves train={TRAIN} test={TEST} degree={degree} maxDegree={DEG.max} width={360} height={150} />
       </div>
       <div className="mt-3 rounded-lg border border-line bg-sunken p-3">
