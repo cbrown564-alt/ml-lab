@@ -101,16 +101,6 @@ function LossStack({
 
   return (
     <g aria-hidden>
-      <text
-        x={stackX + 24}
-        y={12}
-        textAnchor="middle"
-        fontSize={9}
-        fontFamily="var(--font-mono)"
-        fill="var(--ink-faint)"
-      >
-        penalty stack
-      </text>
       {penalties.map((pen, i) => {
         const w = (pen / maxP) * 46;
         const visible = i < shown;

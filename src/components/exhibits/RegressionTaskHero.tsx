@@ -118,7 +118,6 @@ function HeroGraphic({ t }: { t: number }) {
         values={residuals}
         progress={t}
         total={mae}
-        stackLabel="error ruler"
         totalLabel="avg miss"
         variant="bar"
         width={48}

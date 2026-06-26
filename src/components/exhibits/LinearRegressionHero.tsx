@@ -114,7 +114,6 @@ function MseStackLayer({ fit, t }: { fit: LinearParams; t: number }) {
       values={areas}
       progress={t}
       total={partialMse}
-      stackLabel="MSE stack"
       totalLabel="MSE"
       variant="square"
       width={44}
