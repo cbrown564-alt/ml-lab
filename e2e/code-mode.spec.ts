@@ -44,7 +44,9 @@ test.describe("code mode", () => {
     await page.getByRole("button", { name: "code", exact: true }).click();
     await page.getByRole("button", { name: "Run", exact: true }).click();
 
-    const output = page.locator("pre");
+    // Scope to the Run-it panel's output, not any <pre> on the page — a Next.js
+    // dev-overlay <pre> (e.g. an unrelated console warning) must not be matched.
+    const output = page.getByRole("tabpanel", { includeHidden: false }).locator("pre");
     await expect(output).toContainText("y-hat", { timeout: 120_000 });
     await expect(output).toContainText(`y-hat = ${slope} * x + ${intercept}`);
     await expect(output).toContainText("MSE = ");
