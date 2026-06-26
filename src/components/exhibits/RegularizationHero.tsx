@@ -45,27 +45,63 @@ function TestPoints() {
   );
 }
 
-/** Coefficient bars that shrink as λ rises — tension made visible. */
-function CoefTrace({ model, lambdaT }: { model: ChebModel; lambdaT: number }) {
-  const maxW = Math.max(...model.weights.map(Math.abs), 0.01);
+const COEF_FIELD_H = 92;
+
+/**
+ * The shrinkage protagonist — what makes this exhibit *regularisation* and not
+ * just bias-variance. Each bar is one coefficient's magnitude, drawn against a
+ * FIXED reference (the unpenalised λ-low model's largest weight), so as λ rises
+ * and the ridge genuinely contracts the weights the bars honestly collapse
+ * toward the zero baseline. ‖w‖ quantifies the same contraction the curve and
+ * test error are responding to — one chained movement.
+ */
+function CoefTrace({
+  model,
+  refMaxW,
+  lambdaT,
+}: {
+  model: ChebModel;
+  refMaxW: number;
+  lambdaT: number;
+}) {
+  const coefs = model.weights.slice(1);
+  const norm = Math.sqrt(coefs.reduce((s, w) => s + w * w, 0));
+  const state =
+    lambdaT < 0.25 ? "weights free" : lambdaT < 0.75 ? "tension rising" : "weights pulled in";
   return (
-    <div className="flex items-end gap-0.5 px-1" aria-hidden>
-      {model.weights.slice(1).map((w, i) => (
-        <div
-          key={i}
-          className="w-3 rounded-t bg-[var(--viz-param)]"
-          style={{
-            height: `${Math.max(3, (Math.abs(w) / maxW) * 40)}px`,
-            opacity: 0.35 + (1 - lambdaT) * 0.55,
-            transform: `scaleY(${1 - lambdaT * 0.55})`,
-            transformOrigin: "bottom",
-            transition: "height var(--motion-move), opacity var(--motion-move), transform var(--motion-move)",
-          }}
-        />
-      ))}
-      <span className="ml-2 self-center font-mono text-[9px] tracking-wide text-ink-faint uppercase">
-        {lambdaT < 0.25 ? "weights free" : lambdaT < 0.75 ? "tension rising" : "weights pulled in"}
-      </span>
+    <div className="mt-3 rounded-lg border border-line bg-sunken px-4 pt-3 pb-3">
+      <div className="mb-2.5 flex items-baseline justify-between gap-2">
+        <span className="font-mono text-[11px] tracking-widest uppercase" style={{ color: "var(--viz-param-ink)" }}>
+          Coefficients
+        </span>
+        <span className="font-mono text-[11px] tracking-wide text-ink-faint uppercase tabular-nums">
+          <span className="text-ink-muted">‖w‖ {norm.toFixed(1)}</span>
+          <span className="mx-2">·</span>
+          {state}
+        </span>
+      </div>
+      <div
+        className="relative flex items-end gap-1"
+        style={{ height: COEF_FIELD_H }}
+        aria-hidden
+      >
+        {coefs.map((w, i) => {
+          const frac = Math.min(1, Math.abs(w) / refMaxW);
+          return (
+            <div
+              key={i}
+              className="flex-1 rounded-t bg-[var(--viz-param)]"
+              style={{
+                height: `${Math.max(2, frac * COEF_FIELD_H)}px`,
+                opacity: 0.5 + 0.5 * frac,
+                transition: "height var(--motion-move), opacity var(--motion-move)",
+              }}
+            />
+          );
+        })}
+        {/* the zero line the penalty pulls every coefficient toward */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 border-b border-line" />
+      </div>
     </div>
   );
 }
@@ -77,6 +113,12 @@ export function RegularizationHero() {
   const scrubLambda = LAMBDA_LOW * Math.pow(LAMBDA_HIGH / LAMBDA_LOW, lambdaT);
   const lowModel = useMemo(() => ridgeFitCheb(TRAIN, REG_DEGREE, LAMBDA_LOW), []);
   const highModel = useMemo(() => ridgeFitCheb(TRAIN, REG_DEGREE, LAMBDA_HIGH), []);
+  // Fixed bar scale: the largest weight the unpenalised model ever reaches, so
+  // the bars shrink against a stable axis instead of being re-normalised away.
+  const refMaxW = useMemo(
+    () => Math.max(...lowModel.weights.slice(1).map(Math.abs), 0.01),
+    [lowModel],
+  );
   const scrubModel = useMemo(() => ridgeFitCheb(TRAIN, REG_DEGREE, scrubLambda), [scrubLambda]);
   const scrubTrain = useMemo(() => chebMSE(TRAIN, scrubModel), [scrubModel]);
   const scrubTest = useMemo(() => chebMSE(TEST, scrubModel), [scrubModel]);
@@ -133,7 +175,7 @@ export function RegularizationHero() {
           </g>
           <DataPoints points={TRAIN} />
         </Plot>
-        <CoefTrace model={scrubModel} lambdaT={lambdaT} />
+        <CoefTrace model={scrubModel} refMaxW={refMaxW} lambdaT={lambdaT} />
         <label className="mt-3 flex items-center gap-3 px-1">
           <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">λ low</span>
           <input
