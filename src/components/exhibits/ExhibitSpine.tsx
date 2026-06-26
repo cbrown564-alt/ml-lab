@@ -87,7 +87,7 @@ export function ExhibitSpine({ acts }: { acts: ExhibitAct[] }) {
                     ? "bg-accent text-accent-ink"
                     : state === "visited"
                       ? "bg-ink-faint text-surface"
-                      : "border border-line text-ink-faint"
+                      : "border border-ink-faint text-ink-muted group-hover:border-accent"
                 }`}
               >
                 {i + 1}
