@@ -33,7 +33,14 @@ export function TrainTestStory() {
       <figcaption className="mb-3 font-mono text-[11px] tracking-widest text-ink-faint uppercase">
         {stage === "split" ? "One split — one number" : stage === "lottery" ? "Many splits — the lottery" : "Cross-validation pins it down"}
       </figcaption>
-      <ErrorSpreadStrip errs={shown} axisMax={0.2} marks={marks} width={620} height={170} />
+      <ErrorSpreadStrip
+        errs={shown}
+        ghostErrs={stage === "split" ? TEST_ERRS : undefined}
+        axisMax={0.2}
+        marks={marks}
+        width={620}
+        height={170}
+      />
       <div className="mt-4">
         <StatGrid
           caption={stage === "split" ? "This one split" : "Across the splits"}

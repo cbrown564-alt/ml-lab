@@ -18,6 +18,7 @@ export function ErrorSpreadStrip({
   width = 600,
   height = 170,
   accentLatest = false,
+  ghostErrs,
 }: {
   errs: number[];
   marks: SpreadMark[];
@@ -29,14 +30,20 @@ export function ErrorSpreadStrip({
   height?: number;
   /** Highlight the newest bin so accumulation reads beat-by-beat. */
   accentLatest?: boolean;
+  /** The full lottery, drawn faint behind `errs` as prominent markers — so a single
+   * split reads as one draw from the distribution, not a lone bar in an empty plot. */
+  ghostErrs?: number[];
 }) {
   const m = { l: 16, r: 16, t: 34, b: 22 };
   const plotW = width - m.l - m.r;
   const plotH = height - m.t - m.b;
   const x = (e: number) => m.l + (Math.min(e, axisMax) / axisMax) * plotW;
 
+  const ghosting = !!ghostErrs && ghostErrs.length > 0;
+  // When ghosting, the histogram IS the full lottery (faint); the split(s) overlay as marks.
+  const histErrs = ghosting ? ghostErrs! : errs;
   const counts = new Array<number>(bins).fill(0);
-  for (const e of errs) {
+  for (const e of histErrs) {
     const b = Math.min(bins - 1, Math.floor((Math.min(e, axisMax) / axisMax) * bins));
     counts[b]++;
   }
@@ -44,7 +51,16 @@ export function ErrorSpreadStrip({
   const bw = plotW / bins;
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`Distribution of validation error across ${errs.length} random splits; ${marks.map((mk) => `${mk.label} at ${mk.value.toFixed(3)}`).join(", ")}.`} className="h-auto w-full">
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      role="img"
+      aria-label={
+        ghosting
+          ? `One split's validation error (${errs.map((e) => e.toFixed(3)).join(", ")}) marked against the distribution of ${ghostErrs!.length} possible random splits; ${marks.map((mk) => `${mk.label} at ${mk.value.toFixed(3)}`).join(", ")}.`
+          : `Distribution of validation error across ${errs.length} random splits; ${marks.map((mk) => `${mk.label} at ${mk.value.toFixed(3)}`).join(", ")}.`
+      }
+      className="h-auto w-full"
+    >
       <line x1={m.l} x2={width - m.r} y1={height - m.b} y2={height - m.b} stroke="var(--line)" />
       {counts.map((c, i) => {
         if (c === 0) return null;
@@ -64,11 +80,33 @@ export function ErrorSpreadStrip({
             width={bw * 0.76}
             height={(c / maxCount) * plotH}
             fill={latestBin ? "var(--accent)" : "var(--viz-prediction)"}
-            fillOpacity={latestBin ? 0.85 : 0.55}
+            fillOpacity={ghosting ? 0.16 : latestBin ? 0.85 : 0.55}
             style={{ transition: accentLatest ? "fill 200ms ease, fill-opacity 200ms ease" : undefined }}
           />
         );
       })}
+      {/* The actual split(s), marked prominently against the faint lottery. */}
+      {ghosting &&
+        errs.map((e, i) => (
+          <g key={`split-${i}`}>
+            <rect x={x(e) - 3} y={m.t} width={6} height={plotH} rx={2} fill="var(--viz-prediction)" />
+            {i === 0 && (
+              <text
+                x={x(e)}
+                y={m.t - 18}
+                textAnchor="middle"
+                fontSize={11}
+                fontWeight={600}
+                fill="var(--viz-prediction-ink)"
+                paintOrder="stroke"
+                stroke="var(--surface-raised)"
+                strokeWidth={3}
+              >
+                this split
+              </text>
+            )}
+          </g>
+        ))}
       {(() => {
         // Place labels so they never collide: edge marks anchor inward, and a mark
         // whose label would overprint a nearer one is bumped up a row.
