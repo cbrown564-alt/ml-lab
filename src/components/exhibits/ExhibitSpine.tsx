@@ -109,31 +109,6 @@ export function ExhibitSpine({ acts }: { acts: ExhibitAct[] }) {
         })}
       </nav>
 
-      {/* The journey affordance — position in the walk and how to advance. */}
-      <div className="mt-5 flex items-center justify-between gap-4">
-        <span className="font-mono text-xs tracking-widest text-ink-faint uppercase tabular-nums">
-          Act {active + 1} / {count} · {acts[active].label}
-        </span>
-        <div className="flex gap-1.5">
-          <button
-            type="button"
-            onClick={() => go(active - 1)}
-            disabled={active === 0}
-            className="rounded-full border border-line px-3.5 py-1.5 text-sm whitespace-nowrap text-ink-muted transition-colors hover:border-ink-faint hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            ← Back
-          </button>
-          <button
-            type="button"
-            onClick={() => go(active + 1)}
-            disabled={active === count - 1}
-            className="rounded-full border border-line px-3.5 py-1.5 text-sm whitespace-nowrap text-ink-muted transition-colors hover:border-ink-faint hover:text-ink disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {active < count - 1 ? `Next: ${acts[active + 1].label} →` : "Next →"}
-          </button>
-        </div>
-      </div>
-
       {acts.map((act, i) =>
         visited.has(i) ? (
           <div
