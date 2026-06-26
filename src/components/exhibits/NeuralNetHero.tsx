@@ -80,7 +80,7 @@ export function NeuralNetHero() {
           muted={muted}
           visibleUnits={visibleUnits}
           width={1200}
-          height={400}
+          height={720}
           bare
         />
       </div>
