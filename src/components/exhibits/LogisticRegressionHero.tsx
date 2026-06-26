@@ -149,6 +149,7 @@ function Panel({
   probe,
   onProbe,
   showPortal,
+  note,
 }: {
   kicker: string;
   acc: number;
@@ -158,6 +159,8 @@ function Panel({
   probe: { x1: number; x2: number };
   onProbe: (p: { x1: number; x2: number }) => void;
   showPortal: boolean;
+  /** A centred caption framing a flat field as meaningful (the untrained "no opinion"). */
+  note?: string;
 }) {
   return (
     <div className="min-w-0 flex-1">
@@ -170,6 +173,19 @@ function Panel({
       <div className="relative" style={{ opacity: reveal, transition: "opacity 500ms ease" }}>
         <DecisionField points={logisticPoints} params={params} showProb width={520} height={400} />
         {showPortal && <ProbeOverlay probe={probe} onMove={onProbe} />}
+        {note && (
+          <div
+            className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 justify-center px-4"
+            aria-hidden
+          >
+            <span
+              className="rounded-full border border-line px-3 py-1 font-mono text-[11px] tracking-wide text-ink-muted uppercase"
+              style={{ backgroundColor: "color-mix(in oklab, var(--surface-raised) 90%, transparent)" }}
+            >
+              {note}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -210,6 +226,7 @@ export function LogisticRegressionHero() {
             probe={probe}
             onProbe={setProbe}
             showPortal={false}
+            note="p ≈ 0.50 everywhere"
           />
           <Panel
             kicker="trained — the boundary"
