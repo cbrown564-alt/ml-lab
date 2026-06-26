@@ -2,15 +2,15 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Plot, usePlot } from "@/components/viz/Plot";
-import { PlotContributionStack } from "@/components/viz/primitives";
 import { allExamples, regressionTrend } from "@content/exhibits/regression-task/experiment";
 
 /**
  * The specimen hero — what a regression task is, in one picture. The model's rule
  * is a line through study-hours → exam-score; each student's actual score sits off
- * it by some amount, and on load those gaps draw in as vertical error-hued stems.
- * An error ruler and ContributionStack on the right accumulate the residuals into
- * a running mean absolute error as they grow. Reduced motion renders stems drawn.
+ * it by some amount, and on load those gaps draw in as a forest of vertical
+ * error-hued distance stems — error = distance. The running average miss is named
+ * in the masthead. Reduced motion renders stems drawn. (No right-edge stack: that
+ * gesture belongs to loss-functions, so the heroes stay shuffle-distinct.)
  */
 
 const XS = allExamples.map((e) => e.x);
@@ -21,14 +21,10 @@ const DEMO = [...allExamples].sort(
   (a, b) => Math.abs(b.y - regressionTrend(b.x)) - Math.abs(a.y - regressionTrend(a.x)),
 )[2];
 
-const residuals = allExamples.map((e) => Math.abs(e.y - regressionTrend(e.x)));
-
 function HeroGraphic({ t }: { t: number }) {
   const { x, y } = usePlot();
   const [x0, x1] = X_DOMAIN;
   const shown = Math.max(1, Math.round(t * allExamples.length));
-  const partial = residuals.slice(0, shown);
-  const mae = partial.reduce((s, r) => s + r, 0) / partial.length;
 
   return (
     <g>
@@ -114,15 +110,6 @@ function HeroGraphic({ t }: { t: number }) {
           error = distance
         </text>
       )}
-      <PlotContributionStack
-        values={residuals}
-        progress={t}
-        total={mae}
-        totalLabel="avg miss"
-        variant="bar"
-        width={48}
-        insetRight={20}
-      />
     </g>
   );
 }
