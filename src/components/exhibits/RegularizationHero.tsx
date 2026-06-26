@@ -69,7 +69,7 @@ function CoefTrace({
   const state =
     lambdaT < 0.25 ? "weights free" : lambdaT < 0.75 ? "tension rising" : "weights pulled in";
   return (
-    <div className="mt-3 rounded-lg border border-line bg-sunken px-4 pt-3 pb-3">
+    <div className="mt-3 border-t border-line px-1 pt-3">
       <div className="mb-2.5 flex items-baseline justify-between gap-2">
         <span className="font-mono text-[11px] tracking-widest uppercase" style={{ color: "var(--viz-param-ink)" }}>
           Coefficients
@@ -160,7 +160,7 @@ export function RegularizationHero() {
         </div>
         <Plot
           width={1200}
-          height={320}
+          height={280}
           xDomain={[-0.02, 1.02]}
           yDomain={[-1.55, 1.55]}
           ariaLabel={`A degree-${REG_DEGREE} ridge fit with λ ${scrubLambda.toExponential(1)}: train ${scrubTrain.toFixed(2)}, test ${scrubTest.toFixed(2)}. ${kicker}.`}
@@ -175,7 +175,6 @@ export function RegularizationHero() {
           </g>
           <DataPoints points={TRAIN} />
         </Plot>
-        <CoefTrace model={scrubModel} refMaxW={refMaxW} lambdaT={lambdaT} />
         <label className="mt-3 flex items-center gap-3 px-1">
           <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">λ low</span>
           <input
@@ -189,6 +188,7 @@ export function RegularizationHero() {
           />
           <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-faint uppercase">λ high</span>
         </label>
+        <CoefTrace model={scrubModel} refMaxW={refMaxW} lambdaT={lambdaT} />
       </div>
       <div className="flex items-center justify-center gap-6 border-t border-line px-3 py-2 font-mono text-[11px] text-ink-faint">
         <span className="inline-flex items-center gap-1.5">

@@ -12,7 +12,7 @@ import { useActHandoffOptional } from "@/components/exhibits/ActHandoffContext";
  * Each act mounts on first visit and stays mounted (hidden) thereafter, so a
  * detour never loses an act's state and only the opening act is in the server
  * HTML (the per-route budget stays honest, C5). Advance by the numbered rail, by
- * Back/Next, or by arrow keys while the rail holds focus.
+ * the forward link at each act's foot, or by arrow keys while the rail holds focus.
  */
 
 export type ExhibitAct = {
@@ -121,6 +121,23 @@ export function ExhibitSpine({ acts }: { acts: ExhibitAct[] }) {
             data-act-panel={act.id}
           >
             {act.content}
+            {/* The forward affordance, at the act's foot — point of need, not a
+                persistent top-row breadcrumb. The numbered rail still allows any
+                jump; this just makes "advance" discoverable without one. */}
+            {i < count - 1 && (
+              <div className="mt-12 flex justify-end border-t border-line pt-6">
+                <button
+                  type="button"
+                  onClick={() => go(i + 1, true)}
+                  className="group inline-flex items-center gap-2 rounded-full border border-line px-5 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-accent hover:text-ink"
+                >
+                  Next: {acts[i + 1].label}
+                  <span aria-hidden className="transition-transform group-hover:translate-x-0.5">
+                    →
+                  </span>
+                </button>
+              </div>
+            )}
           </div>
         ) : null,
       )}
