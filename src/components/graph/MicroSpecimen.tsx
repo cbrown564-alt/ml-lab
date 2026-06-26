@@ -331,8 +331,8 @@ function BiasVariance() {
   return (
     <>
       <path d="M26 42 C 48 78, 72 78, 96 42" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M26 30 C 44 64, 60 56" fill="none" stroke="var(--viz-prediction)" strokeWidth="1.8" opacity="0.7" />
-      <path d="M60 56 C 80 36, 96 30" fill="none" stroke="var(--viz-param)" strokeWidth="1.8" opacity="0.7" />
+      <path d="M26 30 Q 44 64, 60 56" fill="none" stroke="var(--viz-prediction)" strokeWidth="1.8" opacity="0.7" />
+      <path d="M60 56 Q 80 36, 96 30" fill="none" stroke="var(--viz-param)" strokeWidth="1.8" opacity="0.7" />
       <circle cx="61" cy="68" r="3.5" fill="var(--viz-truth)" />
     </>
   );
