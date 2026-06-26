@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Axes, DataPoints, Plot, usePlot } from "@/components/viz/Plot";
 import { PolyCurve } from "@/components/viz/PolyCurve";
-import { StatGrid } from "@/components/viz/StatGrid";
 import { ErrorSpreadStrip } from "@/components/exhibits/ErrorSpreadStrip";
 import { useActHandoffFrame } from "@/components/exhibits/ActHandoffContext";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
@@ -81,15 +80,11 @@ export function TrainTestLab() {
             Reshuffle the split
           </button>
 
-          <StatGrid
-            direction="col"
-            caption={`${split.train.length} train · ${split.test.length} validation · ${history.length} splits drawn`}
-            stats={[
-              { label: "training error", value: score.trainErr.toFixed(3), hue: "var(--viz-neutral-ink)", note: "on data it has seen — flatters" },
-              { label: "validation error (this split)", value: score.testErr.toFixed(3), hue: "var(--viz-prediction)", note: "honest, but jumps every reshuffle" },
-              { label: "5-fold CV error", value: CV.toFixed(3), hue: "var(--viz-truth-ink)", note: "averaged over folds — stable" },
-            ]}
-          />
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">5-fold CV error</span>
+            <span className="font-mono text-lg" style={{ color: "var(--accent)" }}>{CV.toFixed(3)}</span>
+            <span className="font-mono text-[10px] text-ink-faint">— stable</span>
+          </div>
 
           <p className="text-sm leading-relaxed text-ink-faint">
             Keep reshuffling: the blue validation-error histogram spreads as the splits disagree,
@@ -112,14 +107,17 @@ export function TrainTestLab() {
             <DataPoints points={split.train} />
           </Plot>
           <figure className="mt-4 rounded-xl border border-line bg-raised p-3">
-            <figcaption className="mb-1 font-mono text-[11px] tracking-widest text-ink-faint uppercase">Validation error across splits</figcaption>
+            <figcaption className="mb-1 font-mono text-[11px] tracking-widest text-ink-faint uppercase">
+              Validation error · {history.length} splits drawn
+            </figcaption>
             <ErrorSpreadStrip
               errs={history}
               axisMax={0.2}
               accentLatest
               marks={[
-                { value: score.trainErr, label: "train", color: "var(--viz-neutral)" },
-                { value: CV, label: "CV", color: "var(--accent)" },
+                { value: score.trainErr, label: `train ${score.trainErr.toFixed(3)}`, color: "var(--viz-neutral)" },
+                { value: score.testErr, label: `split ${score.testErr.toFixed(3)}`, color: "var(--viz-prediction)" },
+                { value: CV, label: `CV ${CV.toFixed(3)}`, color: "var(--accent)" },
               ]}
               width={620}
               height={150}

@@ -1,13 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FeatureFoldField } from "@/components/viz/FeatureFoldField";
 import { NetworkDiagram } from "@/components/viz/NetworkDiagram";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { PortalView, RepresentationPortal } from "@/components/viz/primitives";
+import { useActHandoffFrame } from "@/components/exhibits/ActHandoffContext";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import { initNet, logLoss, predictProbaMuted, step, type Net } from "@/lib/models/neural-net";
 import { DEFAULT_HIDDEN, HIDDEN_CHOICES, NN_LR, neuralNetScenario, xorData } from "@content/exhibits/neural-network-fundamentals/experiment";
+import type { NeuralNetFrame } from "@content/exhibits/neural-network-fundamentals/spine";
 
 /**
  * Watch a small network learn XOR. The RepresentationPortal links each hidden unit
@@ -19,6 +21,8 @@ const STEPS_PER_TICK = 14;
 const MAX_EPOCHS = 1400;
 
 export function NeuralNetLab() {
+  const storyFrame = useActHandoffFrame<NeuralNetFrame>();
+  const appliedHandoff = useRef(false);
   const [hidden, setHidden] = useState<number>(DEFAULT_HIDDEN);
   const [seed, setSeed] = useState(2);
   const [net, setNet] = useState<Net>(() => initNet(DEFAULT_HIDDEN, 2));
@@ -26,6 +30,17 @@ export function NeuralNetLab() {
   const [training, setTraining] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState<number | null>(null);
   const [muted, setMuted] = useState<Set<number>>(() => new Set());
+
+  // Seed Run-it from the See-it story stage so the network isn't cold on arrival.
+  useEffect(() => {
+    if (appliedHandoff.current || !storyFrame || storyFrame.stage === "neuron") return;
+    appliedHandoff.current = true;
+    const targetEpoch = storyFrame.stage === "solved" ? MAX_EPOCHS : 400;
+    let c = initNet(DEFAULT_HIDDEN, 2);
+    for (let i = 0; i < targetEpoch; i++) c = step(c, xorData, NN_LR);
+    setNet(c);
+    setEpoch(targetEpoch);
+  }, [storyFrame]);
 
   const reset = (h: number, s: number) => {
     setTraining(false);
@@ -148,11 +163,10 @@ export function NeuralNetLab() {
 
           <StatGrid
             direction="col"
-            caption={`${epoch} training steps`}
+            caption={`${epoch} steps · ${hidden - muted.size}/${hidden} folds active`}
             stats={[
               { label: "loss", value: loss.toFixed(3), hue: "var(--viz-error-ink)", note: "cross-entropy, falling as it learns" },
               { label: "accuracy on XOR", value: `${Math.round(acc * 100)}%`, hue: "var(--viz-truth-ink)", note: hidden === 1 ? "one fold tops out ~75%" : acc >= 0.9 ? "folds reach the X" : "training — folds are bending" },
-              { label: "active folds", value: `${hidden - muted.size}/${hidden}`, hue: "var(--viz-param)", note: "muted units contribute zero" },
             ]}
           />
         </div>

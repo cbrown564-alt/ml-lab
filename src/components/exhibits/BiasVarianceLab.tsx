@@ -104,8 +104,6 @@ export function BiasVarianceLab() {
           <p className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
             Degree {degree} — {regime}
           </p>
-
-          <ErrorCurves train={TRAIN} test={TEST} degree={degree} maxDegree={DEG.max} />
         </div>
 
         <div className="mt-6 lg:mt-0">
@@ -122,6 +120,7 @@ export function BiasVarianceLab() {
             <PolyCurve predict={(xv) => predictPoly(w, xv)} />
             <DataPoints points={TRAIN} />
           </Plot>
+          <ErrorCurves train={TRAIN} test={TEST} degree={degree} maxDegree={DEG.max} />
           <p className="mt-3 text-sm leading-relaxed text-ink-faint">
             Gold dots are the training data; hollow rings are held-out test points the
             model never sees. Watch the blue curve go from too stiff, to just right,
