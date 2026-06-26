@@ -171,13 +171,11 @@ export function FeatureScalingLab() {
             ]}
           />
 
-          <p className="text-sm leading-relaxed text-ink-faint">
-            {isMorphing
-              ? "Watch the axes deform — the valley rounds out and the path straightens."
-              : scaling === "raw"
-                ? "The bowl is stretched, so the biggest safe step is tiny and the walk zig-zags."
-                : "Round bowl: one big step points almost at the floor."}
-          </p>
+          {isMorphing && (
+            <p className="text-sm leading-relaxed text-ink-faint">
+              Watch the axes deform — the valley rounds out and the path straightens.
+            </p>
+          )}
         </div>
 
         <div className="mt-6 lg:mt-0">

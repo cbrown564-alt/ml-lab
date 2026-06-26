@@ -24,7 +24,7 @@ const MAX_STEPS = 300;
 const DURATION = 1500;
 
 function walk(points: Point[]): DescentStep[] {
-  const run = createGradientDescent(points, { learningRate: stableLearningRate(points) });
+  const run = createGradientDescent(points, { learningRate: stableLearningRate(points) * 0.55 });
   const floor = mse(points, olsFit(points));
   while (run.current.step < MAX_STEPS && run.current.loss > floor * 1.01 + 1e-9) run.step();
   return [...run.trace];

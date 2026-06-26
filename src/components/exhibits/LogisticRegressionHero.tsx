@@ -171,11 +171,6 @@ function Panel({
         <DecisionField points={logisticPoints} params={params} showProb width={520} height={400} />
         {showPortal && <ProbeOverlay probe={probe} onMove={onProbe} />}
       </div>
-      {showPortal && reveal > 0.5 && (
-        <div className="mt-2 border-t border-line pt-2">
-          <SigmoidPortal params={params} probe={probe} />
-        </div>
-      )}
     </div>
   );
 }
@@ -227,6 +222,11 @@ export function LogisticRegressionHero() {
             showPortal
           />
         </div>
+        {reveal > 0.5 && (
+          <div className="border-t border-line px-3 py-3">
+            <SigmoidPortal params={TRAINED} probe={probe} />
+          </div>
+        )}
       </RepresentationPortal>
     </figure>
   );

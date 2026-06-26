@@ -81,11 +81,14 @@ function MicroscopePanel({
   return (
     <div className="flex min-w-0 flex-col gap-1">
       <div className="flex items-baseline justify-between gap-2">
-        <span className="font-mono text-[10px] tracking-widest text-ink-muted uppercase">
+        <span
+          className="font-mono text-[10px] tracking-widest uppercase"
+          style={{ color: '#6b6056' }}
+        >
           {label}
         </span>
         {kicker && (
-          <span className="font-mono text-[9px] text-ink-muted">{kicker}</span>
+          <span className="font-mono text-[9px]" style={{ color: '#6b6056' }}>{kicker}</span>
         )}
       </div>
       <div
