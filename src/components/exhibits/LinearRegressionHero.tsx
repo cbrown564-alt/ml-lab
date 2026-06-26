@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { DataPoints, FitLine, Plot, usePlot } from "@/components/viz/Plot";
-import { PlotContributionStack, PlotPinGhost } from "@/components/viz/primitives";
+import { PlotPinGhost } from "@/components/viz/primitives";
 import { mse, olsFit, type LinearParams } from "@/lib/models/linear-regression";
 import { linearRegressionExperiment } from "@content/exhibits/linear-regression/experiment";
 
@@ -53,10 +53,10 @@ function HeroResiduals({ fit, t }: { fit: LinearParams; t: number }) {
             width={side}
             height={side}
             fill="var(--viz-error)"
-            fillOpacity={0.14}
+            fillOpacity={0.22}
             stroke="var(--viz-error)"
             strokeWidth={1.5}
-            strokeOpacity={0.7}
+            strokeOpacity={0.9}
           />
         );
       })}
@@ -100,25 +100,6 @@ function HeroLabels({ fit }: { fit: LinearParams }) {
         residuals → MSE
       </text>
     </g>
-  );
-}
-
-function MseStackLayer({ fit, t }: { fit: LinearParams; t: number }) {
-  const areas = SPECIMEN.map((p) => {
-    const r = p.y - (fit.slope * p.x + fit.intercept);
-    return r * r;
-  });
-  const partialMse = areas.reduce((s, a) => s + a, 0) / SPECIMEN.length;
-  return (
-    <PlotContributionStack
-      values={areas}
-      progress={t}
-      total={partialMse}
-      totalLabel="MSE"
-      variant="square"
-      width={44}
-      insetRight={16}
-    />
   );
 }
 
@@ -197,7 +178,6 @@ export function LinearRegressionHero() {
                 <HeroResiduals fit={FLAT} t={1} />
               </PlotPinGhost>
               <HeroResiduals fit={candidate} t={residT} />
-              <MseStackLayer fit={candidate} t={residT} />
             </g>
           )}
           <FitLine params={settled ? candidate : FLAT} ease={animate && scrub === 1} />
