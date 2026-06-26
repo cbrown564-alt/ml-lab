@@ -22,9 +22,9 @@ test.describe("neural-network-fundamentals exhibit", () => {
 
   test("Run it trains live and a single hidden unit stalls", async ({ page }) => {
     await openTab(page, "Run it");
-    await expect(panel(page).getByText(/0 training steps/i)).toBeVisible();
+    await expect(panel(page).getByText(/^0 steps ·/i)).toBeVisible();
     await panel(page).getByRole("button", { name: /Train ▶/i }).click();
-    await expect(panel(page).getByText(/training steps/i)).not.toHaveText(/^0 training steps/, { timeout: 4000 });
+    await expect(panel(page).getByText(/\d+ steps ·/i)).not.toHaveText(/^0 steps ·/, { timeout: 4000 });
     // one hidden unit can't draw the X — the stall warning appears
     await panel(page).getByRole("button", { name: "1", exact: true }).click();
     await expect(panel(page).getByText(/can't draw the X/i)).toBeVisible();

@@ -39,7 +39,7 @@ export function LogisticRegressionStory() {
           stats={[
             { label: "accuracy", value: `${Math.round(acc * 100)}%`, hue: "var(--viz-prediction)", note: "share correct" },
             { label: "log-loss", value: loss.toFixed(3), hue: "var(--viz-error)", note: "what training minimised" },
-            { label: "class hues", value: "0 / 1", hue: "var(--viz-truth)", note: "amber · blue" },
+            { label: "class hues", value: "0 / 1", hue: "var(--viz-truth-ink)", note: "amber · blue" },
           ]}
         />
       </div>

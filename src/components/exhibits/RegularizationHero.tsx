@@ -48,7 +48,6 @@ function TestPoints() {
 /** Coefficient bars that shrink as λ rises — tension made visible. */
 function CoefTrace({ model, lambdaT }: { model: ChebModel; lambdaT: number }) {
   const maxW = Math.max(...model.weights.map(Math.abs), 0.01);
-  const tension = 0.65 + lambdaT * 0.35;
   return (
     <div className="flex items-end gap-0.5 px-1" aria-hidden>
       {model.weights.slice(1).map((w, i) => (
@@ -64,10 +63,7 @@ function CoefTrace({ model, lambdaT }: { model: ChebModel; lambdaT: number }) {
           }}
         />
       ))}
-      <span
-        className="ml-2 self-center font-mono text-[9px] tracking-wide text-ink-faint uppercase"
-        style={{ opacity: tension }}
-      >
+      <span className="ml-2 self-center font-mono text-[9px] tracking-wide text-ink-faint uppercase">
         {lambdaT < 0.25 ? "weights free" : lambdaT < 0.75 ? "tension rising" : "weights pulled in"}
       </span>
     </div>

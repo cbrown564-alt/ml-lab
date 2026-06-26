@@ -55,7 +55,10 @@ export function NetworkDiagram({
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
-      role="img"
+      // When hidden units are selectable they render as focusable buttons; an
+      // image role may not contain interactive descendants (axe nested-interactive),
+      // so the interactive variant is a labelled group instead of an atomic image.
+      role={onSelectUnit ? "group" : "img"}
       aria-label={`A neural network: 2 inputs, ${H} hidden ${H === 1 ? "unit" : "units"}, 1 output. Edge thickness is each weight's size, colour its sign.${onSelectUnit ? " Click a hidden unit to inspect its fold." : ""}`}
       className="h-auto w-full"
     >
