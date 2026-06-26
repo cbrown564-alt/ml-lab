@@ -21,10 +21,10 @@ function outcomeOf(s: Scored, threshold: number): Outcome {
 }
 
 const BIN_LAYOUT: Record<Outcome, { cx: number; cy: number; good: boolean; label: string }> = {
-  tp: { cx: 188, cy: 202, good: true, label: "TP" },
-  fp: { cx: 308, cy: 202, good: false, label: "FP" },
-  fn: { cx: 188, cy: 262, good: false, label: "FN" },
-  tn: { cx: 308, cy: 262, good: true, label: "TN" },
+  tp: { cx: 188, cy: 175, good: true, label: "TP" },
+  fp: { cx: 308, cy: 175, good: false, label: "FP" },
+  fn: { cx: 188, cy: 235, good: false, label: "FN" },
+  tn: { cx: 308, cy: 235, good: true, label: "TN" },
 };
 
 /**
@@ -46,7 +46,7 @@ export function DecisionConveyor({
 }) {
   const reduceMotion = usePrefersReducedMotion();
   const W = showMetrics ? 640 : 560;
-  const H = 292;
+  const H = 270;
   const m = { l: 56, r: showMetrics ? 20 : 24, t: 32, b: 16 };
   const beltY1 = m.t + 22;
   const beltY0 = m.t + 58;
@@ -120,7 +120,7 @@ export function DecisionConveyor({
       </text>
 
       {([beltY1, beltY0] as const).map((by) => (
-        <line key={`ch${by}`} x1={tx} y1={by + 12} x2={tx} y2={174} stroke="var(--line)" strokeWidth={1.5} strokeDasharray="3 3" />
+        <line key={`ch${by}`} x1={tx} y1={by + 12} x2={tx} y2={150} stroke="var(--line)" strokeWidth={1.5} strokeDasharray="3 3" />
       ))}
 
       {(Object.keys(BIN_LAYOUT) as Outcome[]).map((key) => {
@@ -183,7 +183,7 @@ export function DecisionConveyor({
       })}
 
       {showMetrics && (
-        <g transform="translate(448, 198)">
+        <g transform="translate(448, 172)">
           <text x={0} y={0} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
             PRECISION
           </text>
