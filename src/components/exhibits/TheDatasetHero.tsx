@@ -93,7 +93,7 @@ function HeroGraphic({ t }: { t: number }) {
         <circle cx={px} cy={py} r={7} fill="var(--viz-error)" stroke="var(--surface-bg)" strokeWidth={2} />
         <PointRowLink
           point={[px, py]}
-          card={[px + 48, py - 52]}
+          card={[px + 48, py + 10]}
           cardWidth={152}
           cardHeight={48}
           kicker="row · provenance"
