@@ -21,10 +21,10 @@ function outcomeOf(s: Scored, threshold: number): Outcome {
 }
 
 const BIN_LAYOUT: Record<Outcome, { cx: number; cy: number; good: boolean; label: string }> = {
-  tp: { cx: 188, cy: 232, good: true, label: "TP" },
-  fp: { cx: 308, cy: 232, good: false, label: "FP" },
-  fn: { cx: 188, cy: 292, good: false, label: "FN" },
-  tn: { cx: 308, cy: 292, good: true, label: "TN" },
+  tp: { cx: 188, cy: 202, good: true, label: "TP" },
+  fp: { cx: 308, cy: 202, good: false, label: "FP" },
+  fn: { cx: 188, cy: 262, good: false, label: "FN" },
+  tn: { cx: 308, cy: 262, good: true, label: "TN" },
 };
 
 /**
@@ -46,7 +46,7 @@ export function DecisionConveyor({
 }) {
   const reduceMotion = usePrefersReducedMotion();
   const W = showMetrics ? 640 : 560;
-  const H = 320;
+  const H = 292;
   const m = { l: 56, r: showMetrics ? 20 : 24, t: 32, b: 16 };
   const beltY1 = m.t + 22;
   const beltY0 = m.t + 58;
@@ -120,7 +120,7 @@ export function DecisionConveyor({
       </text>
 
       {([beltY1, beltY0] as const).map((by) => (
-        <line key={`ch${by}`} x1={tx} y1={by + 12} x2={tx} y2={204} stroke="var(--line)" strokeWidth={1.5} strokeDasharray="3 3" />
+        <line key={`ch${by}`} x1={tx} y1={by + 12} x2={tx} y2={174} stroke="var(--line)" strokeWidth={1.5} strokeDasharray="3 3" />
       ))}
 
       {(Object.keys(BIN_LAYOUT) as Outcome[]).map((key) => {
@@ -138,30 +138,26 @@ export function DecisionConveyor({
               stroke={b.good ? "var(--viz-prediction)" : "var(--viz-error)"}
               strokeWidth={1.25}
             />
-            <text x={b.cx} y={b.cy - 10} textAnchor="middle" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
-              {b.label}
-            </text>
+            {/* Count surfaced in a header above the bin, clear of the dots that
+                fill it — never occluded. */}
             <text
               x={b.cx}
-              y={b.cy + 14}
+              y={b.cy - 33}
               textAnchor="middle"
-              fontSize={18}
               fontFamily="var(--font-mono)"
               fill={b.good ? "var(--viz-prediction-ink)" : "var(--viz-error-ink)"}
               style={{ transition: reduceMotion ? undefined : `opacity ${MOTION_MOVE}` }}
             >
-              {n}
+              <tspan fontSize={10} fill="var(--ink-faint)">
+                {b.label}{" "}
+              </tspan>
+              <tspan fontSize={16} fontWeight={700}>
+                {n}
+              </tspan>
             </text>
           </g>
         );
       })}
-      <text x={248} y={216} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
-        actual 1
-      </text>
-      <text x={368} y={216} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
-        actual 0
-      </text>
-
       {landed.map((s, i) => {
         const out = outcomeOf(s, threshold);
         const bin = BIN_LAYOUT[out];
@@ -169,7 +165,8 @@ export function DecisionConveyor({
         const onBelt = animate && i === shown - 1 && shown < scored.length;
         const stackIdx = landed.slice(0, i + 1).filter((p) => outcomeOf(p, threshold) === out).length - 1;
         const cx = onBelt ? x(s.prob) : bin.cx + ((stackIdx % 4) - 1.5) * 9;
-        const cy = onBelt ? beltY : bin.cy + 6 - Math.floor(stackIdx / 4) * 8;
+        // Clamp the pile to the bin so dense bins don't overflow into the labels.
+        const cy = onBelt ? beltY : bin.cy + 6 - Math.min(Math.floor(stackIdx / 4), 4) * 8;
         const correct = out === "tp" || out === "tn";
         return (
           <circle
@@ -186,7 +183,7 @@ export function DecisionConveyor({
       })}
 
       {showMetrics && (
-        <g transform="translate(448, 228)">
+        <g transform="translate(448, 198)">
           <text x={0} y={0} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
             PRECISION
           </text>
