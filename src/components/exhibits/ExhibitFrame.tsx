@@ -272,10 +272,11 @@ export function ExhibitFrame({
             label: "Explain it",
             purpose: ACT_PURPOSE.explain,
             content: checkCompanion ? (
-              // Composed onto the canvas: the checks hold the left column, a live
-              // instrument is pinned in the right so the learner answers against the
-              // running model — no dead canvas at the climax.
-              <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,400px)] lg:items-start lg:gap-12">
+              // Act continuity (audit principle 2): the protagonist must survive
+              // into Explain, not shrink to a corner widget. The live instrument
+              // holds a co-equal column beside the checks — the same running model
+              // the learner met in See/Run/Break, now answered against.
+              <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-12">
                 <div className="max-w-[64ch]">
                   <ConceptCheckSection check={check} nodeTitle={node.title} next={checkNext} />
                 </div>
