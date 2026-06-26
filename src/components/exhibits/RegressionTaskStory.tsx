@@ -7,6 +7,7 @@ import { toClass } from "@/lib/models/regression-task";
 import {
   PASS_LINE,
   queryPoints,
+  regressionTrend,
   shownExamples,
   X_LABEL,
   Y_LABEL,
@@ -39,6 +40,34 @@ function Points({ mode }: { mode: RegressionTaskFrame["mode"] }) {
   }
   return (
     <g>
+      {/* Beat 1 is otherwise a bare scatter; a faint ghost of the trend puts the
+          mechanism — a continuous answer that rises with the feature — in the
+          opening frame, before the residual story names it. */}
+      {mode === "anatomy" && (
+        <g aria-hidden>
+          <line
+            x1={x(0)}
+            y1={y(regressionTrend(0))}
+            x2={x(10.4)}
+            y2={y(regressionTrend(10.4))}
+            stroke="var(--viz-prediction)"
+            strokeWidth={2}
+            strokeDasharray="5 4"
+            opacity={0.4}
+          />
+          <text
+            x={x(10.2)}
+            y={y(regressionTrend(10.4)) - 8}
+            textAnchor="end"
+            fontSize={11}
+            fontFamily="var(--font-mono)"
+            fill="var(--viz-prediction)"
+            opacity={0.7}
+          >
+            scores rise with hours
+          </text>
+        </g>
+      )}
       {ALL.map((p, i) => (
         <circle key={i} cx={x(p.x)} cy={y(p.y)} r={5} fill="var(--viz-truth)" />
       ))}
