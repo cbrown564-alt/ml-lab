@@ -36,10 +36,18 @@ R² · MSE · λ · η · w·x + b · OLS · sigmoid · ŷ · k-fold · train/te
 
 ## Decision
 
-- **Winner:** _TBD_ — provider · voice · settings
-- **Runner-up:** _TBD_
-- **Rationale:** _TBD (esp. "much better than baseline" — the §1 goal)_
-- **Go / no-go to generate the full 15-exhibit catalog:** _TBD (Milestone #6)_
+- **Winner (c6):** **Gemini · Sulafat (Warm)** · `gemini-3.1-flash-tts-preview` · documentary style-steer — the product owner's clear-cut pick (2026-06-27).
+- **Rationale:** warm, expressive, and clearly the documentary register the lab wants — decisively better than the c1 baseline (Roger @ default), which was the whole bar to clear (§1). The expressiveness hypothesis held: Gemini over ElevenLabs, even tuned.
+- **Runner-up:** not separately scored — the winner was unambiguous.
+- **Watch into productionization:** Sulafat's steered delivery ran **long (~48–54 s vs 36–46 s)** on the corpus. Confirm pacing reads as "unhurried," not "slow," on a full exhibit; if too slow, dial the style directive back before the catalog run.
+- **Go / no-go to generate the full 15-exhibit catalog:** pending Milestone #6 (cost-at-scale tabulation) — voice is now locked.
+
+## Implication: provider is **Gemini** → the timing path is Whisper-recovery
+
+The winner has no native timestamps, so the production pipeline must adopt the
+spike's recovery path (Whisper word-ts → map to prose) as a first-class provider,
+not just ElevenLabs `with-timestamps`. This is the §7 work (M5), now on the
+critical path rather than optional.
 
 ## Next once a winner is picked
 
