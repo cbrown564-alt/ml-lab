@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "lint:deps": "depcruise src content scripts",
+    "typecheck": "tsc --noEmit",
     "check:budgets": "node scripts/check-budgets.mjs",
     "validate": "tsx scripts/validate-graph.ts",
     "new:exhibit": "tsx scripts/new-exhibit.ts",

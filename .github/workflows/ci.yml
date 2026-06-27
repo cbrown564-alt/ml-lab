@@ -1,5 +1,6 @@
 # Every gate the loop relies on (docs/06): graph validation, lint,
-# architecture rules, unit tests, build, performance budgets, e2e + axe.
+# architecture rules, type check, unit tests, build, performance budgets,
+# e2e + axe.
 name: CI
 
 on:
@@ -28,6 +29,9 @@ jobs:
 
       - name: Architecture rules
         run: npm run lint:deps
+
+      - name: Type check
+        run: npm run typecheck
 
       - name: Unit tests
         run: npm test
