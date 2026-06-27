@@ -29,12 +29,10 @@ describe("narration audio", () => {
         for (const s of narrative.story) expect(ids.has(s.id), s.id).toBe(true);
       });
 
-      // DEFERRED — the two pilot hooks' prose drifted from their ElevenLabs manifests
-      // during the copy audit, and we are intentionally NOT regenerating audio (billable)
-      // until the voice bake-off picks a narrator. See docs/audio-narration-bakeoff-plan.md
-      // §11. Re-enable (it.skip -> it) once the catalog is regenerated on the chosen voice;
-      // the structural checks (manifest covers every section, every mp3 exists) stay live.
-      it.skip("is generated from the current prose (no stale audio)", () => {
+      // Re-enabled 2026-06-27: the pilots were regenerated on the bake-off winner
+      // (Gemini · Sulafat) by the M5 provider abstraction, so prose and audio are
+      // back in sync. The staleness discipline is live again (plan §11 closed).
+      it("is generated from the current prose (no stale audio)", () => {
         const texts = new Map<string, string>([
           ["hook", sectionText(narrative.hook)],
           ...narrative.story.map(
@@ -50,8 +48,8 @@ describe("narration audio", () => {
         }
       });
 
-      // DEFERRED with the staleness check above — same reason (bake-off pending).
-      it.skip("word timings match the prose word-for-word and run forward", () => {
+      // Re-enabled with the staleness check above (M5 regen on Gemini · Sulafat).
+      it("word timings match the prose word-for-word and run forward", () => {
         const texts = new Map<string, string>([
           ["hook", sectionText(narrative.hook)],
           ...narrative.story.map(
