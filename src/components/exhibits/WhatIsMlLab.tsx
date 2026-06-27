@@ -138,7 +138,8 @@ export function WhatIsMlLab() {
     if (appliedHandoff.current || !storyFrame) return;
     if (storyFrame.stage === "learned" || storyFrame.stage === "learning") {
       appliedHandoff.current = true;
-      setLearned(fitLogistic(whatIsMlData));
+      const id = requestAnimationFrame(() => setLearned(fitLogistic(whatIsMlData)));
+      return () => cancelAnimationFrame(id);
     }
   }, [storyFrame]);
 

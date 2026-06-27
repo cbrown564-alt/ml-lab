@@ -127,9 +127,11 @@ export function GradientDescentMicroscope({ before, after, learningRate, reveal 
 
   useEffect(() => {
     if (reduceMotion) {
-      setShown(1);
-      setAriaReady(true);
-      return;
+      const id = requestAnimationFrame(() => {
+        setShown(1);
+        setAriaReady(true);
+      });
+      return () => cancelAnimationFrame(id);
     }
     const delay = reveal ? 280 : 0;
     const t1 = window.setTimeout(() => setShown(1), delay);

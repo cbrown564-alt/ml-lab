@@ -50,9 +50,12 @@ function VarianceSwarm({ degree }: { degree: number }) {
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
-    setReveal(0.2);
+    const raf = requestAnimationFrame(() => setReveal(0.2));
     const t = window.setTimeout(() => setReveal(1), 100);
-    return () => window.clearTimeout(t);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(t);
+    };
   }, [degree]);
 
   return (

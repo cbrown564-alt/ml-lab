@@ -75,7 +75,11 @@ test.describe("interaction latency", () => {
         }
         // 24ms floor: the API's minimum reporting threshold region — we
         // only care about entries approaching the 100ms red line.
-      }).observe({ type: "event", durationThreshold: 24 });
+        // durationThreshold is part of the Event Timing API but missing from the
+        // lib's PerformanceObserverInit type.
+      }).observe({ type: "event", durationThreshold: 24 } as PerformanceObserverInit & {
+        durationThreshold: number;
+      });
     });
   };
 

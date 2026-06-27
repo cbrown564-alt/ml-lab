@@ -67,22 +67,21 @@ export function DecisionConveyor({
   const [shown, setShown] = useState(animate ? 0 : scored.length);
 
   useEffect(() => {
-    if (!animate) {
-      setShown(scored.length);
-      return;
+    if (!animate || reduceMotion) {
+      const id = requestAnimationFrame(() => setShown(scored.length));
+      return () => cancelAnimationFrame(id);
     }
-    if (reduceMotion) {
-      setShown(scored.length);
-      return;
-    }
-    setShown(0);
+    const reset = requestAnimationFrame(() => setShown(0));
     let i = 0;
-    const id = window.setInterval(() => {
+    const interval = window.setInterval(() => {
       i += 1;
       setShown(i);
-      if (i >= scored.length) window.clearInterval(id);
+      if (i >= scored.length) window.clearInterval(interval);
     }, 48);
-    return () => window.clearInterval(id);
+    return () => {
+      cancelAnimationFrame(reset);
+      window.clearInterval(interval);
+    };
   }, [animate, scored.length, reduceMotion]);
 
   const landed = scored.slice(0, shown);

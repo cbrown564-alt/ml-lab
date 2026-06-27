@@ -24,13 +24,13 @@ export function MicroSpecimen({
 
   useEffect(() => {
     if (!intent || reduceMotion) {
-      setT(1);
-      return;
+      const f = requestAnimationFrame(() => setT(1));
+      return () => cancelAnimationFrame(f);
     }
-    setT(0);
     let raf = 0;
     let start = 0;
     const DURATION = 400;
+    // The first frame eases from 0, so no separate synchronous reset is needed.
     const tick = (now: number) => {
       if (!start) start = now;
       setT(easeProgress(now - start, DURATION));

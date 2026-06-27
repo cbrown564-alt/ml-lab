@@ -66,8 +66,8 @@ export function FeatureScalingLab() {
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
-      setMorphT(targetT);
-      return;
+      const id = requestAnimationFrame(() => setMorphT(targetT));
+      return () => cancelAnimationFrame(id);
     }
     const from = morphT;
     if (Math.abs(from - targetT) < 0.001) return;

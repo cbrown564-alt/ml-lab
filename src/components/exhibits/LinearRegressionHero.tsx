@@ -138,8 +138,8 @@ export function LinearRegressionHero() {
     if (!settled) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
-      setResidT(1);
-      return;
+      const id = requestAnimationFrame(() => setResidT(1));
+      return () => cancelAnimationFrame(id);
     }
     let raf = 0;
     let start = 0;

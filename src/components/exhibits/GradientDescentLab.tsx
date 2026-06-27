@@ -105,10 +105,13 @@ export function GradientDescentLab() {
     if (appliedHandoff.current || !storyFrame) return;
     if (!spec.scenarios.some((s) => s.id === storyFrame.scenarioId)) return;
     appliedHandoff.current = true;
-    loadScenario(storyFrame.scenarioId);
-    if (storyFrame.microscope) setView("microscope");
-    else setView(storyFrame.view);
-    setHandoffVisible(true);
+    const id = requestAnimationFrame(() => {
+      loadScenario(storyFrame.scenarioId);
+      if (storyFrame.microscope) setView("microscope");
+      else setView(storyFrame.view);
+      setHandoffVisible(true);
+    });
+    return () => cancelAnimationFrame(id);
   }, [storyFrame, loadScenario, spec.scenarios]);
 
   // A new dataset identity (scenario load or reset) means a new loss surface:

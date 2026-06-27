@@ -86,9 +86,12 @@ export function BiasVarianceHero() {
       const id = requestAnimationFrame(() => setReveal(1));
       return () => cancelAnimationFrame(id);
     }
-    setReveal(0.15);
+    const raf = requestAnimationFrame(() => setReveal(0.15));
     const t = window.setTimeout(() => setReveal(1), 120);
-    return () => window.clearTimeout(t);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(t);
+    };
   }, [degree]);
 
   return (

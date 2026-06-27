@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { hueInk, hueMark } from "./shared";
+import { hueMark } from "./shared";
 
 /**
  * TRACE/INSPECT — Step microscope (visual-standards audit).
@@ -28,7 +28,6 @@ export function StepMicroscope({
   vectorLabel?: string;
   ariaLabel: string;
 }) {
-  const paramInk = hueInk("param");
   const paramMark = hueMark("param");
 
   return (

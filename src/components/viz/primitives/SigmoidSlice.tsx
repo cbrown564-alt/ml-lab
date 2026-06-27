@@ -1,6 +1,6 @@
 "use client";
 
-import { boundaryX2, proba, score, sigmoid, type LogisticParams } from "@/lib/models/logistic";
+import { proba, score, sigmoid, type LogisticParams } from "@/lib/models/logistic";
 import { MOTION_QUICK, usePrefersReducedMotion } from "./shared";
 
 /**

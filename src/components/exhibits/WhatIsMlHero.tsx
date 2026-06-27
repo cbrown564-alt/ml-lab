@@ -227,9 +227,11 @@ export function WhatIsMlHero() {
 
   useEffect(() => {
     if (reduceMotion) {
-      setMorph(1);
-      setAutoPlayed(true);
-      return;
+      const id = requestAnimationFrame(() => {
+        setMorph(1);
+        setAutoPlayed(true);
+      });
+      return () => cancelAnimationFrame(id);
     }
     let raf = 0;
     let start = 0;

@@ -185,9 +185,11 @@ export function LossFunctionsHero() {
 
   useEffect(() => {
     if (reduceMotion) {
-      setMorphT(1);
-      setStackT(1);
-      return;
+      const id = requestAnimationFrame(() => {
+        setMorphT(1);
+        setStackT(1);
+      });
+      return () => cancelAnimationFrame(id);
     }
     let raf = 0;
     let start = 0;
@@ -205,8 +207,8 @@ export function LossFunctionsHero() {
 
   useEffect(() => {
     if (reduceMotion) {
-      setStackT(1);
-      return;
+      const id = requestAnimationFrame(() => setStackT(1));
+      return () => cancelAnimationFrame(id);
     }
     let raf = 0;
     let start = 0;

@@ -112,8 +112,8 @@ export function TheDatasetHero() {
 
   useEffect(() => {
     if (reduceMotion) {
-      setT(1);
-      return;
+      const id = requestAnimationFrame(() => setT(1));
+      return () => cancelAnimationFrame(id);
     }
     let raf = 0;
     let start = 0;

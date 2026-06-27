@@ -12,6 +12,9 @@ import { MOTION_QUICK } from "@/components/viz/primitives/shared";
  * boundary; the shaded field is the network's decision with optional units muted.
  */
 
+// Stable reference so the folds useMemo's deps don't change identity each render
+// (a default array literal would, and the React Compiler then can't preserve the memo).
+const DEFAULT_DOMAIN: [number, number] = [-3.6, 3.6];
 const MARGIN = { top: 14, right: 14, bottom: 36, left: 44 };
 const AMBER = [206, 158, 74];
 const BLUE = [78, 120, 200];
@@ -45,7 +48,7 @@ export function FeatureFoldField({
   muted = new Set<number>(),
   selectedUnit = null,
   visibleUnits = null,
-  domain = [-3.6, 3.6],
+  domain = DEFAULT_DOMAIN,
   width = 520,
   height = 420,
   bare = false,
