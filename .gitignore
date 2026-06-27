@@ -58,3 +58,6 @@ next-env.d.ts
 # large and date-stamped. The durable verdicts in docs/reviews/feedback/ ARE
 # committed (that is the value); the pixels are rebuilt on demand.
 /docs/reviews/captures/
+
+# Python venv for sklearn fixture generation
+.venv/

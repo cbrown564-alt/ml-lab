@@ -49,4 +49,15 @@ export const edges: ConceptEdge[] = [
   { from: "linear-regression", to: "bias-variance", type: "requires", strength: "soft" },
   { from: "bias-variance", to: "overfitting-regularization", type: "requires", strength: "soft" },
   { from: "train-test-generalization", to: "data-leakage", type: "requires", strength: "hard" },
+  // Trees cluster opens here: a classifier that bends on its own, where the depth knob
+  // is the overfitting wall made literal (a box around every noisy point).
+  { from: "classification-task", to: "decision-trees", type: "requires", strength: "hard" },
+  { from: "overfitting-regularization", to: "decision-trees", type: "requires", strength: "soft" },
+  {
+    from: "logistic-regression",
+    to: "decision-trees",
+    type: "alternative_to",
+    strength: "soft",
+    note: "Two ways to split a plane: logistic regression searches for one straight boundary; a tree carves the plane into axis-aligned boxes with a cascade of yes/no cuts. The line needs you to engineer x₁² to bend; the tree bends on its own — at the price of a jagged boundary that overfits if you let it grow.",
+  },
 ];

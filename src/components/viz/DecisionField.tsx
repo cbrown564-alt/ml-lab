@@ -40,6 +40,7 @@ export function DecisionField({
   width = 560,
   height = 460,
   showProb = true,
+  label,
 }: {
   points: LabeledPoint[];
   /** The linear classifier — used for the field and the straight boundary line. */
@@ -52,6 +53,9 @@ export function DecisionField({
   width?: number;
   height?: number;
   showProb?: boolean;
+  /** Override the accessible description — the default names a logistic boundary, but
+   * the same field serves any classifier (e.g. a decision tree's box regions). */
+  label?: string;
 }) {
   const predict = useMemo(
     () => predictProba ?? ((x1: number, x2: number) => proba(params!, x1, x2)),
@@ -114,7 +118,10 @@ export function DecisionField({
       <svg
         viewBox={`0 0 ${width} ${height}`}
         role="img"
-        aria-label={`Two classes in a 2-D feature plane with a logistic decision boundary; the model classifies ${acc} of ${points.length} points correctly. The shaded field is the predicted probability — amber for class 0, blue for class 1, palest at the boundary.`}
+        aria-label={
+          label ??
+          `Two classes in a 2-D feature plane with a logistic decision boundary; the model classifies ${acc} of ${points.length} points correctly. The shaded field is the predicted probability — amber for class 0, blue for class 1, palest at the boundary.`
+        }
         className="absolute inset-0 h-full w-full select-none"
       >
         <rect x={MARGIN.left} y={MARGIN.top} width={width - MARGIN.left - MARGIN.right} height={height - MARGIN.top - MARGIN.bottom} fill="none" stroke="var(--line)" />

@@ -27,6 +27,11 @@ export const foundations: Journey = {
     { nodeId: "overfitting-regularization" },
     { nodeId: "classification-task" },
     { nodeId: "logistic-regression" },
+    {
+      nodeId: "decision-trees",
+      framing:
+        "The other way to draw a boundary: not one line, but a staircase of yes/no cuts that bends on its own — and shows you overfitting as a thing you can watch happen.",
+    },
     { nodeId: "neural-network-fundamentals", optional: true },
   ],
 };

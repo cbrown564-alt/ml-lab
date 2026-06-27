@@ -191,6 +191,22 @@ export const nodes: ConceptNode[] = [
     status: "flagship",
   },
   {
+    id: "decision-trees",
+    title: "Decision Trees",
+    oneLiner:
+      "Twenty questions for data: a staircase of yes/no splits that bends to any boundary — and memorizes if you let it.",
+    domain: "supervised",
+    tags: ["classification", "trees"],
+    kind: "algorithm",
+    phase: 1,
+    depth: "core",
+    // Opens the trees cluster. Stub until the non-circular panel clears it — the
+    // depth knob is the cluster's cleanest bias–variance demonstration (test accuracy
+    // peaks shallow, then the staircase memorizes), bridged straight off logistic's
+    // "use a model that bends on its own" failure card.
+    status: "stub",
+  },
+  {
     id: "the-gradient",
     title: "The Gradient",
     oneLiner: "The direction of steepest ascent — calculus's gift to optimization.",

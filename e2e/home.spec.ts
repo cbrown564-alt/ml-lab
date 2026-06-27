@@ -44,7 +44,7 @@ test.describe("home", () => {
 
   test("the journey lists every stop in order with live links", async ({ page }) => {
     const journey = page.locator("#foundations");
-    await expect(journey.getByRole("listitem")).toHaveCount(14);
+    await expect(journey.getByRole("listitem")).toHaveCount(15);
     await journey.getByRole("link", { name: /Linear Regression/ }).click();
     await expect(
       page.getByRole("heading", { name: "Linear Regression" }),

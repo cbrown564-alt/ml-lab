@@ -60,6 +60,7 @@ const BUDGETS = [
   { route: "/exhibits/neural-network-fundamentals", jsKb: 705, htmlKb: 110 },
   { route: "/exhibits/what-is-ml", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/the-dataset", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/decision-trees", jsKb: 700, htmlKb: 110 },
 ];
 
 const server =
