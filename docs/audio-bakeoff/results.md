@@ -40,7 +40,25 @@ R² · MSE · λ · η · w·x + b · OLS · sigmoid · ŷ · k-fold · train/te
 - **Rationale:** warm, expressive, and clearly the documentary register the lab wants — decisively better than the c1 baseline (Roger @ default), which was the whole bar to clear (§1). The expressiveness hypothesis held: Gemini over ElevenLabs, even tuned.
 - **Runner-up:** not separately scored — the winner was unambiguous.
 - **Watch into productionization:** Sulafat's steered delivery ran **long (~48–54 s vs 36–46 s)** on the corpus. Confirm pacing reads as "unhurried," not "slow," on a full exhibit; if too slow, dial the style directive back before the catalog run.
-- **Go / no-go to generate the full 15-exhibit catalog:** pending Milestone #6 (cost-at-scale tabulation) — voice is now locked.
+- **Go / no-go to generate the full 15-exhibit catalog:** **GO (2026-06-27)** — the
+  product owner listened to the pilots and signed off the delivery. See "M6" below.
+
+## M6 — cost-at-scale + full-catalog generation (done 2026-06-27)
+
+The whole 15-exhibit catalog was generated on Gemini · Sulafat via the M5 pipeline.
+
+- **Volume:** 76 sections / ~35.4k chars / ~48 min of narration. This run: 65 new
+  sections (the 2 pilots skipped, idempotent); **zero retries, zero low-coverage
+  warnings, zero errors** — every section aligned cleanly.
+- **Cost (per run):** Whisper recovery ≈ $0.006/audio-min × ~48 min ≈ **~$0.30**;
+  Gemini `gemini-3.1-flash-tts-preview` TTS the larger-but-still-modest component
+  (the bake-off + this run are the empirical sample — confirm the exact char rate
+  on the billing dashboard). Budget a small multiple for prose-churn regen, which
+  is per-section, not per-catalog (idempotent on `textHash` + provider/voice/model).
+- **Pacing:** the catalog runs a consistent **121–138 wpm** (documentary register,
+  matching the approved pilots) — no per-exhibit outliers.
+- **Verification:** the `audio.test.ts` staleness + word-for-word guards now cover
+  all 15 exhibits (60 cases) and are green; build · 236 unit · validate green.
 
 ## Implication: provider is **Gemini** → the timing path is Whisper-recovery
 

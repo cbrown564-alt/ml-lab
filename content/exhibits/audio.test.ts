@@ -4,8 +4,21 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { sectionText, splitWords } from "@/lib/narrative/audio";
 import { audioManifests } from "./audio";
+import { biasVarianceNarrative } from "./bias-variance/narrative";
+import { classificationTaskNarrative } from "./classification-task/narrative";
+import { dataLeakageNarrative } from "./data-leakage/narrative";
+import { featureScalingNarrative } from "./feature-scaling/narrative";
 import { gradientDescentNarrative } from "./gradient-descent/narrative";
 import { linearRegressionNarrative } from "./linear-regression/narrative";
+import { logisticRegressionNarrative } from "./logistic-regression/narrative";
+import { lossFunctionsNarrative } from "./loss-functions/narrative";
+import { neuralNetworkFundamentalsNarrative } from "./neural-network-fundamentals/narrative";
+import { overfittingRegularizationNarrative } from "./overfitting-regularization/narrative";
+import { regressionTaskNarrative } from "./regression-task/narrative";
+import { theDatasetNarrative } from "./the-dataset/narrative";
+import { theGradientNarrative } from "./the-gradient/narrative";
+import { trainTestGeneralizationNarrative } from "./train-test-generalization/narrative";
+import { whatIsMlNarrative } from "./what-is-ml/narrative";
 
 /**
  * Audio-staleness discipline (docs/06, C3/B4): narration is generated from
@@ -14,7 +27,23 @@ import { linearRegressionNarrative } from "./linear-regression/narrative";
  * that section.
  */
 
-const narratives = [linearRegressionNarrative, gradientDescentNarrative];
+const narratives = [
+  whatIsMlNarrative,
+  theDatasetNarrative,
+  regressionTaskNarrative,
+  classificationTaskNarrative,
+  linearRegressionNarrative,
+  lossFunctionsNarrative,
+  gradientDescentNarrative,
+  theGradientNarrative,
+  featureScalingNarrative,
+  logisticRegressionNarrative,
+  trainTestGeneralizationNarrative,
+  biasVarianceNarrative,
+  overfittingRegularizationNarrative,
+  dataLeakageNarrative,
+  neuralNetworkFundamentalsNarrative,
+];
 const sha256 = (s: string) => createHash("sha256").update(s, "utf8").digest("hex");
 
 describe("narration audio", () => {

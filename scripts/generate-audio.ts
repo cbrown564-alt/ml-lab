@@ -12,8 +12,21 @@ import {
 } from "@/lib/narrative/audio";
 import { alignWordsToProse, matchCoverage, type AsrWord } from "@/lib/narrative/align";
 import type { ExhibitNarrative } from "@/lib/narrative/schema";
+import { whatIsMlNarrative } from "@content/exhibits/what-is-ml/narrative";
+import { theDatasetNarrative } from "@content/exhibits/the-dataset/narrative";
+import { regressionTaskNarrative } from "@content/exhibits/regression-task/narrative";
+import { classificationTaskNarrative } from "@content/exhibits/classification-task/narrative";
 import { linearRegressionNarrative } from "@content/exhibits/linear-regression/narrative";
+import { lossFunctionsNarrative } from "@content/exhibits/loss-functions/narrative";
 import { gradientDescentNarrative } from "@content/exhibits/gradient-descent/narrative";
+import { theGradientNarrative } from "@content/exhibits/the-gradient/narrative";
+import { featureScalingNarrative } from "@content/exhibits/feature-scaling/narrative";
+import { logisticRegressionNarrative } from "@content/exhibits/logistic-regression/narrative";
+import { trainTestGeneralizationNarrative } from "@content/exhibits/train-test-generalization/narrative";
+import { biasVarianceNarrative } from "@content/exhibits/bias-variance/narrative";
+import { overfittingRegularizationNarrative } from "@content/exhibits/overfitting-regularization/narrative";
+import { dataLeakageNarrative } from "@content/exhibits/data-leakage/narrative";
+import { neuralNetworkFundamentalsNarrative } from "@content/exhibits/neural-network-fundamentals/narrative";
 
 /**
  * Narration generator (docs/06, B4; docs/04 content pipeline): turns each
@@ -41,9 +54,24 @@ import { gradientDescentNarrative } from "@content/exhibits/gradient-descent/nar
  *   AUDIO_MODEL (override the provider default).
  */
 
+// The full Phase-1 catalog, in graph-coherent order (docs/05). Idempotent: a
+// node already current on the selected provider/voice/model is skipped.
 const narratives: ExhibitNarrative[] = [
+  whatIsMlNarrative,
+  theDatasetNarrative,
+  regressionTaskNarrative,
+  classificationTaskNarrative,
   linearRegressionNarrative,
+  lossFunctionsNarrative,
   gradientDescentNarrative,
+  theGradientNarrative,
+  featureScalingNarrative,
+  logisticRegressionNarrative,
+  trainTestGeneralizationNarrative,
+  biasVarianceNarrative,
+  overfittingRegularizationNarrative,
+  dataLeakageNarrative,
+  neuralNetworkFundamentalsNarrative,
 ];
 
 // ---- env ------------------------------------------------------------------
@@ -63,6 +91,20 @@ function requireEnv(name: string): string {
     process.exit(1);
   }
   return v;
+}
+
+/** Retry a transient network step a few times — a long catalog run shouldn't die on one 429/500. */
+async function withRetry<T>(label: string, fn: () => Promise<T>, attempts = 3): Promise<T> {
+  for (let i = 1; ; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (i >= attempts) throw e;
+      const wait = 2000 * i;
+      console.log(`  ${label}: attempt ${i} failed (${e instanceof Error ? e.message : e}); retrying in ${wait / 1000}s`);
+      await new Promise((r) => setTimeout(r, wait));
+    }
+  }
 }
 
 // ---- the shared provider contract -----------------------------------------
@@ -355,7 +397,10 @@ async function main() {
         continue;
       }
       console.log(`${narrative.nodeId}/${id}: generating (${text.length} chars)…`);
-      const { audio, words, durationSeconds } = await provider.synthesize(text);
+      const { audio, words, durationSeconds } = await withRetry(
+        `${narrative.nodeId}/${id}`,
+        () => provider.synthesize(text),
+      );
       assertContract(text, words);
       const out = audioPath(narrative.nodeId, id);
       mkdirSync(dirname(out), { recursive: true });

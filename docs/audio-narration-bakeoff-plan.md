@@ -166,13 +166,15 @@ gradient descent, overfitting / regularization, "x-hat" / ŷ, k-fold, train/test
 | 6 | **Decision doc + go/no-go** | recommendation + cost; greenlight full catalog | ~2026-07-25 |
 | — | *Full-catalog generation (15 exhibits)* | *separate follow-on, gated on #6* | TBD |
 
-**M1–M4 ✅ done & merged** (timing spike, corpus/rubric, finalists, narrator pick:
-Gemini · Sulafat). **M5 ⏳ abstraction code-complete 2026-06-27** —
-`scripts/generate-audio.ts` is a two-provider abstraction (default Gemini, with
-the Whisper-recovery timing path in `src/lib/narrative/align.ts`, unit-tested);
-`provider` is on the manifest + idempotence key. The one step left in M5 is the
-**billable run** on the 2 pilots (regen + re-enable the §11 guards), deliberately
-held for an explicit go-ahead — see `docs/audio-bakeoff/results.md` §"Next".
+**ALL MILESTONES ✅ done (2026-06-27).** M1–M4 (timing spike, corpus/rubric,
+finalists, narrator pick: Gemini · Sulafat). M5 — `scripts/generate-audio.ts` is a
+two-provider abstraction (default Gemini, Whisper-recovery timing path in
+`src/lib/narrative/align.ts`, unit-tested; `provider` on the manifest + idempotence
+key); pilots regenerated + §11 guards re-enabled. **M6 — full 15-exhibit catalog
+generated** (76 sections, 121–138 wpm, clean run); the staleness guards cover all
+15 (60 cases, green). Workstream complete — see `docs/audio-bakeoff/results.md` §M6.
+The temp harnesses (`scripts/spike-timing.ts`, `scripts/bakeoff-generate.ts`) were
+deleted as superseded.
 
 ## 10. Risks & open questions
 
