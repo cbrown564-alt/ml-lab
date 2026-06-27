@@ -166,6 +166,14 @@ gradient descent, overfitting / regularization, "x-hat" / ŷ, k-fold, train/test
 | 6 | **Decision doc + go/no-go** | recommendation + cost; greenlight full catalog | ~2026-07-25 |
 | — | *Full-catalog generation (15 exhibits)* | *separate follow-on, gated on #6* | TBD |
 
+**M1–M4 ✅ done & merged** (timing spike, corpus/rubric, finalists, narrator pick:
+Gemini · Sulafat). **M5 ⏳ abstraction code-complete 2026-06-27** —
+`scripts/generate-audio.ts` is a two-provider abstraction (default Gemini, with
+the Whisper-recovery timing path in `src/lib/narrative/align.ts`, unit-tested);
+`provider` is on the manifest + idempotence key. The one step left in M5 is the
+**billable run** on the 2 pilots (regen + re-enable the §11 guards), deliberately
+held for an explicit go-ahead — see `docs/audio-bakeoff/results.md` §"Next".
+
 ## 10. Risks & open questions
 
 - **Gemini timestamps** (§5) is the top risk — forced alignment adds a moving part and could

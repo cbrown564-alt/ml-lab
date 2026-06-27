@@ -51,9 +51,21 @@ critical path rather than optional.
 
 ## Next once a winner is picked
 
-1. Fold the winner's provider/voice/settings into the pipeline (§7): add
+1. ~~Fold the winner's provider/voice/settings into the pipeline (§7): add
    `provider` to the manifest; for ElevenLabs, fix `resolveVoiceId` to match
-   "George" by substring; for Gemini, wire the Whisper-recovery timing path.
-2. Re-record the 2 stale pilot sections on the winner; re-enable the two skipped
-   `audio.test.ts` sub-tests (plan §11).
+   "George" by substring; for Gemini, wire the Whisper-recovery timing path.~~
+   **DONE 2026-06-27 (M5 abstraction).** `scripts/generate-audio.ts` is now a
+   two-provider abstraction (`AUDIO_PROVIDER=gemini|elevenlabs`, default **gemini ·
+   Sulafat · gemini-3.1-flash-tts-preview**). The Gemini path is TTS → ffmpeg mp3
+   → Whisper word-ts → `src/lib/narrative/align.ts` (extracted from the spike,
+   **unit-tested** — the word-for-word + monotonic contract is guaranteed by
+   construction, so it's verified without any audio/API spend). `provider` is on
+   the manifest + the idempotence key, so switching narrator invalidates the old
+   ElevenLabs sections cleanly. ElevenLabs retained with the substring voice fix.
+   Build (type-checks `scripts/`) · lint · 180 unit green.
+2. **PENDING — the billable run (gated, not auto-run):** generate the 2 pilot
+   sections on Gemini · Sulafat, listen to confirm pacing reads "unhurried" not
+   "slow" (see watch note above), then re-enable the two skipped `audio.test.ts`
+   sub-tests (plan §11). Held for an explicit go-ahead — it spends Gemini TTS +
+   Whisper credits and rewrites player-facing audio.
 3. Cost-at-scale tabulation + go/no-go (Milestone #6), then full-catalog gen.
