@@ -299,11 +299,13 @@ function TheGradient({ t }: { t: number }) {
 }
 
 function GradientDescent({ t }: { t: number }) {
+  // Steps sampled *on* the bowl curve, settling at its minimum (60,78) rather
+  // than overshooting below the floor.
   const pts = [
-    [34, 50],
-    [46, 68],
-    [56, 79],
-    [60, 83],
+    [32, 53],
+    [42, 68],
+    [52, 76],
+    [60, 78],
   ];
   const idx = Math.min(pts.length - 1, Math.floor(t * (pts.length - 1)));
   return (
@@ -395,30 +397,28 @@ function DataLeakage() {
 }
 
 function NeuralNet({ t }: { t: number }) {
+  // input (2) → hidden (3) → output (1). The hidden layer assembles unit by
+  // unit; each one wires to *both* inputs and the output, so the graph always
+  // reads as a complete, connected network (no floating output, no curve
+  // slashing across the nodes).
   const folds = Math.ceil(t * 3);
+  const hidden = [26, 48, 70];
   return (
     <>
-      {[[30, 36], [30, 60]].map(([x, y], i) => (
-        <circle key={`in${i}`} cx={x} cy={y} r="3.5" fill="var(--viz-truth)" />
-      ))}
-      {[28, 48, 68].slice(0, folds).map((y, i) => (
-        <g key={i}>
-          <line x1="30" y1="36" x2="58" y2={y} stroke="var(--line)" strokeWidth="1" />
-          <line x1="30" y1="60" x2="58" y2={y} stroke="var(--line)" strokeWidth="1" />
-          <circle cx="58" cy={y} r="3.5" fill="var(--viz-param)" />
+      {hidden.slice(0, folds).map((hy, i) => (
+        <g key={`e${i}`} stroke="var(--line)" strokeWidth="1">
+          <line x1="30" y1="34" x2="58" y2={hy} />
+          <line x1="30" y1="62" x2="58" y2={hy} />
+          <line x1="58" y1={hy} x2="88" y2="48" />
         </g>
       ))}
-      <circle cx="86" cy="48" r="4" fill="var(--viz-prediction)" />
-      {folds >= 2 && (
-        <path
-          d="M20 48 C 40 20, 80 76, 100 48"
-          fill="none"
-          stroke="var(--viz-neutral)"
-          strokeWidth="1.5"
-          strokeDasharray="4 4"
-          opacity={t}
-        />
-      )}
+      {[34, 62].map((y, i) => (
+        <circle key={`in${i}`} cx="30" cy={y} r="3.5" fill="var(--viz-truth)" />
+      ))}
+      {hidden.slice(0, folds).map((hy, i) => (
+        <circle key={`h${i}`} cx="58" cy={hy} r="3.5" fill="var(--viz-param)" />
+      ))}
+      <circle cx="88" cy="48" r="4" fill="var(--viz-prediction)" />
     </>
   );
 }
