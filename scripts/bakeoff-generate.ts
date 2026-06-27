@@ -145,7 +145,7 @@ function pcmToWav(pcm: Buffer, rate: number): Buffer {
 // ---- Whisper recovery (Gemini timing, best-effort) ------------------------
 async function whisperWords(apiKey: string, wav: Buffer) {
   const fd = new FormData();
-  fd.append("file", new Blob([wav], { type: "audio/wav" }), "a.wav");
+  fd.append("file", new Blob([new Uint8Array(wav)], { type: "audio/wav" }), "a.wav");
   fd.append("model", "whisper-1");
   fd.append("response_format", "verbose_json");
   fd.append("timestamp_granularities[]", "word");

@@ -141,7 +141,7 @@ function pcmToWav(pcm: Buffer, rate: number): Buffer {
 // ---- OpenAI Whisper (word timestamps) -------------------------------------
 async function whisperWords(apiKey: string, wav: Buffer) {
   const fd = new FormData();
-  fd.append("file", new Blob([wav], { type: "audio/wav" }), "audio.wav");
+  fd.append("file", new Blob([new Uint8Array(wav)], { type: "audio/wav" }), "audio.wav");
   fd.append("model", "whisper-1");
   fd.append("response_format", "verbose_json");
   fd.append("timestamp_granularities[]", "word");
