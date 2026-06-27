@@ -204,8 +204,14 @@ function RegressionTask() {
 }
 
 function LinearRegression({ t }: { t: number }) {
-  const y1 = 72 - t * 42;
-  const y2 = 72 - t * 48;
+  // The fit pivots from a flat line at the cloud's mean into the least-squares
+  // fit *through* the scatter — settling at (22,72)→(100,30), so it lands on the
+  // points instead of floating above them.
+  const y1 = 51 + t * 21; // left end drops below the centroid
+  const y2 = 51 - t * 21; // right end rises — the line rotates into place
+  // Where the fitted line sits at x=80 (tracks the animation, so the residual
+  // always connects the off-line point to the line, not to empty space).
+  const lineAt80 = 51 - 10.2 * t;
   return (
     <>
       <line x1="22" y1={y1} x2="100" y2={y2} stroke="var(--viz-prediction)" strokeWidth="2.5" strokeLinecap="round" />
@@ -213,7 +219,7 @@ function LinearRegression({ t }: { t: number }) {
         <circle key={i} cx={x} cy={y} r="3" fill="var(--viz-truth)" />
       ))}
       {t > 0.6 && (
-        <line x1="80" y1="34" x2="80" y2="54" stroke="var(--viz-error)" strokeWidth="1.5" strokeDasharray="3 3" opacity={(t - 0.6) / 0.4} />
+        <line x1="80" y1="34" x2="80" y2={lineAt80} stroke="var(--viz-error)" strokeWidth="1.5" strokeDasharray="3 3" opacity={(t - 0.6) / 0.4} />
       )}
     </>
   );
@@ -244,21 +250,50 @@ function LogisticRegression() {
 }
 
 function LossFunctions() {
+  // A convex loss bowl: a point sits *on* the curve and pays a loss — the dashed
+  // drop down to the bowl floor (not a marker floating in the middle of the bowl).
   return (
     <>
       <path d="M26 26 C 44 92, 76 92, 94 26" fill="none" stroke="var(--viz-prediction)" strokeWidth="2.5" strokeLinecap="round" />
-      <circle cx="70" cy="54" r="4" fill="var(--viz-truth)" />
-      <line x1="70" y1="54" x2="70" y2="74" stroke="var(--viz-error)" strokeWidth="2" strokeDasharray="3 3" />
+      <line x1="82" y1="58" x2="82" y2="76" stroke="var(--viz-error)" strokeWidth="2" strokeDasharray="3 3" />
+      <circle cx="82" cy="58" r="4" fill="var(--viz-truth)" />
     </>
   );
 }
 
 function TheGradient({ t }: { t: number }) {
-  const len = 28 * t;
+  // Nested contours with the steepest-ascent arrow climbing across them toward
+  // the peak — a topographic read, not a single ellipse with a slash through it.
+  const tipX = 50 + t * 24;
+  const tipY = 70 - t * 36;
   return (
     <>
-      <ellipse cx="54" cy="56" rx="28" ry="18" fill="none" stroke="var(--viz-prediction)" strokeWidth="1.5" opacity="0.5" />
-      <path d={`M50 70 L${50 + len * 0.75} ${70 - len}`} stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" />
+      {[26, 18, 10].map((r, i) => (
+        <ellipse
+          key={i}
+          cx="54"
+          cy="56"
+          rx={r + 10}
+          ry={r}
+          transform="rotate(-24 54 56)"
+          fill="none"
+          stroke="var(--viz-prediction)"
+          strokeWidth="1.4"
+          opacity={0.4 + i * 0.16}
+        />
+      ))}
+      <path d={`M50 70 L${tipX} ${tipY}`} stroke="var(--accent)" strokeWidth="2.6" strokeLinecap="round" />
+      {t > 0.55 && (
+        <path
+          d={`M${tipX - 9} ${tipY + 5} L${tipX} ${tipY} L${tipX - 1} ${tipY + 10}`}
+          fill="none"
+          stroke="var(--accent)"
+          strokeWidth="2.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={(t - 0.55) / 0.45}
+        />
+      )}
     </>
   );
 }
@@ -282,20 +317,25 @@ function GradientDescent({ t }: { t: number }) {
 }
 
 function FeatureScaling({ t }: { t: number }) {
-  const rx = 20 - t * 7;
-  const ry = 8 + t * 5;
+  // Raw features at unequal scales (a stretched, tilted cloud) normalised into a
+  // round one. The before/after both read at rest; hover replays the normalise so
+  // it isn't just a lone circle with a dangling stub.
   return (
     <>
-      <ellipse cx="60" cy="50" rx={rx} ry={ry} fill="none" stroke="var(--viz-error)" strokeWidth="2" opacity={0.7 + t * 0.3} />
+      <ellipse cx="38" cy="50" rx="18" ry="7" transform="rotate(-28 38 50)" fill="none" stroke="var(--viz-error)" strokeWidth="2" />
+      <circle cx="38" cy="50" r="2.2" fill="var(--viz-truth)" />
+      <path d={`M60 50 L${68 + t * 4} 50`} stroke="var(--viz-param)" strokeWidth="2" strokeLinecap="round" opacity={t} />
       <path
-        d={`M34 50 L${46 + t * 8} 50`}
+        d="M69 46 L74 50 L69 54"
+        fill="none"
         stroke="var(--viz-param)"
         strokeWidth="2"
         strokeLinecap="round"
-        strokeDasharray="4 4"
+        strokeLinejoin="round"
         opacity={t}
       />
-      <circle cx="60" cy="50" r="2.5" fill="var(--viz-truth)" />
+      <circle cx="90" cy="50" r={11 * t} fill="none" stroke="var(--accent)" strokeWidth="2.4" />
+      <circle cx="90" cy="50" r="2.2" fill="var(--viz-truth)" opacity={t} />
     </>
   );
 }
@@ -339,11 +379,17 @@ function BiasVariance() {
 }
 
 function DataLeakage() {
+  // The target column's answer leaks back into the feature table — an arrowhead
+  // gives the leak a direction, and the rows make the left box read as features.
   return (
     <>
       <rect x="26" y="28" width="34" height="44" rx="5" fill="none" stroke="var(--viz-truth)" strokeWidth="2" />
+      {[40, 54].map((y) => (
+        <line key={y} x1="33" y1={y} x2="53" y2={y} stroke="var(--viz-truth)" strokeWidth="1.6" opacity="0.7" />
+      ))}
       <rect x="80" y="28" width="14" height="44" rx="5" fill="none" stroke="var(--viz-error)" strokeWidth="2" />
-      <path d="M80 50 C 70 50, 62 50, 58 50" fill="none" stroke="var(--viz-error)" strokeWidth="2" strokeDasharray="4 4" />
+      <path d="M80 50 L64 50" fill="none" stroke="var(--viz-error)" strokeWidth="2" strokeDasharray="4 4" strokeLinecap="round" />
+      <path d="M70 45 L63 50 L70 55" fill="none" stroke="var(--viz-error)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </>
   );
 }
