@@ -31,6 +31,7 @@ const ROUTES = [
   "/exhibits/the-gradient",
   "/exhibits/decision-trees",
   "/exhibits/random-forests",
+  "/exhibits/gradient-boosting",
 ];
 
 /** Serious/critical axe violations on the current page, formatted for the failure message. */

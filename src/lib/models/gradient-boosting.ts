@@ -132,7 +132,7 @@ export type BoostOptions = {
  */
 export function fitBooster(points: TreePoint[], opts: BoostOptions): Booster {
   const { nRounds, maxDepth = 3, lr = 0.3 } = opts;
-  const y = points.map((p) => p.y);
+  const y = points.map((p) => p.y as number);
   const n = points.length;
   const pbar = Math.min(1 - 1e-6, Math.max(1e-6, y.reduce((a, b) => a + b, 0) / n));
   const F0 = Math.log(pbar / (1 - pbar)); // log-odds of the base rate

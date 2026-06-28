@@ -1,6 +1,6 @@
 import type { ParamDef } from "@/lib/experiment/spec";
 import type { TreePoint } from "@/lib/models/decision-tree";
-import { fitBooster, type Booster } from "@/lib/models/gradient-boosting";
+import { boosterLogLoss, fitBooster, type Booster } from "@/lib/models/gradient-boosting";
 import treeFix from "@/lib/models/fixtures/decision-tree.json";
 import gbFix from "@/lib/models/fixtures/gradient-boosting.json";
 
@@ -37,10 +37,22 @@ export const FULL_BOOSTER: Booster = fitBooster(boostPoints, {
   lr: BOOST_LR,
 });
 
-/** The held-out loss bottoms here — the round to stop at. */
+/** The pair of curves boosting drives apart, computed once from FULL_BOOSTER: train
+ * log-loss sinks toward zero while held-out log-loss bottoms and then climbs. This is the
+ * node's payoff made visible — the overfit lives in the loss, not the (flat) accuracy. */
+export const boostLossCurve = (() => {
+  const rs = [1, 2, 3, 4, 5, 7, 10, 14, 20, 28, 40, 56, 80, 110, 150, 200];
+  return rs.map((r) => ({
+    rounds: r,
+    trainLL: boosterLogLoss(boostPoints, FULL_BOOSTER, r),
+    testLL: boosterLogLoss(boostTestPoints, FULL_BOOSTER, r),
+  }));
+})();
+
+/** The held-out loss bottoms here — the round to stop at (early stopping). */
 export const bestRound = (() => {
-  let best = boostByRounds[0];
-  for (const r of boostByRounds) if (r.testLogLoss < best.testLogLoss) best = r;
+  let best = boostLossCurve[0];
+  for (const c of boostLossCurve) if (c.testLL < best.testLL) best = c;
   return best.rounds;
 })();
 
