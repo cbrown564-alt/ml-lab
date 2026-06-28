@@ -63,4 +63,21 @@ export const edges: ConceptEdge[] = [
   // Ensembles: the random forest is the cure for the single tree's high variance.
   { from: "decision-trees", to: "random-forests", type: "requires", strength: "hard" },
   { from: "bias-variance", to: "random-forests", type: "requires", strength: "soft" },
+  // Boosting: the other way to build a forest — sequential, bias-reducing, and it IS
+  // gradient descent run in the space of functions.
+  { from: "decision-trees", to: "gradient-boosting", type: "requires", strength: "hard" },
+  {
+    from: "the-gradient",
+    to: "gradient-boosting",
+    type: "mathematical_basis",
+    strength: "soft",
+    note: "The residual y − p that each tree is fit to is exactly the negative gradient of the log-loss. Boosting is the gradient hunt you met here, run in the space of functions: each tree is a step against −∇, the learning rate is the step size.",
+  },
+  {
+    from: "random-forests",
+    to: "gradient-boosting",
+    type: "often_confused_with",
+    strength: "soft",
+    note: "Both are forests of trees, and they are near-opposites. A random forest grows trees independently in parallel and averages them to cut variance — more trees is always safe. Boosting grows shallow trees in sequence, each fixing the last's residuals, to cut bias — and more trees can overshoot into the noise.",
+  },
 ];

@@ -224,6 +224,21 @@ export const nodes: ConceptNode[] = [
     status: "stub",
   },
   {
+    id: "gradient-boosting",
+    title: "Gradient Boosting",
+    oneLiner:
+      "Grow shallow trees in sequence, each correcting the last's mistakes — gradient descent in tree form, powerful enough to overshoot the signal into noise.",
+    domain: "supervised",
+    tags: ["classification", "trees", "ensembles"],
+    kind: "algorithm",
+    phase: 1,
+    depth: "core",
+    // Closes the trees cluster and the opposite of the forest: sequential bias-reduction
+    // (gradient descent in function space) that CAN overfit. Bridges back to the regression
+    // cluster's gradient descent. Stub until the cluster panel clears it.
+    status: "stub",
+  },
+  {
     id: "the-gradient",
     title: "The Gradient",
     oneLiner: "The direction of steepest ascent — calculus's gift to optimization.",
