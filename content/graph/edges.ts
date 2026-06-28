@@ -60,4 +60,7 @@ export const edges: ConceptEdge[] = [
     strength: "soft",
     note: "Two ways to split a plane: logistic regression searches for one straight boundary; a tree carves the plane into axis-aligned boxes with a cascade of yes/no cuts. The line needs you to engineer x₁² to bend; the tree bends on its own — at the price of a jagged boundary that overfits if you let it grow.",
   },
+  // Ensembles: the random forest is the cure for the single tree's high variance.
+  { from: "decision-trees", to: "random-forests", type: "requires", strength: "hard" },
+  { from: "bias-variance", to: "random-forests", type: "requires", strength: "soft" },
 ];

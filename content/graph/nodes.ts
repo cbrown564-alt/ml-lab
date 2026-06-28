@@ -209,6 +209,21 @@ export const nodes: ConceptNode[] = [
     status: "interactive",
   },
   {
+    id: "random-forests",
+    title: "Random Forests",
+    oneLiner:
+      "Grow a crowd of disagreeing trees and average their votes — the wobble cancels and the jagged boundary smooths.",
+    domain: "supervised",
+    tags: ["classification", "trees", "ensembles"],
+    kind: "algorithm",
+    phase: 1,
+    depth: "core",
+    // The cure for the single tree's high variance (decision-trees ended on the resample
+    // instability). Bagging + feature randomness → decorrelated trees whose errors cancel
+    // on average. Stub until the non-circular panel clears it.
+    status: "stub",
+  },
+  {
     id: "the-gradient",
     title: "The Gradient",
     oneLiner: "The direction of steepest ascent — calculus's gift to optimization.",
