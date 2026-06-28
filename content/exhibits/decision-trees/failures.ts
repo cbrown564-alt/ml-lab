@@ -34,7 +34,7 @@ export const decisionTreesFailures: FailureGallery = {
       trigger:
         "Draw a fresh bootstrap sample of the training set (change the resample seed) and refit. Repeat with another seed.",
       symptom:
-        "The first cut's threshold jumps and the whole tree below it reshuffles — the boundary lurches from sample to sample — yet held-out accuracy barely moves. Unstable shape, stable-ish score.",
+        "The first cut's threshold jumps and the whole tree below it reshuffles — the boundary lurches from sample to sample — yet held-out accuracy swings far less than the shape and never collapses. Unstable shape, roughly stable score.",
       diagnosis:
         "A tree is a high-variance estimator: greedy, hard splits mean a few different points shift where the near-tied root threshold lands, and that choice cascades down the tree. The 'seed' here is which sample you happened to draw, and the shape is unstable even when the score is fine.",
       repair:

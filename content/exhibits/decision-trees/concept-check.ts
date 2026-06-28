@@ -100,12 +100,23 @@ export const decisionTreesCheck: ConceptCheck = {
       id: "overfit-by-depth",
       kind: "experiment-task",
       prompt:
-        "Break it on purpose: drag Tree depth to the maximum and watch training accuracy climb to 100% while the held-out score peaks early and then falls — the boundary filling with single-point islands.",
+        "Break it on purpose: drag Tree depth to the maximum and watch training accuracy climb to 100% while the gap to the held-out score yawns open — the boundary turning jagged with a few single-point islands.",
       taskEvent: "decision-trees:overfit-by-depth",
       feedback:
         "You just watched overfitting happen as a picture, not a statistic. The deepest tree is the most accurate on training and not the best on new data — depth is a knob to tune on held-out data, not to max out.",
       difficulty: 1,
       targets: ["tree:break"],
+    },
+    {
+      id: "instability-by-resample",
+      kind: "experiment-task",
+      prompt:
+        "Break it a second way: in Break it, switch to 'Resample the data' and click Resample & refit a few times. Watch the first cut and the whole boundary jump from draw to draw — while the held-out score swings far less and never collapses.",
+      taskEvent: "decision-trees:instability-by-resample",
+      feedback:
+        "That is high variance you can see: a single tree's shape is unstable even when its score isn't. The cure is to average many trees, each grown on its own resample — bagging, a random forest — which is exactly where the cluster goes next.",
+      difficulty: 1,
+      targets: ["tree:instability"],
     },
     {
       id: "transfer-instability",
@@ -118,7 +129,7 @@ export const decisionTreesCheck: ConceptCheck = {
         placeholder:
           "e.g. a forest would stabilize it because … but here that breaks … so instead I'd … and the tradeoff is …",
         answer:
-          "No — the forest is the wrong fix here, even though it would work on the instability. The tree is unstable because it is a high-variance model: the top split sits on a near-tie, so each month's slightly different data tips it a different way and the whole tree reshuffles. Averaging 400 trees (bagging) really would average that variance away and give a stable map — but it destroys exactly what this setting requires. A forest's decision is a vote across hundreds of trees; you cannot recite that to a clinician as a single chain of reasons, so it fails the regulator's per-decision explainability rule. The right move is to keep one readable tree and attack its variance directly: constrain it — cap the depth and require larger minimum leaves — so the near-tied root is resolved more stably and the top split stops flipping (and pin a split where clinical knowledge says it belongs if needed). A shallower, regularized tree is both steadier across retrains and still a chain of yes/no questions a clinician can read aloud. The tradeoff: a constrained single tree is a little less accurate and flexible than a forest — and here that is the right price, because explainability is a hard requirement, not a nicety.",
+          "No — the forest is the wrong fix here, even though it would work on the instability. The tree is unstable because it is a high-variance model: the top split sits on a near-tie, so each month's slightly different data tips it a different way and the whole tree reshuffles. Averaging 400 trees (bagging) really would average that variance away and give a stable map — but it destroys exactly what this setting requires. A forest's decision is a vote across hundreds of trees; you cannot recite that to a clinician as a single chain of reasons, so it fails the regulator's per-decision explainability rule. The right move is to keep one readable tree and attack its variance directly: constrain it — cap the depth and require larger minimum leaves — so the near-tied root resolves more stably and the top split flips less (and, if it still wanders, pin that split where clinical knowledge says it belongs). A shallower, regularized tree is both steadier across retrains and still a chain of yes/no questions a clinician can read aloud. The tradeoff: a constrained single tree is a little less accurate and flexible than a forest — and here that is the right price, because explainability is a hard requirement, not a nicety.",
       },
       difficulty: 3,
       targets: ["tree:transfer-instability"],

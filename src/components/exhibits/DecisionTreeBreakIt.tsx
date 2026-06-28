@@ -161,6 +161,12 @@ function ResampleFailure() {
   const [seed, setSeed] = useState(0); // 0 = the original sample, before any resample
   const [history, setHistory] = useState<number[]>([]);
 
+  // The instability is a manipulation to complete, not just read — once the learner has
+  // resampled a few times and watched the tree change its mind, the task is done.
+  useEffect(() => {
+    if (history.length >= 3) reportTaskEvent("decision-trees:instability-by-resample");
+  }, [history.length]);
+
   const sample = useMemo(
     () => (seed === 0 ? treePoints : bootstrapSample(treePoints, seed)),
     [seed],
@@ -219,7 +225,7 @@ function ResampleFailure() {
                 draws a fresh bootstrap of the same data and regrows the tree.
               </>
             }
-            foot="Watch the first question and the boundary jump from sample to sample — while the held-out score barely moves. Unstable shape, stable-ish score."
+            foot="Watch the first question and the boundary jump from sample to sample — while the held-out score swings far less and never collapses. Unstable shape, roughly stable score."
           />
         )}
 
@@ -243,7 +249,7 @@ function ResampleFailure() {
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <Readout label="held-out now" value={`${Math.round(testAcc * 100)}%`} hue="var(--accent)" hint="barely moves" />
+          <Readout label="held-out now" value={`${Math.round(testAcc * 100)}%`} hue="var(--accent)" hint="swings less than the shape" />
           <Readout label="held-out range" value={history.length ? `${Math.round(lo * 100)}–${Math.round(hi * 100)}%` : "—"} hue="var(--ink-muted)" hint={`${history.length} resamples`} />
         </div>
         <p className="font-mono text-[11px] text-ink-faint">{leaves} leaves · a different tree every draw</p>

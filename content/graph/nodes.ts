@@ -200,11 +200,13 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    // Opens the trees cluster. Stub until the non-circular panel clears it — the
-    // depth knob is the cluster's cleanest bias–variance demonstration (test accuracy
-    // peaks shallow, then the staircase memorizes), bridged straight off logistic's
-    // "use a model that bends on its own" failure card.
-    status: "stub",
+    // Opens the trees cluster, bridged off logistic's "use a model that bends on its
+    // own" failure card. The depth knob is the cluster's cleanest bias–variance demo
+    // (held-out peaks at depth 2, then the staircase memorizes), and Break-it carries
+    // both failures hands-on (overfit-by-depth + resample instability). The non-circular
+    // panel (designer register-3 cleared / teacher both-legs-taught) advanced it to
+    // interactive; flagship awaits the owner's human re-judge (red line #6).
+    status: "interactive",
   },
   {
     id: "the-gradient",

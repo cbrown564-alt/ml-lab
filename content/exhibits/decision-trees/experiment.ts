@@ -53,5 +53,5 @@ export const decisionTreeScenario = {
   id: "two-moons",
   title: "Two arcs, no straight line",
   prompt:
-    "Two interleaving crescents — class 0 in amber, class 1 in blue — that no straight line can separate. Drag Tree depth to add questions: each one cuts a box in two, and the staircase of cuts bends to the arcs. Watch the field harden into boxes as you go deeper — and watch the held-out score peak, then fall, as the boxes start wrapping single noisy points.",
+    "Two interleaving crescents — class 0 in amber, class 1 in blue — that no straight line can separate. Drag Tree depth to add questions: each one cuts a box in two, and the staircase of cuts bends to the arcs. Watch the field harden into boxes as you go deeper — and watch the gap between training and the held-out score yawn open as the boxes start wrapping single noisy points.",
 };

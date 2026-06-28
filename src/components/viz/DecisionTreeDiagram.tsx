@@ -30,6 +30,8 @@ type Placed = {
   x: number;
   depth: number;
   parent?: { x: number; depth: number };
+  /** Which branch of the parent this is: "L" = the split's condition held (yes / ≤). */
+  side?: "L" | "R";
 };
 
 function layout(tree: TreeNode): { placed: Placed[]; leaves: number; maxDepth: number } {
@@ -37,20 +39,25 @@ function layout(tree: TreeNode): { placed: Placed[]; leaves: number; maxDepth: n
   let slot = 0;
   let maxDepth = 0;
 
-  const walk = (node: TreeNode, depth: number, parent?: { x: number; depth: number }): number => {
+  const walk = (
+    node: TreeNode,
+    depth: number,
+    parent?: { x: number; depth: number },
+    side?: "L" | "R",
+  ): number => {
     maxDepth = Math.max(maxDepth, depth);
     if (node.kind === "leaf") {
       const x = slot + 0.5;
       slot += 1;
-      placed.push({ node, x, depth, parent });
+      placed.push({ node, x, depth, parent, side });
       return x;
     }
     const self = { x: 0, depth };
-    const lx = walk(node.left, depth + 1, self);
-    const rx = walk(node.right, depth + 1, self);
+    const lx = walk(node.left, depth + 1, self, "L");
+    const rx = walk(node.right, depth + 1, self, "R");
     const x = (lx + rx) / 2;
     self.x = x;
-    placed.push({ node, x, depth, parent });
+    placed.push({ node, x, depth, parent, side });
     return x;
   };
 
@@ -133,6 +140,28 @@ export function DecisionTreeDiagram({
               strokeWidth={1.4}
             />
           ))}
+        {/* Branch semantics: yes/no on the edges from a labelled split, so the diagram
+            reads as a partition (condition true → left), not a bare flowchart. */}
+        {placed
+          .filter((p) => p.parent && p.side && p.parent.depth <= MAX_LABEL_DEPTH)
+          .map((p, i) => {
+            const t = 0.34;
+            const lx = px(p.parent!.x) + (px(p.x) - px(p.parent!.x)) * t;
+            const ly = py(p.parent!.depth) + (py(p.depth) - py(p.parent!.depth)) * t;
+            return (
+              <text
+                key={`b${i}`}
+                x={lx + (p.side === "L" ? -5 : 5)}
+                y={ly}
+                textAnchor={p.side === "L" ? "end" : "start"}
+                fontSize={9}
+                fontFamily="var(--font-mono)"
+                fill="var(--ink-faint)"
+              >
+                {p.side === "L" ? "yes" : "no"}
+              </text>
+            );
+          })}
         {placed.map((p, i) => {
           if (p.node.kind === "leaf") {
             return <LeafPie key={`n${i}`} cx={px(p.x)} cy={py(p.depth)} counts={p.node.counts} />;

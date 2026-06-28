@@ -66,6 +66,8 @@ Visualization colors are semantic and lab-wide:
 
 Do not invent per-exhibit color meanings unless the visual grammar is explicitly extended in the docs and tokens.
 
+**Sanctioned extension — the two-class field (classification).** In the 2-D decision field and the decision-tree leaf pies, the two class labels read as **amber = class 0** and **blue = class 1** (amber from the Truth family, blue from the Prediction family), denoting *classes* rather than fit-vs-truth; a data point ringed in **Error red** is misclassified. This is a deliberate, lab-wide extension shared by every classification exhibit (logistic regression, decision trees, and the rest of the trees cluster) — reuse it rather than minting new class colors. Accuracy readouts that share a screen with the field must avoid these hues: train reads neutral, held-out reads accent.
+
 ## Typography
 
 Use the existing Geist sans and Geist mono variables through Tailwind tokens.
