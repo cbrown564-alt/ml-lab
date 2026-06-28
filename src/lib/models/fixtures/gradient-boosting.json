@@ -1,0 +1,84 @@
+{
+  "generator": {
+    "script": "scripts/generate_trees_fixtures.py",
+    "sklearn": "1.9.0",
+    "model": "GradientBoostingClassifier(log-loss), shallow trees on the shared moons",
+    "learningRate": 0.3,
+    "maxDepth": 2,
+    "seed": 7
+  },
+  "byRounds": [
+    {
+      "rounds": 1,
+      "trainAccuracy": 0.93125,
+      "testAccuracy": 0.9,
+      "trainLogLoss": 0.5001196098051142,
+      "testLogLoss": 0.5203524168067498
+    },
+    {
+      "rounds": 2,
+      "trainAccuracy": 0.93125,
+      "testAccuracy": 0.9,
+      "trainLogLoss": 0.392847288739751,
+      "testLogLoss": 0.43305782557030575
+    },
+    {
+      "rounds": 5,
+      "trainAccuracy": 0.93125,
+      "testAccuracy": 0.9,
+      "trainLogLoss": 0.24890652937132404,
+      "testLogLoss": 0.3305061040005801
+    },
+    {
+      "rounds": 10,
+      "trainAccuracy": 0.95625,
+      "testAccuracy": 0.8916666666666667,
+      "trainLogLoss": 0.17049581275356468,
+      "testLogLoss": 0.3154519101500509
+    },
+    {
+      "rounds": 20,
+      "trainAccuracy": 0.99375,
+      "testAccuracy": 0.9,
+      "trainLogLoss": 0.09392647110169891,
+      "testLogLoss": 0.2970347404745562
+    },
+    {
+      "rounds": 40,
+      "trainAccuracy": 1.0,
+      "testAccuracy": 0.9083333333333333,
+      "trainLogLoss": 0.04354258792608767,
+      "testLogLoss": 0.31298117364385375
+    },
+    {
+      "rounds": 80,
+      "trainAccuracy": 1.0,
+      "testAccuracy": 0.9083333333333333,
+      "trainLogLoss": 0.012383909947356485,
+      "testLogLoss": 0.38482932372111034
+    },
+    {
+      "rounds": 140,
+      "trainAccuracy": 1.0,
+      "testAccuracy": 0.9083333333333333,
+      "trainLogLoss": 0.0022825192382639413,
+      "testLogLoss": 0.5058430674021716
+    },
+    {
+      "rounds": 200,
+      "trainAccuracy": 1.0,
+      "testAccuracy": 0.9083333333333333,
+      "trainLogLoss": 0.00043329112858420517,
+      "testLogLoss": 0.6252804309410023
+    }
+  ],
+  "peak": {
+    "round": 40,
+    "testAccuracy": 0.9083333333333333
+  },
+  "final": {
+    "rounds": 200,
+    "trainAccuracy": 1.0,
+    "testAccuracy": 0.9083333333333333
+  }
+}

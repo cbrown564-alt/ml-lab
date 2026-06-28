@@ -22,7 +22,8 @@ from pathlib import Path
 import numpy as np
 import sklearn
 from sklearn.datasets import make_moons
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from sklearn.metrics import log_loss as sk_log_loss
 from sklearn.tree import DecisionTreeClassifier
 
 OUT = Path(__file__).resolve().parent.parent / "src" / "lib" / "models" / "fixtures"
@@ -115,6 +116,67 @@ def main() -> None:
     )
 
     write_forest(Xtr, ytr, Xte, yte)
+    write_boosting(Xtr, ytr, Xte, yte)
+
+
+def write_boosting(Xtr, ytr, Xte, yte) -> None:
+    """Gradient-boosting reference on the SAME moons: shallow trees (depth 2) added in
+    sequence. The story is the OPPOSITE of the forest — boosting cuts bias and CAN overfit:
+    train log-loss falls toward zero while test accuracy peaks early and then declines.
+    """
+    LR, DEPTH, M = 0.3, 2, 200
+    gb = GradientBoostingClassifier(
+        n_estimators=M, learning_rate=LR, max_depth=DEPTH, random_state=0
+    ).fit(Xtr, ytr)
+
+    stages_tr = list(gb.staged_predict(Xtr))
+    stages_te = list(gb.staged_predict(Xte))
+    proba_tr = list(gb.staged_predict_proba(Xtr))
+    proba_te = list(gb.staged_predict_proba(Xte))
+
+    by_rounds = []
+    for r in [1, 2, 5, 10, 20, 40, 80, 140, 200]:
+        i = r - 1
+        by_rounds.append(
+            {
+                "rounds": r,
+                "trainAccuracy": float((stages_tr[i] == ytr).mean()),
+                "testAccuracy": float((stages_te[i] == yte).mean()),
+                "trainLogLoss": float(sk_log_loss(ytr, proba_tr[i], labels=[0, 1])),
+                "testLogLoss": float(sk_log_loss(yte, proba_te[i], labels=[0, 1])),
+            }
+        )
+
+    test_acc = [float((s == yte).mean()) for s in stages_te]
+    peak = max(test_acc)
+    peak_round = int(np.argmax(test_acc)) + 1
+
+    payload = {
+        "generator": {
+            "script": "scripts/generate_trees_fixtures.py",
+            "sklearn": sklearn.__version__,
+            "model": "GradientBoostingClassifier(log-loss), shallow trees on the shared moons",
+            "learningRate": LR,
+            "maxDepth": DEPTH,
+            "seed": SEED,
+        },
+        "byRounds": by_rounds,
+        "peak": {"round": peak_round, "testAccuracy": peak},
+        "final": {
+            "rounds": M,
+            "trainAccuracy": float((stages_tr[-1] == ytr).mean()),
+            "testAccuracy": test_acc[-1],
+        },
+    }
+    path = OUT / "gradient-boosting.json"
+    path.write_text(json.dumps(payload, indent=2) + "\n")
+    print(f"wrote {path}")
+    for r in by_rounds:
+        print(
+            f"  {r['rounds']:3d} rounds: train={r['trainAccuracy']:.3f} test={r['testAccuracy']:.3f} "
+            f"trainLogLoss={r['trainLogLoss']:.3f}"
+        )
+    print(f"  test accuracy peaks {peak:.3f} at round {peak_round}, ends {test_acc[-1]:.3f} (overfit)")
 
 
 def write_forest(Xtr, ytr, Xte, yte) -> None:
