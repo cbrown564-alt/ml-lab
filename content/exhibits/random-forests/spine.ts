@@ -47,13 +47,13 @@ export const randomForestsSpine: Spine<RandomForestFrame> = [
             "No — more trees only steady the average; the count isn't a complexity knob the way depth is",
           correct: true,
           feedback:
-            "Right. Averaging more estimates can only reduce variance, never add the capacity to fit noise. The held-out curve climbs and then flattens — it never turns back down. The thing that can still overfit is each tree's depth, not how many trees you average.",
+            "Right. Averaging more estimates can only reduce variance, never add the capacity to fit noise. The held-out curve climbs and then plateaus — it never makes the systematic U a too-deep tree does (small wiggles are just test-set noise). The thing that can still overfit is each tree's depth, not how many trees you average.",
         },
         {
           label:
             "Yes — more trees means more total complexity, so eventually the forest overfits like a deep tree did",
           feedback:
-            "This conflates two different knobs. A forest's capacity to fit noise lives in each tree (its depth), not in the count. Adding trees averages the same kind of model more times — that shrinks variance and can't manufacture new capacity. No U-curve appears.",
+            "This conflates two different knobs. A forest's capacity to fit noise lives in each tree (its depth), not in the count. Adding trees averages the same kind of model more times — that shrinks variance and can't manufacture new capacity. No systematic U appears — only test-set jiggle.",
         },
         {
           label:
@@ -77,7 +77,7 @@ export const randomForestsSpine: Spine<RandomForestFrame> = [
     sectionId: "more-is-safe",
     frame: { nTrees: 60 },
     terms: [
-      { phrase: "never a U", hue: "truth" },
+      { phrase: "never the systematic U", hue: "truth" },
       { phrase: "a free, safe knob", hue: "param" },
     ],
   },

@@ -125,13 +125,17 @@ export function DecisionField({
         className="absolute inset-0 h-full w-full select-none"
       >
         <rect x={MARGIN.left} y={MARGIN.top} width={width - MARGIN.left - MARGIN.right} height={height - MARGIN.top - MARGIN.bottom} fill="none" stroke="var(--line)" />
-        <g aria-hidden>
-          {sx.ticks(7).map((t) => (
-            <text key={`x${t}`} x={sx(t)} y={height - MARGIN.bottom + 16} textAnchor="middle" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">{t}</text>
-          ))}
-          <text x={width - MARGIN.right} y={height - 6} textAnchor="end" fontSize={11} fill="var(--ink-faint)">x₁</text>
-          <text x={MARGIN.left} y={MARGIN.top - 3} fontSize={11} fill="var(--ink-faint)">x₂</text>
-        </g>
+        {/* Axis ticks orient on full-size fields; on small-multiple tiles (a forest's member
+            strip) they're clutter that buries the boundary, so they drop out. */}
+        {width > 240 && (
+          <g aria-hidden>
+            {sx.ticks(7).map((t) => (
+              <text key={`x${t}`} x={sx(t)} y={height - MARGIN.bottom + 16} textAnchor="middle" fontSize={10} fontFamily="var(--font-mono)" fill="var(--ink-faint)">{t}</text>
+            ))}
+            <text x={width - MARGIN.right} y={height - 6} textAnchor="end" fontSize={11} fill="var(--ink-faint)">x₁</text>
+            <text x={MARGIN.left} y={MARGIN.top - 3} fontSize={11} fill="var(--ink-faint)">x₂</text>
+          </g>
+        )}
 
         {/* the p = ½ decision boundary */}
         {Number.isFinite(by0) && Number.isFinite(by1) && (
@@ -153,7 +157,7 @@ export function DecisionField({
               key={i}
               cx={sx(p.x1)}
               cy={sy(p.x2)}
-              r={5}
+              r={width <= 240 ? 2.6 : 5}
               fill={p.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"}
               stroke={correct ? "var(--surface-bg)" : "var(--viz-error)"}
               strokeWidth={correct ? 1.5 : 2.25}

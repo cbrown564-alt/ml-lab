@@ -42,7 +42,7 @@ export const randomForestsNarrative: ExhibitNarrative = {
       id: "more-is-safe",
       heading: "More trees never overfit",
       paragraphs: [
-        "Here is the part that surprises anyone who just met overfitting. With a single tree, depth was a dial you could overshoot — too deep, and the held-out score fell. The number of trees is not that kind of dial. Adding trees only makes the average steadier; it cannot make the forest fit the noise harder. The held-out curve climbs and then flattens — never a U.",
+        "Here is the part that surprises anyone who just met overfitting. With a single tree, depth was a dial you could overshoot — too deep, and the held-out score fell. The number of trees is not that kind of dial. Adding trees only makes the average steadier; it cannot make the forest fit the noise harder. The held-out curve climbs and then plateaus — never the systematic U a too-deep tree makes. (It may jiggle a point or two from run to run; that is just test-set noise, not overfitting.)",
         "So you grow as many trees as you can afford and stop when the gain stops paying for the compute. The complexity that can overfit still lives inside each tree — its depth — but the count of trees is a free, safe knob. A single tree's gift and curse were the same thing; the forest keeps the gift and spends a crowd to bury the curse.",
       ],
     },

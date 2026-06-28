@@ -6,7 +6,7 @@ import { StatGrid } from "@/components/viz/StatGrid";
 import { useActiveFrame } from "@/components/exhibits/story-frame";
 import type { RandomForestFrame } from "@content/exhibits/random-forests/spine";
 import { predictProbaTree } from "@/lib/models/decision-tree";
-import { boundaryRoughness, forestAccuracy, forestProba } from "@/lib/models/random-forest";
+import { forestAccuracy, forestProba } from "@/lib/models/random-forest";
 import {
   FULL_FOREST,
   forestDomain,
@@ -30,7 +30,6 @@ export function RandomForestStory() {
   const crowd = useMemo(() => FULL_FOREST.slice(0, k), [k]);
   const predict = useMemo(() => (x1: number, x2: number) => forestProba(crowd, x1, x2), [crowd]);
   const acc = useMemo(() => forestAccuracy(forestTestPoints, crowd), [crowd]);
-  const rough = useMemo(() => boundaryRoughness(predict, forestDomain), [predict]);
 
   return (
     <figure className="flex flex-col gap-4 rounded-xl border border-line bg-raised p-5">
@@ -78,10 +77,10 @@ export function RandomForestStory() {
             note: k === 1 ? "one tree alone" : "steadier than any member",
           },
           {
-            label: "boundary roughness",
-            value: rough.toFixed(2),
+            label: "boundary",
+            value: k === 1 ? "jagged" : "smooth",
             hue: "var(--viz-param)",
-            note: "falls as the crowd grows",
+            note: k === 1 ? "a single staircase" : "the members, averaged",
           },
           { label: "trees", value: `${k}`, hue: "var(--ink-muted)", note: "averaged into one vote" },
         ]}

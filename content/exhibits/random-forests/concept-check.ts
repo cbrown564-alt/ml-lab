@@ -18,10 +18,10 @@ export const randomForestsCheck: ConceptCheck = {
       options: [
         {
           label:
-            "No — adding trees only reduces variance toward a floor; it never adds capacity to fit noise, so the curve flattens rather than turning back down",
+            "No — adding trees only reduces variance toward a floor; it never adds capacity to fit noise, so the curve plateaus rather than making the systematic U a too-deep tree does",
           correct: true,
           feedback:
-            "Right. The tree count appears only in the variance term, divided — it can shrink variance but can't manufacture capacity. Overfitting would come from deeper trees, not more of them. The held-out curve plateaus; it never makes a U.",
+            "Right. The tree count appears only in the variance term, divided — it can shrink variance but can't manufacture capacity. Overfitting would come from deeper trees, not more of them. The held-out curve plateaus (small run-to-run wiggles are just test-set noise); it never makes the systematic U overfitting does.",
         },
         {
           label: "Yes — every model overfits if you make it big enough, and 500 trees is a very big model",
