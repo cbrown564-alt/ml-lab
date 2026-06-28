@@ -7,10 +7,10 @@ import { boosterAccuracy, boosterProba } from "@/lib/models/gradient-boosting";
 import { FULL_BOOSTER, bestRound, boostDomain, boostPoints, boostTestPoints } from "@content/exhibits/gradient-boosting/experiment";
 
 /**
- * The specimen hero — boosting's whole tension in one frame. Left: the boosted boundary at
- * the early-stopping point, a clean curve a sequence of shallow trees descended to. Right:
- * the loss curves that got it there and the trap beyond — training loss sinking to zero,
- * held-out loss bottoming and then climbing. Power, and the line you must not cross.
+ * The specimen hero — boosting's whole tension in one column. The boosted boundary at the
+ * early-stopping point sits above the loss curves that got it there and the trap beyond:
+ * training loss sinking to zero, held-out loss bottoming and then climbing. Stacked
+ * full-width so the wide loss-U fills its space rather than floating beside the field.
  */
 export function GradientBoostingHero() {
   const [reveal, setReveal] = useState(0);
@@ -35,33 +35,29 @@ export function GradientBoostingHero() {
           descend the loss ↔ overshoot it
         </span>
       </figcaption>
-      <div className="flex flex-col gap-4 px-3 py-3 sm:flex-row sm:items-stretch">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-baseline justify-between gap-2 px-1 pb-1">
-            <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
-              boosted to the sweet spot
-            </span>
-            <span className="font-mono text-[11px] tabular-nums" style={{ color: "var(--accent)" }}>{acc}%</span>
-          </div>
-          <div style={{ opacity: reveal, transition: "opacity 500ms ease" }}>
+      <div className="flex flex-col gap-3 px-4 py-4" style={{ opacity: reveal, transition: "opacity 500ms ease" }}>
+        <div className="grid gap-4 sm:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] sm:items-center">
+          <div>
+            <div className="flex items-baseline justify-between gap-2 px-1 pb-1">
+              <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
+                boosted to the sweet spot
+              </span>
+              <span className="font-mono text-[11px] tabular-nums" style={{ color: "var(--accent)" }}>{acc}%</span>
+            </div>
             <DecisionField
               points={boostPoints}
               predictProba={predict}
               domain={boostDomain}
-              width={520}
-              height={400}
+              width={420}
+              height={340}
               label={`The boosted boundary at the early-stopping point (~${bestRound} rounds) — a clean curve, ${acc}% on held-out data.`}
             />
           </div>
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-baseline justify-between gap-2 px-1 pb-1">
-            <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
+          <div>
+            <span className="block px-1 pb-1 font-mono text-[11px] tracking-widest text-ink-faint uppercase">
               the descent — and the overshoot
             </span>
-          </div>
-          <div className="flex h-full items-center" style={{ opacity: reveal, transition: "opacity 500ms ease" }}>
-            <BoostingLossCurves current={bestRound} width={520} height={360} />
+            <BoostingLossCurves current={bestRound} width={560} height={300} />
           </div>
         </div>
       </div>

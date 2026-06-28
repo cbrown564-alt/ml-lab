@@ -101,17 +101,17 @@ export const gradientBoostingCheck: ConceptCheck = {
       targets: ["boost:break"],
     },
     {
-      id: "transfer-forest-logic",
+      id: "transfer-training-accuracy",
       kind: "transfer",
       scenario:
-        "A teammate's gradient-boosting model for predicting customer churn scores beautifully on the training data but disappoints in production. They've read that 'random forests don't overfit — you just add more trees,' and their plan is to add ten times more boosting rounds to make it even stronger.",
+        "A teammate's gradient-boosting churn model reaches 99.6% accuracy on the training data after 800 rounds. They're thrilled — they call it the best model they've built and want to ship it today. They never tracked a validation curve, and they note that the held-out ACCURACY is about the same as their old 40-round model, which they take as further proof it's solid.",
       prompt:
-        "Will that help? Explain what's going wrong and what you'd actually change — in your own words.",
+        "Should that 99.6% training accuracy reassure you? What would you check before shipping, and why — specifically for a boosted model? Write it in your own words.",
       open: {
         placeholder:
-          "e.g. a forest and boosting differ because … so more rounds would … the real fixes are …",
+          "e.g. for boosting, high training accuracy means … the overfit hides in … so I'd check … and roll back to …",
         answer:
-          "No — more rounds will make it worse. The teammate is applying a forest's logic to boosting, and the two are opposites. A random forest averages independent trees, so more trees only cancel variance and never overfit. Boosting grows trees in sequence, each fitting the previous ones' residuals — it is gradient descent on the loss — so more rounds keep driving the TRAINING loss toward zero, and past the point where the held-out loss bottoms out, the new trees fit noise that production data doesn't share. Ten times more rounds pushes it further down the overfitting U. The real fixes are the boosting controls: lower the learning rate so each step is more cautious (then you can afford more rounds), use early stopping — track a validation loss and stop at its minimum, which is likely far FEWER rounds than they have now — and keep the trees shallow. And if the churn data is noisy, a random forest may simply be the safer model here, since averaging dilutes the hard cases boosting would chase.",
+          "No — for a boosting model that high training accuracy is a warning, not a triumph. Boosting is gradient descent on the loss, so given enough rounds it drives the TRAINING loss to zero and training accuracy to ~100% by adding trees that fit the training noise — 99.6% after 800 rounds is exactly what an overfit booster looks like, not evidence of quality. The tell is that boosting's overfit hides in the LOSS, not the accuracy: training log-loss collapses while held-out log-loss bottoms early and then climbs, often while held-out ACCURACY barely moves — which is precisely the 'same accuracy as the 40-round model' they're treating as reassurance. So the flat held-out accuracy actually argues that the 760 extra rounds bought nothing but over-confidence. What I'd check: plot the held-out (validation) log-loss across rounds, find where it bottomed, and roll back to that many rounds with early stopping — probably much closer to 40 than 800 — and consider a smaller learning rate. Training accuracy is meaningless here because a booster can always reach 100%; only the held-out loss curve tells you where to stop.",
       },
       difficulty: 3,
       targets: ["boost:transfer"],

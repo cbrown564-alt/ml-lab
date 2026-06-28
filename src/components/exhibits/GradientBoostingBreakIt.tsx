@@ -5,7 +5,8 @@ import { DecisionField } from "@/components/viz/DecisionField";
 import { BoostingLossCurves } from "@/components/viz/BoostingLossCurves";
 import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
-import { boosterLogLoss, boosterProba, fitBooster } from "@/lib/models/gradient-boosting";
+import type { TreePoint } from "@/lib/models/decision-tree";
+import { boosterAccuracy, boosterLogLoss, boosterProba, fitBooster } from "@/lib/models/gradient-boosting";
 import {
   BOOST_DEPTH,
   FULL_BOOSTER,
@@ -16,20 +17,22 @@ import {
 } from "@content/exhibits/gradient-boosting/experiment";
 
 /**
- * The "Break it" lab — the two ways boosting's descent runs off the road:
- *   · Too many rounds — boost past the held-out loss's low point and watch it climb back up.
- *   · Steps too big — raise the learning rate so each step overshoots, overfitting fast.
- * Both are the same wall (overfitting) reached through boosting's two dials.
+ * The "Break it" lab — two DISTINCT failures (not the same wall twice):
+ *   · Too many rounds — boost past the held-out loss's low point and watch it climb back up
+ *     (overfitting; descent doesn't stop itself).
+ *   · Noisy labels — mislabel a few points and boost: each round re-fits the residuals, so
+ *     those stubborn wrong points keep drawing the next tree's attention and the boundary
+ *     contorts to chase them — the outlier-fixation a forest would have averaged away.
  */
-type Mode = "rounds" | "steps";
+type Mode = "rounds" | "noisy";
 
 export function GradientBoostingBreakIt() {
   const [mode, setMode] = useState<Mode>("rounds");
   return (
     <div className="rounded-xl border border-line bg-raised p-6">
       <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div role="group" aria-label="Which dial to overshoot" className="inline-flex self-start rounded-full border border-line p-0.5 text-sm">
-          {([["Too many rounds", "rounds"], ["Steps too big", "steps"]] as const).map(([label, value]) => (
+        <div role="group" aria-label="Which failure to trigger" className="inline-flex self-start rounded-full border border-line p-0.5 text-sm">
+          {([["Too many rounds", "rounds"], ["Noisy labels", "noisy"]] as const).map(([label, value]) => (
             <button
               key={value}
               type="button"
@@ -41,9 +44,11 @@ export function GradientBoostingBreakIt() {
             </button>
           ))}
         </div>
-        <p className="font-mono text-[11px] text-ink-faint">both overshoot the held-out loss</p>
+        <p className="font-mono text-[11px] text-ink-faint">
+          {mode === "rounds" ? "overfitting — descent overshoots" : "outliers — boosting chases the hard cases"}
+        </p>
       </div>
-      {mode === "rounds" ? <RoundsFailure /> : <StepsFailure />}
+      {mode === "rounds" ? <RoundsFailure /> : <NoisyFailure />}
     </div>
   );
 }
@@ -83,39 +88,51 @@ function RoundsFailure() {
   );
 }
 
-const LRS = [0.05, 0.3, 1.0, 1.5] as const;
-function StepsFailure() {
-  const [lr, setLr] = useState<number>(0.3);
-  const booster = useMemo(() => fitBooster(boostPoints, { nRounds: 80, maxDepth: BOOST_DEPTH, lr }), [lr]);
+/** Flip a fixed handful of training labels — the "outliers" boosting will chase. */
+const FLIP_EVERY = 22;
+function poison(points: TreePoint[], on: boolean): { data: TreePoint[]; flipped: TreePoint[] } {
+  if (!on) return { data: points, flipped: [] };
+  const flipped: TreePoint[] = [];
+  const data = points.map((p, i) => {
+    if (i % FLIP_EVERY === 0) {
+      const f = { ...p, y: (1 - p.y) as 0 | 1 };
+      flipped.push(f);
+      return f;
+    }
+    return p;
+  });
+  return { data, flipped };
+}
+
+function NoisyFailure() {
+  const [noisy, setNoisy] = useState(false);
+  const ROUNDS = 120;
+  const { data, flipped } = useMemo(() => poison(boostPoints, noisy), [noisy]);
+  const booster = useMemo(() => fitBooster(data, { nRounds: ROUNDS, maxDepth: BOOST_DEPTH, lr: 0.3 }), [data]);
   const predict = useMemo(() => (x1: number, x2: number) => boosterProba(booster, x1, x2), [booster]);
-  const testLL = useMemo(() => boosterLogLoss(boostTestPoints, booster), [booster]);
-  const broken = lr >= 1.0;
+  const acc = useMemo(() => boosterAccuracy(boostTestPoints, booster), [booster]);
 
   return (
     <div className="lg:grid lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:items-start lg:gap-8">
       <div className="flex flex-col gap-5">
-        {broken ? (
+        {noisy ? (
           <Guidance tone="broken" kicker="Symptom · it broke"
-            body={<>With a large step each tree <span className="font-medium text-[var(--viz-error-ink)]">overshoots</span>, and after 80 rounds the boundary is jagged and the held-out loss is high — the descent leapt past the optimum instead of settling into it.</>}
-            foot={<><span className="font-medium text-ink">Diagnose:</span> the learning rate is the step size; too large and each correction overcorrects, fitting noise fast. <span className="font-medium text-ink">Repair:</span> shrink the learning rate (0.05–0.1) and add more rounds — small, careful steps reach a lower held-out loss than a few big ones.</>} />
+            body={<>The boundary <span className="font-medium text-[var(--viz-error-ink)]">bulges and pockets</span> around the {flipped.length} mislabeled points — boosting has bent the model to capture them — and the held-out accuracy has <span className="font-medium text-[var(--viz-error-ink)]">dropped</span>.</>}
+            foot={<><span className="font-medium text-ink">Diagnose:</span> a mislabeled point stays wrong, so its residual stays large and keeps drawing the next tree — boosting fixates on the hardest cases by design. <span className="font-medium text-ink">Repair:</span> clean the labels, cap depth and the learning rate, or prefer a forest, which averages stray points away instead of chasing them.</>} />
         ) : (
           <Guidance tone="trigger" kicker="Trigger it"
-            body={<>All four runs use the same 80 rounds and the same shallow trees — only the <span className="font-medium text-ink">learning rate</span> differs. Step it up.</>}
-            foot="A bigger step isn't faster progress — watch the held-out loss rise as the steps get too large." />
+            body={<>The model fits the clean data well. Now <span className="font-medium text-ink">flip a few labels</span> — mislabel a handful of points, the kind of noise real data always has.</>}
+            foot="Watch the boundary near the flipped points, and the held-out score. Does boosting shrug them off, or chase them?" />
         )}
-        <div className="flex flex-col gap-2 rounded-lg border border-line bg-sunken p-4">
-          <span className="text-sm font-medium text-ink">Learning rate η (80 rounds)</span>
-          <div role="group" aria-label="Learning rate" className="inline-flex self-start rounded-full border border-line p-0.5 text-sm">
-            {LRS.map((v) => (
-              <button key={v} type="button" aria-pressed={lr === v} onClick={() => { whenHydrated(() => useLearner.getState().recordPractice("gradient-boosting")); setLr(v); }}
-                className={`rounded-full px-3 py-1 font-mono transition-colors ${lr === v ? "bg-accent text-accent-ink" : "text-ink-muted hover:text-ink"}`}>{v.toFixed(2)}</button>
-            ))}
-          </div>
-        </div>
-        <Readout label="held-out log-loss" value={testLL.toFixed(3)} hue={broken ? "var(--viz-error-ink)" : "var(--accent)"} hint={broken ? "overshot — steps too big" : lr <= 0.1 ? "cautious — lowest loss" : "the standard step"} />
+        <label className="flex items-center gap-2 self-start rounded-lg border border-line bg-sunken px-4 py-2.5 text-sm text-ink">
+          <input type="checkbox" checked={noisy} onChange={(e) => { whenHydrated(() => useLearner.getState().recordPractice("gradient-boosting")); setNoisy(e.target.checked); }} className="accent-[var(--accent)]" />
+          Mislabel a few points
+        </label>
+        <Readout label="held-out accuracy" value={`${Math.round(acc * 100)}%`} hue={noisy ? "var(--viz-error-ink)" : "var(--accent)"} hint={noisy ? `chasing ${flipped.length} flipped points` : "clean labels"} />
+        <p className="font-mono text-[11px] text-ink-faint">{ROUNDS} rounds · a forest would average the stray points away</p>
       </div>
       <div className="mt-6 lg:mt-0">
-        <DecisionField points={boostPoints} predictProba={predict} domain={boostDomain} width={600} height={500} label={`80 rounds of boosting at learning rate ${lr}; held-out log-loss ${testLL.toFixed(2)}.`} />
+        <DecisionField points={data} predictProba={predict} domain={boostDomain} width={600} height={500} label={`A ${ROUNDS}-round booster on data with ${flipped.length} mislabeled points; the boundary bulges to capture them, and held-out accuracy is ${Math.round(acc * 100)}%.`} />
       </div>
     </div>
   );

@@ -14,17 +14,6 @@ export const boostPoints = treeFix.train as TreePoint[];
 export const boostTestPoints = treeFix.test as TreePoint[];
 export const boostDomain = treeFix.domain as [number, number];
 
-/** scikit-learn's committed curve: train log-loss → 0 while held-out log-loss bottoms and
- * then climbs (the overfitting U), with accuracy alongside. */
-export const boostByRounds = gbFix.byRounds as {
-  rounds: number;
-  trainAccuracy: number;
-  testAccuracy: number;
-  trainLogLoss: number;
-  testLogLoss: number;
-}[];
-export const boostPeak = gbFix.peak as { round: number; testAccuracy: number };
-
 export const BOOST_MAX = 200;
 export const BOOST_LR = gbFix.generator.learningRate as number; // 0.3
 export const BOOST_DEPTH = gbFix.generator.maxDepth as number; // 2

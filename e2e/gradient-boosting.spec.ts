@@ -40,10 +40,10 @@ test.describe("gradient-boosting exhibit", () => {
     await expect(panel(page).getByText(/Symptom · it broke/i)).toBeVisible();
   });
 
-  test("Break it: too large a learning rate overshoots", async ({ page }) => {
+  test("Break it: mislabeling points makes boosting chase the outliers", async ({ page }) => {
     await openTab(page, "Break it");
-    await panel(page).getByRole("button", { name: "Steps too big" }).click();
-    await panel(page).getByRole("button", { name: "1.50", exact: true }).click();
+    await panel(page).getByRole("button", { name: "Noisy labels" }).click();
+    await panel(page).getByRole("checkbox", { name: /Mislabel a few points/i }).check();
     await expect(panel(page).getByText(/Symptom · it broke/i)).toBeVisible();
   });
 

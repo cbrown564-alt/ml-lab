@@ -33,7 +33,10 @@ export const gradientBoostingSpine: Spine<GradientBoostingFrame> = [
   },
   {
     sectionId: "gradient-descent-in-disguise",
-    frame: { rounds: 20 },
+    // Stay within the descending window (≤ bestRound ≈ 14) so the graphic doesn't label
+    // the model "overshooting" — and pre-reveal the answer — while the predict still asks
+    // whether more rounds keep helping. The overshoot is the next beat's job.
+    frame: { rounds: 12 },
     terms: [
       { phrase: "the negative gradient of the log-loss", hue: "error" },
       { phrase: "the learning rate is the step size", hue: "param" },
