@@ -28,6 +28,7 @@ import { overfittingRegularizationNarrative } from "@content/exhibits/overfittin
 import { dataLeakageNarrative } from "@content/exhibits/data-leakage/narrative";
 import { neuralNetworkFundamentalsNarrative } from "@content/exhibits/neural-network-fundamentals/narrative";
 import { decisionTreesNarrative } from "@content/exhibits/decision-trees/narrative";
+import { randomForestsNarrative } from "@content/exhibits/random-forests/narrative";
 
 /**
  * Narration generator (docs/06, B4; docs/04 content pipeline): turns each
@@ -74,6 +75,7 @@ const narratives: ExhibitNarrative[] = [
   dataLeakageNarrative,
   neuralNetworkFundamentalsNarrative,
   decisionTreesNarrative,
+  randomForestsNarrative,
 ];
 
 // ---- env ------------------------------------------------------------------

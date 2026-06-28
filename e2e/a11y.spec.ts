@@ -30,6 +30,7 @@ const ROUTES = [
   "/exhibits/neural-network-fundamentals",
   "/exhibits/the-gradient",
   "/exhibits/decision-trees",
+  "/exhibits/random-forests",
 ];
 
 /** Serious/critical axe violations on the current page, formatted for the failure message. */
