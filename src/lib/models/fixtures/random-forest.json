@@ -1,0 +1,44 @@
+{
+  "generator": {
+    "script": "scripts/generate_trees_fixtures.py",
+    "sklearn": "1.9.0",
+    "model": "RandomForestClassifier(max_features='sqrt'), gini, on the shared moons",
+    "seed": 7
+  },
+  "singleTree": {
+    "trainAccuracy": 1.0,
+    "testAccuracy": 0.8666666666666667
+  },
+  "byTrees": [
+    {
+      "nTrees": 1,
+      "trainAccuracy": 0.94375,
+      "testAccuracy": 0.8583333333333333
+    },
+    {
+      "nTrees": 3,
+      "trainAccuracy": 0.99375,
+      "testAccuracy": 0.8666666666666667
+    },
+    {
+      "nTrees": 10,
+      "trainAccuracy": 0.9875,
+      "testAccuracy": 0.925
+    },
+    {
+      "nTrees": 30,
+      "trainAccuracy": 1.0,
+      "testAccuracy": 0.9166666666666666
+    },
+    {
+      "nTrees": 100,
+      "trainAccuracy": 1.0,
+      "testAccuracy": 0.9166666666666666
+    }
+  ],
+  "stability": {
+    "resamples": 20,
+    "singleTreeTestStd": 0.02743679605525722,
+    "forestTestStd": 0.01083333333333332
+  }
+}

@@ -22,6 +22,7 @@ from pathlib import Path
 import numpy as np
 import sklearn
 from sklearn.datasets import make_moons
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 
 OUT = Path(__file__).resolve().parent.parent / "src" / "lib" / "models" / "fixtures"
@@ -111,6 +112,75 @@ def main() -> None:
     print(
         f"  fully grown: train={fg['trainAccuracy']:.3f} test={fg['testAccuracy']:.3f} "
         f"leaves={fg['leaves']} depth={fg['actualDepth']}"
+    )
+
+    write_forest(Xtr, ytr, Xte, yte)
+
+
+def write_forest(Xtr, ytr, Xte, yte) -> None:
+    """Random-forest reference on the SAME moons data: a fully-grown single tree (the
+    high-variance baseline) vs forests of growing size, each with sqrt feature sampling.
+    The story is variance reduction — test accuracy rises and steadies as trees are added.
+    """
+    single = DecisionTreeClassifier(criterion="gini", random_state=0).fit(Xtr, ytr)
+
+    by_trees = []
+    for k in [1, 3, 10, 30, 100]:
+        rf = RandomForestClassifier(
+            n_estimators=k, criterion="gini", max_features="sqrt", random_state=0
+        ).fit(Xtr, ytr)
+        by_trees.append(
+            {
+                "nTrees": k,
+                "trainAccuracy": float(rf.score(Xtr, ytr)),
+                "testAccuracy": float(rf.score(Xte, yte)),
+            }
+        )
+
+    # Variance of a single fully-grown tree across resamples vs a 100-tree forest across
+    # resamples — the forest's prediction should swing far less (the whole point).
+    rng = np.random.default_rng(SEED)
+    single_acc, forest_acc = [], []
+    n = len(Xtr)
+    for _ in range(20):
+        idx = rng.integers(0, n, n)  # bootstrap
+        Xb, yb = Xtr[idx], ytr[idx]
+        single_acc.append(
+            DecisionTreeClassifier(random_state=0).fit(Xb, yb).score(Xte, yte)
+        )
+        forest_acc.append(
+            RandomForestClassifier(
+                n_estimators=100, max_features="sqrt", random_state=0
+            ).fit(Xb, yb).score(Xte, yte)
+        )
+
+    payload = {
+        "generator": {
+            "script": "scripts/generate_trees_fixtures.py",
+            "sklearn": sklearn.__version__,
+            "model": "RandomForestClassifier(max_features='sqrt'), gini, on the shared moons",
+            "seed": SEED,
+        },
+        "singleTree": {
+            "trainAccuracy": float(single.score(Xtr, ytr)),
+            "testAccuracy": float(single.score(Xte, yte)),
+        },
+        "byTrees": by_trees,
+        "stability": {
+            "resamples": 20,
+            "singleTreeTestStd": float(np.std(single_acc)),
+            "forestTestStd": float(np.std(forest_acc)),
+        },
+    }
+    path = OUT / "random-forest.json"
+    path.write_text(json.dumps(payload, indent=2) + "\n")
+    print(f"wrote {path}")
+    for r in by_trees:
+        print(f"  {r['nTrees']:3d} trees: train={r['trainAccuracy']:.3f} test={r['testAccuracy']:.3f}")
+    s = payload["stability"]
+    print(
+        f"  stability across 20 resamples: single-tree test std={s['singleTreeTestStd']:.3f} "
+        f"vs forest std={s['forestTestStd']:.3f}"
     )
 
 

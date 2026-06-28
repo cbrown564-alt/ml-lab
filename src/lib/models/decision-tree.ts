@@ -39,6 +39,11 @@ export type TreeOptions = {
   minSamplesLeaf?: number;
   /** A node needs at least this many points to be split at all (CART default 2). */
   minSamplesSplit?: number;
+  /** How many features a split may consider at each node (default: all). Set to 1 with
+   * an `rng` to grow the decorrelated trees a *random* forest is built from. */
+  maxFeatures?: number;
+  /** Seeded RNG used only when maxFeatures restricts the per-node feature subset. */
+  rng?: () => number;
 };
 
 const featAt = (p: TreePoint, f: 0 | 1): number => (f === 0 ? p.x1 : p.x2);
@@ -72,13 +77,17 @@ type Candidate = { feature: 0 | 1; threshold: number; impurity: number };
 /** The best Gini-reducing axis-aligned split, or null if none improves on the node.
  * Mirrors scikit-learn's "best" splitter: thresholds at the midpoint between
  * consecutive distinct sorted values, weighted child impurity minimised. */
-function bestSplit(points: TreePoint[], minLeaf: number): Candidate | null {
+function bestSplit(
+  points: TreePoint[],
+  minLeaf: number,
+  features: readonly (0 | 1)[] = [0, 1],
+): Candidate | null {
   const n = points.length;
   const parent = gini(points);
   const total = sumOnes(points);
   let best: Candidate | null = null;
 
-  for (const feature of [0, 1] as const) {
+  for (const feature of features) {
     const sorted = [...points].sort((a, b) => featAt(a, feature) - featAt(b, feature));
     let onesL = 0; // class-1 count to the left of the running threshold, one pass
     for (let i = 1; i < n; i++) {
@@ -112,15 +121,26 @@ function sumOnes(points: TreePoint[]): number {
   return s;
 }
 
+/** Pick which features a split may consider at one node. With maxFeatures ≥ all (or no
+ * rng) this is both features — the deterministic CART. With maxFeatures = 1 and a seeded
+ * rng it's a random single feature, which is what turns bagging into a *random* forest. */
+function pickFeatures(maxFeatures: number, rng?: () => number): readonly (0 | 1)[] {
+  if (!rng || maxFeatures >= 2) return [0, 1];
+  if (maxFeatures <= 1) return [(rng() < 0.5 ? 0 : 1) as 0 | 1];
+  return [0, 1];
+}
+
 /** Grow a CART tree greedily, splitting on the largest Gini reduction at each node. */
 export function buildTree(points: TreePoint[], opts: TreeOptions = {}): TreeNode {
   const maxDepth = opts.maxDepth ?? Infinity;
   const minLeaf = opts.minSamplesLeaf ?? 1;
   const minSplit = opts.minSamplesSplit ?? 2;
+  const maxFeatures = opts.maxFeatures ?? 2;
+  const rng = opts.rng;
 
   const grow = (pts: TreePoint[], depth: number): TreeNode => {
     if (depth >= maxDepth || pts.length < minSplit || gini(pts) === 0) return leaf(pts);
-    const split = bestSplit(pts, minLeaf);
+    const split = bestSplit(pts, minLeaf, pickFeatures(maxFeatures, rng));
     if (!split) return leaf(pts);
     const left: TreePoint[] = [];
     const right: TreePoint[] = [];
@@ -182,7 +202,8 @@ export type LeafRegion = {
 export const rootSplit = (tree: TreeNode): { feature: 0 | 1; threshold: number } | null =>
   tree.kind === "split" ? { feature: tree.feature, threshold: tree.threshold } : null;
 
-function mulberry32(seed: number): () => number {
+/** A small seeded PRNG (mulberry32) — reproducible bootstraps and feature bags. */
+export function seededRng(seed: number): () => number {
   return () => {
     seed |= 0;
     seed = (seed + 0x6d2b79f5) | 0;
@@ -199,7 +220,7 @@ function mulberry32(seed: number): () => number {
  * trees, each grown on one of these resamples, then averaged.
  */
 export function bootstrapSample(points: TreePoint[], seed: number): TreePoint[] {
-  const rng = mulberry32(seed);
+  const rng = seededRng(seed);
   const out: TreePoint[] = [];
   for (let i = 0; i < points.length; i++) out.push(points[Math.floor(rng() * points.length)]);
   return out;
