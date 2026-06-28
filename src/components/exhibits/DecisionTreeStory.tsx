@@ -7,13 +7,13 @@ import { StatGrid } from "@/components/viz/StatGrid";
 import { useActiveFrame } from "@/components/exhibits/story-frame";
 import type { DecisionTreeFrame } from "@content/exhibits/decision-trees/spine";
 import {
-  buildTree,
   countLeaves,
   predictProbaTree,
   treeAccuracy,
 } from "@/lib/models/decision-tree";
 import { fitLogistic, accuracy as logAccuracy } from "@/lib/models/logistic";
 import {
+  treeAtDepth,
   treePoints,
   treeTestPoints,
   treeDomain,
@@ -34,7 +34,7 @@ export function DecisionTreeStory() {
   const depth = frame?.depth ?? 2;
   const showLine = frame?.showLine ?? false;
 
-  const tree = useMemo(() => buildTree(treePoints, { maxDepth: Math.max(depth, 1) }), [depth]);
+  const tree = useMemo(() => treeAtDepth(depth), [depth]);
   const trainAcc = useMemo(() => treeAccuracy(treePoints, tree), [tree]);
   const testAcc = useMemo(() => treeAccuracy(treeTestPoints, tree), [tree]);
   const leaves = useMemo(() => countLeaves(tree), [tree]);
@@ -61,20 +61,22 @@ export function DecisionTreeStory() {
           points={treePoints}
           params={LOGISTIC_FIT}
           domain={treeDomain}
-          width={600}
-          height={440}
+          width={560}
+          height={320}
           label={`The straight boundary logistic regression fits to the two moons — it classifies ${Math.round(
             LOGISTIC_ACC * 160,
           )} of 160 training points correctly and cannot follow the curve.`}
         />
       ) : (
+        // Field + its tree kept co-visible (the node's whole thesis): a compact plane
+        // above the diagram of the very questions that carved it.
         <>
           <DecisionField
             points={treePoints}
             predictProba={predict}
             domain={treeDomain}
-            width={600}
-            height={440}
+            width={560}
+            height={320}
             label={`A decision tree of depth ${depth} carving the plane into ${leaves} axis-aligned boxes; amber regions vote class 0, blue vote class 1, and a point ringed in red sits in the wrong-coloured box.`}
           />
           <DecisionTreeDiagram tree={tree} caption="The questions that drew those boxes" />

@@ -1,5 +1,5 @@
 import type { ParamDef } from "@/lib/experiment/spec";
-import type { TreePoint } from "@/lib/models/decision-tree";
+import { buildTree, type TreeNode, type TreePoint } from "@/lib/models/decision-tree";
 import fixtures from "@/lib/models/fixtures/decision-tree.json";
 
 /**
@@ -36,6 +36,18 @@ export const depthParam: ParamDef = {
   step: 1,
   default: 2,
 };
+
+/** The trees at every depth, built once at module load — so dragging the depth knob (or
+ * stepping a Story beat) is a lookup, not a refit, keeping interaction off the 100ms red
+ * line. Index d holds the tree grown to maxDepth d; index 0 mirrors depth 1. */
+export const treesByDepth: TreeNode[] = (() => {
+  const out: TreeNode[] = [buildTree(treePoints, { maxDepth: 1 })];
+  for (let d = 1; d <= treeMaxDepth; d++) out.push(buildTree(treePoints, { maxDepth: d }));
+  return out;
+})();
+
+export const treeAtDepth = (d: number): TreeNode =>
+  treesByDepth[Math.max(0, Math.min(treeMaxDepth, d))];
 
 export const decisionTreeScenario = {
   id: "two-moons",

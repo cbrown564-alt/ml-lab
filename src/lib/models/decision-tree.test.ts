@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  bootstrapSample,
   buildTree,
   countLeaves,
   gini,
   leafRegions,
   predictTree,
+  rootSplit,
   treeAccuracy,
   treeDepth,
   type TreePoint,
@@ -68,6 +70,28 @@ describe("the overfitting wall", () => {
     const full = buildTree(train);
     expect(treeAccuracy(train, full)).toBeCloseTo(1, 6);
     expect(treeAccuracy(test, full)).toBeCloseTo(fixtures.fullyGrown.testAccuracy, 6);
+  });
+});
+
+describe("a single tree is a high-variance estimator", () => {
+  it("resampling the data jumps the cuts while held-out stays in a band (variance, not collapse)", () => {
+    const thresholds: number[] = [];
+    const accs: number[] = [];
+    for (let seed = 1; seed <= 16; seed++) {
+      const tree = buildTree(bootstrapSample(train, seed), { maxDepth: 4 });
+      const root = rootSplit(tree);
+      expect(root).not.toBeNull();
+      thresholds.push(root!.threshold);
+      accs.push(treeAccuracy(test, tree));
+    }
+    // The first cut's threshold wanders materially across resamples — the tree keeps
+    // "changing its mind" about where to split.
+    const spread = Math.max(...thresholds) - Math.min(...thresholds);
+    expect(spread).toBeGreaterThan(0.4);
+    // …yet held-out accuracy only bounces within a band and never collapses: the shape
+    // is unstable even when the score is roughly fine. That gap is the case for bagging.
+    expect(Math.min(...accs)).toBeGreaterThan(0.78);
+    expect(Math.max(...accs) - Math.min(...accs)).toBeGreaterThan(0.04);
   });
 });
 

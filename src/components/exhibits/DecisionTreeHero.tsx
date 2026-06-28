@@ -2,14 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { DecisionField } from "@/components/viz/DecisionField";
-import {
-  buildTree,
-  countLeaves,
-  predictProbaTree,
-  treeAccuracy,
-} from "@/lib/models/decision-tree";
+import { countLeaves, predictProbaTree, treeAccuracy } from "@/lib/models/decision-tree";
 import { fitLogistic, accuracy as logAccuracy } from "@/lib/models/logistic";
-import { treeDomain, treePoints } from "@content/exhibits/decision-trees/experiment";
+import { treeAtDepth, treeDomain, treePoints } from "@content/exhibits/decision-trees/experiment";
 
 /**
  * The specimen hero — the node's thesis as a before/after. Left: the best straight line
@@ -24,7 +19,7 @@ const LOGISTIC_ACC = Math.round(logAccuracy(treePoints, LOGISTIC_FIT) * 100);
 export function DecisionTreeHero() {
   const [reveal, setReveal] = useState(0);
 
-  const tree = useMemo(() => buildTree(treePoints, { maxDepth: 3 }), []);
+  const tree = useMemo(() => treeAtDepth(3), []);
   const treeAcc = Math.round(treeAccuracy(treePoints, tree) * 100);
   const leaves = countLeaves(tree);
   const predict = useMemo(() => (x1: number, x2: number) => predictProbaTree(tree, x1, x2), [tree]);

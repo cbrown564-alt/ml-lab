@@ -32,7 +32,7 @@ test.describe("decision-trees exhibit", () => {
   });
 
   test("See it enforces a committed prediction before the overfitting reveal", async ({ page }) => {
-    await panel(page).getByRole("button", { name: /Beat 4 of/ }).click();
+    await panel(page).getByRole("button", { name: /Beat 3 of/ }).click();
     await expect(panel(page).getByText(/Predict first/i)).toBeVisible();
     await panel(page).getByRole("button", { name: /memorizes flukes/i }).click();
     await expect(panel(page).getByText(/You're right/)).toBeVisible();
@@ -43,6 +43,15 @@ test.describe("decision-trees exhibit", () => {
     await expect(panel(page).getByText(/Trigger it/i)).toBeVisible();
     await panel(page).getByRole("slider", { name: "Tree depth" }).fill("7");
     await expect(panel(page).getByText(/Symptom · it broke/i)).toBeVisible();
+  });
+
+  test("Break it: resampling the data exposes the tree's instability", async ({ page }) => {
+    await openTab(page, "Break it");
+    await panel(page).getByRole("button", { name: "Resample the data" }).click();
+    const refit = panel(page).getByRole("button", { name: /Resample & refit/i });
+    await refit.click();
+    await refit.click();
+    await expect(panel(page).getByText(/changing its mind/i)).toBeVisible();
   });
 
   test("Explain it pairs the checks with the three-depth instrument", async ({ page }) => {

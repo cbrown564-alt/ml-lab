@@ -41,6 +41,31 @@ export const decisionTreesSpine: Spine<DecisionTreeFrame> = [
       { phrase: "a staircase", hue: "prediction" },
       { phrase: "bends to the curve", hue: "prediction" },
     ],
+    predict: {
+      prompt:
+        "This shallow tree separates the arcs cleanly. Imagine you keep asking questions until every training point sits in a pure box — the tree gets 100% of the training data right. On fresh data it has never seen, will it do better, the same, or worse than this shallow one?",
+      options: [
+        {
+          label:
+            "Worse — the deepest cuts wrap single stray points, so the tree memorizes flukes instead of the shape",
+          correct: true,
+          feedback:
+            "Right. A perfectly pure tree has drawn a box around every noisy point that crossed the boundary. Those boxes describe this exact sample, not the underlying arcs — so on new points they misfire, and the held-out score sinks below this shallow tree's.",
+        },
+        {
+          label:
+            "Better — a model that is right about every training point has clearly learned the most",
+          feedback:
+            "This is the trap. 100% training accuracy measures memorization, not understanding. The extra cuts fit the noise in this sample; the only score that matters is on data the tree has never seen, and there a deep tree does worse than this shallow one.",
+        },
+        {
+          label:
+            "The same — once the boundary separates the classes, extra cuts can't change the test score",
+          feedback:
+            "Extra cuts keep changing the boundary — each one carves a new box around a stray point. That moves predictions near those points, and on held-out data the gap to training only widens. The shallow tree here is the sweet spot.",
+        },
+      ],
+    },
   },
   {
     sectionId: "which-question",
@@ -50,31 +75,6 @@ export const decisionTreesSpine: Spine<DecisionTreeFrame> = [
       { phrase: "perfectly pure", hue: "truth" },
       { phrase: "the biggest gain in purity", hue: "param" },
     ],
-    predict: {
-      prompt:
-        "Keep asking questions until every training point sits in a pure box, and the tree gets 100% of the training data right. On fresh data it has never seen, will it do better, the same, or worse?",
-      options: [
-        {
-          label:
-            "Worse — the deepest cuts wrap single stray points, so the tree memorizes flukes instead of the shape",
-          correct: true,
-          feedback:
-            "Right. A perfectly pure tree has drawn a box around every noisy point that crossed the boundary. Those boxes describe this exact sample, not the underlying arcs — so on new points they misfire, and the held-out score drops below the shallow tree's.",
-        },
-        {
-          label:
-            "Better — a model that is right about every training point has clearly learned the most",
-          feedback:
-            "This is the trap. 100% training accuracy measures memorization, not understanding. The extra cuts fit the noise in this sample; the only score that matters is on data the tree has never seen, and there a deep tree does worse.",
-        },
-        {
-          label:
-            "The same — once the boundary separates the classes, extra cuts can't change the test score",
-          feedback:
-            "Extra cuts keep changing the boundary — each one carves a new box around a stray point. That moves predictions near those points, and on held-out data it moves them the wrong way. The test score falls; it doesn't hold.",
-        },
-      ],
-    },
   },
   {
     sectionId: "grow-too-far",

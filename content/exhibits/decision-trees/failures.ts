@@ -32,15 +32,15 @@ export const decisionTreesFailures: FailureGallery = {
       primitive: "seed-sensitivity",
       title: "Move the data, redraw the tree",
       trigger:
-        "Resample the training set — drop a few points, or draw a fresh bootstrap sample — and refit. Repeat with a different sample.",
+        "Draw a fresh bootstrap sample of the training set (change the resample seed) and refit. Repeat with another seed.",
       symptom:
-        "The top split, and often the whole tree below it, changes. When two candidate cuts are nearly tied in gain, a handful of points decides which one wins, and the entire boundary lurches.",
+        "The first cut's threshold jumps and the whole tree below it reshuffles — the boundary lurches from sample to sample — yet held-out accuracy barely moves. Unstable shape, stable-ish score.",
       diagnosis:
-        "A tree is a high-variance estimator: greedy, hard splits mean a small change in the data flips a near-tie at the root, and that choice cascades. The shape is unstable even when the accuracy is fine.",
+        "A tree is a high-variance estimator: greedy, hard splits mean a few different points shift where the near-tied root threshold lands, and that choice cascades down the tree. The 'seed' here is which sample you happened to draw, and the shape is unstable even when the score is fine.",
       repair:
-        "Average many trees built on resampled data so the idiosyncratic splits cancel and the shared signal survives — that is exactly bagging, and it is what a random forest does. Boosting tackles the bias side the same building block.",
+        "Average many trees, each grown on its own resample, so the idiosyncratic splits cancel and the shared signal survives — that is exactly bagging, and it is what a random forest does. Boosting reuses the same building block to attack bias instead.",
       boundary:
-        "If you need a model a person can read aloud as a chain of questions, one shallow tree's interpretability is worth its instability — an averaged forest is far harder to explain.",
+        "If you need a model a person can read aloud as a chain of questions, one shallow tree's interpretability can be worth its instability — an averaged forest of hundreds of trees is far harder to explain.",
     },
   ],
 };

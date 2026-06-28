@@ -2,13 +2,14 @@
 
 import { useMemo, useState } from "react";
 import { DecisionField } from "@/components/viz/DecisionField";
+import { countLeaves, predictProbaTree, treeAccuracy } from "@/lib/models/decision-tree";
 import {
-  buildTree,
-  countLeaves,
-  predictProbaTree,
-  treeAccuracy,
-} from "@/lib/models/decision-tree";
-import { treeDomain, treeMaxDepth, treePoints, treeTestPoints } from "@content/exhibits/decision-trees/experiment";
+  treeAtDepth,
+  treeDomain,
+  treeMaxDepth,
+  treePoints,
+  treeTestPoints,
+} from "@content/exhibits/decision-trees/experiment";
 
 /**
  * The compact live instrument pinned beside the Explain-it checks: the same tree, at
@@ -25,7 +26,7 @@ export function DecisionTreeCheckLab() {
   const [stageId, setStageId] = useState<(typeof STAGES)[number]["id"]>("sweet");
   const stage = STAGES.find((s) => s.id === stageId)!;
 
-  const tree = useMemo(() => buildTree(treePoints, { maxDepth: stage.depth }), [stage.depth]);
+  const tree = useMemo(() => treeAtDepth(stage.depth), [stage.depth]);
   const trainAcc = useMemo(() => treeAccuracy(treePoints, tree), [tree]);
   const testAcc = useMemo(() => treeAccuracy(treeTestPoints, tree), [tree]);
   const leaves = useMemo(() => countLeaves(tree), [tree]);
@@ -61,8 +62,8 @@ export function DecisionTreeCheckLab() {
       />
       <p className="mt-2 text-[11px] text-ink-faint">{stage.blurb}</p>
       <div className="mt-3 flex justify-between font-mono text-xs tabular-nums">
-        <span style={{ color: "var(--viz-prediction-ink)" }}>train {Math.round(trainAcc * 100)}%</span>
-        <span style={{ color: "var(--viz-error-ink)" }}>held-out {Math.round(testAcc * 100)}%</span>
+        <span className="text-ink-muted">train {Math.round(trainAcc * 100)}%</span>
+        <span style={{ color: "var(--accent)" }}>held-out {Math.round(testAcc * 100)}%</span>
         <span className="text-ink-faint">{leaves} leaves</span>
       </div>
     </figure>

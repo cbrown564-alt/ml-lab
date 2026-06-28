@@ -6,7 +6,6 @@ import { DecisionTreeDiagram } from "@/components/viz/DecisionTreeDiagram";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { useLearner, whenHydrated } from "@/lib/learner/store";
 import {
-  buildTree,
   countLeaves,
   predictProbaTree,
   treeAccuracy,
@@ -16,6 +15,7 @@ import {
   decisionTreeScenario,
   depthParam,
   treeAccuracyByDepth,
+  treeAtDepth,
   treeDomain,
   treeMaxDepth,
   treePoints,
@@ -32,7 +32,7 @@ import {
 export function DecisionTreeLab() {
   const [depth, setDepth] = useState(depthParam.default);
 
-  const tree = useMemo(() => buildTree(treePoints, { maxDepth: depth }), [depth]);
+  const tree = useMemo(() => treeAtDepth(depth), [depth]);
   const trainAcc = useMemo(() => treeAccuracy(treePoints, tree), [tree]);
   const testAcc = useMemo(() => treeAccuracy(treeTestPoints, tree), [tree]);
   const leaves = useMemo(() => countLeaves(tree), [tree]);
@@ -51,9 +51,9 @@ export function DecisionTreeLab() {
       : depth === bestTestDepth
         ? "The sweet spot — best on data it never saw."
         : trainAcc > 0.99
-          ? "Memorized — perfect on training, worse on new data."
+          ? "Memorized — perfect on training, the gap to held-out yawns open."
           : depth > bestTestDepth
-            ? "Past the peak — the held-out score is slipping."
+            ? "Past the peak — the train–held-out gap is widening."
             : "Bending to the curve.";
 
   return (
@@ -95,14 +95,14 @@ export function DecisionTreeLab() {
               {
                 label: "train accuracy",
                 value: `${Math.round(trainAcc * 100)}%`,
-                hue: "var(--viz-prediction)",
+                hue: "var(--ink-muted)",
                 note: "climbs to 100% as you go deeper",
               },
               {
                 label: "held-out accuracy",
                 value: `${Math.round(testAcc * 100)}%`,
-                hue: "var(--viz-error)",
-                note: "peaks shallow, then falls",
+                hue: "var(--accent)",
+                note: "the score that counts — peaks shallow",
               },
               {
                 label: "leaves",
@@ -164,19 +164,19 @@ function DepthAccuracyChart({ current }: { current: number }) {
             {a === 1 ? "100" : Math.round(a * 100)}
           </text>
         ))}
-        <path d={path("trainAccuracy")} fill="none" stroke="var(--viz-prediction)" strokeWidth={2} />
-        <path d={path("testAccuracy")} fill="none" stroke="var(--viz-error)" strokeWidth={2} />
+        <path d={path("trainAccuracy")} fill="none" stroke="var(--ink-muted)" strokeWidth={2} strokeDasharray="4 3" />
+        <path d={path("testAccuracy")} fill="none" stroke="var(--accent)" strokeWidth={2.25} />
         {treeAccuracyByDepth.map((r) => (
           <g key={r.depth}>
-            <circle cx={xs(r.depth)} cy={ys(r.trainAccuracy)} r={r.depth === current ? 3.5 : 2} fill="var(--viz-prediction)" />
-            <circle cx={xs(r.depth)} cy={ys(r.testAccuracy)} r={r.depth === current ? 3.5 : 2} fill="var(--viz-error)" />
+            <circle cx={xs(r.depth)} cy={ys(r.trainAccuracy)} r={r.depth === current ? 3.5 : 2} fill="var(--ink-muted)" />
+            <circle cx={xs(r.depth)} cy={ys(r.testAccuracy)} r={r.depth === current ? 3.5 : 2} fill="var(--accent)" />
             <text x={xs(r.depth)} y={h - 8} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">{r.depth}</text>
           </g>
         ))}
       </svg>
       <div className="mt-1 flex gap-4 font-mono text-[10px] text-ink-faint">
-        <span><span style={{ color: "var(--viz-prediction)" }}>—</span> train</span>
-        <span><span style={{ color: "var(--viz-error)" }}>—</span> held-out</span>
+        <span><span style={{ color: "var(--ink-muted)" }}>– –</span> train</span>
+        <span><span style={{ color: "var(--accent)" }}>—</span> held-out</span>
         <span>depth →</span>
       </div>
     </figure>

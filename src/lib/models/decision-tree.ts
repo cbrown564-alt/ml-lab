@@ -178,6 +178,33 @@ export type LeafRegion = {
   n: number;
 };
 
+/** The root question, for highlighting how it moves as the data is resampled. */
+export const rootSplit = (tree: TreeNode): { feature: 0 | 1; threshold: number } | null =>
+  tree.kind === "split" ? { feature: tree.feature, threshold: tree.threshold } : null;
+
+function mulberry32(seed: number): () => number {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * A seeded bootstrap resample — draw n points with replacement. This is the data
+ * perturbation a single tree is dangerously sensitive to (resample, refit, watch the
+ * cuts jump), and it is exactly the building block of bagging: a random forest is many
+ * trees, each grown on one of these resamples, then averaged.
+ */
+export function bootstrapSample(points: TreePoint[], seed: number): TreePoint[] {
+  const rng = mulberry32(seed);
+  const out: TreePoint[] = [];
+  for (let i = 0; i < points.length; i++) out.push(points[Math.floor(rng() * points.length)]);
+  return out;
+}
+
 export function leafRegions(
   tree: TreeNode,
   bounds: { x1: [number, number]; x2: [number, number] },

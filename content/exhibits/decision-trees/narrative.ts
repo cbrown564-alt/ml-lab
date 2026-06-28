@@ -43,8 +43,8 @@ export const decisionTreesNarrative: ExhibitNarrative = {
       id: "grow-too-far",
       heading: "Grow it too far",
       paragraphs: [
-        "Keep splitting and the tree will not stop until every box is pure — which, on noisy data, means drawing a tiny box around each stray point that wandered across the boundary. Training accuracy climbs to a perfect 100%. And on fresh data the score gets worse, not better: those tiny boxes were memorizing flukes, not learning the shape.",
-        "This is overfitting you can see — not a number in a table but a boundary gone visibly jagged, sprouting one-point islands in the other class's territory. The depth of the tree is its complexity knob, and the best held-out score sits at a shallow setting, not the deepest one. A tree's gift and its curse are the same thing: nobody told it where to stop.",
+        "Keep splitting and the tree will not stop until every box is pure — which, on noisy data, means drawing a tiny box around each stray point that wandered across the boundary. Training accuracy climbs to a perfect 100%. But the held-out score doesn't follow it up; the gap between the two yawns open, because those tiny boxes are memorizing flukes, not learning the shape.",
+        "This is overfitting you can see — not a number in a table but a boundary gone visibly jagged, sprouting a few one-point islands in the other class's territory. The depth of the tree is its complexity knob, and the best held-out score sits at a shallow setting, not the deepest one. A tree's gift and its curse are the same thing: nobody told it where to stop.",
       ],
     },
   ],

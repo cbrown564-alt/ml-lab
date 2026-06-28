@@ -5,27 +5,25 @@ import type { TreeNode } from "@/lib/models/decision-tree";
 
 /**
  * The tree itself, drawn — the signature visual of the node. A node-link diagram of the
- * fitted CART: internal nodes are the yes/no questions ("x₁ ≤ 0.42"), leaves are class
- * votes tinted the same amber/blue as the plane and saturated by their purity. It is the
- * coordinated partner of the decision field: the same model, once as boxes on the plane
- * and once as the cascade of questions that drew them. Grown deep, the diagram sprawls
- * into a visible thicket — overfitting you can read at a glance.
+ * fitted CART: internal nodes are the yes/no questions ("x₁ ≤ 0.42"), leaves are little
+ * pies sized by how many training points fell in them and split amber/blue by their class
+ * mixture (R2D3's leaf-pie idiom — a solid disc is a pure leaf, a halved one is a 50/50
+ * box). It is the coordinated partner of the decision field: the same model, once as boxes
+ * on the plane and once as the cascade of questions that drew them. Grown deep, the labels
+ * drop away past a few levels and the pies multiply into a visible thicket — overfitting
+ * you can read at a glance.
  */
 
-// Class hues echoing DecisionField (amber = class 0, blue = class 1), pale at 50/50.
-const AMBER = [206, 158, 74];
-const BLUE = [78, 120, 200];
-const PALE = [236, 233, 226];
-const mix = (a: number[], b: number[], t: number) =>
-  `rgb(${Math.round(a[0] + (b[0] - a[0]) * t)}, ${Math.round(a[1] + (b[1] - a[1]) * t)}, ${Math.round(a[2] + (b[2] - a[2]) * t)})`;
-const leafColor = (prob1: number) => {
-  const conf = Math.abs(prob1 - 0.5) * 2;
-  return mix(PALE, prob1 >= 0.5 ? BLUE : AMBER, conf * 0.85);
-};
+// Class hues echoing DecisionField (amber = class 0, blue = class 1).
+const AMBER = "rgb(196, 150, 68)";
+const BLUE = "rgb(72, 112, 190)";
 
-const SLOT = 66; // horizontal pixels per leaf
-const LEVEL = 72; // vertical pixels per depth level
-const PAD = 18;
+const SLOT = 64; // horizontal pixels per leaf
+const LEVEL = 70; // vertical pixels per depth level
+const PAD = 22;
+/** Past this depth the split labels are illegible, so internal nodes shrink to a dot and
+ * only the leaf pies carry meaning — the sprawl then reads as "look how complex" by design. */
+const MAX_LABEL_DEPTH = 4;
 
 type Placed = {
   node: TreeNode;
@@ -47,7 +45,6 @@ function layout(tree: TreeNode): { placed: Placed[]; leaves: number; maxDepth: n
       placed.push({ node, x, depth, parent });
       return x;
     }
-    // Place children first so the split sits centred above them.
     const self = { x: 0, depth };
     const lx = walk(node.left, depth + 1, self);
     const rx = walk(node.right, depth + 1, self);
@@ -63,6 +60,32 @@ function layout(tree: TreeNode): { placed: Placed[]; leaves: number; maxDepth: n
 
 const featLabel = (f: 0 | 1) => (f === 0 ? "x₁" : "x₂");
 
+/** An SVG arc slice from fraction a→b of a circle, starting at the top, clockwise. */
+function slice(cx: number, cy: number, r: number, a: number, b: number): string {
+  const ang = (f: number) => f * 2 * Math.PI - Math.PI / 2;
+  const x0 = cx + r * Math.cos(ang(a));
+  const y0 = cy + r * Math.sin(ang(a));
+  const x1 = cx + r * Math.cos(ang(b));
+  const y1 = cy + r * Math.sin(ang(b));
+  const large = b - a > 0.5 ? 1 : 0;
+  return `M ${cx} ${cy} L ${x0.toFixed(2)} ${y0.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z`;
+}
+
+function LeafPie({ cx, cy, counts }: { cx: number; cy: number; counts: [number, number] }) {
+  const n = counts[0] + counts[1];
+  const r = Math.max(6, Math.min(18, 5 + Math.sqrt(n) * 1.7));
+  const f0 = n === 0 ? 0 : counts[0] / n; // class-0 (amber) fraction
+  if (f0 >= 0.999 || f0 <= 0.001) {
+    return <circle cx={cx} cy={cy} r={r} fill={f0 >= 0.5 ? AMBER : BLUE} stroke="var(--surface-bg)" strokeWidth={1.5} />;
+  }
+  return (
+    <g stroke="var(--surface-bg)" strokeWidth={1}>
+      <path d={slice(cx, cy, r, 0, f0)} fill={AMBER} />
+      <path d={slice(cx, cy, r, f0, 1)} fill={BLUE} />
+    </g>
+  );
+}
+
 export function DecisionTreeDiagram({
   tree,
   caption,
@@ -76,9 +99,8 @@ export function DecisionTreeDiagram({
   const w = Math.max(leaves, 1) * SLOT;
   const h = (maxDepth + 1) * LEVEL;
   const px = (x: number) => PAD + (x / Math.max(leaves, 1)) * (w - 2 * PAD);
-  const py = (depth: number) => PAD + depth * LEVEL + 22;
+  const py = (depth: number) => PAD + depth * LEVEL + 16;
 
-  // Just the root before any question is asked (depth-0 leaf) reads as "no questions yet".
   const onlyRoot = tree.kind === "leaf";
 
   return (
@@ -94,11 +116,10 @@ export function DecisionTreeDiagram({
         aria-label={
           onlyRoot
             ? "A decision tree with no questions yet — a single leaf voting the majority class."
-            : `A decision tree of ${leaves} leaves and depth ${maxDepth}: internal nodes test one feature against a threshold, leaves vote a class.`
+            : `A decision tree of ${leaves} leaves and depth ${maxDepth}: internal nodes test one feature against a threshold; each leaf is a pie sized by its training count and split by class.`
         }
         className="h-auto w-full select-none"
       >
-        {/* edges */}
         {placed
           .filter((p) => p.parent)
           .map((p, i) => (
@@ -112,24 +133,17 @@ export function DecisionTreeDiagram({
               strokeWidth={1.4}
             />
           ))}
-        {/* nodes */}
         {placed.map((p, i) => {
           if (p.node.kind === "leaf") {
-            return (
-              <g key={`n${i}`}>
-                <circle
-                  cx={px(p.x)}
-                  cy={py(p.depth)}
-                  r={11}
-                  fill={leafColor(p.node.prob1)}
-                  stroke="var(--surface-bg)"
-                  strokeWidth={1.5}
-                />
-              </g>
-            );
+            return <LeafPie key={`n${i}`} cx={px(p.x)} cy={py(p.depth)} counts={p.node.counts} />;
+          }
+          // Past the legible depth, internal nodes shrink to a dot.
+          if (p.depth > MAX_LABEL_DEPTH) {
+            return <circle key={`n${i}`} cx={px(p.x)} cy={py(p.depth)} r={3.5} fill="var(--viz-param)" />;
           }
           const label = `${featLabel(p.node.feature)} ≤ ${p.node.threshold.toFixed(2)}`;
-          const half = 30;
+          // Auto-fit the pill to its label (mono ≈ 7.3px/char at 13px) — no fixed half-width.
+          const half = Math.max(26, label.length * 3.8 + 9);
           return (
             <g key={`n${i}`}>
               <rect
