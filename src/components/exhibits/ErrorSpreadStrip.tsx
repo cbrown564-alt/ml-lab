@@ -34,7 +34,7 @@ export function ErrorSpreadStrip({
    * split reads as one draw from the distribution, not a lone bar in an empty plot. */
   ghostErrs?: number[];
 }) {
-  const m = { l: 16, r: 16, t: 34, b: 22 };
+  const m = { l: 16, r: 16, t: 46, b: 22 };
   const plotW = width - m.l - m.r;
   const plotH = height - m.t - m.b;
   const x = (e: number) => m.l + (Math.min(e, axisMax) / axisMax) * plotW;
@@ -120,7 +120,8 @@ export function ErrorSpreadStrip({
           let row = 0;
           while (placed.some((p) => p.row === row && Math.abs(p.lx - lx) < 92)) row++;
           placed.push({ lx, row });
-          const ly = m.t - 8 - row * 12;
+          // Stacked rows climb toward the top margin; never let a label leave the frame.
+          const ly = Math.max(12, m.t - 8 - row * 12);
           return (
             <g key={i}>
               <line x1={mx} x2={mx} y1={ly + 3} y2={height - m.b} stroke={mk.color} strokeWidth={2} />

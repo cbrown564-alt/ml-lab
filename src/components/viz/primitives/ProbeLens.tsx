@@ -98,8 +98,15 @@ export function ProbeLens({
           }}
           role="tooltip"
         >
-          <div className="flex h-full w-full items-center justify-center p-3 text-center text-xs">
-            {probe}
+          {/* Keep content inside the circle's inscribed square (≈0.71×diameter) so
+              corners — e.g. a flush-left caption — never clip on the round edge. */}
+          <div className="flex h-full w-full items-center justify-center text-center text-xs">
+            <div
+              className="flex flex-col items-center justify-center"
+              style={{ width: lensSize * 0.66, height: lensSize * 0.66 }}
+            >
+              {probe}
+            </div>
           </div>
         </div>
       )}

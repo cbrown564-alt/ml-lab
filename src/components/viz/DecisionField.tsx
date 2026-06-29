@@ -18,7 +18,10 @@ const MARGIN = { top: 14, right: 14, bottom: 36, left: 44 };
 // points read on top; saturation grows with confidence |p − ½|.
 const AMBER = [206, 158, 74];
 const BLUE = [78, 120, 200];
-const PALE = [248, 246, 241];
+// A soft warm neutral, distinctly below the raised-surface cream (#fffcf8) so the
+// low-confidence zone reads as a faint "unsure" panel — not a hole in the card. The
+// boosted classifier's wide near-½ band was vanishing into the background at this end.
+const PALE = [239, 236, 228];
 
 const mix = (a: number[], b: number[], t: number) =>
   `rgb(${Math.round(a[0] + (b[0] - a[0]) * t)}, ${Math.round(a[1] + (b[1] - a[1]) * t)}, ${Math.round(a[2] + (b[2] - a[2]) * t)})`;

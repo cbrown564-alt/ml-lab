@@ -166,7 +166,7 @@ export function FeatureScalingLab() {
             caption="The shape of the walk"
             stats={[
               { label: "condition #", value: kappa < 10 ? kappa.toFixed(1) : Math.round(kappa).toString(), hue: "var(--viz-error)", note: "bowl stretch — 1 is round" },
-              { label: "stable step η", value: lr.toFixed(3), hue: "var(--viz-param)", note: "largest safe rate here" },
+              { label: <>stable step <span className="normal-case">η</span></>, value: lr.toFixed(3), hue: "var(--viz-param)", note: "largest safe rate here" },
               { label: "steps to floor", value: steps >= MAX_STEPS ? `${MAX_STEPS}+` : String(steps), hue: "var(--viz-prediction)" },
             ]}
           />

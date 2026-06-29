@@ -94,7 +94,7 @@ export function FeatureScalingStory() {
           stats={[
             { label: "condition #", value: kappa < 10 ? kappa.toFixed(1) : Math.round(kappa).toString(), hue: "var(--viz-error)", note: "1 is round" },
             { label: "steps to floor", value: steps >= MAX_STEPS ? `${MAX_STEPS}+` : String(steps), hue: "var(--viz-prediction)" },
-            { label: "stable step η", value: stableLearningRate(points).toFixed(3), hue: "var(--viz-param)" },
+            { label: <>stable step <span className="normal-case">η</span></>, value: stableLearningRate(points).toFixed(3), hue: "var(--viz-param)" },
           ]}
         />
       </div>

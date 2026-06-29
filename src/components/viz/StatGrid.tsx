@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 /**
  * A live estimates strip — the Seeing Theory move (docs/exemplars/seeing-theory
  * teardown): a compact table of the numbers that the geometry above is showing,
@@ -9,8 +11,10 @@
  */
 
 export type Stat = {
-  /** Short uppercase caption, e.g. "slope ŵ". */
-  label: string;
+  /** Short uppercase caption, e.g. "slope ŵ". The cell applies CSS `uppercase`, which
+   * mangles lowercase Greek (η → Η, identical to "H"); wrap such symbols in a
+   * `<span className="normal-case">…</span>` to keep them legible — hence ReactNode. */
+  label: ReactNode;
   /** Formatted value, set in the mono voice the readouts speak. */
   value: string;
   /** A visual-grammar token (e.g. "var(--viz-prediction)") to tie it to a mark. */
@@ -42,8 +46,8 @@ export function StatGrid({
       )}
       {direction === "row" ? (
         <dl className="grid grid-flow-col auto-cols-fr divide-x divide-line overflow-hidden rounded-lg border border-line">
-          {stats.map((s) => (
-            <div key={s.label} className="px-3 py-2.5">
+          {stats.map((s, i) => (
+            <div key={i} className="px-3 py-2.5">
               <dt className="font-mono text-[10px] tracking-wider text-ink-faint uppercase">
                 {s.label}
               </dt>
@@ -63,9 +67,9 @@ export function StatGrid({
         </dl>
       ) : (
         <dl className="divide-y divide-line overflow-hidden rounded-lg border border-line">
-          {stats.map((s) => (
+          {stats.map((s, i) => (
             <div
-              key={s.label}
+              key={i}
               className="flex items-baseline justify-between gap-4 px-3 py-2"
             >
               <dt className="font-mono text-[11px] tracking-wider text-ink-faint uppercase">
