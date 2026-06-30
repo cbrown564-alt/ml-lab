@@ -84,7 +84,7 @@ function Graphic({ stage }: { stage: WhatIsMlFrame["stage"] }) {
         </g>
       )}
       {showLearning && (
-        <PlotLabel x={x(xd0) + 12} y={y(yd1) + 18} anchor="start" fill="var(--viz-truth-ink)">
+        <PlotLabel x={x(xd0) + 12} y={y(yd1) + 18} anchor="start">
           labelled examples →
         </PlotLabel>
       )}

@@ -124,8 +124,8 @@ function TreesAccuracyChart({ current }: { current: number }) {
   const m = { top: 12, right: 12, bottom: 24, left: 30 };
   const maxT = forestAccCurve[forestAccCurve.length - 1].nTrees;
   const xs = (t: number) => m.left + (Math.log(t) / Math.log(maxT)) * (w - m.left - m.right);
-  const lo = 0.84;
-  const hi = 0.95;
+  const lo = 0.87;
+  const hi = 0.94;
   const ys = (a: number) => h - m.bottom - ((a - lo) / (hi - lo)) * (h - m.top - m.bottom);
   const path = forestAccCurve
     .map((r, i) => `${i === 0 ? "M" : "L"}${xs(r.nTrees).toFixed(1)},${ys(r.testAccuracy).toFixed(1)}`)
@@ -144,7 +144,7 @@ function TreesAccuracyChart({ current }: { current: number }) {
         className="h-auto w-full"
       >
         <line x1={xs(Math.max(1, current))} y1={m.top} x2={xs(Math.max(1, current))} y2={h - m.bottom} stroke="var(--viz-param)" strokeWidth={1.5} strokeDasharray="3 3" opacity={0.7} />
-        {[0.9, 0.85].map((a) => (
+        {([0.93, 0.92, 0.9, 0.88] as const).map((a) => (
           <text key={a} x={m.left - 4} y={ys(a) + 3} textAnchor="end" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">{Math.round(a * 100)}</text>
         ))}
         <path d={path} fill="none" stroke="var(--accent)" strokeWidth={2.25} />

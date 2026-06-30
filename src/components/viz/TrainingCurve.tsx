@@ -23,12 +23,15 @@ export function TrainingCurve({
   cursor,
   width = 440,
   height = 420,
+  emptyHint = "press play · watch the loss fall",
 }: {
   trace: ReadonlyArray<DescentStep>;
   /** Index into the trace currently shown by the exhibit (scrub position). */
   cursor: number;
   width?: number;
   height?: number;
+  /** Shown centered when the curve has not started yet (step 0, before play/replay). */
+  emptyHint?: string;
 }) {
   const finite = trace.filter((s) => Number.isFinite(s.loss));
 
@@ -66,15 +69,20 @@ export function TrainingCurve({
   for (let d = lo; d <= hi; d += decadeStep) decades.push(d);
 
   const current = trace[Math.min(cursor, trace.length - 1)];
+  const awaitingCurve = trace.length <= 1;
+  const plotCx = (MARGIN.left + width - MARGIN.right) / 2;
+  const plotCy = (MARGIN.top + height - MARGIN.bottom) / 2;
 
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
       role="img"
       aria-label={
-        current
-          ? `Training curve: loss over ${trace.length - 1} descent steps, log scale. At step ${current.step} the loss is ${Number.isFinite(current.loss) ? current.loss.toPrecision(3) : "infinite"}.`
-          : "Training curve: loss over descent steps, log scale."
+        awaitingCurve
+          ? `Training curve: loss over descent steps, log scale. ${emptyHint}.`
+          : current
+            ? `Training curve: loss over ${trace.length - 1} descent steps, log scale. At step ${current.step} the loss is ${Number.isFinite(current.loss) ? current.loss.toPrecision(3) : "infinite"}.`
+            : "Training curve: loss over descent steps, log scale."
       }
       className="h-auto w-full select-none"
     >
@@ -123,6 +131,24 @@ export function TrainingCurve({
         <text x={MARGIN.left} y={MARGIN.top - 4} fontSize={11} fill="var(--ink-faint)">
           loss (log)
         </text>
+
+        {awaitingCurve && (
+          <text
+            x={plotCx}
+            y={plotCy}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize={11}
+            fontFamily="var(--font-mono)"
+            letterSpacing="0.06em"
+            paintOrder="stroke"
+            stroke="var(--surface-bg)"
+            strokeWidth={3}
+            fill="var(--ink-faint)"
+          >
+            {emptyHint}
+          </text>
+        )}
 
         {trace.length > 1 && (
           <polyline

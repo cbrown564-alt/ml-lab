@@ -94,14 +94,14 @@ neighbour or container) is the same disease as half the register.
 | linear-regression | run-full | MAJOR | SquaredPenalty's default square is 44px and fails its own `> 46` label guard by 2px → anonymous unlabelled square on ~80% empty canvas | `SquaredPenalty.tsx:28-29, 71`; `…/math.ts:30` | ✅ guard + default residual | ✔︎ |
 | loss-functions | see | MAJOR | LossShapes draws non-selected curves at 0.28 opacity → effectively invisible; the 3-shape comparison reads as one curve | `LossShapes.tsx:70-71` | ✅ opacity 0.28→0.58 | ✔︎ |
 | logistic-regression | hero, see | MAJOR | the decision boundary overshoots the plot border ~19px into x-tick labels (`clampPx` is ±2000, not `[0, height]`) | `DecisionField.tsx:33` | ✅ SVG clipPath on plot | ✔︎ |
-| overfitting-regularization | see-beat-3, break | BLOCKER* | the fitted curve still spikes past the chart edge even at λ=0.30 ("REINED IN"), and the spike *reverses direction* — looks like the chart misbehaving | Runge artifact in `PolyCurve` on `xDomain=[-0.02,1.02]`; `RegularizationHero.tsx:164-165` | 🔶 *framing/crop call, not a pure bug* | |
+| overfitting-regularization | see-beat-3, break | BLOCKER* | the fitted curve still spikes past the chart edge even at λ=0.30 ("REINED IN"), and the spike *reverses direction* — looks like the chart misbehaving | Runge artifact in `PolyCurve` on `xDomain=[-0.02,1.02]`; `RegularizationHero.tsx:164-165` | ✅ clipPath + xDomain [0,1] | ✔︎ |
 | overfitting-regularization | see, break | MAJOR | the "best λ" line sits noticeably right of where the test-error curve visually bottoms (y-axis hard-clamps at 0.5, flattening the left descent) | `RegularizationCurves.tsx:46, 51, 66` | ✅ data-driven yMax | ✔︎ |
-| overfitting-regularization | hero | MINOR | hero labels the chart "Coefficients" but plots `|w|` magnitudes (break-it correctly says `|Wᵢ|`) | `RegularizationHero.tsx:75` vs `:89` | 🔶 | |
-| regression-task | see-beat-2 | MINOR | the "distance" residual label lacks the `paintOrder="stroke"` halo every other annotation in the exhibit uses | `RegressionTaskStory.tsx:79` | 🔶 | |
-| what-is-ml | see-beat-3 | MINOR | "labelled examples →" is amber (class-0 ink) but refers to the whole labelled set incl. blue class-1 dots | `WhatIsMlStory.tsx:87` | 🔶 | |
-| linear-regression | see | MINOR | StatGrid's MSE note makes that cell taller; the 5 value-only cells get a dangling bottom gap, breaking the strip's rhythm | `LinearRegressionStory.tsx:191`; `StatGrid.tsx:56-59` | 🔶 | |
-| gradient-descent | break, explain | MINOR | the step-0 log-loss chart is ~95% empty with no "press play" empty-state | not pinned (`TrainingCurve` initial render) | 🔶 | |
-| random-forests | run-full | MINOR | "held-out vs forest size" y-axis ticks (85, 90) omit the ~92-93% plateau the chart exists to show | `RandomForestLab.tsx:147` | 🔶 | |
+| overfitting-regularization | hero | MINOR | hero labels the chart "Coefficients" but plots `|w|` magnitudes (break-it correctly says `|Wᵢ|`) | `RegularizationHero.tsx:75` vs `:89` | ✅ label → `\|wⱼ\|` | ✔︎ |
+| regression-task | see-beat-2 | MINOR | the "distance" residual label lacks the `paintOrder="stroke"` halo every other annotation in the exhibit uses | `RegressionTaskStory.tsx:79` | ✅ halo ported from Hero | ✔︎ |
+| what-is-ml | see-beat-3 | MINOR | "labelled examples →" is amber (class-0 ink) but refers to the whole labelled set incl. blue class-1 dots | `WhatIsMlStory.tsx:87` | ✅ → `--viz-neutral-ink` | ✔︎ |
+| linear-regression | see | MINOR | StatGrid's MSE note makes that cell taller; the 5 value-only cells get a dangling bottom gap, breaking the strip's rhythm | `LinearRegressionStory.tsx:191`; `StatGrid.tsx:56-59` | ✅ note-row placeholder in StatGrid | ✔︎ |
+| gradient-descent | break, explain | MINOR | the step-0 log-loss chart is ~95% empty with no "press play" empty-state | not pinned (`TrainingCurve` initial render) | ✅ emptyHint overlay | ✔︎ |
+| random-forests | run-full | MINOR | "held-out vs forest size" y-axis ticks (85, 90) omit the ~92-93% plateau the chart exists to show | `RandomForestLab.tsx:147` | ✅ domain 87–94%, ticks 88/90/92/93 | ✔︎ |
 
 *what-is-ml is otherwise clean.*
 
@@ -119,6 +119,20 @@ Six commits on `cursor/fix-major-visual-defects-8cfc`, bundled by pattern:
 6. **Singletons** — `4c350b5`
 
 Verified: typecheck + 256 unit tests green. Remaining queue: MINOR items + overfitting BLOCKER* (framing/crop call).
+
+## Remaining pass — completed 2026-06-30
+
+Six parallel agents on `cursor/fix-remaining-visual-defects-3f48`:
+
+1. **overfitting BLOCKER*** — `PolyCurve` clipPath + xDomain `[0,1]` across all Regularization views
+2. **overfitting MINOR** — hero label `|wⱼ|`
+3. **regression-task** — distance label halo
+4. **what-is-ml** — neutral ink for dataset-wide label
+5. **linear-regression** — StatGrid note-row rhythm
+6. **gradient-descent** — TrainingCurve empty-state hint
+7. **random-forests** — y-axis domain/ticks for plateau
+
+Verified: typecheck + 256 unit tests green. **Audit queue empty.**
 
 ⚠️ The majors include more agent-only findings than the blockers did. **Re-verify each geometry against pixels before touching it** — agents cite file:line but can miscompute.
 
