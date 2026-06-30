@@ -37,6 +37,9 @@ export function StatGrid({
   /** Optional wrapper class — e.g. `chrome-redundant-metrics` when See-it already showed these numbers. */
   className?: string;
 }) {
+  const rowHasNotes =
+    direction === "row" && stats.some((s) => s.note != null && s.note !== "");
+
   return (
     <div className={className}>
       {caption && (
@@ -57,9 +60,14 @@ export function StatGrid({
               >
                 {s.value}
               </dd>
-              {s.note && (
-                <dd className="mt-0.5 text-[10px] leading-tight text-ink-faint">
-                  {s.note}
+              {rowHasNotes && (
+                <dd
+                  className={`mt-0.5 text-[10px] leading-tight ${
+                    s.note ? "text-ink-faint" : "invisible select-none"
+                  }`}
+                  aria-hidden={!s.note}
+                >
+                  {s.note ?? "\u00a0"}
                 </dd>
               )}
             </div>

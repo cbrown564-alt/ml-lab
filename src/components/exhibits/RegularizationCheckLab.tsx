@@ -85,7 +85,7 @@ export function RegularizationCheckLab() {
       <Plot
         width={460}
         height={240}
-        xDomain={[-0.02, 1.02]}
+        xDomain={[0, 1]}
         yDomain={[-1.55, 1.55]}
         ariaLabel={`A degree-${REG_DEGREE} ridge fit at λ ${lambdaLabel}: train ${trainErr.toFixed(
           2,

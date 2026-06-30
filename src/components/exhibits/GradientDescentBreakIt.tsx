@@ -145,7 +145,7 @@ export function GradientDescentBreakIt() {
             {!offTheCliff(viewing) && <FitLine params={viewing.params} />}
             <DataPoints points={POINTS} />
           </Plot>
-          <TrainingCurve trace={trace} cursor={cursor} width={640} height={172} />
+          <TrainingCurve trace={trace} cursor={cursor} width={640} height={172} emptyHint="press replay · watch the loss fall" />
           <input
             type="range"
             aria-label="Scrub through descent steps"

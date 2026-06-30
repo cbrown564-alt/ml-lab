@@ -76,7 +76,18 @@ function Points({ mode }: { mode: RegressionTaskFrame["mode"] }) {
           <line x1={x(DEMO.x)} x2={x(DEMO.x)} y1={y(DEMO_PRED)} y2={y(DEMO.y)} stroke="var(--viz-error)" strokeWidth={2.5} />
           <line x1={x(DEMO.x) - 24} x2={x(DEMO.x) + 24} y1={y(DEMO_PRED)} y2={y(DEMO_PRED)} stroke="var(--viz-prediction)" strokeWidth={3} strokeLinecap="round" />
           <circle cx={x(DEMO.x)} cy={y(DEMO_PRED)} r={5.5} fill="var(--viz-prediction)" stroke="var(--surface-bg)" strokeWidth={1.5} />
-          <text x={x(DEMO.x) + 10} y={(y(DEMO_PRED) + y(DEMO.y)) / 2} fontSize={12} fontWeight={600} fill="var(--viz-error-ink)">distance</text>
+          <text
+            x={x(DEMO.x) + 10}
+            y={(y(DEMO_PRED) + y(DEMO.y)) / 2}
+            fontSize={12}
+            fontFamily="var(--font-mono)"
+            paintOrder="stroke"
+            stroke="var(--surface-bg)"
+            strokeWidth={3}
+            fill="var(--viz-error-ink)"
+          >
+            distance
+          </text>
         </g>
       )}
     </g>

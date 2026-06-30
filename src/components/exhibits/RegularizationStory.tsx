@@ -47,7 +47,7 @@ export function RegularizationStory() {
       <Plot
         width={640}
         height={420}
-        xDomain={[-0.02, 1.02]}
+        xDomain={[0, 1]}
         yDomain={[-1.8, 1.8]}
         ariaLabel={`A degree-${REG_DEGREE} polynomial with ridge penalty λ = ${lambda.toExponential(1)}; training error ${trainErr.toFixed(3)}, test error ${testErr.toFixed(3)}. ${regime}.`}
       >

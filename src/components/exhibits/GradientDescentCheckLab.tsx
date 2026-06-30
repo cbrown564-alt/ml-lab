@@ -76,7 +76,7 @@ export function GradientDescentCheckLab() {
         {!off(v) && <FitLine params={v.params} />}
         <DataPoints points={POINTS} />
       </Plot>
-      <TrainingCurve trace={trace} cursor={cursor} width={380} height={120} />
+      <TrainingCurve trace={trace} cursor={cursor} width={380} height={120} emptyHint="press replay · watch the loss fall" />
       <div className="mt-3">
         <ParamSlider def={LR_DEF} value={lr} onChange={setLr} />
       </div>

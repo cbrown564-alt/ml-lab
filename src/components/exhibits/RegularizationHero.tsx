@@ -72,7 +72,7 @@ function CoefTrace({
     <div className="mt-3 border-t border-line px-1 pt-3">
       <div className="mb-2.5 flex items-baseline justify-between gap-2">
         <span className="font-mono text-[11px] tracking-widest uppercase" style={{ color: "var(--viz-param-ink)" }}>
-          Coefficients
+          |wⱼ|
         </span>
         <span className="font-mono text-[11px] tracking-wide text-ink-faint uppercase tabular-nums">
           <span className="text-ink-muted">‖w‖ {norm.toFixed(1)}</span>
@@ -161,7 +161,7 @@ export function RegularizationHero() {
         <Plot
           width={1200}
           height={280}
-          xDomain={[-0.02, 1.02]}
+          xDomain={[0, 1]}
           yDomain={[-1.55, 1.55]}
           ariaLabel={`A degree-${REG_DEGREE} ridge fit with λ ${scrubLambda.toExponential(1)}: train ${scrubTrain.toFixed(2)}, test ${scrubTest.toFixed(2)}. ${kicker}.`}
         >
