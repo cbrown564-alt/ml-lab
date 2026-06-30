@@ -29,7 +29,7 @@ export function BoostingLossCurves({
 
   return (
     <figure>
-      <figcaption className="mb-1 font-mono text-[11px] tracking-widest text-ink-faint uppercase">
+      <figcaption className="mb-1 font-mono text-[11px] tracking-widest text-ink-muted uppercase">
         Log-loss vs rounds
       </figcaption>
       <svg
@@ -45,17 +45,17 @@ export function BoostingLossCurves({
         <line x1={xs(current)} y1={m.top} x2={xs(current)} y2={height - m.bottom} stroke="var(--viz-param)" strokeWidth={1.5} strokeDasharray="3 3" opacity={0.6} />
         {/* axes ticks */}
         {[0, 0.3, 0.6].map((ll) => (
-          <text key={ll} x={m.left - 4} y={ys(ll) + 3} textAnchor="end" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">{ll.toFixed(1)}</text>
+          <text key={ll} x={m.left - 4} y={ys(ll) + 3} textAnchor="end" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-muted)">{ll.toFixed(1)}</text>
         ))}
         {[1, 10, 100].map((r) => (
-          <text key={r} x={xs(r)} y={height - 8} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">{r}</text>
+          <text key={r} x={xs(r)} y={height - 8} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-muted)">{r}</text>
         ))}
         <path d={path("trainLL")} fill="none" stroke="var(--ink-muted)" strokeWidth={2} strokeDasharray="4 3" />
         <path d={path("testLL")} fill="none" stroke="var(--accent)" strokeWidth={2.25} />
       </svg>
-      <div className="mt-1 flex gap-4 font-mono text-[10px] text-ink-faint">
+      <div className="mt-1 flex gap-4 font-mono text-[10px] text-ink-muted">
         <span><span style={{ color: "var(--ink-muted)" }}>– –</span> train</span>
-        <span><span style={{ color: "var(--accent)" }}>—</span> held-out</span>
+        <span><span style={{ color: "var(--viz-accent-ink)" }}>—</span> held-out</span>
         <span>rounds →</span>
       </div>
     </figure>

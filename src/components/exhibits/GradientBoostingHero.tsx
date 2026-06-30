@@ -39,10 +39,10 @@ export function GradientBoostingHero() {
         <div className="grid gap-4 sm:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] sm:items-center">
           <div>
             <div className="flex items-baseline justify-between gap-2 px-1 pb-1">
-              <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
+              <span className="font-mono text-[11px] tracking-widest text-ink-muted uppercase">
                 boosted to the sweet spot
               </span>
-              <span className="font-mono text-[11px] tabular-nums" style={{ color: "var(--accent)" }}>{acc}%</span>
+              <span className="font-mono text-[11px] tabular-nums" style={{ color: "var(--viz-accent-ink)" }}>{acc}%</span>
             </div>
             <DecisionField
               points={boostPoints}

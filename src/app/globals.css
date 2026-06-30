@@ -54,6 +54,8 @@
   --viz-error-ink: oklch(48% 0.165 8);
   --viz-param-ink: oklch(47% 0.15 303);
   --viz-neutral-ink: oklch(45% 0.02 245);
+  /* Held-out / accent readouts in prose and small mono labels (≥ AA on --surface-bg). */
+  --viz-accent-ink: oklch(38% 0.085 190);
 
   /* One motion language lab-wide (docs/06, A5/B3): quick for microfeedback,
      move for state-to-state transitions the eye should follow. */
