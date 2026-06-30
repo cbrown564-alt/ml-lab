@@ -139,9 +139,9 @@ export function DataLeakageProvenancePipe({ leaky, r2, reveal = 1, className }: 
       })}
 
       <rect
-        x={stages[1].x - 44}
+        x={stages[1].x - 53}
         y={pipeY - 28}
-        width={88}
+        width={106}
         height={22}
         rx={4}
         fill="var(--surface-raised)"

@@ -43,7 +43,7 @@ export function NeuralNetCheckLab() {
         </div>
         <div className="rounded border border-line p-2">
           <dt className="font-mono text-[10px] tracking-widest text-ink-faint uppercase">gap</dt>
-          <dd className="font-mono text-base text-[var(--viz-error-ink)]">{tr - te}pt</dd>
+          <dd className={`font-mono text-base ${tr - te > 0 ? "text-[var(--viz-error-ink)]" : "text-[var(--viz-neutral-ink)]"}`}>{tr - te}pt</dd>
         </div>
       </dl>
     </figure>
