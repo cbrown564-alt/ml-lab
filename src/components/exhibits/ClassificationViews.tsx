@@ -27,6 +27,50 @@ const BIN_LAYOUT: Record<Outcome, { cx: number; cy: number; good: boolean; label
   tn: { cx: 308, cy: 252, good: true, label: "TN" },
 };
 
+/** Bin rect geometry — shared by the box stroke and dot layout. */
+const BIN = { w: 96, h: 52, cols: 4 } as const;
+/** Clearance for the largest mark (misclassified r + half stroke). */
+const DOT_CLEAR = 8;
+
+/** Place one landed dot inside its bin — never on the label or past the border. */
+function binDotPosition(
+  bin: { cx: number; cy: number },
+  stackIdx: number,
+  binCount: number,
+): { cx: number; cy: number } {
+  const xMin = bin.cx - BIN.w / 2 + DOT_CLEAR;
+  const xMax = bin.cx + BIN.w / 2 - DOT_CLEAR;
+  const yMin = bin.cy - BIN.h / 2 + DOT_CLEAR;
+  const yMax = bin.cy + BIN.h / 2 - DOT_CLEAR;
+
+  if (binCount <= 2) {
+    const hSpacing = binCount <= 1 ? 0 : Math.min(17, xMax - xMin);
+    return {
+      cx: bin.cx + (stackIdx - (binCount - 1) / 2) * hSpacing,
+      cy: (yMin + yMax) / 2,
+    };
+  }
+
+  const row = Math.floor(stackIdx / BIN.cols);
+  const col = stackIdx % BIN.cols;
+  const rowsNeeded = Math.ceil(binCount / BIN.cols);
+  const maxRows = Math.max(1, Math.floor((yMax - yMin) / 6.5) + 1);
+  const displayRows = Math.min(rowsNeeded, maxRows);
+  const clampedRow = Math.min(row, displayRows - 1);
+
+  const countInRow = Math.min(BIN.cols, binCount - clampedRow * BIN.cols);
+  const posInRow = Math.min(col, countInRow - 1);
+  const hSpacing = countInRow <= 1 ? 0 : Math.min(9, (xMax - xMin) / (BIN.cols - 1));
+  const cx =
+    countInRow <= 1 ? bin.cx : bin.cx + (posInRow - (countInRow - 1) / 2) * hSpacing;
+
+  const vSpan = yMax - yMin;
+  const rowPitch = displayRows <= 1 ? 0 : vSpan / (displayRows - 1);
+  const cy = displayRows <= 1 ? (yMin + yMax) / 2 : yMin + clampedRow * rowPitch;
+
+  return { cx, cy };
+}
+
 /**
  * Decision conveyor — observations ride the belt to the threshold gate and drop
  * into TP/FP/FN/TN bins; precision and recall update from what's landed.
@@ -122,16 +166,27 @@ export function DecisionConveyor({
         <line key={`ch${by}`} x1={tx} y1={by + 12} x2={tx} y2={150} stroke="var(--line)" strokeWidth={1.5} strokeDasharray="3 3" />
       ))}
 
+      <defs>
+        {(Object.keys(BIN_LAYOUT) as Outcome[]).map((key) => {
+          const b = BIN_LAYOUT[key];
+          return (
+            <clipPath key={key} id={`conveyor-bin-${key}`}>
+              <rect x={b.cx - BIN.w / 2 + 1} y={b.cy - BIN.h / 2 + 1} width={BIN.w - 2} height={BIN.h - 2} rx={5} />
+            </clipPath>
+          );
+        })}
+      </defs>
+
       {(Object.keys(BIN_LAYOUT) as Outcome[]).map((key) => {
         const b = BIN_LAYOUT[key];
         const n = counts[key];
         return (
           <g key={key}>
             <rect
-              x={b.cx - 48}
-              y={b.cy - 28}
-              width={96}
-              height={52}
+              x={b.cx - BIN.w / 2}
+              y={b.cy - BIN.h / 2}
+              width={BIN.w}
+              height={BIN.h}
               rx={6}
               fill={b.good ? "color-mix(in oklab, var(--viz-prediction) 8%, transparent)" : "color-mix(in oklab, var(--viz-error) 8%, transparent)"}
               stroke={b.good ? "var(--viz-prediction)" : "var(--viz-error)"}
@@ -159,25 +214,15 @@ export function DecisionConveyor({
       })}
       {landed.map((s, i) => {
         const out = outcomeOf(s, threshold);
-        const bin = BIN_LAYOUT[out];
         const beltY = s.y === 1 ? beltY1 : beltY0;
         const onBelt = animate && i === shown - 1 && shown < scored.length;
-        const stackIdx = landed.slice(0, i + 1).filter((p) => outcomeOf(p, threshold) === out).length - 1;
-        const binCount = landed.filter((p) => outcomeOf(p, threshold) === out).length;
-        const col = stackIdx % 4;
-        const row = Math.floor(stackIdx / 4);
-        const itemsInRow = Math.min(4, binCount - row * 4);
-        // Sparse FP/FN stacks (≤2 dots) need wider pitch than the 11px misclassified diameter.
-        const hSpacing = binCount <= 2 ? 14 : 9;
-        const cx = onBelt ? x(s.prob) : bin.cx + (col - (itemsInRow - 1) / 2) * hSpacing;
-        // Clamp the pile to the bin so dense bins don't overflow into the labels.
-        const cy = onBelt ? beltY : bin.cy + 6 - Math.min(row, 4) * 8;
+        if (!onBelt) return null;
         const correct = out === "tp" || out === "tn";
         return (
           <circle
-            key={`${s.prob}-${s.y}-${i}`}
-            cx={cx}
-            cy={cy}
+            key={`belt-${s.prob}-${s.y}-${i}`}
+            cx={x(s.prob)}
+            cy={beltY}
             r={correct ? 4.5 : 5.5}
             fill={s.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"}
             stroke={correct ? "var(--surface-bg)" : "var(--viz-error)"}
@@ -186,6 +231,33 @@ export function DecisionConveyor({
           />
         );
       })}
+      {(Object.keys(BIN_LAYOUT) as Outcome[]).map((outKey) => (
+        <g key={outKey} clipPath={`url(#conveyor-bin-${outKey})`}>
+          {landed.map((s, i) => {
+            const out = outcomeOf(s, threshold);
+            if (out !== outKey) return null;
+            const onBelt = animate && i === shown - 1 && shown < scored.length;
+            if (onBelt) return null;
+            const bin = BIN_LAYOUT[out];
+            const stackIdx = landed.slice(0, i + 1).filter((p) => outcomeOf(p, threshold) === out).length - 1;
+            const binCount = landed.filter((p) => outcomeOf(p, threshold) === out).length;
+            const { cx, cy } = binDotPosition(bin, stackIdx, binCount);
+            const correct = out === "tp" || out === "tn";
+            return (
+              <circle
+                key={`${s.prob}-${s.y}-${i}`}
+                cx={cx}
+                cy={cy}
+                r={correct ? 4.5 : 5.5}
+                fill={s.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"}
+                stroke={correct ? "var(--surface-bg)" : "var(--viz-error)"}
+                strokeWidth={correct ? 1 : 2.5}
+                style={{ transition: moveTransition }}
+              />
+            );
+          })}
+        </g>
+      ))}
 
       {showMetrics && (
         <g transform="translate(448, 172)">
