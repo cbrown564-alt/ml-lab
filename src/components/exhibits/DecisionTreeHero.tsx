@@ -62,6 +62,7 @@ export function DecisionTreeHero() {
             domain={treeDomain}
             width={520}
             height={400}
+            fieldMode="crisp"
             label={`A depth-3 decision tree carving the same plane into ${leaves} axis-aligned boxes that follow the arcs — ${treeAcc}% of training points correct.`}
           />
         </Panel>

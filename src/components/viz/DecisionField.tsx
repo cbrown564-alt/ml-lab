@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useId, useMemo, useRef } from "react";
 import { linearScale } from "@/lib/viz/scale";
 import { boundaryX2, proba, type LabeledPoint, type LogisticParams } from "@/lib/models/logistic";
 
@@ -33,7 +33,12 @@ function fieldColor(p: number): string {
   return mix(PALE, hue, conf * 0.8);
 }
 
-const clampPx = (v: number) => Math.max(-2000, Math.min(2000, v));
+/** smooth = averaged / logistic fields (higher grid, browser interpolation);
+ *  crisp = axis-aligned step functions (pixelated upscaling, no hairline bleed). */
+const GRID = {
+  smooth: { cols: 280, rows: 234 },
+  crisp: { cols: 120, rows: 100 },
+} as const;
 
 export function DecisionField({
   points,
@@ -44,6 +49,7 @@ export function DecisionField({
   height = 460,
   showProb = true,
   label,
+  fieldMode = "smooth",
 }: {
   points: LabeledPoint[];
   /** The linear classifier — used for the field and the straight boundary line. */
@@ -59,14 +65,18 @@ export function DecisionField({
   /** Override the accessible description — the default names a logistic boundary, but
    * the same field serves any classifier (e.g. a decision tree's box regions). */
   label?: string;
+  /** crisp for decision-tree staircases; smooth for logistic / forest averages. */
+  fieldMode?: "smooth" | "crisp";
 }) {
   const predict = useMemo(
     () => predictProba ?? ((x1: number, x2: number) => proba(params!, x1, x2)),
     [predictProba, params],
   );
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const cols = 120;
-  const rows = 100;
+  const clipId = useId();
+  const { cols, rows } = GRID[fieldMode];
+  const plotW = width - MARGIN.left - MARGIN.right;
+  const plotH = height - MARGIN.top - MARGIN.bottom;
 
   const sx = linearScale(domain, [MARGIN.left, width - MARGIN.right]);
   const sy = linearScale(domain, [height - MARGIN.bottom, MARGIN.top]);
@@ -90,7 +100,7 @@ export function DecisionField({
         ctx.fillRect(c, rows - 1 - r, 1, 1);
       }
     }
-  }, [params, predictProba, domain, showProb]);
+  }, [params, predictProba, domain, showProb, cols, rows]);
 
   const acc = useMemo(
     () => points.reduce((n, p) => n + ((predict(p.x1, p.x2) >= 0.5 ? 1 : 0) === p.y ? 1 : 0), 0),
@@ -115,7 +125,7 @@ export function DecisionField({
           top: `${(MARGIN.top / height) * 100}%`,
           width: `${((width - MARGIN.left - MARGIN.right) / width) * 100}%`,
           height: `${((height - MARGIN.top - MARGIN.bottom) / height) * 100}%`,
-          imageRendering: "auto",
+          imageRendering: fieldMode === "crisp" ? "pixelated" : "auto",
         }}
       />
       <svg
@@ -127,7 +137,12 @@ export function DecisionField({
         }
         className="absolute inset-0 h-full w-full select-none"
       >
-        <rect x={MARGIN.left} y={MARGIN.top} width={width - MARGIN.left - MARGIN.right} height={height - MARGIN.top - MARGIN.bottom} fill="none" stroke="var(--line)" />
+        <defs>
+          <clipPath id={clipId}>
+            <rect x={MARGIN.left} y={MARGIN.top} width={plotW} height={plotH} />
+          </clipPath>
+        </defs>
+        <rect x={MARGIN.left} y={MARGIN.top} width={plotW} height={plotH} fill="none" stroke="var(--line)" />
         {/* Axis ticks orient on full-size fields; on small-multiple tiles (a forest's member
             strip) they're clutter that buries the boundary, so they drop out. */}
         {width > 240 && (
@@ -143,10 +158,11 @@ export function DecisionField({
         {/* the p = ½ decision boundary */}
         {Number.isFinite(by0) && Number.isFinite(by1) && (
           <line
-            x1={clampPx(sx(d0))}
-            y1={clampPx(sy(by0))}
-            x2={clampPx(sx(d1))}
-            y2={clampPx(sy(by1))}
+            x1={sx(d0)}
+            y1={sy(by0)}
+            x2={sx(d1)}
+            y2={sy(by1)}
+            clipPath={`url(#${clipId})`}
             stroke="var(--ink)"
             strokeWidth={2}
             strokeDasharray="6 4"
