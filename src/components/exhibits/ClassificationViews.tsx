@@ -65,8 +65,11 @@ function binDotPosition(
     countInRow <= 1 ? bin.cx : bin.cx + (posInRow - (countInRow - 1) / 2) * hSpacing;
 
   const vSpan = yMax - yMin;
-  const rowPitch = displayRows <= 1 ? 0 : vSpan / (displayRows - 1);
-  const cy = displayRows <= 1 ? (yMin + yMax) / 2 : yMin + clampedRow * rowPitch;
+  const usableV = vSpan * 0.9;
+  const rowPitch = displayRows <= 1 ? 0 : usableV / (displayRows - 1);
+  const gridHeight = displayRows <= 1 ? 0 : rowPitch * (displayRows - 1);
+  const yOffset = (vSpan - gridHeight) / 2;
+  const cy = displayRows <= 1 ? (yMin + yMax) / 2 : yMin + yOffset + clampedRow * rowPitch;
 
   return { cx, cy };
 }
