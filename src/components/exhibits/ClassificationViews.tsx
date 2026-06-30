@@ -163,9 +163,15 @@ export function DecisionConveyor({
         const beltY = s.y === 1 ? beltY1 : beltY0;
         const onBelt = animate && i === shown - 1 && shown < scored.length;
         const stackIdx = landed.slice(0, i + 1).filter((p) => outcomeOf(p, threshold) === out).length - 1;
-        const cx = onBelt ? x(s.prob) : bin.cx + ((stackIdx % 4) - 1.5) * 9;
+        const binCount = landed.filter((p) => outcomeOf(p, threshold) === out).length;
+        const col = stackIdx % 4;
+        const row = Math.floor(stackIdx / 4);
+        const itemsInRow = Math.min(4, binCount - row * 4);
+        // Sparse FP/FN stacks (≤2 dots) need wider pitch than the 11px misclassified diameter.
+        const hSpacing = binCount <= 2 ? 14 : 9;
+        const cx = onBelt ? x(s.prob) : bin.cx + (col - (itemsInRow - 1) / 2) * hSpacing;
         // Clamp the pile to the bin so dense bins don't overflow into the labels.
-        const cy = onBelt ? beltY : bin.cy + 6 - Math.min(Math.floor(stackIdx / 4), 4) * 8;
+        const cy = onBelt ? beltY : bin.cy + 6 - Math.min(row, 4) * 8;
         const correct = out === "tp" || out === "tn";
         return (
           <circle
@@ -231,10 +237,10 @@ export function ProbabilityStrip({ scored, threshold }: { scored: Scored[]; thre
             key={i}
             cx={x(s.prob)}
             cy={rowOf(s.y)}
-            r={correct ? 5.5 : 6.5}
+            r={correct ? 4.5 : 5.5}
             fill={s.y === 1 ? "var(--viz-prediction)" : "var(--viz-truth)"}
             stroke={correct ? "var(--surface-bg)" : "var(--viz-error)"}
-            strokeWidth={correct ? 1.25 : 3}
+            strokeWidth={correct ? 1 : 2.5}
           />
         );
       })}
