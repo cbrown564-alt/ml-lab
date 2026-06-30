@@ -27,7 +27,7 @@ export const linearRegressionMath: MathDrawerContent = {
         {
           kind: "widget",
           widget: "penalty",
-          config: { maxResidual: 8, defaultResidual: 2 },
+          config: { maxResidual: 8, defaultResidual: 2.5 },
         },
         {
           kind: "prose",

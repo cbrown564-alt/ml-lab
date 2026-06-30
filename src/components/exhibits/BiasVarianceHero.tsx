@@ -100,9 +100,6 @@ export function BiasVarianceHero() {
         <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">
           The bias–variance tradeoff
         </span>
-        <span className="hidden font-mono text-[11px] tracking-widest text-ink-faint uppercase sm:inline">
-          degree {degree} · test {testErr.toFixed(2)}
-        </span>
       </figcaption>
       <div className="px-3 py-3">
         <div className="mb-2 flex items-baseline justify-between gap-2 px-1">

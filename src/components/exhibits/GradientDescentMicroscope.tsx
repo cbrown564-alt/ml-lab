@@ -69,17 +69,12 @@ function DecompositionBars({
   const stepInt = -learningRate * g.dIntercept;
   const dLoss = after.loss - before.loss;
 
-  const scale =
-    38 /
-    Math.max(
-      0.01,
-      Math.abs(g.dSlope),
-      Math.abs(g.dIntercept),
-      Math.abs(stepSlope),
-      Math.abs(stepInt),
-      Math.abs(dSlope),
-      Math.abs(dInt),
-    );
+  const maxBar = 38;
+  const pairScale = (a: number, b: number) =>
+    maxBar / Math.max(0.01, Math.abs(a), Math.abs(b));
+  const gradScale = pairScale(g.dSlope, g.dIntercept);
+  const stepScale = pairScale(stepSlope, stepInt);
+  const deltaScale = pairScale(dSlope, dInt);
   const barH = 11;
   const row = (y: number, label: string, w: number, fill: string, value: string, opacity = 1) => (
     <g key={label}>
@@ -103,12 +98,12 @@ function DecompositionBars({
       <text x={140} y={12} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
         ∇L → α·∇L → Δθ
       </text>
-      {row(28, "∂L/∂ŵ", Math.abs(g.dSlope) * scale, "var(--viz-param)", g.dSlope.toFixed(3))}
-      {row(52, "∂L/∂b", Math.abs(g.dIntercept) * scale, "var(--viz-param)", g.dIntercept.toFixed(3))}
-      {row(84, "Δŵ step", Math.abs(stepSlope) * scale, "var(--viz-param)", stepSlope.toFixed(4), 0.75)}
-      {row(108, "Δb step", Math.abs(stepInt) * scale, "var(--viz-param)", stepInt.toFixed(4), 0.75)}
-      {row(140, "Δŵ", Math.abs(dSlope) * scale, "var(--viz-prediction)", dSlope.toFixed(4))}
-      {row(164, "Δb", Math.abs(dInt) * scale, "var(--viz-prediction)", dInt.toFixed(4))}
+      {row(28, "∂L/∂ŵ", Math.abs(g.dSlope) * gradScale, "var(--viz-param)", g.dSlope.toFixed(3))}
+      {row(52, "∂L/∂b", Math.abs(g.dIntercept) * gradScale, "var(--viz-param)", g.dIntercept.toFixed(3))}
+      {row(84, "Δŵ step", Math.abs(stepSlope) * stepScale, "var(--viz-param)", stepSlope.toFixed(4), 0.75)}
+      {row(108, "Δb step", Math.abs(stepInt) * stepScale, "var(--viz-param)", stepInt.toFixed(4), 0.75)}
+      {row(140, "Δŵ", Math.abs(dSlope) * deltaScale, "var(--viz-prediction)", dSlope.toFixed(4))}
+      {row(164, "Δb", Math.abs(dInt) * deltaScale, "var(--viz-prediction)", dInt.toFixed(4))}
       <g transform="translate(0, 182)">
         <text fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
           LOSS {before.loss.toFixed(2)} → {after.loss.toFixed(2)} · ΔL={dLoss >= 0 ? "+" : ""}

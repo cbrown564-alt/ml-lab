@@ -14,8 +14,10 @@ import { gradient, magnitude } from "@/lib/models/gradient";
 const INIT = { x: 0.4, y: 1.0 };
 
 function TangentReadout({ gx, gy, mag }: { gx: number; gy: number; mag: number }) {
-  const max = Math.max(0.01, Math.abs(gx), Math.abs(gy));
-  const scale = 52 / max;
+  const maxBar = 52;
+  const maxMag = Math.max(0.01, Math.abs(gx), Math.abs(gy));
+  const scale = maxBar / Math.sqrt(maxMag);
+  const barW = (v: number) => Math.sqrt(Math.abs(v)) * scale;
   const midY = 36;
   const barH = 10;
 
@@ -28,15 +30,15 @@ function TangentReadout({ gx, gy, mag }: { gx: number; gy: number; mag: number }
         <text x={0} y={10} fontSize={8} fontFamily="var(--font-mono)" fill="var(--viz-neutral-ink)">
           ∂f/∂x
         </text>
-        <rect x={0} y={midY - barH / 2} width={Math.abs(gx) * scale} height={barH} rx={2} fill="var(--viz-neutral)" opacity={0.85} />
-        <text x={Math.abs(gx) * scale + 4} y={midY + 4} fontSize={9} fontFamily="var(--font-mono)" fill="var(--viz-neutral-ink)">
+        <rect x={0} y={midY - barH / 2} width={barW(gx)} height={barH} rx={2} fill="var(--viz-neutral)" opacity={0.85} />
+        <text x={barW(gx) + 4} y={midY + 4} fontSize={9} fontFamily="var(--font-mono)" fill="var(--viz-neutral-ink)">
           {gx.toFixed(3)}
         </text>
         <text x={0} y={58} fontSize={8} fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
           ∂f/∂y
         </text>
-        <rect x={0} y={62} width={Math.abs(gy) * scale} height={barH} rx={2} fill="var(--viz-param)" opacity={0.85} />
-        <text x={Math.abs(gy) * scale + 4} y={66} fontSize={9} fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
+        <rect x={0} y={62} width={barW(gy)} height={barH} rx={2} fill="var(--viz-param)" opacity={0.85} />
+        <text x={barW(gy) + 4} y={66} fontSize={9} fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
           {gy.toFixed(3)}
         </text>
       </svg>

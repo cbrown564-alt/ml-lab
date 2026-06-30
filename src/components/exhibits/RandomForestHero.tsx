@@ -46,6 +46,7 @@ export function RandomForestHero() {
             domain={forestDomain}
             width={520}
             height={400}
+            fieldMode="crisp"
             label={`A single fully-grown decision tree on two moons — a jagged, overfit staircase, ${SINGLE_ACC}% on held-out data.`}
           />
         </Panel>

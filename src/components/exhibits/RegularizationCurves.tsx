@@ -43,7 +43,10 @@ export function RegularizationCurves({
     return rows;
   }, [train, test, degree, lambdaMin, lambdaMax]);
 
-  const yMax = 0.5;
+  const yMax = useMemo(() => {
+    const peak = data.reduce((m, r) => Math.max(m, r.train, r.test), 0);
+    return peak > 0 ? peak * 1.08 : 0.5;
+  }, [data]);
   const m = { l: 36, r: 10, t: 12, b: 26 };
   const l0 = Math.log10(lambdaMin);
   const l1 = Math.log10(lambdaMax);

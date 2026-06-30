@@ -68,7 +68,7 @@ export function SquaredPenalty({ config }: { config: PenaltyConfig }) {
           r = {r.toFixed(1)}
         </text>
         {/* Area = the penalty, once the square is big enough to hold the label. */}
-        {side > 46 && (
+        {side > 42 && (
           <text
             x={left + side / 2}
             y={bottom - side / 2}
