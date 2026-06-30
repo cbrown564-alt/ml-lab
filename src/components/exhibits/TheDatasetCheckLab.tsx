@@ -11,8 +11,8 @@ import { corruptedRows, houses, toPoints } from "@content/exhibits/the-dataset/e
  * act instead of swapping it for two number tiles.
  *
  * Toggle the mistyped row and it appears as a red, high-leverage point at the top-left;
- * the live fit (red) tilts off the true trend (dashed) toward it. Untick it and the fit
- * (accent) snaps back onto the trend. One bad row drags the whole line — shown, with
+ * the live fit (prediction blue) tilts off the true trend (dashed) toward it. Untick it
+ * and the fit snaps back onto the trend. One bad row drags the whole line — shown, with
  * the slope and the 120 m² estimate beneath putting numbers on the damage.
  */
 const CLEAN = olsFit(toPoints(houses));
@@ -36,13 +36,13 @@ function DatasetScene({ fit, included }: { fit: LinearParams; included: boolean 
         strokeDasharray="6 4"
         opacity={0.5}
       />
-      {/* the live fit — red when the bad row drags it, accent when clean */}
+      {/* the live fit — same prediction hue as Break it */}
       <line
         x1={x(x0)}
         y1={y(at(fit, x0))}
         x2={x(x1)}
         y2={y(at(fit, x1))}
-        stroke={included ? "var(--viz-error)" : "var(--accent)"}
+        stroke="var(--viz-prediction)"
         strokeWidth={2.5}
         style={{ transition: "all var(--motion-move)" }}
       />

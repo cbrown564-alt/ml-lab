@@ -10,9 +10,8 @@ import { allExamples, regressionTrend } from "@content/exhibits/regression-task/
  * See/Run/Break — the scatter, the prediction line, and each point's miss — into the
  * closing act instead of swapping it for two number tiles.
  *
- * Widen the "close enough" band and accent rings bloom over the points it now counts
- * as correct (accuracy climbs), while the red residual ticks — the honest distances
- * MAE measures — never move. Accuracy is something you can buy by loosening the ruler;
+ * Widen the "close enough" band and in-band points fill solid (out-of-band ring red),
+ * while the red residual ticks — the honest distances MAE measures — never move. Accuracy is something you can buy by loosening the ruler;
  * distance is not. The tiles below put the numbers on what the scene shows.
  */
 const XS = allExamples.map((e) => e.x);
@@ -38,8 +37,11 @@ function ToleranceScene({ tol }: { tol: number }) {
     <g>
       <polygon
         points={band}
-        fill="var(--accent)"
-        fillOpacity={0.12}
+        fill="var(--viz-prediction)"
+        fillOpacity={0.13}
+        stroke="var(--viz-prediction)"
+        strokeOpacity={0.4}
+        strokeDasharray="4 3"
         style={{ transition: "all var(--motion-move)" }}
       />
       <line
@@ -67,10 +69,10 @@ function ToleranceScene({ tol }: { tol: number }) {
               cx={x(e.x)}
               cy={y(e.y)}
               r={4.5}
-              fill="var(--viz-truth)"
-              stroke={inBand ? "var(--accent)" : "var(--surface-bg)"}
-              strokeWidth={inBand ? 2 : 1}
-              style={{ transition: "stroke var(--motion-move), stroke-width var(--motion-move)" }}
+              fill={inBand ? "var(--viz-truth)" : "var(--surface-bg)"}
+              stroke={inBand ? "var(--surface-bg)" : "var(--viz-error)"}
+              strokeWidth={inBand ? 1 : 1.75}
+              style={{ transition: "fill var(--motion-move), stroke var(--motion-move), stroke-width var(--motion-move)" }}
             />
           </g>
         );

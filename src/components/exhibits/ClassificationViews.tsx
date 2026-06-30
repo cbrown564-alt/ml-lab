@@ -198,7 +198,7 @@ export function DecisionConveyor({
           <text x={0} y={48} fontSize={9} fontFamily="var(--font-mono)" fill="var(--ink-faint)">
             RECALL
           </text>
-          <text x={0} y={70} fontSize={22} fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
+          <text x={0} y={70} fontSize={22} fontFamily="var(--font-mono)" fill="var(--viz-truth-ink)">
             {rec.toFixed(2)}
           </text>
         </g>

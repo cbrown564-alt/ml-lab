@@ -35,7 +35,7 @@ export function ClassificationTaskStory() {
           caption="Reading the decision"
           stats={[
             { label: "precision", value: precision(cm).toFixed(2), hue: "var(--viz-prediction)", note: "of called-positive, how many were" },
-            { label: "recall", value: recall(cm).toFixed(2), hue: "var(--viz-param)", note: "of actual positives, how many caught" },
+            { label: "recall", value: recall(cm).toFixed(2), hue: "var(--viz-truth-ink)", note: "of actual positives, how many caught" },
           ]}
         />
       </div>
