@@ -183,6 +183,17 @@ exhibits, confirmed by the critic agent against named frames, before scaling.
   (Break it **4**), both flagships teach to the bar, integrity green. **Template verified
   ready to scale** — see [../reviews/spine-review/FINDINGS.md](../reviews/spine-review/FINDINGS.md).
 
+- **Trees cluster panel (2026-06-30) — core trilogy functionally built.** Three nodes
+  (decision-trees, random-forests, gradient-boosting) put before the non-circular panel
+  with fresh 1440px captures. **Tester:** 18/18 e2e · 256 unit · axe green after GB hero
+  contrast fix · budgets justified for multi-panel heroes. **Designer:** cluster clears
+  register **3** on hero views vs `r2d3-trees/00–04`; atmosphere **2** (boxed cards +
+  dead air). **Teacher:** pedagogy flagship-ready; code-parity beat open. **Status:**
+  all three → `interactive` (not flagship — human scorecards + code-parity + audio +
+  atmosphere polish remain). **Decision:** push one flagship-polish batch; defer k-nn /
+  naive-bayes / svm to later expansion. See
+  [../reviews/trees-cluster-review/FINDINGS.md](../reviews/trees-cluster-review/FINDINGS.md).
+
 ## Queue — scaling Phase 1 (template locked)
 
 The hard, high-leverage part — getting the *shared template* to the bar — is done
@@ -190,13 +201,11 @@ and proven (linreg 3.0). Remaining Phase-1 work is **per-exhibit buildout** on
 that template, the larger-but-more-mechanical bulk. Order (graph-coherent, per
 docs/05):
 
-1. **Regression cluster next** — each new node needs: a model layer verified vs a
-   committed sklearn fixture, an `ExperimentSpec`, viz (compose the kit — Plot /
-   StatGrid / LossSurface / TrainingCurve), a 5-beat narrative + spine, a Math
-   view, a concept check, and regenerated narration. Budget ~1–3 iterations each
-   on the now-proven template; run the designer/teacher panel per cluster, not per
-   exhibit.
-2. Then the trees, unsupervised, and deep-learning clusters.
+1. **Regression cluster** — complete (15/15 Foundations flagship).
+2. **Trees cluster (core trilogy)** — functionally built; panel cleared register 3;
+   **flagship-polish batch next** (human `/review`, code-parity, audio, atmosphere).
+   Original plan's k-nn / naive-bayes / svm deferred.
+3. Then unsupervised and deep-learning clusters.
 3. Backlog (reach-4, carried): GD conditioning small-multiples; a masthead hero
    visual; distinct first-paint heroes per exhibit.
 

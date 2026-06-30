@@ -61,3 +61,14 @@ test("axe: neural-network Run it has no serious or critical violations", async (
   const blocking = await blockingAxe(page);
   expect(blocking, blocking.join("\n")).toEqual([]);
 });
+
+// Regression guard: gradient-boosting's masthead hero renders 11px accent readouts
+// beside the loss-curve panel; the opening sweep alone caught a color-contrast miss
+// on the hero kicker (2026-06-30 trees-cluster panel).
+test("axe: gradient-boosting See it has no serious or critical violations", async ({ page }) => {
+  await page.goto("/exhibits/gradient-boosting");
+  await page.getByRole("tab", { name: "See it" }).click();
+  await page.getByRole("tabpanel", { includeHidden: false }).waitFor();
+  const blocking = await blockingAxe(page);
+  expect(blocking, blocking.join("\n")).toEqual([]);
+});

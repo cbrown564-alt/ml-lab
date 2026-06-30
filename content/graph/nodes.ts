@@ -220,8 +220,10 @@ export const nodes: ConceptNode[] = [
     depth: "core",
     // The cure for the single tree's high variance (decision-trees ended on the resample
     // instability). Bagging + feature randomness → decorrelated trees whose errors cancel
-    // on average. Stub until the non-circular panel clears it.
-    status: "stub",
+    // Bagging + feature randomness → decorrelated trees whose errors cancel on average.
+    // Functionally complete; advanced to interactive by the 2026-06-30 cluster panel.
+    // Flagship awaits human re-judge (red line #6).
+    status: "interactive",
   },
   {
     id: "gradient-boosting",
@@ -233,10 +235,10 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    // Closes the trees cluster and the opposite of the forest: sequential bias-reduction
-    // (gradient descent in function space) that CAN overfit. Bridges back to the regression
-    // cluster's gradient descent. Stub until the cluster panel clears it.
-    status: "stub",
+    // Closes the trees cluster (core trilogy: tree → forest → boosting). Functionally
+    // complete; advanced to interactive by the 2026-06-30 cluster panel. Flagship
+    // awaits human re-judge (red line #6) + code-parity decision (see trees-cluster-review).
+    status: "interactive",
   },
   {
     id: "the-gradient",

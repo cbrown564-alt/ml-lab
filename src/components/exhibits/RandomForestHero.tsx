@@ -81,7 +81,12 @@ function Panel({
     <div className="min-w-0 flex-1">
       <div className="flex items-baseline justify-between gap-2 px-1 pb-1">
         <span className="font-mono text-[11px] tracking-widest text-ink-faint uppercase">{kicker}</span>
-        <span className="font-mono text-[11px] tabular-nums" style={{ color: accHue }}>{acc}%</span>
+        <span
+          className="font-mono text-[11px] tabular-nums"
+          style={{ color: accHue === "var(--accent)" ? "var(--viz-accent-ink)" : accHue }}
+        >
+          {acc}%
+        </span>
       </div>
       <div style={{ opacity: reveal, transition: "opacity 500ms ease" }}>{children}</div>
     </div>

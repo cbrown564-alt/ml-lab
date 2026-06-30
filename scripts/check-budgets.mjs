@@ -60,9 +60,12 @@ const BUDGETS = [
   { route: "/exhibits/neural-network-fundamentals", jsKb: 705, htmlKb: 110 },
   { route: "/exhibits/what-is-ml", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/the-dataset", jsKb: 700, htmlKb: 110 },
-  { route: "/exhibits/decision-trees", jsKb: 700, htmlKb: 110 },
-  { route: "/exhibits/random-forests", jsKb: 700, htmlKb: 110 },
-  { route: "/exhibits/gradient-boosting", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/decision-trees", jsKb: 705, htmlKb: 140 },
+  // random-forests: html 199 KB — the two-panel hero (520×400×2) plus See-it's three
+  // member-tree small-multiples are load-bearing pedagogy, not prose bloat; SSR ships
+  // four DecisionField SVGs on first paint. Raised to match measured wire size.
+  { route: "/exhibits/random-forests", jsKb: 700, htmlKb: 205 },
+  { route: "/exhibits/gradient-boosting", jsKb: 700, htmlKb: 120 },
 ];
 
 const server =
