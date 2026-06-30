@@ -68,7 +68,7 @@ export function LossShapes({
               fill="none"
               stroke={HUES[kind]}
               strokeWidth={selected === kind ? 2.6 : 1.6}
-              strokeOpacity={on ? 1 : 0.28}
+              strokeOpacity={on ? 1 : 0.58}
               strokeLinecap="round"
             />
           );
