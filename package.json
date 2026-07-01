@@ -2,6 +2,9 @@
   "name": "ml-lab",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -18,7 +21,7 @@
     "capture:homepages": "node scripts/capture-homepages.mjs",
     "capture:review": "node scripts/capture-review.mjs",
     "check:rubric": "tsx scripts/check-rubric.ts",
-    "prebuild": "npm run validate",
+    "prebuild": "npm run validate && npm run check:rubric -- --strict",
     "test": "vitest run",
     "test:e2e": "playwright test"
   },

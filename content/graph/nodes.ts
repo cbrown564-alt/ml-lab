@@ -204,9 +204,9 @@ export const nodes: ConceptNode[] = [
     // own" failure card. The depth knob is the cluster's cleanest bias–variance demo
     // (held-out peaks at depth 2, then the staircase memorizes), and Break-it carries
     // both failures hands-on (overfit-by-depth + resample instability). The non-circular
-    // panel (designer register-3 cleared / teacher both-legs-taught) advanced it to
-    // interactive; flagship awaits the owner's human re-judge (red line #6).
-    status: "interactive",
+    // Flagship: all four acts, cleared the non-circular panel and the human review
+    // pass (2026-07-01). Opens the trees cluster.
+    status: "flagship",
   },
   {
     id: "random-forests",
@@ -218,10 +218,9 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    // The cure for the single tree's high variance (decision-trees ended on the resample
-    // instability). Bagging + feature randomness → decorrelated trees whose errors cancel
-    // on average. Stub until the non-circular panel clears it.
-    status: "stub",
+    // Flagship: all four acts, cleared the cluster panel and the human review pass
+    // (2026-07-01). Bagging + feature randomness → decorrelated trees whose errors cancel.
+    status: "flagship",
   },
   {
     id: "gradient-boosting",
@@ -235,8 +234,35 @@ export const nodes: ConceptNode[] = [
     depth: "core",
     // Closes the trees cluster and the opposite of the forest: sequential bias-reduction
     // (gradient descent in function space) that CAN overfit. Bridges back to the regression
-    // cluster's gradient descent. Stub until the cluster panel clears it.
-    status: "stub",
+    // cluster's gradient descent. Flagship after the cluster panel + human review (2026-07-01).
+    status: "flagship",
+  },
+  {
+    id: "k-means",
+    title: "K-Means Clustering",
+    oneLiner:
+      "Find k group centres by repeatedly assigning each point to its nearest centre and moving the centres to the mean — no labels required.",
+    domain: "unsupervised",
+    tags: ["clustering"],
+    kind: "algorithm",
+    phase: 1,
+    depth: "core",
+    // Opens the unsupervised cluster. Built to interactive on the four-act spine;
+    // flagship awaits the cluster panel + human review.
+    status: "interactive",
+  },
+  {
+    id: "pca",
+    title: "Principal Component Analysis",
+    oneLiner:
+      "Rotate the axes so the first direction captures the most spread — compress many correlated features into a few that still carry the shape.",
+    domain: "unsupervised",
+    tags: ["dimensionality-reduction"],
+    kind: "algorithm",
+    phase: 1,
+    depth: "core",
+    // Closes the unsupervised cluster: variance directions, not cluster labels.
+    status: "interactive",
   },
   {
     id: "the-gradient",

@@ -2,8 +2,8 @@
   "schemaVersion": 2,
   "exhibit": "regression-task",
   "reviewer": "human",
-  "date": "2026-06-24",
-  "contentHash": "384dde4c54820313",
+  "date": "2026-07-01",
+  "contentHash": "7d4cef1843274ad7",
   "register": [
     {
       "dimension": "hero-as-protagonist",
@@ -43,23 +43,17 @@
     "labeledAnnotation": true,
     "depictsMechanism": true,
     "thumbnailLegible": true,
-    "atMostOneLoadMotion": true,
-    "note": "needs a wide ambient specimen portrait above the masthead — amber data with a prediction-hued line easing into the fit and residuals shown — so the page opens on the mechanism, not a placard."
+    "atMostOneLoadMotion": true
   },
   "assessment": {
     "playableExperimentTask": true,
     "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
-    "notPureMcqStack": true,
-    "note": "the closing transfer-wrong-metric item is a 3-option choice MCQ with per-option feedback, not an interaction or open prompt, though the set is not a pure MCQ stack (it includes a predict and a live experiment-task)."
+    "notPureMcqStack": true
   },
   "verdict": {
     "decision": "advance",
-    "blocking": [
-      "No specimen hero: hero.png shows only title + placard, forcing hero-as-protagonist and mechanism-in-the-picture to 0 against floor 3.",
-      "SEE scatter carries no in-graphic mechanism annotation, leaving annotation-integration at 2 vs distill-momentum's labelled figure.",
-      "The fold is dead air above the graphic and the lede has a missing-space rendering bug ('been'the model), holding atmosphere-finish at 2.",
-      "The closing transfer item is another MCQ, not an interactive/open prompt, under-serving the learning-loop payoff."
-    ]
+    "blocking": [],
+    "summary": "Human review complete — satisfied at register 3."
   }
 }

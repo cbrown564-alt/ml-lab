@@ -186,19 +186,9 @@ exhibits, confirmed by the critic agent against named frames, before scaling.
 ## Queue — scaling Phase 1 (template locked)
 
 The hard, high-leverage part — getting the *shared template* to the bar — is done
-and proven (linreg 3.0). Remaining Phase-1 work is **per-exhibit buildout** on
-that template, the larger-but-more-mechanical bulk. Order (graph-coherent, per
-docs/05):
-
-1. **Regression cluster next** — each new node needs: a model layer verified vs a
-   committed sklearn fixture, an `ExperimentSpec`, viz (compose the kit — Plot /
-   StatGrid / LossSurface / TrainingCurve), a 5-beat narrative + spine, a Math
-   view, a concept check, and regenerated narration. Budget ~1–3 iterations each
-   on the now-proven template; run the designer/teacher panel per cluster, not per
-   exhibit.
-2. Then the trees, unsupervised, and deep-learning clusters.
-3. Backlog (reach-4, carried): GD conditioning small-multiples; a masthead hero
-   visual; distinct first-paint heroes per exhibit.
+and proven (linreg 3.0). **Foundations (15 nodes) and the trees cluster (3 nodes)
+are flagship** after the human review pass (2026-07-01). **Unsupervised cluster**
+(k-means, PCA) built to interactive (2026-07-01). Next: **deep-learning on-ramps**.
 
 **Honest scope note:** Phase 1 is ~25–30 exhibits; building them all to this bar
 is a multi-session effort. This session delivered the template lift + the

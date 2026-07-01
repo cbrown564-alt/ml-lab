@@ -4,11 +4,13 @@ import { classificationTaskCheck } from "./classification-task/concept-check";
 import { dataLeakageCheck } from "./data-leakage/concept-check";
 import { featureScalingCheck } from "./feature-scaling/concept-check";
 import { gradientDescentCheck } from "./gradient-descent/concept-check";
+import { kMeansCheck } from "./k-means/concept-check";
 import { linearRegressionCheck } from "./linear-regression/concept-check";
 import { logisticRegressionCheck } from "./logistic-regression/concept-check";
 import { lossFunctionsCheck } from "./loss-functions/concept-check";
 import { neuralNetworkFundamentalsCheck } from "./neural-network-fundamentals/concept-check";
 import { overfittingRegularizationCheck } from "./overfitting-regularization/concept-check";
+import { pcaCheck } from "./pca/concept-check";
 import { regressionTaskCheck } from "./regression-task/concept-check";
 import { theDatasetCheck } from "./the-dataset/concept-check";
 import { theGradientCheck } from "./the-gradient/concept-check";
@@ -27,11 +29,13 @@ export const conceptChecks: Record<string, ConceptCheck> = {
   "data-leakage": dataLeakageCheck,
   "feature-scaling": featureScalingCheck,
   "gradient-descent": gradientDescentCheck,
+  "k-means": kMeansCheck,
   "linear-regression": linearRegressionCheck,
   "logistic-regression": logisticRegressionCheck,
   "loss-functions": lossFunctionsCheck,
   "neural-network-fundamentals": neuralNetworkFundamentalsCheck,
   "overfitting-regularization": overfittingRegularizationCheck,
+  pca: pcaCheck,
   "regression-task": regressionTaskCheck,
   "the-dataset": theDatasetCheck,
   "the-gradient": theGradientCheck,

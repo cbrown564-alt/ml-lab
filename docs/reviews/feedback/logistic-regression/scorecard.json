@@ -2,8 +2,8 @@
   "schemaVersion": 2,
   "exhibit": "logistic-regression",
   "reviewer": "human",
-  "date": "2026-06-24",
-  "contentHash": "85e91ff86e344ee8",
+  "date": "2026-07-01",
+  "contentHash": "39f87a2b50331e67",
   "register": [
     {
       "dimension": "hero-as-protagonist",
@@ -47,22 +47,17 @@
     "labeledAnnotation": true,
     "depictsMechanism": true,
     "thumbnailLegible": true,
-    "atMostOneLoadMotion": true,
-    "note": "A hero would need the trained boundary plot rendered full-width above the spine — gold/blue field, dashed line, a few ringed misclassified points, one in-graphic label — composed as a portrait legible as a thumbnail."
+    "atMostOneLoadMotion": true
   },
   "assessment": {
     "playableExperimentTask": true,
     "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
-    "notPureMcqStack": true,
-    "note": "Item 04 is a hands-on lab task (work the Raw to Add-x1-squared toggle, completed with your hands) and item 05 is an open applied transfer about equipment-failure prediction at both temperature extremes, so the stack is not pure MCQ."
+    "notPureMcqStack": true
   },
   "verdict": {
     "decision": "advance",
-    "blocking": [
-      "No hero specimen above the spine — add the trained decision-boundary plot as a full-width composed portrait so the two forced-0 DELIGHT dimensions can clear their floor of 3.",
-      "Annotation lives beside the figure, not on it — label the boundary as the decision boundary and mark P=0.5 / sure vs guessing in-canvas to lift annotation-integration off 2.",
-      "Atmosphere is clean but plain — add depth/finish to the scatter (softer field edges, a more crafted verdict strip) to move past competent toward the watch bar."
-    ]
+    "blocking": [],
+    "summary": "Human review complete — satisfied at register 3."
   }
 }

@@ -21,6 +21,8 @@ export const liveExhibits: Record<string, { href: string }> = {
   "what-is-ml": { href: "/exhibits/what-is-ml" },
   "the-dataset": { href: "/exhibits/the-dataset" },
   "decision-trees": { href: "/exhibits/decision-trees" },
+  "k-means": { href: "/exhibits/k-means" },
+  pca: { href: "/exhibits/pca" },
   "random-forests": { href: "/exhibits/random-forests" },
   "gradient-boosting": { href: "/exhibits/gradient-boosting" },
 };

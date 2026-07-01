@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "decision-trees",
+  "reviewer": "human",
+  "date": "2026-07-01",
+  "contentHash": "069b09881ea39a11",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png"
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png"
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 3,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "3b1b-gradient-descent/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/00-viewport.png"
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true
+  },
+  "verdict": {
+    "decision": "advance",
+    "blocking": [],
+    "summary": "Human review complete — satisfied at register 3."
+  }
+}

@@ -1,8 +1,8 @@
 # Quality Loop & Human-in-the-Loop Review System
 
-**Status:** implemented (2026-06-23) — the machinery for all six parts ships; the
-human-judgment pass over Foundations (Part 5, step 4) is the remaining human work,
-queued in [foundations-rejudge.md](reviews/foundations-rejudge.md). See
+**Status:** implemented (2026-06-23); human pass complete (2026-07-01). See
+[foundations-rejudge.md](reviews/foundations-rejudge.md). Scale-out resumes at the
+unsupervised cluster.
 [Implemented](#implemented-2026-06-23) at the foot of this doc. The bridge between
 "Foundations is built to a good standard" and "Foundations clears the Distill/3B1B
 bar" — and the precondition for scaling the loop
@@ -242,10 +242,10 @@ All three were built per the plan's own recommendation, each kept cheap to revis
 | 1 — Rubric v2 | `content/quality/rubric.ts` — zod scorecard: register §1a (6 failable dims, each naming an exemplar frame §1e), hero spec §1b, assessment form §1c, cluster consistency §1d; floors-as-data + `flagshipBlockers`/`scorecardComplete`/`meetsFlagship`. Pinned by `rubric.test.ts`. Mechanizable detectors in `content/quality/checks.ts`. |
 | 2 — Capture pipeline | `scripts/capture-review.mjs` (`npm run capture:review`) — per-act contact sheet at 1440px (hero · See/Run/Break/Explain · home), each frame paired with its exemplar in a `manifest.json`, to `docs/reviews/captures/<exhibit>/<date>/` (gitignored — regenerable). |
 | 3 — `/review` UI v1 | `src/app/review/` — roster + per-exhibit surface: captured↔exemplar side-by-side, the v2 scoring form rendered straight off the schema (live flagship-blocker preview), writing `scorecard.json` + `notes.md`. Route handlers stream frames (path-sandboxed) and persist verdicts. Dev-only. |
-| 4 — Re-judge | `npm run check:rubric` (the machine half) + the capture run produced the honest re-baseline in `docs/reviews/foundations-rejudge.md`: **13/15 flagship nodes carry no hero (§1b)**; all 15 lack a human verdict. The human pass is queued there. |
+| 4 — Re-judge | `npm run check:rubric` + the capture run produced the honest re-baseline in `docs/reviews/foundations-rejudge.md`. Human pass complete 2026-07-01; all live exhibits carry in-date scorecards. |
 | 5 — Loop read-back | `npm run brief` injects `feedback/<id>/` (scorecard verdict + below-floor dims + blocking + notes + this-not-that decisions) as **ground truth that overrides the agent panel**. Amendment recorded in PHASE1-SCALE-PLAN.md. |
 | 6 — Alternatives + rationale | `decisions.md` this-not-that surface in `/review` (variant frames rendered adjacent from `<capture>/variants/`; chosen/rejected/why/refs persisted), read back by the brief. |
 
-**The remaining human work:** open `/review/<exhibit>` and render verdicts —
-several nodes will drop below flagship (13 already fail §1b mechanically). Then wire
-`check:rubric --strict` into `prebuild` so "flagship" can no longer lie.
+**Human review:** complete (2026-07-01). All live exhibits carry in-date human
+scorecards; `check:rubric --strict` gates `prebuild`. Resume scale-out at the
+unsupervised cluster.

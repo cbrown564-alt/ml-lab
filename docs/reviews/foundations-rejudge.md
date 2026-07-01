@@ -1,11 +1,8 @@
 # Foundations re-judge — the honest re-baseline (rubric v2)
 
-**Status:** machine pass complete, human pass owed (2026-06-23). This is the
-re-baseline `SYNTHESIS.md` has owed since Stream 3 (docs/08 Part 5, step 4) — now
-with rubric v2 as the instrument and the `/review` surface for the human in the
-seat. It records what the **machine** already decided and enumerates the queue the
-**human** must now judge. Expect several nodes to drop below flagship; that is the
-system working, not a regression.
+**Status:** complete (2026-07-01). Machine pass (2026-06-23), hero phase, agent panel,
+and the human taste pass through `/review` are all done. All 18 live exhibits carry
+in-date human scorecards; `check:rubric --strict` gates `prebuild`.
 
 ## Method (non-circular)
 
@@ -203,15 +200,10 @@ Per-node agent-panel verdicts (`docs/reviews/feedback/<node>/scorecard.agent.jso
      (commit-and-reveal resolves it regardless of answer quality — the honest design
      for a local-first, no-grader product).
 
-## Turning the gate on
+## Turning the gate on — DONE (2026-07-01)
 
-The machine gate is clear and the agent panel + tester + teacher all pass. What's
-left is the **human pass**: every node's prior human verdict is now *stale*
-(content changed under it), and `check:rubric` reports all 15 lack an in-date human
-scorecard (red line #6). The sequence (docs/08 Part 5):
-
-1. **Re-judge through `/review`** — refresh the human verdict per node against the
-   new heroes/transfers (the agent cards are predictions, not the human's call).
-2. **Then make `--strict` the flagship gate** — once human verdicts are in-date,
-   wire `npm run check:rubric -- --strict` (content + verdict freshness) into
-   `prebuild`, so "flagship" can no longer lie.
+The machine gate is clear, the agent panel + tester + teacher passed, and the
+**human pass is complete** — all live exhibits re-judged through `/review` and
+satisfied at register 3. `npm run check:rubric -- --strict` is wired into
+`prebuild` (content blockers + in-date human scorecards on every flagship node).
+Scale-out resumes at the unsupervised cluster.

@@ -36,4 +36,25 @@ export const foundations: Journey = {
   ],
 };
 
-export const journeys: Journey[] = [foundations];
+export const unsupervised: Journey = {
+  id: "unsupervised",
+  title: "Unsupervised Learning",
+  audience: "Learners who know supervised basics and want to find structure without labels",
+  description:
+    "When there is no answer column — only features — you can still discover groups and the directions where the data actually varies.",
+  stops: [
+    { nodeId: "feature-scaling", optional: true },
+    {
+      nodeId: "k-means",
+      framing:
+        "No labels: just points and a guess at how many groups exist. Watch centres chase clusters through assign → average → repeat.",
+    },
+    {
+      nodeId: "pca",
+      framing:
+        "Not groups — directions. Rotate the view so one axis captures as much spread as possible, then compress without losing the shape.",
+    },
+  ],
+};
+
+export const journeys: Journey[] = [foundations, unsupervised];
