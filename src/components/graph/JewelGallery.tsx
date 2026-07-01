@@ -47,7 +47,7 @@ export function JewelGallery({
 
   return (
     <div
-      className="grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-4"
+      className="grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 lg:gap-x-4"
       onMouseLeave={() => setActive(null)}
     >
       {wings.map((wing) => (
