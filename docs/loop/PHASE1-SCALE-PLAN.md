@@ -69,8 +69,8 @@ review surface ([docs/08](../08-quality-loop-and-review-system.md)):
   **resolves on `/review`** and the resolution is captured, instead of stalling.
 
 Net: the panel proposes and predicts; the human disposes on taste; the filesystem
-remembers. Human review complete (2026-07-01); scale-out resumes at the
-unsupervised cluster.
+remembers. Human review complete (2026-07-01). Unsupervised cluster (k-means, PCA)
+shipped interactive 2026-07-01; next scale-out: deep-learning on-ramps.
 
 ## Per-exhibit pipeline (orchestrator)
 
@@ -110,15 +110,9 @@ cluster statuses to `flagship` → log verdicts in PHASE1-STATUS.md → commit.
 
 Grow the graph **per cluster** (keeps `validate` honest, journeys coherent):
 
-1. **Regression / foundations** (mostly seeded as stubs): what-is-ml, the-dataset,
-   regression-task, **loss-functions** (ideal first build — between the two flagships,
-   reuses MSE/penalty/surface machinery), feature-scaling, polynomial-features,
-   regularisation (overfitting-regularization), train-test-generalization,
-   bias-variance (new), data-leakage (new), evaluation-metrics (new),
-   classification-task, logistic-regression.
-2. **Trees**: k-nearest-neighbors, decision-trees, random-forests, gradient-boosting,
-   naive-bayes, svm (+kernel). New nodes/edges + a journey.
-3. **Unsupervised**: k-means, pca (+ clustering framing). New nodes.
+1. ~~**Regression / foundations**~~ — complete (15 nodes flagship).
+2. ~~**Trees**~~ — decision-trees, random-forests, gradient-boosting (flagship, 2026-07-01).
+3. ~~**Unsupervised**~~ — k-means, pca (interactive, 2026-07-01; panel → flagship pending).
 4. **Deep-learning on-ramps**: neural-network-fundamentals (stub), cnns, embeddings,
    attention, the-transformer, **how-llms-work (a graph journey, not one giant
    exhibit)**, fine-tuning-vs-prompting-vs-rag. Biggest lift — pulls in the deferred

@@ -1,9 +1,9 @@
 # Quality Loop & Human-in-the-Loop Review System
 
 **Status:** implemented (2026-06-23); human pass complete (2026-07-01). See
-[foundations-rejudge.md](reviews/foundations-rejudge.md). Scale-out resumes at the
-unsupervised cluster.
-[Implemented](#implemented-2026-06-23) at the foot of this doc. The bridge between
+[foundations-rejudge.md](reviews/foundations-rejudge.md) and
+[Implemented](#implemented-2026-06-23) at the foot of this doc. Unsupervised cluster
+(k-means, PCA) shipped 2026-07-01; next: deep-learning on-ramps. The bridge between
 "Foundations is built to a good standard" and "Foundations clears the Distill/3B1B
 bar" — and the precondition for scaling the loop
 ([PHASE1-SCALE-PLAN.md](loop/PHASE1-SCALE-PLAN.md)) to the rest of the graph
@@ -246,6 +246,7 @@ All three were built per the plan's own recommendation, each kept cheap to revis
 | 5 — Loop read-back | `npm run brief` injects `feedback/<id>/` (scorecard verdict + below-floor dims + blocking + notes + this-not-that decisions) as **ground truth that overrides the agent panel**. Amendment recorded in PHASE1-SCALE-PLAN.md. |
 | 6 — Alternatives + rationale | `decisions.md` this-not-that surface in `/review` (variant frames rendered adjacent from `<capture>/variants/`; chosen/rejected/why/refs persisted), read back by the brief. |
 
-**Human review:** complete (2026-07-01). All live exhibits carry in-date human
-scorecards; `check:rubric --strict` gates `prebuild`. Resume scale-out at the
-unsupervised cluster.
+**Human review:** complete (2026-07-01) for Foundations; `check:rubric --strict` gates
+`prebuild` on every flagship node. Unsupervised cluster (k-means, PCA) built
+interactive 2026-07-01 — cluster panel review pending before flagship batch. Next
+scale-out: deep-learning on-ramps.

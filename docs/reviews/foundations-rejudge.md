@@ -1,8 +1,10 @@
 # Foundations re-judge — the honest re-baseline (rubric v2)
 
 **Status:** complete (2026-07-01). Machine pass (2026-06-23), hero phase, agent panel,
-and the human taste pass through `/review` are all done. All 18 live exhibits carry
-in-date human scorecards; `check:rubric --strict` gates `prebuild`.
+and the human taste pass through `/review` are all done. All flagship exhibits carry
+in-date human scorecards; `check:rubric --strict` gates `prebuild`. (Foundations
+re-judge covered the first 15 nodes; later clusters add their own scorecards at
+panel time.)
 
 ## Method (non-circular)
 
@@ -206,4 +208,5 @@ The machine gate is clear, the agent panel + tester + teacher passed, and the
 **human pass is complete** — all live exhibits re-judged through `/review` and
 satisfied at register 3. `npm run check:rubric -- --strict` is wired into
 `prebuild` (content blockers + in-date human scorecards on every flagship node).
-Scale-out resumes at the unsupervised cluster.
+Unsupervised cluster (k-means, PCA) shipped interactive 2026-07-01; next scale-out
+target is the deep-learning on-ramps cluster.
