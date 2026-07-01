@@ -59,9 +59,10 @@ Working document for the build-evaluate-improve loop. Goal: **all 19 criteria in
 2. ~~**Review punch list**~~ — done 2026-06-12 (iter 19): math drawers shipped on both exhibits, mobile notice live, Listen accessible names fixed, page-transition item closed with evidence (nav is 72–88 ms in production — nothing to treat). The word-span SR check rides with the NVDA pass in the release gate.
 3. ~~**Flagship acceptance review**~~ — done 2026-06-21; both Phase 0 exhibits advanced to `flagship`.
 4. ~~Phase 1, regression cluster~~ — Foundations + trees clusters flagship (2026-07-01).
-4. ~~Phase 1, unsupervised cluster~~ — k-means + PCA live (2026-07-01).
-5. **Phase 1, deep-learning on-ramps** (CNNs, embeddings, attention, transformer, LLM journey). narration choreographed to experiment visuals (temporal contiguity), force-personification characters + art bible, explorer filter/search when the graph approaches 30 nodes, 3D loss surfaces with the deep-learning cluster.
-7. **Release gate (pre-public-launch)**: human cold walkthroughs (n≥3, think-aloud) and a manual NVDA/VoiceOver pass (including the word-span transcripts).
+5. ~~Phase 1, unsupervised cluster~~ — k-means + PCA live (2026-07-01).
+6. **Phase 1, deep-learning on-ramps** (CNNs, embeddings, attention, transformer, LLM journey).
+7. **Known level-4 work, deliberately deferred**: narration choreographed to experiment visuals (temporal contiguity), force-personification characters + art bible, explorer filter/search when the graph approaches 30 nodes, 3D loss surfaces with the deep-learning cluster.
+8. **Release gate (pre-public-launch)**: human cold walkthroughs (n≥3, think-aloud) and a manual NVDA/VoiceOver pass (including the word-span transcripts).
 
 ## Standing rules for the loop
 
