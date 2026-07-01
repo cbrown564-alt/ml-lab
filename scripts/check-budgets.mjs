@@ -63,6 +63,8 @@ const BUDGETS = [
   { route: "/exhibits/decision-trees", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/random-forests", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/gradient-boosting", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/k-means", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/pca", jsKb: 700, htmlKb: 110 },
 ];
 
 const server =

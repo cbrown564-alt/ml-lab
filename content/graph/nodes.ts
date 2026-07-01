@@ -238,6 +238,33 @@ export const nodes: ConceptNode[] = [
     status: "flagship",
   },
   {
+    id: "k-means",
+    title: "K-Means Clustering",
+    oneLiner:
+      "Find k group centres by repeatedly assigning each point to its nearest centre and moving the centres to the mean — no labels required.",
+    domain: "unsupervised",
+    tags: ["clustering"],
+    kind: "algorithm",
+    phase: 1,
+    depth: "core",
+    // Opens the unsupervised cluster. Built to interactive on the four-act spine;
+    // flagship awaits the cluster panel + human review.
+    status: "interactive",
+  },
+  {
+    id: "pca",
+    title: "Principal Component Analysis",
+    oneLiner:
+      "Rotate the axes so the first direction captures the most spread — compress many correlated features into a few that still carry the shape.",
+    domain: "unsupervised",
+    tags: ["dimensionality-reduction"],
+    kind: "algorithm",
+    phase: 1,
+    depth: "core",
+    // Closes the unsupervised cluster: variance directions, not cluster labels.
+    status: "interactive",
+  },
+  {
     id: "the-gradient",
     title: "The Gradient",
     oneLiner: "The direction of steepest ascent — calculus's gift to optimization.",

@@ -187,8 +187,8 @@ exhibits, confirmed by the critic agent against named frames, before scaling.
 
 The hard, high-leverage part — getting the *shared template* to the bar — is done
 and proven (linreg 3.0). **Foundations (15 nodes) and the trees cluster (3 nodes)
-are flagship** after the human review pass (2026-07-01). Next: **unsupervised
-cluster** (k-means, PCA), then deep-learning on-ramps.
+are flagship** after the human review pass (2026-07-01). **Unsupervised cluster**
+(k-means, PCA) built to interactive (2026-07-01). Next: **deep-learning on-ramps**.
 
 **Honest scope note:** Phase 1 is ~25–30 exhibits; building them all to this bar
 is a multi-session effort. This session delivered the template lift + the

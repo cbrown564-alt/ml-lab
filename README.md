@@ -30,4 +30,4 @@ ML Lab turns core machine-learning ideas into exhibits you can run, break, and a
 
 ## Status
 
-Phase 0 complete. Phase 1 in progress: **18 live exhibits**, **18 graph nodes** — the Foundations journey (15 nodes), `the-gradient`, and the trees cluster (`decision-trees`, `random-forests`, `gradient-boosting`) are all **flagship**. Human review through `/review` is complete (2026-07-01); `npm run check:rubric -- --strict` gates the build. Next: unsupervised cluster (k-means, PCA) — see [docs/05-roadmap.md](docs/05-roadmap.md).
+Phase 0 complete. Phase 1 in progress: **20 live exhibits**, **20 graph nodes** — Foundations (15), `the-gradient`, trees cluster (3), and unsupervised cluster (`k-means`, `pca`) are built on the four-act spine. Human review gate complete (2026-07-01). Next: deep-learning on-ramps — see [docs/05-roadmap.md](docs/05-roadmap.md).

@@ -80,4 +80,25 @@ export const edges: ConceptEdge[] = [
     strength: "soft",
     note: "Both are forests of trees, and they are near-opposites. A random forest grows trees independently in parallel and averages them to cut variance — more trees is always safe. Boosting grows shallow trees in sequence, each fixing the last's residuals, to cut bias — and more trees can overshoot into the noise.",
   },
+  // Unsupervised cluster: grouping without labels, then finding the directions of spread.
+  { from: "what-is-ml", to: "k-means", type: "requires", strength: "soft" },
+  { from: "the-dataset", to: "k-means", type: "requires", strength: "soft" },
+  { from: "feature-scaling", to: "k-means", type: "requires", strength: "soft" },
+  {
+    from: "classification-task",
+    to: "k-means",
+    type: "often_confused_with",
+    strength: "soft",
+    note: "Both partition data into groups — but classification is told the right answer for each point and learns a boundary; k-means discovers groups from geometry alone, with no labels to check against.",
+  },
+  { from: "the-dataset", to: "pca", type: "requires", strength: "soft" },
+  { from: "feature-scaling", to: "pca", type: "requires", strength: "hard" },
+  { from: "k-means", to: "pca", type: "requires", strength: "soft" },
+  {
+    from: "pca",
+    to: "neural-network-fundamentals",
+    type: "used_inside",
+    strength: "soft",
+    note: "Deep models often learn compressed representations the way PCA finds directions of variance — the difference is PCA is a fixed linear rotation; a network learns its own.",
+  },
 ];
