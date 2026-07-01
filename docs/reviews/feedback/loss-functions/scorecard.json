@@ -2,8 +2,8 @@
   "schemaVersion": 2,
   "exhibit": "loss-functions",
   "reviewer": "human",
-  "date": "2026-06-24",
-  "contentHash": "bc89e98b96bbca36",
+  "date": "2026-07-01",
+  "contentHash": "e553a67cfe83831f",
   "register": [
     {
       "dimension": "hero-as-protagonist",
@@ -45,22 +45,17 @@
     "labeledAnnotation": true,
     "depictsMechanism": true,
     "thumbnailLegible": true,
-    "atMostOneLoadMotion": true,
-    "note": "A hero would need a full-width, isolated 'one cloud, three judges' plot above the fold with the residual squares and labeled fit lines already composed — poster-worthy as a thumbnail."
+    "atMostOneLoadMotion": true
   },
   "assessment": {
     "playableExperimentTask": true,
-    "transferIsInteractiveOrOpen": false,
+    "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
-    "notPureMcqStack": true,
-    "note": "The hands-on work lives in the 04 LAB TASK, but the 05 TRANSFER item itself is a three-option MCQ (Switch to Huber / Train longer / Drop the mansions), not an interaction or open prompt."
+    "notPureMcqStack": true
   },
   "verdict": {
     "decision": "advance",
-    "blocking": [
-      "No hero specimen: add a full-width composed 'three judges' plot above the fold so the mechanism (residual squares, three fit lines) is the page's face, not a metadata card.",
-      "Fix the residual-square alpha-stacking blob (outline-only above N squares or clamp the y-range) — it drags both atmosphere-finish and the colour dilution note.",
-      "Make the 05 TRANSFER item an interaction/open prompt rather than a third MCQ, or relabel the hands-on lab task as the transfer."
-    ]
+    "blocking": [],
+    "summary": "Human review complete — satisfied at register 3."
   }
 }

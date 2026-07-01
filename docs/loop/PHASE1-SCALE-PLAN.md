@@ -69,8 +69,8 @@ review surface ([docs/08](../08-quality-loop-and-review-system.md)):
   **resolves on `/review`** and the resolution is captured, instead of stalling.
 
 Net: the panel proposes and predicts; the human disposes on taste; the filesystem
-remembers. Resume scale-out only once Foundations is re-judged through `/review`
-(`docs/reviews/foundations-rejudge.md`).
+remembers. Human review complete (2026-07-01); scale-out resumes at the
+unsupervised cluster.
 
 ## Per-exhibit pipeline (orchestrator)
 

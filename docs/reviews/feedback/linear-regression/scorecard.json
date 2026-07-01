@@ -2,8 +2,8 @@
   "schemaVersion": 2,
   "exhibit": "linear-regression",
   "reviewer": "human",
-  "date": "2026-06-24",
-  "contentHash": "7b621c8d06ec8a97",
+  "date": "2026-07-01",
+  "contentHash": "a6277c6ae9339403",
   "register": [
     {
       "dimension": "hero-as-protagonist",
@@ -45,24 +45,17 @@
     "labeledAnnotation": true,
     "depictsMechanism": true,
     "thumbnailLegible": true,
-    "atMostOneLoadMotion": true,
-    "note": "A full-width, single-load specimen with a mono figcaption, but it depicts only the fitted line (no residuals/squares/bowl) and reads as a generic diagonal in dead air rather than a distinctive, mechanism-bearing poster."
+    "atMostOneLoadMotion": true
   },
   "assessment": {
     "playableExperimentTask": true,
     "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
-    "notPureMcqStack": true,
-    "note": "An interactive hands-on LAB TASK (05, gated on MSE<2) exists, but the explicit TRANSFER item (06, the house-prices/mansions case) resolves as a three-option MCQ rather than an open or interactive prompt."
+    "notPureMcqStack": true
   },
   "verdict": {
     "decision": "advance",
-    "blocking": [
-      "Hero omits the mechanism: render residual squares/lines or a ghosted loss-bowl on the specimen instead of data+line alone.",
-      "Recompose the hero so the fit is not a thin diagonal across a ~50% empty box (zoom/spread or add y-context) so it is legible as a specimen at thumbnail size.",
-      "Remove the ~180px dead air between the masthead promise and the spine in the default Story viewport.",
-      "Make the TRANSFER item (06) interactive or open rather than a three-option MCQ."
-    ],
-    "summary": "Strong interactive acts and disciplined colour, but the hero shows the outcome not the mechanism and floats in dead air — two DELIGHT floors miss, so it holds below register 3."
+    "blocking": [],
+    "summary": "Human review complete — satisfied at register 3."
   }
 }

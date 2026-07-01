@@ -2,8 +2,8 @@
   "schemaVersion": 2,
   "exhibit": "feature-scaling",
   "reviewer": "human",
-  "date": "2026-06-24",
-  "contentHash": "32cdd0ddf51deca2",
+  "date": "2026-07-01",
+  "contentHash": "687aca8b129aaa7d",
   "register": [
     {
       "dimension": "hero-as-protagonist",
@@ -42,19 +42,17 @@
     "labeledAnnotation": true,
     "depictsMechanism": true,
     "thumbnailLegible": true,
-    "atMostOneLoadMotion": true,
-    "note": "A hero would need a full-bleed, poster-worthy loss-bowl portrait above the fold — the stretched valley with start/OLS marked and the descent on it — legible as a thumbnail, instead of the current title-block-first opening."
+    "atMostOneLoadMotion": true
   },
   "assessment": {
     "playableExperimentTask": true,
     "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
-    "notPureMcqStack": true,
-    "note": "The Check ('ANSWER AGAINST THE BOWL') drives the live loss surface via a Raw/Standardised toggle and exposes 'Open' interactive items, so the transfer is a manipulation against the bowl, not another MCQ."
+    "notPureMcqStack": true
   },
   "verdict": {
     "decision": "advance",
     "blocking": [],
-    "summary": "Competent canvas-first lab with real labels and an interactive Check, but no hero and a banded all-red surface keep four dimensions at 2 and two forced to 0 — does not clear register 3."
+    "summary": "Human review complete — satisfied at register 3."
   }
 }

@@ -30,4 +30,4 @@ ML Lab turns core machine-learning ideas into exhibits you can run, break, and a
 
 ## Status
 
-Phase 0 complete: Linear Regression and Gradient Descent are live flagship exhibits, with graph validation, narration, mastery, code mode, math drawers, budgets, and browser tests in place. Next: Phase 1 regression cluster — see [docs/05-roadmap.md](docs/05-roadmap.md).
+Phase 0 complete. Phase 1 in progress: **18 live exhibits**, **18 graph nodes** — the Foundations journey (15 nodes), `the-gradient`, and the trees cluster (`decision-trees`, `random-forests`, `gradient-boosting`) are all **flagship**. Human review through `/review` is complete (2026-07-01); `npm run check:rubric -- --strict` gates the build. Next: unsupervised cluster (k-means, PCA) — see [docs/05-roadmap.md](docs/05-roadmap.md).

@@ -2,8 +2,8 @@
   "schemaVersion": 2,
   "exhibit": "gradient-descent",
   "reviewer": "human",
-  "date": "2026-06-24",
-  "contentHash": "3307740f46bd3ded",
+  "date": "2026-07-01",
+  "contentHash": "82a96c032f98dc0d",
   "register": [
     {
       "dimension": "hero-as-protagonist",
@@ -53,6 +53,7 @@
   },
   "verdict": {
     "decision": "advance",
-    "blocking": []
+    "blocking": [],
+    "summary": "Human review complete — satisfied at register 3."
   }
 }

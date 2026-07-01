@@ -18,7 +18,7 @@
     "capture:homepages": "node scripts/capture-homepages.mjs",
     "capture:review": "node scripts/capture-review.mjs",
     "check:rubric": "tsx scripts/check-rubric.ts",
-    "prebuild": "npm run validate",
+    "prebuild": "npm run validate && npm run check:rubric -- --strict",
     "test": "vitest run",
     "test:e2e": "playwright test"
   },

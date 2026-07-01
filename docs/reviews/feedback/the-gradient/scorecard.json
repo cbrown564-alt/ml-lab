@@ -2,8 +2,8 @@
   "schemaVersion": 2,
   "exhibit": "the-gradient",
   "reviewer": "human",
-  "date": "2026-06-24",
-  "contentHash": "44583abbf82a606c",
+  "date": "2026-07-01",
+  "contentHash": "479b1b7b4e81edfe",
   "register": [
     {
       "dimension": "hero-as-protagonist",
@@ -43,23 +43,17 @@
     "labeledAnnotation": true,
     "depictsMechanism": true,
     "thumbnailLegible": true,
-    "atMostOneLoadMotion": true,
-    "note": "needs a wide ambient specimen portrait (per DESIGN.md / LinearRegressionHero) of the contour landscape with the gradient arrow standing on it, smoothly rendered with one explanatory load-motion, so the page has a poster-worthy face instead of an empty masthead void."
+    "atMostOneLoadMotion": true
   },
   "assessment": {
     "playableExperimentTask": true,
     "transferIsInteractiveOrOpen": true,
     "processFeedbackEveryOption": true,
-    "notPureMcqStack": true,
-    "note": "the experiment is genuinely playable (drag the point) and every Check option gets process feedback, but the 06 TRANSFER item is a three-row MCQ with no interaction or open prompt."
+    "notPureMcqStack": true
   },
   "verdict": {
     "decision": "advance",
-    "blocking": [
-      "Add a wide specimen hero before the masthead — an ambient contour-landscape portrait with the gradient arrow on it, one explanatory load-motion, no readouts — so the exhibit has a poster-worthy protagonist (currently absent; forces hero dims to 0).",
-      "Re-render the contour landscape anti-aliased (it is visibly stair-stepped/pixel-blocky at native resolution) so the page's focal object reaches the Distill/Ciechanowski smoothness bar.",
-      "Tag the arrow in-figure (label it grad-f and mark the right angle where it crosses a contour) so the canvas self-documents instead of leaning on adjacent prose, per distill-momentum's per-panel captions.",
-      "Make the Transfer item interactive or open-ended (e.g. drag onto a multi-basin landscape and predict the basin) rather than a third MCQ."
-    ]
+    "blocking": [],
+    "summary": "Human review complete — satisfied at register 3."
   }
 }

@@ -8,10 +8,8 @@
  * the machine half: it asserts the parts of rubric v2 the build can decide from
  * content alone — a hero specimen exists (§1b), the assessment form isn't exam
  * cosplay (§1c) — and reports whether each exhibit carries an in-date human
- * scorecard (red line #6). It deliberately does NOT block `prebuild` yet: until
- * Foundations is re-judged through `/review`, every node lacks a verdict, so the
- * gate reports the gap rather than failing the green build. `--strict` enforces
- * only the *content* blockers (the ones the build loop can fix today).
+ * scorecard (red line #6). `--strict` enforces content blockers and in-date human
+ * verdicts on every flagship node — wired into `prebuild` so "flagship" cannot lie.
  */
 import {
   contentHash,
@@ -102,8 +100,15 @@ if (flagshipContentFails.length) {
 }
 
 const strict = process.argv.includes("--strict");
+const strictVerdictFails = flagship.filter((r) => r.verdict !== "in-date");
 if (strict && flagshipContentFails.length) {
   console.error(`\n✖ --strict: ${flagshipContentFails.length} flagship node(s) below the rubric v2 content floor`);
+  process.exit(1);
+}
+if (strict && strictVerdictFails.length) {
+  console.error(
+    `\n✖ --strict: ${strictVerdictFails.length} flagship node(s) lack an in-date human scorecard (red line #6)`,
+  );
   process.exit(1);
 }
 console.log("");

@@ -2,8 +2,8 @@
   "schemaVersion": 2,
   "exhibit": "classification-task",
   "reviewer": "human",
-  "date": "2026-06-24",
-  "contentHash": "4614cb34df6f44e4",
+  "date": "2026-07-01",
+  "contentHash": "def7012e1ea857ac",
   "register": [
     {
       "dimension": "hero-as-protagonist",
@@ -52,6 +52,7 @@
   },
   "verdict": {
     "decision": "advance",
-    "blocking": []
+    "blocking": [],
+    "summary": "Human review complete — satisfied at register 3."
   }
 }

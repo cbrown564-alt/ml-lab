@@ -2,8 +2,8 @@
   "schemaVersion": 2,
   "exhibit": "bias-variance",
   "reviewer": "human",
-  "date": "2026-06-23",
-  "contentHash": "dfd748852a8d593f",
+  "date": "2026-07-01",
+  "contentHash": "70e9a81b24cfd2e5",
   "register": [
     {
       "dimension": "hero-as-protagonist",
@@ -52,6 +52,7 @@
   },
   "verdict": {
     "decision": "advance",
-    "blocking": []
+    "blocking": [],
+    "summary": "Human review complete — satisfied at register 3."
   }
 }
