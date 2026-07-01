@@ -13,14 +13,16 @@ test.describe("home", () => {
     await page.goto("/");
   });
 
-  test("orients: hero, the cabinet, its wings, the journey", async ({ page }) => {
+  test("orients: hero, the cabinet, its wings, the journeys", async ({ page }) => {
     await expect(
       page.getByRole("heading", { name: "Build intuition by running the model." }),
     ).toBeVisible();
     await expect(page.getByText(/\d+ interactive exhibits/)).toBeVisible();
-    // The cabinet is curated into wings — the grouping is on the page as headings.
     await expect(page.getByRole("heading", { name: "The first models" })).toBeVisible();
+    await expect(page.locator("#exhibits").getByRole("heading", { name: "Trees & ensembles" })).toBeVisible();
+    await expect(page.locator("#exhibits").getByRole("heading", { name: "Unsupervised", exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Journey · Foundations/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Journey · Unsupervised Learning/ })).toBeVisible();
     await expect(page).toHaveScreenshot("home.png", { fullPage: true });
   });
 
@@ -34,21 +36,29 @@ test.describe("home", () => {
     ).toBeVisible();
   });
 
-  test("every jewel is a live door — every node now has an exhibit", async ({ page }) => {
+  test("every jewel is a live door — all twenty exhibits in the cabinet", async ({ page }) => {
     const cabinet = page.locator("#exhibits");
     await expect(cabinet.getByRole("link", { name: /Gradient Descent/ })).toBeVisible();
-    // Every foundations node now has a live exhibit — including the last one to land.
+    await expect(cabinet.getByRole("link", { name: /K-Means Clustering/ })).toBeVisible();
+    await expect(cabinet.getByRole("link", { name: /Random Forests/ })).toBeVisible();
     await cabinet.getByRole("link", { name: /The Dataset/ }).click();
     await expect(page.getByRole("heading", { name: "The Dataset" })).toBeVisible();
   });
 
-  test("the journey lists every stop in order with live links", async ({ page }) => {
+  test("the Foundations journey lists every stop in order with live links", async ({ page }) => {
     const journey = page.locator("#foundations");
     await expect(journey.getByRole("listitem")).toHaveCount(15);
     await journey.getByRole("link", { name: /Linear Regression/ }).click();
     await expect(
       page.getByRole("heading", { name: "Linear Regression" }),
     ).toBeVisible();
+  });
+
+  test("the Unsupervised journey lists its stops with live links", async ({ page }) => {
+    const journey = page.locator("#unsupervised");
+    await expect(journey.getByRole("listitem")).toHaveCount(3);
+    await journey.getByRole("link", { name: /K-Means Clustering/ }).click();
+    await expect(page.getByRole("heading", { name: "K-Means Clustering" })).toBeVisible();
   });
 });
 

@@ -96,6 +96,16 @@ function Specimen({ id, t }: { id: string; t: number }) {
       return <DataLeakage />;
     case "neural-network-fundamentals":
       return <NeuralNet t={t} />;
+    case "decision-trees":
+      return <DecisionTrees />;
+    case "random-forests":
+      return <RandomForests />;
+    case "gradient-boosting":
+      return <GradientBoosting t={t} />;
+    case "k-means":
+      return <KMeans t={t} />;
+    case "pca":
+      return <Pca t={t} />;
     default:
       return <FallbackSpecimen id={id} />;
   }
@@ -419,6 +429,97 @@ function NeuralNet({ t }: { t: number }) {
         <circle key={`h${i}`} cx="58" cy={hy} r="3.5" fill="var(--viz-param)" />
       ))}
       <circle cx="88" cy="48" r="4" fill="var(--viz-prediction)" />
+    </>
+  );
+}
+
+function DecisionTrees() {
+  return (
+    <>
+      <line x1="24" y1="72" x2="96" y2="72" stroke="var(--line)" strokeWidth="1.5" />
+      <line x1="24" y1="72" x2="24" y2="28" stroke="var(--line)" strokeWidth="1.5" />
+      <rect x="28" y="44" width="28" height="28" fill="none" stroke="var(--viz-prediction)" strokeWidth="1.5" />
+      <rect x="56" y="44" width="36" height="14" fill="none" stroke="var(--viz-prediction)" strokeWidth="1.5" />
+      <rect x="56" y="58" width="36" height="14" fill="none" stroke="var(--viz-prediction)" strokeWidth="1.5" />
+      {[[38, 58], [72, 50], [78, 66]].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="2.5" fill="var(--viz-truth)" />
+      ))}
+    </>
+  );
+}
+
+function RandomForests() {
+  return (
+    <>
+      <path d="M24 68 C 40 40, 56 80, 72 44" fill="none" stroke="var(--viz-error)" strokeWidth="1.4" opacity="0.45" />
+      <path d="M28 70 C 48 52, 64 76, 88 48" fill="none" stroke="var(--viz-error)" strokeWidth="1.4" opacity="0.45" />
+      <path d="M26 64 C 44 58, 70 54, 96 58" fill="none" stroke="var(--viz-prediction)" strokeWidth="2.5" strokeLinecap="round" />
+    </>
+  );
+}
+
+function GradientBoosting({ t }: { t: number }) {
+  const steps = Math.min(3, 1 + Math.floor(t * 3));
+  return (
+    <>
+      <path d="M22 74 C 44 58, 72 58, 98 34" fill="none" stroke="var(--line)" strokeWidth="1.5" />
+      {[0, 1, 2].slice(0, steps).map((i) => (
+        <path
+          key={i}
+          d={`M${30 + i * 18} ${68 - i * 8} C ${46 + i * 12} ${56 - i * 6}, ${68 + i * 4} ${52 + i * 4}, ${88 - i * 4} ${40 + i * 6}`}
+          fill="none"
+          stroke="var(--viz-param)"
+          strokeWidth="1.8"
+          opacity={0.5 + i * 0.2}
+        />
+      ))}
+    </>
+  );
+}
+
+function KMeans({ t }: { t: number }) {
+  const cx = [36, 60, 84];
+  const cy = [44, 62, 44];
+  return (
+    <>
+      {[[32, 48], [40, 40], [52, 66], [58, 58], [78, 40], [88, 50]].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="2.5" fill="var(--viz-truth)" opacity={0.85} />
+      ))}
+      {cx.map((x, i) => (
+        <g key={i}>
+          <circle
+            cx={x}
+            cy={cy[i]}
+            r={5 + t * 2}
+            fill="none"
+            stroke="var(--viz-param)"
+            strokeWidth="2"
+          />
+          <circle cx={x} cy={cy[i]} r="3" fill="var(--viz-param)" />
+        </g>
+      ))}
+    </>
+  );
+}
+
+function Pca({ t }: { t: number }) {
+  const angle = -28 + t * 8;
+  return (
+    <>
+      <ellipse cx="58" cy="50" rx="34" ry="12" transform="rotate(-24 58 50)" fill="none" stroke="var(--viz-truth)" strokeWidth="1.5" opacity="0.7" />
+      <line
+        x1="34"
+        y1="62"
+        x2="90"
+        y2="34"
+        stroke="var(--viz-prediction)"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        transform={`rotate(${angle} 58 50)`}
+      />
+      <text x="92" y="30" fontSize="7" fontFamily="var(--font-mono)" fill="var(--viz-prediction-ink)">
+        PC1
+      </text>
     </>
   );
 }

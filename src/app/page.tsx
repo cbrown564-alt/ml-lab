@@ -2,10 +2,12 @@ import Link from "next/link";
 import { HeroFitMotif } from "@/components/graph/HeroFitMotif";
 import { JewelGallery, type Wing } from "@/components/graph/JewelGallery";
 import { FoundationsTrail } from "@/components/learner/FoundationsTrail";
+import { JourneyTrail } from "@/components/learner/JourneyTrail";
 import { domainLabel } from "@/lib/graph/labels";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
 import { edges } from "@content/graph/edges";
+import { unsupervised } from "@content/journeys/foundations";
 
 /**
  * The lab's front door (docs/06, A1): orient in seconds — what this place
@@ -42,11 +44,27 @@ const WINGS: { title: string; blurb: string; ids: string[] }[] = [
     ids: ["train-test-generalization", "overfitting-regularization", "bias-variance", "data-leakage"],
   },
   {
+    title: "Trees & ensembles",
+    blurb: "Staircase splits, then crowds of trees that cancel each other's wobble.",
+    ids: ["decision-trees", "random-forests", "gradient-boosting"],
+  },
+  {
+    title: "Unsupervised",
+    blurb: "Find groups and directions of spread — no labels required.",
+    ids: ["k-means", "pca"],
+  },
+  {
     title: "Going deeper",
     blurb: "Combine simple units into flexible models.",
     ids: ["neural-network-fundamentals"],
   },
 ];
+const wingIds = WINGS.flatMap((w) => w.ids);
+if (wingIds.length !== openExhibits.length || new Set(wingIds).size !== wingIds.length) {
+  throw new Error(
+    `Homepage wings must list every live exhibit exactly once (${wingIds.length} in wings, ${openExhibits.length} live)`,
+  );
+}
 const wings: Wing[] = WINGS.map((w) => ({
   title: w.title,
   blurb: w.blurb,
@@ -97,8 +115,7 @@ export default function Home() {
           <p className="mx-auto mt-6 max-w-[58ch] text-xl leading-relaxed text-balance text-ink-muted">
             ML Lab turns core machine-learning ideas into hands-on exhibits. See
             the idea, change the inputs, push the model until it fails, then
-            explain what happened. Explore freely or follow the Foundations
-            journey.
+            explain what happened. Explore freely or follow a guided journey.
           </p>
           <div className="mt-12" aria-hidden>
             <HeroFitMotif />
@@ -164,6 +181,7 @@ export default function Home() {
         </section>
 
         <FoundationsTrail />
+        <JourneyTrail journey={unsupervised} />
       </main>
 
       <footer className="border-t border-line">
