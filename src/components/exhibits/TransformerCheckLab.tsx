@@ -13,6 +13,8 @@ export function TransformerCheckLab() {
   const [modeId, setModeId] = useState<(typeof MODES)[number]["id"]>("one");
   const mode = MODES.find((entry) => entry.id === modeId)!;
   const state = transformerLabState(mode.blockIndex, mode.temperatureTimesTen, 5);
+  const oneBlockProb = transformerLabState(1, 10, 5).targetProb;
+  const twoBlockProb = transformerLabState(2, 10, 5).targetProb;
 
   return (
     <figure className="rounded-xl border border-line bg-raised p-4">
@@ -38,10 +40,32 @@ export function TransformerCheckLab() {
           </button>
         ))}
       </div>
+      <div className="mb-4 grid grid-cols-2 gap-2">
+        {MODES.map((entry) => {
+          const prob = entry.id === "one" ? oneBlockProb : twoBlockProb;
+          const active = entry.id === modeId;
+          return (
+            <div
+              key={entry.id}
+              className={`rounded-lg border px-3 py-2 ${active ? "border-[color-mix(in_srgb,var(--accent)_40%,var(--line))] bg-sunken" : "border-line"}`}
+            >
+              <div className="font-mono text-[10px] tracking-widest text-ink-faint uppercase">
+                {entry.label}
+              </div>
+              <div
+                className={`mt-0.5 font-mono text-lg tabular-nums ${active ? "text-[var(--viz-prediction-ink)]" : "text-ink-muted"}`}
+              >
+                {prob.toFixed(3)}
+              </div>
+            </div>
+          );
+        })}
+      </div>
       <NextTokenLogits
         distribution={state.distribution}
         targetId={state.target.id}
-        width={480}
+        width={640}
+        size="lg"
         ariaLabel={`Check companion: ${mode.label}, mat probability ${state.targetProb.toFixed(3)}.`}
       />
     </figure>

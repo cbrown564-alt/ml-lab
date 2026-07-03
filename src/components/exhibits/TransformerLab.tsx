@@ -102,20 +102,26 @@ export function TransformerLab() {
           />
         </div>
 
-        <div className="mt-6 flex flex-col gap-4 lg:mt-0">
+        <div className="mt-6 flex h-full flex-col gap-5 lg:mt-0">
           <TransformerBlockFlow
             stages={stages}
             activeStageId={state.stage.id}
             blockCount={state.blockCount}
-            width={560}
+            width={1280}
             ariaLabel={`Transformer lab at stage ${state.stage.label}.`}
           />
-          <NextTokenLogits
-            distribution={state.distribution}
-            targetId={state.target.id}
-            width={560}
-            ariaLabel="Next-token distribution from the language-model head."
-          />
+          <div className="rounded-lg border border-line bg-sunken p-4">
+            <p className="mb-3 font-mono text-[10px] tracking-widest text-ink-faint uppercase">
+              Next token · after the LM head
+            </p>
+            <NextTokenLogits
+              distribution={state.distribution}
+              targetId={state.target.id}
+              width={1280}
+              size="lg"
+              ariaLabel="Next-token distribution from the language-model head."
+            />
+          </div>
         </div>
       </div>
     </div>

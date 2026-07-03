@@ -39,9 +39,9 @@ export function TransformerBlockFlow({
           const hue = STAGE_HUES[stage.id] ?? "var(--viz-neutral)";
           const showResidual = stage.id.endsWith("residual");
           return (
-            <div key={stage.id} className="flex items-center gap-2">
+            <div key={stage.id} className="flex grow items-center gap-2">
               <div
-                className={`min-w-[5.5rem] rounded-lg border px-3 py-2 transition-colors ${
+                className={`min-w-[5.5rem] grow rounded-lg border px-3 py-2 transition-colors ${
                   active ? "border-[color-mix(in_srgb,var(--accent)_40%,var(--line))] bg-[color-mix(in_srgb,var(--accent)_8%,transparent)]" : "border-line bg-sunken"
                 }`}
               >
