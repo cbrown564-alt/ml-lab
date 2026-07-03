@@ -37,6 +37,7 @@ const ROUTES = [
   "/exhibits/cnns",
   "/exhibits/embeddings",
   "/exhibits/attention",
+  "/exhibits/the-transformer",
 ];
 
 /** Serious/critical axe violations on the current page, formatted for the failure message. */

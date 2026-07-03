@@ -17,6 +17,7 @@ import { pcaCheck } from "./pca/concept-check";
 import { regressionTaskCheck } from "./regression-task/concept-check";
 import { theDatasetCheck } from "./the-dataset/concept-check";
 import { theGradientCheck } from "./the-gradient/concept-check";
+import { transformerCheck } from "./the-transformer/concept-check";
 import { trainTestGeneralizationCheck } from "./train-test-generalization/concept-check";
 import { whatIsMlCheck } from "./what-is-ml/concept-check";
 
@@ -32,6 +33,7 @@ export const conceptChecks: Record<string, ConceptCheck> = {
   cnns: cnnsCheck,
   embeddings: embeddingsCheck,
   attention: attentionCheck,
+  "the-transformer": transformerCheck,
   "data-leakage": dataLeakageCheck,
   "feature-scaling": featureScalingCheck,
   "gradient-descent": gradientDescentCheck,

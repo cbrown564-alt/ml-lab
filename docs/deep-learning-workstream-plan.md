@@ -112,7 +112,7 @@ After every node is `interactive`:
   `pca`, and `classification-task`.
 - **Journeys:** `into-deep-learning` (5 stops) and `understanding-llms` (5 stops, one
   optional) registered in `content/journeys/foundations.ts`.
-- **Exhibits:** `cnns`, `embeddings`, and `attention` live at **interactive** (four-act spines,
-  hand-rolled models, `ConvField` + `EmbeddingMap` + `AttentionHeatmap` viz kit). Remaining two
-  nodes still stub. Into Deep Learning journey now shows four live stops.
-- **Next action:** scaffold + build **the-transformer** (stacked block + next-token loop).
+- **Exhibits:** `cnns` through `the-transformer` live at **interactive** (four-act spines,
+  hand-rolled models, viz kit through block flow + next-token logits). RAG capstone still stub.
+  Both deep-learning journeys now show four live stops each.
+- **Next action:** scaffold + build **fine-tuning-vs-prompting-vs-rag** (conceptual capstone).

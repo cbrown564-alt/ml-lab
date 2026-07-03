@@ -28,6 +28,7 @@ export const liveExhibits: Record<string, { href: string }> = {
   cnns: { href: "/exhibits/cnns" },
   embeddings: { href: "/exhibits/embeddings" },
   attention: { href: "/exhibits/attention" },
+  "the-transformer": { href: "/exhibits/the-transformer" },
 };
 
 export const isLive = (nodeId: string): boolean => nodeId in liveExhibits;

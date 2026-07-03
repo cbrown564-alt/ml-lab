@@ -312,7 +312,7 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    status: "stub",
+    status: "interactive",
   },
   {
     id: "fine-tuning-vs-prompting-vs-rag",

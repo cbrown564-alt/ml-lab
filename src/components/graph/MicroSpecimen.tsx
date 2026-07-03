@@ -112,6 +112,8 @@ function Specimen({ id, t }: { id: string; t: number }) {
       return <Embeddings t={t} />;
     case "attention":
       return <Attention t={t} />;
+    case "the-transformer":
+      return <Transformer t={t} />;
     default:
       return <FallbackSpecimen id={id} />;
   }
@@ -616,6 +618,34 @@ function Attention({ t }: { t: number }) {
       <text x={originX + size + 5} y={originY + size + 8} fontSize="7" fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
         sat→cat
       </text>
+    </>
+  );
+}
+
+function Transformer({ t }: { t: number }) {
+  const bars = [
+    ["mat", 0.72],
+    ["rug", 0.12],
+    ["floor", 0.08],
+  ] as const;
+  return (
+    <>
+      {bars.map(([label, width], index) => (
+        <g key={label}>
+          <rect
+            x={28}
+            y={34 + index * 16}
+            width={20 + width * 60 * (0.7 + t * 0.3)}
+            height={8}
+            rx={3}
+            fill={index === 0 ? "var(--viz-prediction)" : "var(--viz-param)"}
+            opacity={0.85}
+          />
+          <text x={24} y={41 + index * 16} textAnchor="end" fontSize="7" fontFamily="var(--font-mono)" fill="var(--ink-muted)">
+            {label}
+          </text>
+        </g>
+      ))}
     </>
   );
 }

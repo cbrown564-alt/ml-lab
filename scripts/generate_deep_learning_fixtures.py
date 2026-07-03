@@ -344,7 +344,85 @@ def attention_fixture() -> None:
     print(f"wrote {path}")
 
 
+def transformer_fixture() -> None:
+    """Next-token prediction on a short prefix — one block, residuals, LM head."""
+    context = [
+        {"id": "the-0", "label": "The"},
+        {"id": "cat", "label": "cat"},
+        {"id": "sat", "label": "sat"},
+        {"id": "on", "label": "on"},
+        {"id": "the-1", "label": "the"},
+    ]
+    candidates = [
+        {"id": "mat", "label": "mat"},
+        {"id": "rug", "label": "rug"},
+        {"id": "floor", "label": "floor"},
+        {"id": "sat", "label": "sat"},
+        {"id": "cat", "label": "cat"},
+        {"id": "the", "label": "the"},
+    ]
+    base_logits = np.array([2.85, 0.55, 0.15, -0.55, -1.05, -0.85], dtype=float)
+    block_boost = np.array([0.35, 0.05, 0.02, 0.0, 0.0, 0.0], dtype=float)
+    no_residual_logits = base_logits - np.array([1.35, 0.15, 0.05, 0.0, 0.0, 0.0], dtype=float)
+
+    def prob(logits: np.ndarray, temperature: float = 1.0) -> np.ndarray:
+        scaled = logits / temperature
+        shifted = scaled - scaled.max()
+        exp = np.exp(shifted)
+        return exp / exp.sum()
+
+    pinned_prob = float(prob(base_logits)[0])
+
+    # Last context token ("the") attending backward before the LM head.
+    attn_logits = np.array([-1.5, 0.4, 1.0, 2.8, 0.2], dtype=float)
+    attn_weights = _softmax_rows((attn_logits / np.sqrt(4))[np.newaxis, :])[0]
+
+    stages = [
+        {"id": "embed", "label": "Token embed", "norm": 1.0},
+        {"id": "attn", "label": "Self-attention", "deltaNorm": 0.34},
+        {"id": "attn-residual", "label": "Add & norm", "norm": 1.14},
+        {"id": "ffn", "label": "Feed-forward", "deltaNorm": 0.41},
+        {"id": "ffn-residual", "label": "Add & norm", "norm": 1.31},
+        {"id": "head", "label": "LM head", "norm": 1.31},
+    ]
+
+    payload = {
+        "generator": {
+            "script": "scripts/generate_deep_learning_fixtures.py",
+            "python": platform.python_version(),
+            "numpy": np.__version__,
+            "note": "hand-tuned next-token logits; softmax in TypeScript must match prob()",
+        },
+        "prefix": "The cat sat on the",
+        "context": context,
+        "predictIndex": len(context) - 1,
+        "candidates": candidates,
+        "nextToken": {
+            "targetId": "mat",
+            "baseLogits": base_logits.round(6).tolist(),
+            "blockBoost": block_boost.round(6).tolist(),
+            "noResidualLogits": no_residual_logits.round(6).tolist(),
+            "pinnedProb": pinned_prob,
+        },
+        "block": {
+            "residualShare": 0.74,
+            "stages": stages,
+        },
+        "attentionRow": {
+            "queryIndex": len(context) - 1,
+            "logits": attn_logits.round(6).tolist(),
+            "weights": attn_weights.round(6).tolist(),
+            "topKeyIndex": int(np.argmax(attn_weights)),
+        },
+    }
+
+    path = OUT / "transformer.json"
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    print(f"wrote {path}")
+
+
 if __name__ == "__main__":
     main()
     embeddings_fixture()
     attention_fixture()
+    transformer_fixture()
