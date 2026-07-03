@@ -28,4 +28,13 @@ describe("embeddings model layer", () => {
     const nearest = nearestByCosine("king", embeddingTokens, 3).map((row) => row.token.id);
     expect(nearest).toEqual(["queen", "prince", "woman"]);
   });
+
+  it("breaks the analogy in pca space (the Break-it beat depends on this)", () => {
+    expect(
+      analogyDistance("king", "man", "woman", "queen", "pca"),
+    ).toBeCloseTo(analogyFixture.pcaDistanceToQueen, 6);
+    // PCA is linear, so a compositional feature matrix would carry the analogy into
+    // the projection exactly — guard that the fixture keeps the miss genuinely visible.
+    expect(analogyFixture.pcaDistanceToQueen).toBeGreaterThan(0.35);
+  });
 });

@@ -43,6 +43,17 @@ test.describe("embeddings exhibit", () => {
     await expect(panel(page).getByText(/Trigger it/i)).toBeVisible();
   });
 
+  test("Break it: PCA projection breaks the analogy until repaired", async ({ page }) => {
+    await openTab(page, "Break it");
+    await panel(page).getByRole("button", { name: "Analogy" }).click();
+    await expect(panel(page).getByText(/Symptom · the offset misses/i)).toBeVisible();
+    await panel(page).getByRole("button", { name: /Repair · learned space/i }).click();
+    await expect(panel(page).getByText(/Trigger it/i)).toBeVisible();
+    await expect(
+      panel(page).getByRole("img", { name: /lands on queen/i }),
+    ).toBeVisible();
+  });
+
   test("Explain it pairs the checks with the learned vs PCA companion", async ({ page }) => {
     await openTab(page, "Explain it");
     await expect(panel(page).getByText(/king's neighbours — learned vs PCA/i)).toBeVisible();

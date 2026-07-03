@@ -31,6 +31,8 @@ export const analogyFixture = {
   ...fixture.analogy,
   result: toVec2(fixture.analogy.result),
   distanceToQueen: fixture.analogy.distanceToQueen,
+  pcaResult: toVec2(fixture.analogy.pcaResult),
+  pcaDistanceToQueen: fixture.analogy.pcaDistanceToQueen,
 };
 
 export const learnedDomain = fixture.domain.learned as [number, number];
@@ -79,12 +81,21 @@ export function nearestByCosine(
     .slice(0, k);
 }
 
-export function analogyDistance(aId: string, bId: string, cId: string, targetId: string): number {
-  const a = tokenById.get(aId)!.vector;
-  const b = tokenById.get(bId)!.vector;
-  const c = tokenById.get(cId)!.vector;
-  const target = tokenById.get(targetId)!.vector;
-  return euclideanDistance(vectorAnalogy(a, b, c), target);
+export function analogyDistance(
+  aId: string,
+  bId: string,
+  cId: string,
+  targetId: string,
+  space: "learned" | "pca" = "learned",
+): number {
+  const pick = (id: string) => {
+    const token = tokenById.get(id)!;
+    return space === "pca" ? token.pca : token.vector;
+  };
+  return euclideanDistance(
+    vectorAnalogy(pick(aId), pick(bId), pick(cId)),
+    pick(targetId),
+  );
 }
 
 export const GROUP_COLORS: Record<string, { fill: string; ink: string }> = {

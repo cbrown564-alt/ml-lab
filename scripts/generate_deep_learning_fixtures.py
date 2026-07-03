@@ -149,28 +149,47 @@ def embeddings_fixture() -> None:
         {"id": "cold", "label": "cold", "group": "temperature", "vector": [-0.5, -0.8]},
     ]
 
-    # Co-occurrence-style features (fixed, not task-tuned): royal, human, female,
-    # animal, motion, intensity — PCA on these will not preserve the gender axis.
-    feature_names = ["royal", "human", "female", "animal", "motion", "intensity"]
+    # Co-occurrence-style counts (fixed, not task-tuned). These must NOT satisfy the
+    # compositional identity king − man + woman = queen: PCA is linear, so any feature
+    # matrix where the identity holds exactly carries the analogy into EVERY projection
+    # unchanged (an earlier compositional version had pca-space distance 0.0, silently
+    # falsifying the exhibit's "PCA breaks the analogy" beat). Real counts are
+    # idiosyncratic — queen skews harder to "she"-contexts, king to "crown" — so the
+    # analogy misses in feature space and visibly misses in the 2-D projection.
+    feature_names = ["crown", "he", "she", "pet", "motion", "intensity"]
     features = {
-        "king": [1, 1, 0, 0, 0, 0.2],
-        "queen": [1, 1, 1, 0, 0, 0.2],
-        "prince": [1, 1, 0, 0, 0, 0.1],
-        "man": [0, 1, 0, 0, 0, 0.0],
-        "woman": [0, 1, 1, 0, 0, 0.0],
-        "cat": [0, 0, 0, 1, 0, 0.1],
-        "dog": [0, 0, 0, 1, 0, 0.0],
-        "kitten": [0, 0, 0, 1, 0, 0.2],
-        "run": [0, 0, 0, 0, 1, 0.8],
-        "walk": [0, 0, 0, 0, 1, 0.3],
-        "sprint": [0, 0, 0, 0, 1, 1.0],
-        "hot": [0, 0, 0, 0, 0, 0.9],
-        "cold": [0, 0, 0, 0, 0, 0.1],
+        "king": [8, 6, 1, 0, 0, 0.4],
+        "queen": [5, 1, 8, 0, 0, 0.3],
+        "prince": [5, 4, 1, 0, 0, 0.2],
+        "man": [1, 7, 1, 0, 0, 0.1],
+        "woman": [1, 1, 8, 0, 0, 0.1],
+        "cat": [0, 1, 1, 7, 1, 0.2],
+        "dog": [0, 1, 1, 8, 2, 0.3],
+        "kitten": [0, 0, 1, 6, 1, 0.5],
+        "run": [0, 1, 1, 1, 8, 1.6],
+        "walk": [0, 1, 1, 1, 7, 0.5],
+        "sprint": [0, 0, 0, 0, 6, 2.0],
+        # hot/cold differ beyond the intensity axis so the 2-D projection keeps their
+        # markers (and labels) visibly apart — identical rows collapsed to one point.
+        "hot": [0, 2, 1, 1, 2, 1.8],
+        "cold": [0, 1, 2, 0, 0, 0.4],
     }
 
     matrix = np.array([features[t["id"]] for t in tokens], dtype=float)
     pca = PCA(n_components=2, random_state=7).fit(matrix)
     pca_points = pca.transform(matrix)
+
+    # Guard the exhibit's Break-it beat: the analogy must genuinely miss queen in the
+    # projected space (relative to the ~unit-scale learned offsets).
+    idx = {t["id"]: i for i, t in enumerate(tokens)}
+    pca_result = (
+        pca_points[idx["king"]] - pca_points[idx["man"]] + pca_points[idx["woman"]]
+    )
+    pca_analogy_distance = float(np.linalg.norm(pca_result - pca_points[idx["queen"]]))
+    assert pca_analogy_distance > 0.35, (
+        f"pca analogy distance {pca_analogy_distance:.3f} too small — "
+        "counts drifted back toward compositional"
+    )
 
     king = next(t for t in tokens if t["id"] == "king")
     man = next(t for t in tokens if t["id"] == "man")
@@ -187,7 +206,7 @@ def embeddings_fixture() -> None:
             "script": "scripts/generate_deep_learning_fixtures.py",
             "python": platform.python_version(),
             "numpy": np.__version__,
-            "note": "learned vectors hand-placed; PCA on co-occurrence features",
+            "note": "learned vectors hand-placed; PCA on non-compositional co-occurrence counts (analogy identity intentionally broken in feature space)",
         },
         "featureNames": feature_names,
         "tokens": [
@@ -206,6 +225,8 @@ def embeddings_fixture() -> None:
             "target": "queen",
             "result": [float(analogy[0]), float(analogy[1])],
             "distanceToQueen": float(np.linalg.norm(analogy - qv)),
+            "pcaResult": [float(pca_result[0]), float(pca_result[1])],
+            "pcaDistanceToQueen": pca_analogy_distance,
         },
         "domain": {
             "learned": [

@@ -8,6 +8,8 @@ import {
   embeddingTokens,
   learnedDomain,
   nearestByCosine,
+  pcaDomain,
+  pcaYDomain,
 } from "@/lib/models/embeddings";
 import { analogyFixture } from "@content/exhibits/embeddings/experiment";
 
@@ -44,7 +46,7 @@ export function EmbeddingsBreakIt() {
         <p className="font-mono text-[11px] text-ink-faint">
           {mode === "one-hot"
             ? "failure ① — no geometry, no neighbours"
-            : "failure ② — verify the analogy lands"}
+            : "failure ② — variance ≠ analogy"}
         </p>
       </div>
       {mode === "one-hot" ? <OneHotLoop /> : <AnalogyLoop />}
@@ -128,31 +130,73 @@ function OneHotLoop() {
 }
 
 function AnalogyLoop() {
+  const [pcaView, setPcaView] = useState(true);
+  const distance = pcaView
+    ? analogyFixture.pcaDistanceToQueen
+    : analogyFixture.distanceToQueen;
+
   return (
     <div className="lg:grid lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:items-start lg:gap-8">
-      <Guidance
-        tone="ready"
-        kicker="Verify the offset"
-        body={
-          <>
-            Run king − man + woman. Distance to queen:{" "}
-            <span className="font-mono tabular-nums text-[var(--viz-prediction-ink)]">
-              {analogyFixture.distanceToQueen.toFixed(2)}
-            </span>
-            . Switch to PCA in Run it to watch the same arithmetic fail.
-          </>
-        }
-      />
+      <div className="flex flex-col gap-5">
+        <Guidance
+          tone={pcaView ? "broken" : "ready"}
+          kicker={pcaView ? "Symptom · the offset misses" : "Trigger it"}
+          body={
+            pcaView ? (
+              <>
+                In PCA coordinates king − man + woman lands{" "}
+                <span className="font-medium text-[var(--viz-error-ink)]">
+                  {analogyFixture.pcaDistanceToQueen.toFixed(2)} away from queen
+                </span>
+                . The axes chase variance in raw co-occurrence counts — nothing tuned
+                them so the gender offset stays linear.
+              </>
+            ) : (
+              "In the learned space the same arithmetic lands exactly on queen. Project with PCA instead to watch the offset dissolve."
+            )
+          }
+          foot={
+            pcaView ? (
+              <>
+                <span className="font-medium text-ink">Repair:</span> use coordinates
+                trained for the task, not the directions of maximum spread.
+              </>
+            ) : undefined
+          }
+        />
+        <button
+          type="button"
+          onClick={() => setPcaView((value) => !value)}
+          className="self-start rounded-full border border-line px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-ink-faint"
+        >
+          {pcaView ? "Repair · learned space" : "Break · PCA projection"}
+        </button>
+        <StatGrid
+          direction="col"
+          stats={[
+            {
+              label: "|result − queen|",
+              value: distance.toFixed(2),
+              hue: pcaView ? "var(--viz-error-ink)" : "var(--viz-prediction-ink)",
+              note: "king − man + woman",
+            },
+          ]}
+        />
+      </div>
       <EmbeddingMap
         tokens={embeddingTokens}
-        layout="learned"
-        xDomain={learnedDomain}
-        yDomain={learnedDomain}
-        selectedId="king"
+        layout={pcaView ? "pca" : "learned"}
+        xDomain={pcaView ? pcaDomain : learnedDomain}
+        yDomain={pcaView ? pcaYDomain : learnedDomain}
+        selectedId="queen"
         analogy={{ a: "king", b: "man", c: "woman", target: "queen", showResult: true }}
         width={560}
         height={360}
-        ariaLabel="Analogy overlay: king minus man plus woman lands on queen."
+        ariaLabel={
+          pcaView
+            ? `PCA view: king minus man plus woman misses queen by ${analogyFixture.pcaDistanceToQueen.toFixed(2)}.`
+            : "Learned view: king minus man plus woman lands on queen."
+        }
       />
     </div>
   );
