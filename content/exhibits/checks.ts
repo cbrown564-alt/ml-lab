@@ -1,7 +1,11 @@
 import type { ConceptCheck } from "@/lib/assessment/schema";
+import { attentionCheck } from "./attention/concept-check";
 import { biasVarianceCheck } from "./bias-variance/concept-check";
 import { classificationTaskCheck } from "./classification-task/concept-check";
+import { cnnsCheck } from "./cnns/concept-check";
 import { dataLeakageCheck } from "./data-leakage/concept-check";
+import { embeddingsCheck } from "./embeddings/concept-check";
+import { adaptationCheck } from "./fine-tuning-vs-prompting-vs-rag/concept-check";
 import { featureScalingCheck } from "./feature-scaling/concept-check";
 import { gradientDescentCheck } from "./gradient-descent/concept-check";
 import { kMeansCheck } from "./k-means/concept-check";
@@ -14,6 +18,7 @@ import { pcaCheck } from "./pca/concept-check";
 import { regressionTaskCheck } from "./regression-task/concept-check";
 import { theDatasetCheck } from "./the-dataset/concept-check";
 import { theGradientCheck } from "./the-gradient/concept-check";
+import { transformerCheck } from "./the-transformer/concept-check";
 import { trainTestGeneralizationCheck } from "./train-test-generalization/concept-check";
 import { whatIsMlCheck } from "./what-is-ml/concept-check";
 
@@ -26,6 +31,11 @@ import { whatIsMlCheck } from "./what-is-ml/concept-check";
 export const conceptChecks: Record<string, ConceptCheck> = {
   "bias-variance": biasVarianceCheck,
   "classification-task": classificationTaskCheck,
+  cnns: cnnsCheck,
+  embeddings: embeddingsCheck,
+  attention: attentionCheck,
+  "the-transformer": transformerCheck,
+  "fine-tuning-vs-prompting-vs-rag": adaptationCheck,
   "data-leakage": dataLeakageCheck,
   "feature-scaling": featureScalingCheck,
   "gradient-descent": gradientDescentCheck,

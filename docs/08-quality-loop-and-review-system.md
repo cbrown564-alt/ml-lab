@@ -3,7 +3,8 @@
 **Status:** implemented (2026-06-23); human pass complete (2026-07-01). See
 [foundations-rejudge.md](reviews/foundations-rejudge.md) and
 [Implemented](#implemented-2026-06-23) at the foot of this doc. Unsupervised cluster
-(k-means, PCA) shipped 2026-07-01; next: deep-learning on-ramps. The bridge between
+(k-means, PCA) shipped flagship 2026-07-02; deep-learning on-ramps kickoff 2026-07-03
+(see [deep-learning-workstream-plan.md](deep-learning-workstream-plan.md)). The bridge between
 "Foundations is built to a good standard" and "Foundations clears the Distill/3B1B
 bar" — and the precondition for scaling the loop
 ([PHASE1-SCALE-PLAN.md](loop/PHASE1-SCALE-PLAN.md)) to the rest of the graph
@@ -247,6 +248,6 @@ All three were built per the plan's own recommendation, each kept cheap to revis
 | 6 — Alternatives + rationale | `decisions.md` this-not-that surface in `/review` (variant frames rendered adjacent from `<capture>/variants/`; chosen/rejected/why/refs persisted), read back by the brief. |
 
 **Human review:** complete (2026-07-01) for Foundations; `check:rubric --strict` gates
-`prebuild` on every flagship node. Unsupervised cluster (k-means, PCA) built
-interactive 2026-07-01 — cluster panel review pending before flagship batch. Next
-scale-out: deep-learning on-ramps.
+`prebuild` on every flagship node. Unsupervised cluster (k-means, PCA) **flagship**
+2026-07-02. Deep-learning on-ramps kickoff 2026-07-03 — see
+[deep-learning-workstream-plan.md](deep-learning-workstream-plan.md).

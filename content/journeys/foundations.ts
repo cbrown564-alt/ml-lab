@@ -57,4 +57,75 @@ export const unsupervised: Journey = {
   ],
 };
 
-export const journeys: Journey[] = [foundations, unsupervised];
+export const intoDeepLearning: Journey = {
+  id: "into-deep-learning",
+  title: "Into Deep Learning",
+  audience: "Learners who have met linear models and neural-network basics and want the modern stack",
+  description:
+    "From stacked units to spatial filters, learned geometry, content-dependent routing, and the transformer block — the connected path into deep learning.",
+  stops: [
+    {
+      nodeId: "neural-network-fundamentals",
+      framing:
+        "You already stacked units and watched a boundary bend. Deep learning is what happens when structure, hierarchy, and representation enter the picture.",
+    },
+    {
+      nodeId: "cnns",
+      framing:
+        "Images are grids, not flat feature vectors. A small filter sliding across the grid learns local patterns that stack into parts.",
+    },
+    {
+      nodeId: "embeddings",
+      framing:
+        "Discrete tokens and objects become points in a space — similar things close, different things far. Attention and transformers live in this geometry.",
+    },
+    {
+      nodeId: "attention",
+      framing:
+        "Each position chooses what to read. Not a fixed window — a weighted mix driven by content.",
+    },
+    {
+      nodeId: "the-transformer",
+      framing:
+        "Self-attention blocks, residuals, layer norm — the repeating unit behind most language and multimodal models today.",
+    },
+  ],
+};
+
+export const understandingLlms: Journey = {
+  id: "understanding-llms",
+  title: "Understanding LLMs",
+  audience: "Engineers and curious readers who want to explain how chat models work end-to-end",
+  description:
+    "Not one giant animation — a connected sequence from vectors and routing through the transformer block to the practical fork: fine-tune, prompt, or retrieve.",
+  stops: [
+    { nodeId: "neural-network-fundamentals", optional: true },
+    {
+      nodeId: "embeddings",
+      framing:
+        "Tokens become vectors. Similar meanings land nearby — the coordinate system every later mechanism operates on.",
+    },
+    {
+      nodeId: "attention",
+      framing:
+        "Query, key, value: each token asks who to listen to. Multi-head attention is several of these lookups in parallel.",
+    },
+    {
+      nodeId: "the-transformer",
+      framing:
+        "Stack the block: predict the next token, backprop through attention, residual pathways keep the signal flowing.",
+    },
+    {
+      nodeId: "fine-tuning-vs-prompting-vs-rag",
+      framing:
+        "The model is pretrained — now how do you steer it? Change weights, change instructions, or change what it can look up.",
+    },
+  ],
+};
+
+export const journeys: Journey[] = [
+  foundations,
+  unsupervised,
+  intoDeepLearning,
+  understandingLlms,
+];

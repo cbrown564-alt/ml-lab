@@ -1,0 +1,325 @@
+{
+  "generator": {
+    "script": "scripts/generate_deep_learning_fixtures.py",
+    "python": "3.12.3",
+    "numpy": "2.4.4",
+    "note": "learned vectors hand-placed; PCA on co-occurrence features"
+  },
+  "featureNames": [
+    "royal",
+    "human",
+    "female",
+    "animal",
+    "motion",
+    "intensity"
+  ],
+  "tokens": [
+    {
+      "id": "king",
+      "label": "king",
+      "group": "royalty",
+      "vector": [
+        2.1,
+        0.8
+      ],
+      "features": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0.2
+      ],
+      "pca": [
+        0.8803363957465892,
+        -0.15976581449286734
+      ]
+    },
+    {
+      "id": "queen",
+      "label": "queen",
+      "group": "royalty",
+      "vector": [
+        2.0,
+        1.6
+      ],
+      "features": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0.2
+      ],
+      "pca": [
+        1.1909239580716489,
+        -0.2202426564410274
+      ]
+    },
+    {
+      "id": "prince",
+      "label": "prince",
+      "group": "royalty",
+      "vector": [
+        1.2,
+        0.0
+      ],
+      "features": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0.1
+      ],
+      "pca": [
+        0.9069094240034036,
+        -0.11759675297695951
+      ]
+    },
+    {
+      "id": "man",
+      "label": "man",
+      "group": "gender",
+      "vector": [
+        0.5,
+        -0.2
+      ],
+      "features": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0.0
+      ],
+      "pca": [
+        0.4625217478599023,
+        0.06243878058117665
+      ]
+    },
+    {
+      "id": "woman",
+      "label": "woman",
+      "group": "gender",
+      "vector": [
+        0.4,
+        0.6
+      ],
+      "features": [
+        0,
+        1,
+        1,
+        0,
+        0,
+        0.0
+      ],
+      "pca": [
+        0.7731093101849619,
+        0.0019619386330166078
+      ]
+    },
+    {
+      "id": "cat",
+      "label": "cat",
+      "group": "animal",
+      "vector": [
+        -1.2,
+        0.5
+      ],
+      "features": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.1
+      ],
+      "pca": [
+        -0.43838926477878715,
+        0.8310222432331413
+      ]
+    },
+    {
+      "id": "dog",
+      "label": "dog",
+      "group": "animal",
+      "vector": [
+        -1.0,
+        -0.3
+      ],
+      "features": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.0
+      ],
+      "pca": [
+        -0.41181623652197286,
+        0.8731913047490492
+      ]
+    },
+    {
+      "id": "kitten",
+      "label": "kitten",
+      "group": "animal",
+      "vector": [
+        -1.4,
+        0.9
+      ],
+      "features": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.2
+      ],
+      "pca": [
+        -0.46496229303560144,
+        0.7888531817172334
+      ]
+    },
+    {
+      "id": "run",
+      "label": "run",
+      "group": "motion",
+      "vector": [
+        -0.2,
+        -1.4
+      ],
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0.8
+      ],
+      "pca": [
+        -0.7683148004949456,
+        -0.7098678604025341
+      ]
+    },
+    {
+      "id": "walk",
+      "label": "walk",
+      "group": "motion",
+      "vector": [
+        0.1,
+        -1.1
+      ],
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0.3
+      ],
+      "pca": [
+        -0.6354496592108742,
+        -0.4990225528229948
+      ]
+    },
+    {
+      "id": "sprint",
+      "label": "sprint",
+      "group": "motion",
+      "vector": [
+        -0.4,
+        -1.8
+      ],
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        1.0
+      ],
+      "pca": [
+        -0.8214608570085741,
+        -0.7942059834343498
+      ]
+    },
+    {
+      "id": "hot",
+      "label": "hot",
+      "group": "temperature",
+      "vector": [
+        0.4,
+        -0.6
+      ],
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.9
+      ],
+      "pca": [
+        -0.44299597543513225,
+        -0.19705916023507344
+      ]
+    },
+    {
+      "id": "cold",
+      "label": "cold",
+      "group": "temperature",
+      "vector": [
+        -0.5,
+        -0.8
+      ],
+      "features": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.1
+      ],
+      "pca": [
+        -0.2304117493806181,
+        0.14029333189218945
+      ]
+    }
+  ],
+  "analogy": {
+    "a": "king",
+    "b": "man",
+    "c": "woman",
+    "target": "queen",
+    "result": [
+      2.0,
+      1.6
+    ],
+    "distanceToQueen": 0.0
+  },
+  "domain": {
+    "learned": [
+      -1.8,
+      2.1
+    ],
+    "pca": [
+      -1.121460857008574,
+      1.490923958071649
+    ],
+    "pcaY": [
+      -1.0942059834343498,
+      1.1731913047490492
+    ]
+  },
+  "nearestKing": {
+    "anchor": "king",
+    "topIds": [
+      "queen",
+      "prince",
+      "woman"
+    ],
+    "queenCosine": 0.9521008431123271
+  }
+}

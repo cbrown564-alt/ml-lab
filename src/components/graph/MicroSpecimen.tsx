@@ -106,6 +106,16 @@ function Specimen({ id, t }: { id: string; t: number }) {
       return <KMeans t={t} />;
     case "pca":
       return <Pca t={t} />;
+    case "cnns":
+      return <Cnns t={t} />;
+    case "embeddings":
+      return <Embeddings t={t} />;
+    case "attention":
+      return <Attention t={t} />;
+    case "the-transformer":
+      return <Transformer t={t} />;
+    case "fine-tuning-vs-prompting-vs-rag":
+      return <AdaptLlm t={t} />;
     default:
       return <FallbackSpecimen id={id} />;
   }
@@ -496,6 +506,174 @@ function KMeans({ t }: { t: number }) {
             strokeWidth="2"
           />
           <circle cx={x} cy={cy[i]} r="3" fill="var(--viz-param)" />
+        </g>
+      ))}
+    </>
+  );
+}
+
+function Cnns({ t }: { t: number }) {
+  const cells = 4;
+  const origin = 34;
+  const size = 10;
+  const slide = Math.round(t * 2);
+  return (
+    <>
+      {Array.from({ length: cells * cells }, (_, i) => {
+        const r = Math.floor(i / cells);
+        const c = i % cells;
+        const x = origin + c * size;
+        const y = origin + r * size;
+        const dark = c < cells / 2 ? 0.25 : 0.75;
+        return (
+          <rect
+            key={i}
+            x={x}
+            y={y}
+            width={size - 1}
+            height={size - 1}
+            fill={`color-mix(in srgb, var(--viz-truth) ${Math.round(dark * 100)}%, var(--surface-bg))`}
+            stroke="var(--line)"
+            strokeWidth="0.5"
+          />
+        );
+      })}
+      <rect
+        x={origin + slide * size}
+        y={origin + slide * size}
+        width={size * 3 - 1}
+        height={size * 3 - 1}
+        fill="none"
+        stroke="var(--viz-param)"
+        strokeWidth="1.5"
+      />
+    </>
+  );
+}
+
+function Embeddings({ t }: { t: number }) {
+  const points = [
+    ["king", 72, 38],
+    ["queen", 68, 52],
+    ["cat", 36, 44],
+    ["run", 48, 68],
+  ] as const;
+  return (
+    <>
+      {points.map(([label, cx, cy], i) => (
+        <g key={label}>
+          <circle
+            cx={cx}
+            cy={cy}
+            r={4 + (i === 0 ? t * 2 : 0)}
+            fill="var(--viz-prediction)"
+            opacity={0.9}
+          />
+          <text
+            x={cx}
+            y={cy - 8}
+            textAnchor="middle"
+            fontSize="7"
+            fontFamily="var(--font-mono)"
+            fill="var(--viz-prediction-ink)"
+          >
+            {label}
+          </text>
+        </g>
+      ))}
+    </>
+  );
+}
+
+function Attention({ t }: { t: number }) {
+  const cells = [
+    [0.1, 0.15, 0.55, 0.05, 0.05, 0.1],
+    [0.05, 0.1, 0.2, 0.05, 0.05, 0.55],
+  ];
+  const originX = 34;
+  const originY = 28;
+  const size = 12;
+  return (
+    <>
+      {cells[1]!.map((weight, col) => (
+        <rect
+          key={`sat-${col}`}
+          x={originX + col * size}
+          y={originY + size}
+          width={size - 1}
+          height={size - 1}
+          rx={2}
+          fill="var(--viz-prediction)"
+          opacity={0.15 + weight * (0.5 + t * 0.35)}
+        />
+      ))}
+      <rect
+        x={originX + size}
+        y={originY + size}
+        width={size - 1}
+        height={size - 1}
+        rx={2}
+        fill="none"
+        stroke="var(--viz-param)"
+        strokeWidth={1.2}
+      />
+      <text x={originX + size + 5} y={originY + size + 8} fontSize="7" fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
+        sat→cat
+      </text>
+    </>
+  );
+}
+
+function Transformer({ t }: { t: number }) {
+  const bars = [
+    ["mat", 0.72],
+    ["rug", 0.12],
+    ["floor", 0.08],
+  ] as const;
+  return (
+    <>
+      {bars.map(([label, width], index) => (
+        <g key={label}>
+          <rect
+            x={28}
+            y={34 + index * 16}
+            width={20 + width * 60 * (0.7 + t * 0.3)}
+            height={8}
+            rx={3}
+            fill={index === 0 ? "var(--viz-prediction)" : "var(--viz-param)"}
+            opacity={0.85}
+          />
+          <text x={24} y={41 + index * 16} textAnchor="end" fontSize="7" fontFamily="var(--font-mono)" fill="var(--ink-muted)">
+            {label}
+          </text>
+        </g>
+      ))}
+    </>
+  );
+}
+
+function AdaptLlm({ t }: { t: number }) {
+  const cols = [
+    { x: 30, label: "FT", h: 28 + t * 8 },
+    { x: 52, label: "P", h: 18 + t * 4 },
+    { x: 74, label: "R", h: 34 + t * 10 },
+  ];
+  return (
+    <>
+      {cols.map((col) => (
+        <g key={col.label}>
+          <rect
+            x={col.x}
+            y={78 - col.h}
+            width={14}
+            height={col.h}
+            rx={3}
+            fill={col.label === "R" ? "var(--viz-prediction)" : "var(--viz-param)"}
+            opacity={0.85}
+          />
+          <text x={col.x + 7} y={88} textAnchor="middle" fontSize="7" fontFamily="var(--font-mono)" fill="var(--ink-muted)">
+            {col.label}
+          </text>
         </g>
       ))}
     </>

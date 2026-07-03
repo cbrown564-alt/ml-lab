@@ -30,4 +30,4 @@ ML Lab turns core machine-learning ideas into exhibits you can run, break, and a
 
 ## Status
 
-Phase 0 complete. Phase 1 in progress: **20 live exhibits**, **20 graph nodes**, **2 journeys** — Foundations (15 flagship), `the-gradient`, trees cluster (3 flagship), unsupervised cluster (k-means, pca, flagship). Human review gate complete for Foundations (2026-07-01); unsupervised cluster panel complete (2026-07-02); `check:rubric --strict` gates `prebuild`. Next: deep-learning on-ramps — see [docs/05-roadmap.md](docs/05-roadmap.md).
+Phase 0 complete. Phase 1 in progress: **25 live exhibits**, **25 graph nodes**, **4 journeys** — Foundations (15 flagship), `the-gradient`, trees cluster (3 flagship), unsupervised cluster (k-means, pca, flagship), **deep-learning on-ramps cluster complete** (cnns → fine-tuning/RAG, all interactive). Human review gate complete for Foundations (2026-07-01); unsupervised cluster panel complete (2026-07-02); deep-learning cluster ready for batch review; `check:rubric --strict` gates `prebuild`. Workstream plan: [docs/deep-learning-workstream-plan.md](docs/deep-learning-workstream-plan.md).

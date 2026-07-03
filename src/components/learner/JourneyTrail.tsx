@@ -36,6 +36,11 @@ const SHORT: Record<string, string> = {
   "gradient-boosting": "Boosting",
   "k-means": "K-Means",
   pca: "PCA",
+  cnns: "CNNs",
+  embeddings: "Embeddings",
+  attention: "Attention",
+  "the-transformer": "Transformer",
+  "fine-tuning-vs-prompting-vs-rag": "Adapt LLMs",
 };
 
 /**

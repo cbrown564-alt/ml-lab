@@ -1,0 +1,139 @@
+{
+  "generator": {
+    "script": "scripts/generate_deep_learning_fixtures.py",
+    "python": "3.12.3",
+    "numpy": "2.4.4",
+    "note": "hand-tuned next-token logits; softmax in TypeScript must match prob()"
+  },
+  "prefix": "The cat sat on the",
+  "context": [
+    {
+      "id": "the-0",
+      "label": "The"
+    },
+    {
+      "id": "cat",
+      "label": "cat"
+    },
+    {
+      "id": "sat",
+      "label": "sat"
+    },
+    {
+      "id": "on",
+      "label": "on"
+    },
+    {
+      "id": "the-1",
+      "label": "the"
+    }
+  ],
+  "predictIndex": 4,
+  "candidates": [
+    {
+      "id": "mat",
+      "label": "mat"
+    },
+    {
+      "id": "rug",
+      "label": "rug"
+    },
+    {
+      "id": "floor",
+      "label": "floor"
+    },
+    {
+      "id": "sat",
+      "label": "sat"
+    },
+    {
+      "id": "cat",
+      "label": "cat"
+    },
+    {
+      "id": "the",
+      "label": "the"
+    }
+  ],
+  "nextToken": {
+    "targetId": "mat",
+    "baseLogits": [
+      2.85,
+      0.55,
+      0.15,
+      -0.55,
+      -1.05,
+      -0.85
+    ],
+    "blockBoost": [
+      0.35,
+      0.05,
+      0.02,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "noResidualLogits": [
+      1.5,
+      0.4,
+      0.1,
+      -0.55,
+      -1.05,
+      -0.85
+    ],
+    "pinnedProb": 0.8026950877108034
+  },
+  "block": {
+    "residualShare": 0.74,
+    "stages": [
+      {
+        "id": "embed",
+        "label": "Token embed",
+        "norm": 1.0
+      },
+      {
+        "id": "attn",
+        "label": "Self-attention",
+        "deltaNorm": 0.34
+      },
+      {
+        "id": "attn-residual",
+        "label": "Add & norm",
+        "norm": 1.14
+      },
+      {
+        "id": "ffn",
+        "label": "Feed-forward",
+        "deltaNorm": 0.41
+      },
+      {
+        "id": "ffn-residual",
+        "label": "Add & norm",
+        "norm": 1.31
+      },
+      {
+        "id": "head",
+        "label": "LM head",
+        "norm": 1.31
+      }
+    ]
+  },
+  "attentionRow": {
+    "queryIndex": 4,
+    "logits": [
+      -1.5,
+      0.4,
+      1.0,
+      2.8,
+      0.2
+    ],
+    "weights": [
+      0.055554,
+      0.143646,
+      0.193902,
+      0.476922,
+      0.129976
+    ],
+    "topKeyIndex": 3
+  }
+}

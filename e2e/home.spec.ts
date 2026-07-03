@@ -22,6 +22,8 @@ test.describe("home", () => {
     await expect(page.locator("#exhibits").getByRole("heading", { name: "Trees & ensembles" })).toBeVisible();
     await expect(page.locator("#exhibits").getByRole("heading", { name: "Unsupervised", exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Journey · Foundations/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Journey · Into Deep Learning/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Journey · Understanding LLMs/ })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Journey · Unsupervised Learning/ })).toBeVisible();
     await expect(page).toHaveScreenshot("home.png", { fullPage: true });
   });
@@ -36,10 +38,15 @@ test.describe("home", () => {
     ).toBeVisible();
   });
 
-  test("every jewel is a live door — all twenty exhibits in the cabinet", async ({ page }) => {
+  test("every jewel is a live door — all twenty-five exhibits in the cabinet", async ({ page }) => {
     const cabinet = page.locator("#exhibits");
     await expect(cabinet.getByRole("link", { name: /Gradient Descent/ })).toBeVisible();
     await expect(cabinet.getByRole("link", { name: /K-Means Clustering/ })).toBeVisible();
+    await expect(cabinet.getByRole("link", { name: /Convolutional Neural Networks/ })).toBeVisible();
+    await expect(cabinet.getByRole("link", { name: /Embeddings/ })).toBeVisible();
+    await expect(cabinet.getByRole("link", { name: /Attention/ })).toBeVisible();
+    await expect(cabinet.getByRole("link", { name: /The Transformer/ })).toBeVisible();
+    await expect(cabinet.getByRole("link", { name: /Fine-Tuning vs Prompting vs RAG/ })).toBeVisible();
     await expect(cabinet.getByRole("link", { name: /Random Forests/ })).toBeVisible();
     await cabinet.getByRole("link", { name: /The Dataset/ }).click();
     await expect(page.getByRole("heading", { name: "The Dataset" })).toBeVisible();
@@ -59,6 +66,16 @@ test.describe("home", () => {
     await expect(journey.getByRole("listitem")).toHaveCount(3);
     await journey.getByRole("link", { name: /K-Means Clustering/ }).click();
     await expect(page.getByRole("heading", { name: "K-Means Clustering" })).toBeVisible();
+  });
+
+  test("the Into Deep Learning journey shows live stops", async ({ page }) => {
+    const journey = page.locator("#into-deep-learning");
+    const stop = journey.locator("ol").getByRole("link", { name: "Neural Network Fundamentals" });
+    await expect(stop).toBeVisible();
+    await stop.click();
+    await expect(
+      page.getByRole("heading", { name: "Neural Network Fundamentals" }),
+    ).toBeVisible();
   });
 });
 
