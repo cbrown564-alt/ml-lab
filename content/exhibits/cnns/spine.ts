@@ -11,7 +11,10 @@ export type CnnsFrame = {
   showParamCompare?: boolean;
 };
 
-const midSlide = 17;
+// Slide 14 = output cell (2,2) — fires (2.10) for BOTH spine image×filter pairs
+// (stripes×vertical fires cols 2–3; vertical-stripes×horizontal fires rows 2–3).
+// Grid midpoints land on dead 0.00 cells and contradict the "strong response" captions.
+const midSlide = 14;
 
 export const cnnsSpine: Spine<CnnsFrame> = [
   {

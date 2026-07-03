@@ -97,14 +97,18 @@ function GridPanel({
   const max = diverging ? Math.max(...values.map(Math.abs), 0.01) : Math.max(...values);
 
   return (
-    <div className="rounded-xl border border-line bg-sunken p-3">
+    <div
+      className="w-full rounded-xl border border-line bg-sunken p-3"
+      style={{ maxWidth: width + 24 }}
+    >
       <div className="mb-2 font-mono text-[11px] tracking-widest text-ink-faint uppercase">
         {title}
       </div>
+      {/* Fluid: width/height only set the viewBox aspect — the SVG must shrink with its
+          minmax(0,…) grid track or the feature map overflows the stage column at 1440. */}
       <svg
-        width={width}
-        height={height}
         viewBox={`0 0 ${width} ${height}`}
+        className="block h-auto w-full"
         role="img"
         aria-hidden
       >

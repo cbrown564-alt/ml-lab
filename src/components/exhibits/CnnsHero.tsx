@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { ConvField } from "@/components/viz/ConvField";
 import { convState } from "@content/exhibits/cnns/experiment";
 
-/** Thesis frame: horizontal stripes, vertical-edge filter, mid-slide. */
+/** Thesis frame: horizontal stripes, vertical-edge filter, slide 14 — a firing cell (2.10). */
 export function CnnsHero() {
   const [reveal, setReveal] = useState(0);
-  const state = convState(0, 1, 17);
+  const state = convState(0, 1, 14);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

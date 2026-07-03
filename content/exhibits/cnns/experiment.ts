@@ -59,7 +59,9 @@ export const slideParam: ParamDef = {
   min: 0,
   max: outputSize * outputSize - 1,
   step: 1,
-  default: Math.floor((outputSize * outputSize) / 2),
+  // Output cell (2,2): fires for both stripe fixtures — the grid midpoint (18) lands
+  // on a dead 0.00 cell, so the learner's first frame would contradict the captions.
+  default: 2 * outputSize + 2,
 };
 
 export const imageAt = (index: number): ImageId =>

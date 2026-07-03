@@ -3,14 +3,6 @@
 import { useMemo } from "react";
 import type { AttentionToken } from "@/lib/models/attention";
 
-const HUES = {
-  low: "color-mix(in srgb, var(--viz-neutral) 18%, transparent)",
-  mid: "color-mix(in srgb, var(--viz-param) 35%, transparent)",
-  high: "color-mix(in srgb, var(--viz-prediction) 55%, transparent)",
-  query: "var(--viz-param-ink)",
-  key: "var(--viz-truth-ink)",
-};
-
 export function AttentionHeatmap({
   tokens,
   weights,
@@ -30,7 +22,9 @@ export function AttentionHeatmap({
 }) {
   const layout = useMemo(() => {
     const labelPad = 56;
-    const topPad = 28;
+    // Two stacked text rows live above the grid ("Keys →" then token labels) —
+    // anything under ~40 collides them at 11px mono.
+    const topPad = 44;
     const size = tokens.length;
     const innerW = width - labelPad - 16;
     const innerH = height - topPad - labelPad;
@@ -39,11 +33,14 @@ export function AttentionHeatmap({
     return { labelPad, topPad, cellW, cellH, size };
   }, [height, tokens.length, width]);
 
-  const row = weights[queryIndex] ?? [];
-
   return (
-    <figure role="img" aria-label={ariaLabel} className="overflow-x-auto">
-      <svg width={width} height={height} className="max-w-full">
+    <figure role="img" aria-label={ariaLabel}>
+      {/* Fluid: viewBox carries the aspect; the matrix scales with its column. */}
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="block h-auto w-full"
+        style={{ maxWidth: width }}
+      >
         <text
           x={layout.labelPad + (layout.cellW * layout.size) / 2}
           y={14}
@@ -100,7 +97,7 @@ export function AttentionHeatmap({
                             : "transparent"
                       }
                       strokeWidth={peak ? 2 : 1}
-                      opacity={isQuery ? 1 : 0.55}
+                      opacity={isQuery ? 1 : 0.9}
                     />
                     {isQuery ? (
                       <text
@@ -123,11 +120,11 @@ export function AttentionHeatmap({
   );
 }
 
+// Continuous single-hue ramp over the WHOLE matrix — every query row is a shaded
+// field (the token-aligned-heatmap register), with the active row run slightly hotter.
 function cellFill(weight: number, emphasized: boolean): string {
-  if (!emphasized) return HUES.low;
-  if (weight >= 0.35) return HUES.high;
-  if (weight >= 0.15) return HUES.mid;
-  return HUES.low;
+  const pct = Math.round(Math.min(0.75, weight) * (emphasized ? 92 : 76));
+  return `color-mix(in srgb, var(--viz-prediction) ${pct}%, var(--surface-bg))`;
 }
 
 export function ValueMixBar({
