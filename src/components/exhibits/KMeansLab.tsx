@@ -94,19 +94,19 @@ export function KMeansLab() {
               {
                 label: "k",
                 value: `${k}`,
-                hue: "var(--viz-param)",
+                hue: "var(--viz-param-ink)",
                 note: k === 3 ? "the honest grouping here" : k === 2 ? "too few" : "too many",
               },
               {
                 label: "inertia",
                 value: state.inertia.toFixed(2),
-                hue: k === 3 ? "var(--viz-prediction)" : "var(--viz-error)",
+                hue: k === 3 ? "var(--viz-prediction-ink)" : "var(--viz-error-ink)",
                 note: "within-cluster squared distance",
               },
               {
                 label: "centroids",
                 value: `${state.centroids.length}`,
-                hue: "var(--viz-truth)",
+                hue: "var(--viz-truth-ink)",
                 note: activeStep === 0 ? "before averaging" : "after averaging",
               },
             ]}

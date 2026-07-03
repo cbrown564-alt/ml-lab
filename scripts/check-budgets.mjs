@@ -42,6 +42,9 @@ const BASE = `http://localhost:${PORT}`;
  *   reorganized the shared chunk (was 708, now 675).
  * - neural-network-fundamentals: 700 → 705. Nominal prose growth from copy audit.
  * - data-leakage: raised to 705 then reverted — FoldBars removal freed 57 KB.
+ * - k-means: html 110 → 115. Five client islands (hero/story/lab/break/check) each
+ *   SSR their Voronoi region paths; the honest cost after replacing the 864-rect grid
+ *   that had bloated this route to ~350 KB.
  */
 const BUDGETS = [
   { route: "/", jsKb: 680, htmlKb: 100 },
@@ -63,7 +66,7 @@ const BUDGETS = [
   { route: "/exhibits/decision-trees", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/random-forests", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/gradient-boosting", jsKb: 700, htmlKb: 110 },
-  { route: "/exhibits/k-means", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/k-means", jsKb: 700, htmlKb: 115 },
   { route: "/exhibits/pca", jsKb: 700, htmlKb: 110 },
 ];
 
