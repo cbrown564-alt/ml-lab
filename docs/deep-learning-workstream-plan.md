@@ -112,7 +112,7 @@ After every node is `interactive`:
   `pca`, and `classification-task`.
 - **Journeys:** `into-deep-learning` (5 stops) and `understanding-llms` (5 stops, one
   optional) registered in `content/journeys/foundations.ts`.
-- **Exhibits:** `cnns` through `the-transformer` live at **interactive** (four-act spines,
-  hand-rolled models, viz kit through block flow + next-token logits). RAG capstone still stub.
-  Both deep-learning journeys now show four live stops each.
-- **Next action:** scaffold + build **fine-tuning-vs-prompting-vs-rag** (conceptual capstone).
+- **Exhibits:** All five deep-learning on-ramp nodes live at **interactive** (cnns →
+  fine-tuning-vs-prompting-vs-rag). Both journeys show five live stops each. **Cluster build
+  complete** — ready for non-circular batch review → flagship.
+- **Next action:** spawn cluster review panel (designer-critic / teacher / tester) per §6.

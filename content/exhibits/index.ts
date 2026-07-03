@@ -29,6 +29,7 @@ export const liveExhibits: Record<string, { href: string }> = {
   embeddings: { href: "/exhibits/embeddings" },
   attention: { href: "/exhibits/attention" },
   "the-transformer": { href: "/exhibits/the-transformer" },
+  "fine-tuning-vs-prompting-vs-rag": { href: "/exhibits/fine-tuning-vs-prompting-vs-rag" },
 };
 
 export const isLive = (nodeId: string): boolean => nodeId in liveExhibits;

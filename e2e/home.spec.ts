@@ -38,7 +38,7 @@ test.describe("home", () => {
     ).toBeVisible();
   });
 
-  test("every jewel is a live door — all twenty-four exhibits in the cabinet", async ({ page }) => {
+  test("every jewel is a live door — all twenty-five exhibits in the cabinet", async ({ page }) => {
     const cabinet = page.locator("#exhibits");
     await expect(cabinet.getByRole("link", { name: /Gradient Descent/ })).toBeVisible();
     await expect(cabinet.getByRole("link", { name: /K-Means Clustering/ })).toBeVisible();
@@ -46,6 +46,7 @@ test.describe("home", () => {
     await expect(cabinet.getByRole("link", { name: /Embeddings/ })).toBeVisible();
     await expect(cabinet.getByRole("link", { name: /Attention/ })).toBeVisible();
     await expect(cabinet.getByRole("link", { name: /The Transformer/ })).toBeVisible();
+    await expect(cabinet.getByRole("link", { name: /Fine-Tuning vs Prompting vs RAG/ })).toBeVisible();
     await expect(cabinet.getByRole("link", { name: /Random Forests/ })).toBeVisible();
     await cabinet.getByRole("link", { name: /The Dataset/ }).click();
     await expect(page.getByRole("heading", { name: "The Dataset" })).toBeVisible();

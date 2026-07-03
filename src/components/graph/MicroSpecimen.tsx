@@ -114,6 +114,8 @@ function Specimen({ id, t }: { id: string; t: number }) {
       return <Attention t={t} />;
     case "the-transformer":
       return <Transformer t={t} />;
+    case "fine-tuning-vs-prompting-vs-rag":
+      return <AdaptLlm t={t} />;
     default:
       return <FallbackSpecimen id={id} />;
   }
@@ -643,6 +645,34 @@ function Transformer({ t }: { t: number }) {
           />
           <text x={24} y={41 + index * 16} textAnchor="end" fontSize="7" fontFamily="var(--font-mono)" fill="var(--ink-muted)">
             {label}
+          </text>
+        </g>
+      ))}
+    </>
+  );
+}
+
+function AdaptLlm({ t }: { t: number }) {
+  const cols = [
+    { x: 30, label: "FT", h: 28 + t * 8 },
+    { x: 52, label: "P", h: 18 + t * 4 },
+    { x: 74, label: "R", h: 34 + t * 10 },
+  ];
+  return (
+    <>
+      {cols.map((col) => (
+        <g key={col.label}>
+          <rect
+            x={col.x}
+            y={78 - col.h}
+            width={14}
+            height={col.h}
+            rx={3}
+            fill={col.label === "R" ? "var(--viz-prediction)" : "var(--viz-param)"}
+            opacity={0.85}
+          />
+          <text x={col.x + 7} y={88} textAnchor="middle" fontSize="7" fontFamily="var(--font-mono)" fill="var(--ink-muted)">
+            {col.label}
           </text>
         </g>
       ))}

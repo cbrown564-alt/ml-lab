@@ -56,7 +56,7 @@ const WINGS: { title: string; blurb: string; ids: string[] }[] = [
   {
     title: "Going deeper",
     blurb: "Combine simple units into flexible models — and see what changes when structure enters.",
-    ids: ["neural-network-fundamentals", "cnns", "embeddings", "attention", "the-transformer"],
+    ids: ["neural-network-fundamentals", "cnns", "embeddings", "attention", "the-transformer", "fine-tuning-vs-prompting-vs-rag"],
   },
 ];
 const wingIds = WINGS.flatMap((w) => w.ids);

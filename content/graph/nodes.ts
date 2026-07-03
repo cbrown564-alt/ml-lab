@@ -324,7 +324,7 @@ export const nodes: ConceptNode[] = [
     kind: "practice",
     phase: 1,
     depth: "core",
-    status: "stub",
+    status: "interactive",
   },
   {
     id: "the-gradient",

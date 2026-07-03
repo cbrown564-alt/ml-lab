@@ -72,6 +72,7 @@ const BUDGETS = [
   { route: "/exhibits/embeddings", jsKb: 700, htmlKb: 115 },
   { route: "/exhibits/attention", jsKb: 700, htmlKb: 115 },
   { route: "/exhibits/the-transformer", jsKb: 700, htmlKb: 115 },
+  { route: "/exhibits/fine-tuning-vs-prompting-vs-rag", jsKb: 700, htmlKb: 115 },
 ];
 
 const server =

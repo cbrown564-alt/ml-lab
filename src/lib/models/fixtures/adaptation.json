@@ -1,0 +1,142 @@
+{
+  "generator": {
+    "script": "scripts/generate_deep_learning_fixtures.py",
+    "python": "3.12.3",
+    "numpy": "2.4.4",
+    "note": "conceptual metrics for teaching tradeoffs \u2014 not live model scores"
+  },
+  "product": "OrbitDesk support bot",
+  "scenarios": [
+    {
+      "id": "reset-procedure",
+      "title": "Hardware reset",
+      "userQuery": "How do I factory-reset the OrbitDesk Pro docking station?",
+      "goldAnswer": "Hold the rear pinhole reset for 8 seconds until the LED blinks amber."
+    },
+    {
+      "id": "pricing-update",
+      "title": "Pricing after update",
+      "userQuery": "What is the monthly price for OrbitDesk Teams after the July update?",
+      "goldAnswer": "OrbitDesk Teams is $18 per seat per month after the July 2026 update."
+    }
+  ],
+  "strategies": [
+    {
+      "id": "fine-tuning",
+      "label": "Fine-tuning",
+      "lever": "Update weights on domain transcripts",
+      "pipeline": [
+        "Pretrained base",
+        "Domain fine-tune",
+        "Frozen weights at deploy"
+      ]
+    },
+    {
+      "id": "prompting",
+      "label": "Prompting",
+      "lever": "Instructions + examples in context",
+      "pipeline": [
+        "Pretrained base",
+        "System prompt",
+        "User message"
+      ]
+    },
+    {
+      "id": "rag",
+      "label": "RAG",
+      "lever": "Retrieve docs, then generate",
+      "pipeline": [
+        "Pretrained base",
+        "Retrieve chunks",
+        "Prompt with evidence"
+      ]
+    }
+  ],
+  "metrics": {
+    "reset-procedure": {
+      "fine-tuning": {
+        "domainFit": 0.92,
+        "freshness": 0.38,
+        "cost": 0.82,
+        "latency": 0.55,
+        "citesSource": false
+      },
+      "prompting": {
+        "domainFit": 0.61,
+        "freshness": 0.52,
+        "cost": 0.18,
+        "latency": 0.22,
+        "citesSource": false
+      },
+      "rag": {
+        "domainFit": 0.89,
+        "freshness": 0.94,
+        "cost": 0.42,
+        "latency": 0.48,
+        "citesSource": true
+      }
+    },
+    "pricing-update": {
+      "fine-tuning": {
+        "domainFit": 0.88,
+        "freshness": 0.35,
+        "cost": 0.82,
+        "latency": 0.55,
+        "citesSource": false
+      },
+      "prompting": {
+        "domainFit": 0.54,
+        "freshness": 0.5,
+        "cost": 0.18,
+        "latency": 0.22,
+        "citesSource": false
+      },
+      "rag": {
+        "domainFit": 0.91,
+        "freshness": 0.96,
+        "cost": 0.42,
+        "latency": 0.48,
+        "citesSource": true
+      }
+    }
+  },
+  "breakIt": {
+    "staleFineTune": {
+      "reset-procedure": {
+        "domainFit": 0.44,
+        "freshness": 0.12,
+        "cost": 0.82,
+        "latency": 0.55,
+        "citesSource": false
+      },
+      "pricing-update": {
+        "domainFit": 0.39,
+        "freshness": 0.1,
+        "cost": 0.82,
+        "latency": 0.55,
+        "citesSource": false
+      }
+    },
+    "badRetrieval": {
+      "reset-procedure": {
+        "domainFit": 0.36,
+        "freshness": 0.94,
+        "cost": 0.42,
+        "latency": 0.48,
+        "citesSource": true
+      },
+      "pricing-update": {
+        "domainFit": 0.33,
+        "freshness": 0.96,
+        "cost": 0.42,
+        "latency": 0.48,
+        "citesSource": true
+      }
+    }
+  },
+  "pinned": {
+    "bestForFreshDocs": "rag",
+    "bestDomainFitFreshFineTune": "fine-tuning",
+    "resetProcedureRagDomain": 0.89
+  }
+}

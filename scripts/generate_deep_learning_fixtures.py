@@ -421,8 +421,106 @@ def transformer_fixture() -> None:
     print(f"wrote {path}")
 
 
+def adaptation_fixture() -> None:
+    """Committed adaptation tradeoffs for a support-bot scenario — three steering strategies."""
+    scenarios = [
+        {
+            "id": "reset-procedure",
+            "title": "Hardware reset",
+            "userQuery": "How do I factory-reset the OrbitDesk Pro docking station?",
+            "goldAnswer": "Hold the rear pinhole reset for 8 seconds until the LED blinks amber.",
+        },
+        {
+            "id": "pricing-update",
+            "title": "Pricing after update",
+            "userQuery": "What is the monthly price for OrbitDesk Teams after the July update?",
+            "goldAnswer": "OrbitDesk Teams is $18 per seat per month after the July 2026 update.",
+        },
+    ]
+
+    def metrics(domain: float, fresh: float, cost: float, latency: float, cites: bool):
+        return {
+            "domainFit": domain,
+            "freshness": fresh,
+            "cost": cost,
+            "latency": latency,
+            "citesSource": cites,
+        }
+
+    strategies = [
+        {
+            "id": "fine-tuning",
+            "label": "Fine-tuning",
+            "lever": "Update weights on domain transcripts",
+            "pipeline": ["Pretrained base", "Domain fine-tune", "Frozen weights at deploy"],
+        },
+        {
+            "id": "prompting",
+            "label": "Prompting",
+            "lever": "Instructions + examples in context",
+            "pipeline": ["Pretrained base", "System prompt", "User message"],
+        },
+        {
+            "id": "rag",
+            "label": "RAG",
+            "lever": "Retrieve docs, then generate",
+            "pipeline": ["Pretrained base", "Retrieve chunks", "Prompt with evidence"],
+        },
+    ]
+
+    # scenarioId -> strategyId -> metrics (docs current)
+    table = {
+        "reset-procedure": {
+            "fine-tuning": metrics(0.92, 0.38, 0.82, 0.55, False),
+            "prompting": metrics(0.61, 0.52, 0.18, 0.22, False),
+            "rag": metrics(0.89, 0.94, 0.42, 0.48, True),
+        },
+        "pricing-update": {
+            "fine-tuning": metrics(0.88, 0.35, 0.82, 0.55, False),
+            "prompting": metrics(0.54, 0.50, 0.18, 0.22, False),
+            "rag": metrics(0.91, 0.96, 0.42, 0.48, True),
+        },
+    }
+
+    stale_finetune = {
+        "reset-procedure": metrics(0.44, 0.12, 0.82, 0.55, False),
+        "pricing-update": metrics(0.39, 0.10, 0.82, 0.55, False),
+    }
+    bad_retrieval = {
+        "reset-procedure": metrics(0.36, 0.94, 0.42, 0.48, True),
+        "pricing-update": metrics(0.33, 0.96, 0.42, 0.48, True),
+    }
+
+    payload = {
+        "generator": {
+            "script": "scripts/generate_deep_learning_fixtures.py",
+            "python": platform.python_version(),
+            "numpy": np.__version__,
+            "note": "conceptual metrics for teaching tradeoffs — not live model scores",
+        },
+        "product": "OrbitDesk support bot",
+        "scenarios": scenarios,
+        "strategies": strategies,
+        "metrics": table,
+        "breakIt": {
+            "staleFineTune": stale_finetune,
+            "badRetrieval": bad_retrieval,
+        },
+        "pinned": {
+            "bestForFreshDocs": "rag",
+            "bestDomainFitFreshFineTune": "fine-tuning",
+            "resetProcedureRagDomain": table["reset-procedure"]["rag"]["domainFit"],
+        },
+    }
+
+    path = OUT / "adaptation.json"
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    print(f"wrote {path}")
+
+
 if __name__ == "__main__":
     main()
     embeddings_fixture()
     attention_fixture()
     transformer_fixture()
+    adaptation_fixture()
