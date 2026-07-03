@@ -75,13 +75,13 @@ export function KMeansStory() {
           {
             label: "k",
             value: `${k}`,
-            hue: "var(--viz-param)",
+            hue: "var(--viz-param-ink)",
             note: k === 3 ? "the honest grouping here" : k === 2 ? "too few centres" : "extra centres",
           },
           {
             label: "inertia",
             value: state.inertia.toFixed(2),
-            hue: k === 3 ? "var(--viz-prediction)" : "var(--viz-error)",
+            hue: k === 3 ? "var(--viz-prediction-ink)" : "var(--viz-error-ink)",
             note: "within-cluster squared distance",
           },
           {
@@ -90,7 +90,7 @@ export function KMeansStory() {
               k === 3
                 ? "0.00"
                 : `${state.inertia > goodK.inertia ? "+" : ""}${(state.inertia - goodK.inertia).toFixed(2)}`,
-            hue: k === 3 ? "var(--viz-truth)" : "var(--viz-error)",
+            hue: k === 3 ? "var(--viz-truth-ink)" : "var(--viz-error-ink)",
             note:
               k === 2
                 ? "wrong k leaves the fit much looser"

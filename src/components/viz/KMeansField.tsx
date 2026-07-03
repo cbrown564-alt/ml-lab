@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { Axes, Plot, usePlot } from "@/components/viz/Plot";
 import { assignLabels, type Centroid, type ClusterPoint } from "@/lib/models/k-means";
+import { boundedVoronoiCells } from "@/lib/viz/voronoi";
 
 export type KMeansDisplayPoint = ClusterPoint & { label?: number };
 
@@ -62,43 +63,34 @@ function NearestRegionLayer({ centroids }: { centroids: Centroid[] }) {
   const [x0, x1] = x.domain;
   const [y0, y1] = y.domain;
   const cells = useMemo(() => {
-    const cols = 36;
-    const rows = 24;
-    const out: { x: number; y: number; w: number; h: number; label: number }[] = [];
-    for (let cx = 0; cx < cols; cx++) {
-      const xa = x0 + (cx / cols) * (x1 - x0);
-      const xb = x0 + ((cx + 1) / cols) * (x1 - x0);
-      const xm = (xa + xb) / 2;
-      for (let cy = 0; cy < rows; cy++) {
-        const ya = y0 + (cy / rows) * (y1 - y0);
-        const yb = y0 + ((cy + 1) / rows) * (y1 - y0);
-        const ym = (ya + yb) / 2;
-        const label = assignLabels([{ x1: xm, x2: ym }], centroids)[0];
-        out.push({
-          x: x(xa),
-          y: y(yb),
-          w: x(xb) - x(xa),
-          h: y(ya) - y(yb),
-          label,
-        });
-      }
-    }
-    return out;
+    const sites = centroids.map((c) => ({ x: c.x1, y: c.x2 }));
+    const polygons = boundedVoronoiCells(sites, { x0, x1, y0, y1 });
+    return polygons.map((poly, label) => ({
+      label,
+      d:
+        poly.length >= 3
+          ? poly
+              .map((p, i) => `${i === 0 ? "M" : "L"} ${x(p.x).toFixed(2)} ${y(p.y).toFixed(2)}`)
+              .join(" ") + " Z"
+          : null,
+    }));
   }, [centroids, x, x0, x1, y, y0, y1]);
 
   return (
     <g aria-hidden>
-      {cells.map((cell, i) => (
-        <rect
-          key={i}
-          x={cell.x}
-          y={cell.y}
-          width={cell.w}
-          height={cell.h}
-          fill={colorAt(cell.label).fill}
-          fillOpacity={0.13}
-        />
-      ))}
+      {cells.map((cell) =>
+        cell.d ? (
+          <path
+            key={cell.label}
+            d={cell.d}
+            fill={colorAt(cell.label).fill}
+            fillOpacity={0.13}
+            stroke={colorAt(cell.label).fill}
+            strokeOpacity={0.22}
+            strokeWidth={0.75}
+          />
+        ) : null,
+      )}
     </g>
   );
 }

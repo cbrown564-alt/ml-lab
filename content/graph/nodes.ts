@@ -247,9 +247,9 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    // Opens the unsupervised cluster. Built to interactive on the four-act spine;
-    // flagship awaits the cluster panel + human review.
-    status: "interactive",
+    // Opens the unsupervised cluster. Flagship after the cluster panel + human review
+    // (2026-07-02): Voronoi regions, assessment-as-play, integrity green.
+    status: "flagship",
   },
   {
     id: "pca",
@@ -262,7 +262,8 @@ export const nodes: ConceptNode[] = [
     phase: 1,
     depth: "core",
     // Closes the unsupervised cluster: variance directions, not cluster labels.
-    status: "interactive",
+    // Flagship after the cluster panel + human review (2026-07-02).
+    status: "flagship",
   },
   {
     id: "the-gradient",

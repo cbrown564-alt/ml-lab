@@ -91,9 +91,20 @@ export const pcaCheck: ConceptCheck = {
         },
       ],
       verify:
-        "In Break it, start on Raw units and compare the nearly horizontal PC1 to the standardized fit that follows the shared tilted cloud.",
+        "In Break it, switch to Standardised first and watch PC1 rotate back to the cloud's shared tilt.",
       difficulty: 2,
       targets: ["pca:scale-matters"],
+    },
+    {
+      id: "break-raw-units",
+      kind: "experiment-task",
+      prompt:
+        "Break it on purpose: in Break it, start on Raw units and watch PC1 hug the large-scale axis. Then switch to Standardised first and watch the principal direction rotate back to the cloud's shared tilt.",
+      taskEvent: "pca:standardised",
+      feedback:
+        "You just felt PCA read the covariance matrix you gave it. Raw units let scale masquerade as structure; standardising gives both features a fair vote before the rotation.",
+      difficulty: 1,
+      targets: ["pca:break"],
     },
     {
       id: "transfer-variance-vs-task",

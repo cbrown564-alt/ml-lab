@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { Annotation, Axes, Plot } from "@/components/viz/Plot";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { pcaDomain, pcaFit, pcaPoints, pcaRawFit, pcaYDomain } from "@content/exhibits/pca/experiment";
@@ -50,7 +51,10 @@ export function PcaBreakIt() {
                 key={value}
                 type="button"
                 aria-pressed={mode === value}
-                onClick={() => setMode(value)}
+                onClick={() => {
+                  if (value === "standardised") reportTaskEvent("pca:standardised");
+                  setMode(value);
+                }}
                 className={`rounded-full px-4 py-1 transition-colors ${
                   mode === value ? "bg-accent text-accent-ink" : "text-ink-muted hover:text-ink"
                 }`}
