@@ -101,4 +101,49 @@ export const edges: ConceptEdge[] = [
     strength: "soft",
     note: "Deep models often learn compressed representations the way PCA finds directions of variance — the difference is PCA is a fixed linear rotation; a network learns its own.",
   },
+  // Deep-learning on-ramps cluster: spatial structure → learned geometry → routing → the
+  // transformer block → practical ways to steer a pretrained model.
+  {
+    from: "neural-network-fundamentals",
+    to: "cnns",
+    type: "generalises",
+    strength: "soft",
+    note: "The same stack of units, now with local filters and weight sharing — structure that matches images and cuts parameters by orders of magnitude.",
+  },
+  { from: "classification-task", to: "cnns", type: "requires", strength: "soft" },
+  {
+    from: "neural-network-fundamentals",
+    to: "embeddings",
+    type: "requires",
+    strength: "soft",
+  },
+  {
+    from: "pca",
+    to: "embeddings",
+    type: "often_confused_with",
+    strength: "soft",
+    note: "Both compress high-dimensional data into a smaller representation — but PCA finds fixed directions of variance; embeddings are learned coordinates tuned to a task.",
+  },
+  {
+    from: "cnns",
+    to: "embeddings",
+    type: "used_inside",
+    strength: "soft",
+    note: "A CNN's feature maps are hierarchical embeddings — early layers catch edges, deeper layers catch parts.",
+  },
+  { from: "embeddings", to: "attention", type: "requires", strength: "hard" },
+  { from: "attention", to: "the-transformer", type: "requires", strength: "hard" },
+  {
+    from: "neural-network-fundamentals",
+    to: "the-transformer",
+    type: "requires",
+    strength: "soft",
+  },
+  {
+    from: "the-transformer",
+    to: "fine-tuning-vs-prompting-vs-rag",
+    type: "requires",
+    strength: "soft",
+    note: "Once you know what a transformer predicts and how attention routes information, the practical fork is how you adapt it — weights, instructions, or retrieval.",
+  },
 ];

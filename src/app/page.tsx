@@ -7,7 +7,7 @@ import { domainLabel } from "@/lib/graph/labels";
 import { isLive, liveExhibits } from "@content/exhibits";
 import { nodes } from "@content/graph/nodes";
 import { edges } from "@content/graph/edges";
-import { unsupervised } from "@content/journeys/foundations";
+import { intoDeepLearning, unsupervised, understandingLlms } from "@content/journeys/foundations";
 
 /**
  * The lab's front door (docs/06, A1): orient in seconds — what this place
@@ -181,6 +181,8 @@ export default function Home() {
         </section>
 
         <FoundationsTrail />
+        <JourneyTrail journey={intoDeepLearning} />
+        <JourneyTrail journey={understandingLlms} />
         <JourneyTrail journey={unsupervised} />
       </main>
 

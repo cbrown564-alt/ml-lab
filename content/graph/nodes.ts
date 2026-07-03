@@ -266,6 +266,67 @@ export const nodes: ConceptNode[] = [
     status: "flagship",
   },
   {
+    id: "cnns",
+    title: "Convolutional Neural Networks",
+    oneLiner:
+      "Scan a small filter across an image — local patterns stack into edges, textures, and parts without counting every pixel pairing.",
+    domain: "vision",
+    tags: ["deep-learning", "classification"],
+    kind: "algorithm",
+    phase: 1,
+    depth: "core",
+    // Opens the deep-learning on-ramps cluster. Stub — exhibit build in progress.
+    status: "stub",
+  },
+  {
+    id: "embeddings",
+    title: "Embeddings",
+    oneLiner:
+      "Map discrete tokens or objects into a continuous space where similar things sit close — the geometry attention and transformers operate on.",
+    domain: "deep-learning",
+    tags: ["deep-learning", "representation"],
+    kind: "concept",
+    phase: 1,
+    depth: "core",
+    status: "stub",
+  },
+  {
+    id: "attention",
+    title: "Attention",
+    oneLiner:
+      "Let each position choose what to read — a weighted mix of other positions, content-dependent routing instead of a fixed window.",
+    domain: "deep-learning",
+    tags: ["deep-learning", "sequence"],
+    kind: "concept",
+    phase: 1,
+    depth: "core",
+    status: "stub",
+  },
+  {
+    id: "the-transformer",
+    title: "The Transformer",
+    oneLiner:
+      "Self-attention blocks stacked with residuals and layer norm — the architecture behind most modern language and multimodal models.",
+    domain: "nlp-and-llms",
+    tags: ["deep-learning", "sequence"],
+    kind: "algorithm",
+    phase: 1,
+    depth: "core",
+    status: "stub",
+  },
+  {
+    id: "fine-tuning-vs-prompting-vs-rag",
+    title: "Fine-Tuning vs Prompting vs RAG",
+    oneLiner:
+      "Three ways to steer a pretrained model — change its weights, change the instructions, or change what it can look up.",
+    domain: "nlp-and-llms",
+    tags: ["llms", "practice"],
+    kind: "practice",
+    phase: 1,
+    depth: "core",
+    status: "stub",
+  },
+  {
     id: "the-gradient",
     title: "The Gradient",
     oneLiner: "The direction of steepest ascent — calculus's gift to optimization.",

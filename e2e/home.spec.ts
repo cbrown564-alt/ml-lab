@@ -22,6 +22,8 @@ test.describe("home", () => {
     await expect(page.locator("#exhibits").getByRole("heading", { name: "Trees & ensembles" })).toBeVisible();
     await expect(page.locator("#exhibits").getByRole("heading", { name: "Unsupervised", exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Journey · Foundations/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Journey · Into Deep Learning/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Journey · Understanding LLMs/ })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Journey · Unsupervised Learning/ })).toBeVisible();
     await expect(page).toHaveScreenshot("home.png", { fullPage: true });
   });
@@ -59,6 +61,16 @@ test.describe("home", () => {
     await expect(journey.getByRole("listitem")).toHaveCount(3);
     await journey.getByRole("link", { name: /K-Means Clustering/ }).click();
     await expect(page.getByRole("heading", { name: "K-Means Clustering" })).toBeVisible();
+  });
+
+  test("the Into Deep Learning journey shows live stops", async ({ page }) => {
+    const journey = page.locator("#into-deep-learning");
+    const stop = journey.locator("ol").getByRole("link", { name: "Neural Network Fundamentals" });
+    await expect(stop).toBeVisible();
+    await stop.click();
+    await expect(
+      page.getByRole("heading", { name: "Neural Network Fundamentals" }),
+    ).toBeVisible();
   });
 });
 

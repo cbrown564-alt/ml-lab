@@ -70,7 +70,8 @@ review surface ([docs/08](../08-quality-loop-and-review-system.md)):
 
 Net: the panel proposes and predicts; the human disposes on taste; the filesystem
 remembers. Human review complete (2026-07-01). Unsupervised cluster (k-means, PCA)
-shipped interactive 2026-07-01; next scale-out: deep-learning on-ramps.
+shipped flagship 2026-07-02. Deep-learning on-ramps kickoff 2026-07-03 — see
+[deep-learning-workstream-plan.md](../deep-learning-workstream-plan.md).
 
 ## Per-exhibit pipeline (orchestrator)
 
@@ -113,10 +114,12 @@ Grow the graph **per cluster** (keeps `validate` honest, journeys coherent):
 1. ~~**Regression / foundations**~~ — complete (15 nodes flagship).
 2. ~~**Trees**~~ — decision-trees, random-forests, gradient-boosting (flagship, 2026-07-01).
 3. ~~**Unsupervised**~~ — k-means, pca (interactive, 2026-07-01; panel → flagship pending).
-4. **Deep-learning on-ramps**: neural-network-fundamentals (stub), cnns, embeddings,
+4. **Deep-learning on-ramps**: neural-network-fundamentals (flagship), cnns, embeddings,
    attention, the-transformer, **how-llms-work (a graph journey, not one giant
    exhibit)**, fine-tuning-vs-prompting-vs-rag. Biggest lift — pulls in the deferred
-   platform capabilities (3D/GPU surfaces, in-browser training).
+   platform capabilities (3D/GPU surfaces, in-browser training). **Kickoff 2026-07-03:**
+   graph stubs + journeys landed; exhibit build in progress — see
+   [deep-learning-workstream-plan.md](../deep-learning-workstream-plan.md).
 
 ## Loop control (durable + autonomous)
 
