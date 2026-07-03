@@ -110,6 +110,8 @@ function Specimen({ id, t }: { id: string; t: number }) {
       return <Cnns t={t} />;
     case "embeddings":
       return <Embeddings t={t} />;
+    case "attention":
+      return <Attention t={t} />;
     default:
       return <FallbackSpecimen id={id} />;
   }
@@ -575,6 +577,45 @@ function Embeddings({ t }: { t: number }) {
           </text>
         </g>
       ))}
+    </>
+  );
+}
+
+function Attention({ t }: { t: number }) {
+  const cells = [
+    [0.1, 0.15, 0.55, 0.05, 0.05, 0.1],
+    [0.05, 0.1, 0.2, 0.05, 0.05, 0.55],
+  ];
+  const originX = 34;
+  const originY = 28;
+  const size = 12;
+  return (
+    <>
+      {cells[1]!.map((weight, col) => (
+        <rect
+          key={`sat-${col}`}
+          x={originX + col * size}
+          y={originY + size}
+          width={size - 1}
+          height={size - 1}
+          rx={2}
+          fill="var(--viz-prediction)"
+          opacity={0.15 + weight * (0.5 + t * 0.35)}
+        />
+      ))}
+      <rect
+        x={originX + size}
+        y={originY + size}
+        width={size - 1}
+        height={size - 1}
+        rx={2}
+        fill="none"
+        stroke="var(--viz-param)"
+        strokeWidth={1.2}
+      />
+      <text x={originX + size + 5} y={originY + size + 8} fontSize="7" fontFamily="var(--font-mono)" fill="var(--viz-param-ink)">
+        sat→cat
+      </text>
     </>
   );
 }

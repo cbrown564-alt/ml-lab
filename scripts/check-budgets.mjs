@@ -70,6 +70,7 @@ const BUDGETS = [
   { route: "/exhibits/pca", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/cnns", jsKb: 700, htmlKb: 115 },
   { route: "/exhibits/embeddings", jsKb: 700, htmlKb: 115 },
+  { route: "/exhibits/attention", jsKb: 700, htmlKb: 115 },
 ];
 
 const server =

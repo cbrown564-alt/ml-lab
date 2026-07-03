@@ -1,4 +1,5 @@
 import type { ConceptCheck } from "@/lib/assessment/schema";
+import { attentionCheck } from "./attention/concept-check";
 import { biasVarianceCheck } from "./bias-variance/concept-check";
 import { classificationTaskCheck } from "./classification-task/concept-check";
 import { cnnsCheck } from "./cnns/concept-check";
@@ -30,6 +31,7 @@ export const conceptChecks: Record<string, ConceptCheck> = {
   "classification-task": classificationTaskCheck,
   cnns: cnnsCheck,
   embeddings: embeddingsCheck,
+  attention: attentionCheck,
   "data-leakage": dataLeakageCheck,
   "feature-scaling": featureScalingCheck,
   "gradient-descent": gradientDescentCheck,

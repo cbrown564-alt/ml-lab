@@ -235,6 +235,116 @@ def embeddings_fixture() -> None:
     print(f"wrote {path}")
 
 
+def _softmax_rows(logits: np.ndarray) -> np.ndarray:
+    shifted = logits - logits.max(axis=1, keepdims=True)
+    exp = np.exp(shifted)
+    return exp / exp.sum(axis=1, keepdims=True)
+
+
+def attention_fixture() -> None:
+    """Committed self-attention logits for a six-token sentence — two interpretable heads."""
+    tokens = [
+        {"id": "the-0", "label": "The", "role": "article"},
+        {"id": "cat", "label": "cat", "role": "noun"},
+        {"id": "sat", "label": "sat", "role": "verb"},
+        {"id": "on", "label": "on", "role": "prep"},
+        {"id": "the-1", "label": "the", "role": "article"},
+        {"id": "mat", "label": "mat", "role": "noun"},
+    ]
+    n = len(tokens)
+    d_k = 4
+
+    # Head 0 — syntax: verbs look back to subjects, prepositions to objects.
+    logits_syntax = np.array(
+        [
+            [-1.0, 0.5, 0.0, -1.0, -1.0, -1.0],
+            [-1.0, -1.0, 2.8, 0.0, -1.0, 0.8],
+            [-1.5, 3.8, -1.0, -1.0, -1.5, 1.2],
+            [-1.5, -1.0, -0.5, -1.0, -1.0, 3.6],
+            [-1.5, -0.5, -0.5, -0.5, -1.5, 2.8],
+            [-1.0, 0.5, -0.5, 2.6, -1.0, -1.0],
+        ],
+        dtype=float,
+    )
+
+    # Head 1 — locality: each token mostly listens to itself and immediate neighbours.
+    logits_local = np.zeros((n, n), dtype=float)
+    for i in range(n):
+        for j in range(n):
+            logits_local[i, j] = -2.5 * abs(i - j)
+
+    # Simple value vectors (3-D) so weighted mixes stay legible in the UI.
+    values = np.array(
+        [
+            [1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0],
+            [0.7, 0.0, 0.3],
+            [1.0, 0.0, 0.0],
+            [0.0, 0.8, 0.2],
+        ],
+        dtype=float,
+    )
+
+    heads = []
+    for head_id, label, logits in [
+        ("syntax", "Syntax", logits_syntax),
+        ("local", "Local", logits_local),
+    ]:
+        weights = _softmax_rows(logits / np.sqrt(d_k))
+        outputs = weights @ values
+        heads.append(
+            {
+                "id": head_id,
+                "label": label,
+                "dK": d_k,
+                "logits": logits.round(6).tolist(),
+                "weights": weights.round(6).tolist(),
+                "values": values.round(6).tolist(),
+                "outputs": outputs.round(6).tolist(),
+            }
+        )
+
+    sat_row = 2
+    cat_col = 1
+    on_row = 3
+    mat_col = 5
+    syntax_weights = np.array(heads[0]["weights"])
+    pinned = {
+        "satToCat": {
+            "headId": "syntax",
+            "queryIndex": sat_row,
+            "keyIndex": cat_col,
+            "weight": float(syntax_weights[sat_row, cat_col]),
+        },
+        "onToMat": {
+            "headId": "syntax",
+            "queryIndex": on_row,
+            "keyIndex": mat_col,
+            "weight": float(syntax_weights[on_row, mat_col]),
+        },
+    }
+
+    payload = {
+        "generator": {
+            "script": "scripts/generate_deep_learning_fixtures.py",
+            "python": platform.python_version(),
+            "numpy": np.__version__,
+            "note": "hand-tuned logits; softmax in TypeScript must match _softmax_rows",
+        },
+        "sentence": "The cat sat on the mat",
+        "tokens": tokens,
+        "valueDim": int(values.shape[1]),
+        "heads": heads,
+        "pinned": pinned,
+    }
+
+    path = OUT / "attention.json"
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    print(f"wrote {path}")
+
+
 if __name__ == "__main__":
     main()
     embeddings_fixture()
+    attention_fixture()
