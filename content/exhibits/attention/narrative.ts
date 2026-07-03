@@ -3,7 +3,7 @@ import type { ExhibitNarrative } from "@/lib/narrative/schema";
 export const attentionNarrative: ExhibitNarrative = {
   nodeId: "attention",
   hook: [
-    "Embeddings give each token a vector, but a single vector per word is not enough — the word bank depends on context. Attention lets every position ask a question of the whole sequence: who should I listen to right now? The answer is not a fixed window three words wide. It is a weighted mix that changes with the sentence.",
+    "Embeddings give each token a vector, but a single fixed vector per word is not enough — what sat means here hangs on cat, and no dictionary entry knows that in advance. Attention lets every position ask a question of the whole sequence: who should I listen to right now? The answer is not a fixed window three words wide. It is a weighted mix that changes with the sentence.",
     "Mechanically, each token builds a query, compares it to every key, softmax-normalises the scores into weights, and blends value vectors. That blend becomes the contextual update — content-dependent routing instead of a hand-designed pattern.",
   ],
   story: [

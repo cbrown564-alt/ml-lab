@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { EmbeddingMap } from "@/components/viz/EmbeddingMap";
-import { embeddingState, tokens } from "@content/exhibits/embeddings/experiment";
+import { analogyFixture, embeddingState, tokens } from "@content/exhibits/embeddings/experiment";
 
 const STAGES = [
   { id: "learned", label: "Learned", layoutIndex: 0 as const },
@@ -17,7 +17,7 @@ export function EmbeddingsCheckLab() {
   return (
     <figure className="rounded-xl border border-line bg-raised p-4">
       <figcaption className="mb-3 font-mono text-[11px] tracking-widest text-ink-faint uppercase">
-        king&apos;s neighbours — learned vs PCA
+        king − man + woman — learned vs PCA
       </figcaption>
       <div
         role="group"
@@ -38,16 +38,46 @@ export function EmbeddingsCheckLab() {
           </button>
         ))}
       </div>
+      <div className="mb-4 grid grid-cols-2 gap-2">
+        {STAGES.map((entry) => {
+          const miss =
+            entry.id === "learned"
+              ? analogyFixture.distanceToQueen
+              : analogyFixture.pcaDistanceToQueen;
+          const active = entry.id === stageId;
+          return (
+            <div
+              key={entry.id}
+              className={`rounded-lg border px-3 py-2 ${active ? "border-[color-mix(in_srgb,var(--accent)_40%,var(--line))] bg-sunken" : "border-line"}`}
+            >
+              <div className="font-mono text-[10px] tracking-widest text-ink-faint uppercase">
+                {entry.label} · miss
+              </div>
+              <div
+                className={`mt-0.5 font-mono text-lg tabular-nums ${
+                  active
+                    ? entry.id === "pca"
+                      ? "text-[var(--viz-error-ink)]"
+                      : "text-[var(--viz-prediction-ink)]"
+                    : "text-ink-muted"
+                }`}
+              >
+                {miss.toFixed(2)}
+              </div>
+            </div>
+          );
+        })}
+      </div>
       <EmbeddingMap
         tokens={tokens}
         layout={state.layout}
         xDomain={state.domains.x}
         yDomain={state.domains.y}
-        selectedId="king"
-        neighborIds={state.neighbors.map((row) => row.token.id)}
-        width={480}
-        height={280}
-        ariaLabel={`Check companion: king neighbours in ${state.layout} layout.`}
+        selectedId="queen"
+        analogy={{ a: "king", b: "man", c: "woman", target: "queen", showResult: true }}
+        width={560}
+        height={330}
+        ariaLabel={`Check companion: king minus man plus woman in ${state.layout} coordinates.`}
       />
     </figure>
   );

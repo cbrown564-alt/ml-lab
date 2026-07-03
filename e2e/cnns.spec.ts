@@ -39,6 +39,16 @@ test.describe("cnns exhibit", () => {
     await expect(panel(page).getByText(/Symptom · pattern moved/i)).toBeVisible();
   });
 
+  test("Break it: the kernel tab triggers the locally-blind failure", async ({ page }) => {
+    await openTab(page, "Break it");
+    await panel(page).getByRole("button", { name: /Kernel too small/i }).click();
+    await expect(panel(page).getByText(/Trigger it/i)).toBeVisible();
+    await panel(page).getByRole("button", { name: /Swap in the corner block/i }).click();
+    await expect(panel(page).getByText(/Symptom · same peak, different world/i)).toBeVisible();
+    await panel(page).getByRole("button", { name: /Repair · back to stripes/i }).click();
+    await expect(panel(page).getByText(/Trigger it/i)).toBeVisible();
+  });
+
   test("Explain it pairs the checks with the three-grid companion", async ({ page }) => {
     await openTab(page, "Explain it");
     await expect(panel(page).getByText(/Same filter idea, three grids/i)).toBeVisible();

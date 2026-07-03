@@ -45,7 +45,7 @@ export const cnnsMath: MathDrawerContent = {
             "FC: 64 × 36 + 36 = 2,340",
             "Conv: 3 × 3 + 1 = 10",
           ],
-          caption: `Flattening this toy grid into a fully connected layer needs ${fcParams.toLocaleString()} weights plus biases. One shared 3×3 filter needs ${convParams}. That ratio is why conv nets scale to real images.`,
+          caption: `Flattening this toy grid into a fully connected layer needs ${fcParams.toLocaleString()} parameters — 2,304 weights plus 36 biases. One shared 3×3 filter needs ${convParams} (nine weights plus one bias). That ratio is why conv nets scale to real images.`,
           highlights: [
             { text: "2,340", hue: "error" },
             { text: "10", hue: "truth" },

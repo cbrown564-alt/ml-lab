@@ -5,7 +5,7 @@ import { reportTaskEvent } from "@/lib/assessment/task-events";
 import { ConvField } from "@/components/viz/ConvField";
 import { StatGrid } from "@/components/viz/StatGrid";
 import { activationMass, conv2dValid } from "@/lib/models/cnn";
-import { convParams, fcParams, shiftDemo } from "@content/exhibits/cnns/experiment";
+import { convParams, convState, fcParams, shiftDemo } from "@content/exhibits/cnns/experiment";
 
 type Mode = "translation" | "kernel-size";
 
@@ -146,30 +146,91 @@ function TranslationLoop() {
 }
 
 function KernelLoop() {
-  const image = shiftDemo.original;
-  const filter = shiftDemo.filter;
-  const featureMap = conv2dValid(image, filter);
-  const maxCell = featureMap.flat().reduce((best, v, i, arr) => (Math.abs(v) > Math.abs(arr[best] ?? 0) ? i : best), 0);
+  // Same vertical-edge filter on two globally different images: the stripe field
+  // and the corner block. Fixture peak |response| is 2.10 on BOTH — no single 3×3
+  // view can tell which world it is in.
+  const [swapped, setSwapped] = useState(false);
+  const state = convState(swapped ? 2 : 0, 1, 14);
+  const featureMap = state.featureMap;
+  const maxCell = featureMap
+    .flat()
+    .reduce((best, v, i, arr) => (Math.abs(v) > Math.abs(arr[best] ?? 0) ? i : best), 0);
   const row = Math.floor(maxCell / featureMap[0]!.length);
   const col = maxCell % featureMap[0]!.length;
+  const peak = Math.abs(featureMap[row]?.[col] ?? 0);
 
   return (
     <div className="lg:grid lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:items-start lg:gap-8">
-      <Guidance
-        tone="ready"
-        kicker="Symptom · locally blind"
-        body="A 3×3 filter only sees a 3×3 patch. It can detect a local edge but never 'see' the whole stripe pattern in one shot — stacking layers widens the receptive field."
-        foot="Repair: stack conv layers or grow the kernel — not one giant dense flatten."
-      />
+      <div className="flex flex-col gap-5">
+        {swapped ? (
+          <Guidance
+            tone="broken"
+            kicker="Symptom · same peak, different world"
+            body={
+              <>
+                The corner block is nothing like the stripe field, but the filter's strongest
+                response is{" "}
+                <span className="font-medium text-[var(--viz-error-ink)]">
+                  exactly {peak.toFixed(2)} on both
+                </span>
+                . No single 3×3 view can tell which image it is looking at.
+              </>
+            }
+            foot={
+              <>
+                <span className="font-medium text-ink">Diagnose:</span> the receptive field is
+                local by design. <span className="font-medium text-ink">Repair:</span> stack conv
+                layers — each layer widens what one deep cell sees (3→5→7 pixels) until global
+                structure is in view.
+              </>
+            }
+          />
+        ) : (
+          <Guidance
+            tone="ready"
+            kicker="Trigger it"
+            body="One vertical-edge filter on the stripe field — strongest response 2.10. Swap in a completely different global pattern and watch what the filter reports."
+            foot="Use the toggle below — then bring the stripes back and compare."
+          />
+        )}
+        <button
+          type="button"
+          onClick={() => setSwapped((value) => !value)}
+          className="self-start rounded-full border border-line px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-ink-faint"
+        >
+          {swapped ? "Repair · back to stripes" : "Swap in the corner block"}
+        </button>
+        <StatGrid
+          direction="col"
+          stats={[
+            {
+              label: "peak |response|",
+              value: peak.toFixed(2),
+              hue: swapped ? "var(--viz-error-ink)" : "var(--viz-prediction-ink)",
+              note: swapped ? "identical on both images" : "stripe field",
+            },
+            {
+              label: "kernel view",
+              value: "3×3",
+              hue: "var(--viz-param-ink)",
+              note: "of an 8×8 image",
+            },
+          ]}
+        />
+      </div>
       <ConvField
-        image={image}
-        filter={filter}
+        image={state.image}
+        filter={state.filter}
         featureMap={featureMap}
         highlightRow={row}
         highlightCol={col}
         width={560}
         height={280}
-        ariaLabel="A 3 by 3 filter sees only a local patch; strongest activation at one position."
+        ariaLabel={
+          swapped
+            ? "Corner-block image: the vertical-edge filter's peak response matches the stripe field's."
+            : "Stripe field: the vertical-edge filter's strongest local response."
+        }
       />
     </div>
   );

@@ -105,7 +105,7 @@ export function CnnsLab() {
                 label: "FC vs conv",
                 value: `${fcParams} / ${convParams}`,
                 hue: "var(--viz-param-ink)",
-                note: "weight count",
+                note: "parameter count",
               },
             ]}
           />

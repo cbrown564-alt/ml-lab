@@ -56,7 +56,7 @@ test.describe("embeddings exhibit", () => {
 
   test("Explain it pairs the checks with the learned vs PCA companion", async ({ page }) => {
     await openTab(page, "Explain it");
-    await expect(panel(page).getByText(/king's neighbours — learned vs PCA/i)).toBeVisible();
+    await expect(panel(page).getByText(/king − man \+ woman — learned vs PCA/i)).toBeVisible();
     await expect(panel(page).getByText(/What is an embedding in a language model/i)).toBeVisible();
   });
 });

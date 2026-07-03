@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AttentionHeatmap } from "@/components/viz/AttentionHeatmap";
+import { AttentionHeatmap, ValueMixBar } from "@/components/viz/AttentionHeatmap";
 import { attentionState, tokens } from "@content/exhibits/attention/experiment";
 
 const QUERIES = [
@@ -43,10 +43,18 @@ export function AttentionCheckLab() {
         weights={state.weights}
         queryIndex={state.queryIndex}
         highlightKeyIndex={state.highlightKeyIndex}
-        width={480}
-        height={280}
+        width={560}
+        height={330}
         ariaLabel={`Check companion: ${state.queryLabel} syntax head peaks on ${state.topKeyLabel}.`}
       />
+      <div className="mt-4">
+        <ValueMixBar
+          tokens={tokens}
+          weights={state.weights}
+          queryIndex={state.queryIndex}
+          width={560}
+        />
+      </div>
     </figure>
   );
 }
