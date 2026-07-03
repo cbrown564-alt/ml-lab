@@ -288,7 +288,7 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    status: "stub",
+    status: "interactive",
   },
   {
     id: "attention",

@@ -112,7 +112,8 @@ After every node is `interactive`:
   `pca`, and `classification-task`.
 - **Journeys:** `into-deep-learning` (5 stops) and `understanding-llms` (5 stops, one
   optional) registered in `content/journeys/foundations.ts`.
-- **Exhibits:** `cnns` live at **interactive** (four-act spine, hand-rolled conv model,
-  `ConvField` viz kit). Remaining four nodes still stub. Into Deep Learning journey
-  now shows two live stops (neural nets + CNNs).
-- **Next action:** scaffold + build **embeddings** (2D/3D scatter kit).
+- **Exhibits:** `cnns` and `embeddings` live at **interactive** (four-act spines,
+  hand-rolled models, `ConvField` + `EmbeddingMap` viz kit). Remaining three nodes
+  still stub. Into Deep Learning journey now shows three live stops (neural nets,
+  CNNs, embeddings).
+- **Next action:** scaffold + build **attention** (content-dependent routing kit).

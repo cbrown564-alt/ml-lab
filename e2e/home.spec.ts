@@ -38,11 +38,12 @@ test.describe("home", () => {
     ).toBeVisible();
   });
 
-  test("every jewel is a live door — all twenty-one exhibits in the cabinet", async ({ page }) => {
+  test("every jewel is a live door — all twenty-two exhibits in the cabinet", async ({ page }) => {
     const cabinet = page.locator("#exhibits");
     await expect(cabinet.getByRole("link", { name: /Gradient Descent/ })).toBeVisible();
     await expect(cabinet.getByRole("link", { name: /K-Means Clustering/ })).toBeVisible();
     await expect(cabinet.getByRole("link", { name: /Convolutional Neural Networks/ })).toBeVisible();
+    await expect(cabinet.getByRole("link", { name: /Embeddings/ })).toBeVisible();
     await expect(cabinet.getByRole("link", { name: /Random Forests/ })).toBeVisible();
     await cabinet.getByRole("link", { name: /The Dataset/ }).click();
     await expect(page.getByRole("heading", { name: "The Dataset" })).toBeVisible();

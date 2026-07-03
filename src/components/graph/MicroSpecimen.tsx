@@ -108,6 +108,8 @@ function Specimen({ id, t }: { id: string; t: number }) {
       return <Pca t={t} />;
     case "cnns":
       return <Cnns t={t} />;
+    case "embeddings":
+      return <Embeddings t={t} />;
     default:
       return <FallbackSpecimen id={id} />;
   }
@@ -539,6 +541,40 @@ function Cnns({ t }: { t: number }) {
         stroke="var(--viz-param)"
         strokeWidth="1.5"
       />
+    </>
+  );
+}
+
+function Embeddings({ t }: { t: number }) {
+  const points = [
+    ["king", 72, 38],
+    ["queen", 68, 52],
+    ["cat", 36, 44],
+    ["run", 48, 68],
+  ] as const;
+  return (
+    <>
+      {points.map(([label, cx, cy], i) => (
+        <g key={label}>
+          <circle
+            cx={cx}
+            cy={cy}
+            r={4 + (i === 0 ? t * 2 : 0)}
+            fill="var(--viz-prediction)"
+            opacity={0.9}
+          />
+          <text
+            x={cx}
+            y={cy - 8}
+            textAnchor="middle"
+            fontSize="7"
+            fontFamily="var(--font-mono)"
+            fill="var(--viz-prediction-ink)"
+          >
+            {label}
+          </text>
+        </g>
+      ))}
     </>
   );
 }

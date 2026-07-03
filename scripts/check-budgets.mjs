@@ -69,6 +69,7 @@ const BUDGETS = [
   { route: "/exhibits/k-means", jsKb: 700, htmlKb: 115 },
   { route: "/exhibits/pca", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/cnns", jsKb: 700, htmlKb: 115 },
+  { route: "/exhibits/embeddings", jsKb: 700, htmlKb: 115 },
 ];
 
 const server =

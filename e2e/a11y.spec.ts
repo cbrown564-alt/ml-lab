@@ -35,6 +35,7 @@ const ROUTES = [
   "/exhibits/k-means",
   "/exhibits/pca",
   "/exhibits/cnns",
+  "/exhibits/embeddings",
 ];
 
 /** Serious/critical axe violations on the current page, formatted for the failure message. */
