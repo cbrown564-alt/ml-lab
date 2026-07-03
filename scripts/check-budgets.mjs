@@ -68,6 +68,7 @@ const BUDGETS = [
   { route: "/exhibits/gradient-boosting", jsKb: 700, htmlKb: 110 },
   { route: "/exhibits/k-means", jsKb: 700, htmlKb: 115 },
   { route: "/exhibits/pca", jsKb: 700, htmlKb: 110 },
+  { route: "/exhibits/cnns", jsKb: 700, htmlKb: 115 },
 ];
 
 const server =

@@ -106,6 +106,8 @@ function Specimen({ id, t }: { id: string; t: number }) {
       return <KMeans t={t} />;
     case "pca":
       return <Pca t={t} />;
+    case "cnns":
+      return <Cnns t={t} />;
     default:
       return <FallbackSpecimen id={id} />;
   }
@@ -498,6 +500,45 @@ function KMeans({ t }: { t: number }) {
           <circle cx={x} cy={cy[i]} r="3" fill="var(--viz-param)" />
         </g>
       ))}
+    </>
+  );
+}
+
+function Cnns({ t }: { t: number }) {
+  const cells = 4;
+  const origin = 34;
+  const size = 10;
+  const slide = Math.round(t * 2);
+  return (
+    <>
+      {Array.from({ length: cells * cells }, (_, i) => {
+        const r = Math.floor(i / cells);
+        const c = i % cells;
+        const x = origin + c * size;
+        const y = origin + r * size;
+        const dark = c < cells / 2 ? 0.25 : 0.75;
+        return (
+          <rect
+            key={i}
+            x={x}
+            y={y}
+            width={size - 1}
+            height={size - 1}
+            fill={`color-mix(in srgb, var(--viz-truth) ${Math.round(dark * 100)}%, var(--surface-bg))`}
+            stroke="var(--line)"
+            strokeWidth="0.5"
+          />
+        );
+      })}
+      <rect
+        x={origin + slide * size}
+        y={origin + slide * size}
+        width={size * 3 - 1}
+        height={size * 3 - 1}
+        fill="none"
+        stroke="var(--viz-param)"
+        strokeWidth="1.5"
+      />
     </>
   );
 }

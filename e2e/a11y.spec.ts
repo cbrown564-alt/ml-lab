@@ -32,6 +32,9 @@ const ROUTES = [
   "/exhibits/decision-trees",
   "/exhibits/random-forests",
   "/exhibits/gradient-boosting",
+  "/exhibits/k-means",
+  "/exhibits/pca",
+  "/exhibits/cnns",
 ];
 
 /** Serious/critical axe violations on the current page, formatted for the failure message. */

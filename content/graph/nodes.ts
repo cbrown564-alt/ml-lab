@@ -275,8 +275,8 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    // Opens the deep-learning on-ramps cluster. Stub — exhibit build in progress.
-    status: "stub",
+    // Opens the deep-learning on-ramps cluster. Interactive — four-act spine live.
+    status: "interactive",
   },
   {
     id: "embeddings",

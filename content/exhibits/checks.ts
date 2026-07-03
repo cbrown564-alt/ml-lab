@@ -1,6 +1,7 @@
 import type { ConceptCheck } from "@/lib/assessment/schema";
 import { biasVarianceCheck } from "./bias-variance/concept-check";
 import { classificationTaskCheck } from "./classification-task/concept-check";
+import { cnnsCheck } from "./cnns/concept-check";
 import { dataLeakageCheck } from "./data-leakage/concept-check";
 import { featureScalingCheck } from "./feature-scaling/concept-check";
 import { gradientDescentCheck } from "./gradient-descent/concept-check";
@@ -26,6 +27,7 @@ import { whatIsMlCheck } from "./what-is-ml/concept-check";
 export const conceptChecks: Record<string, ConceptCheck> = {
   "bias-variance": biasVarianceCheck,
   "classification-task": classificationTaskCheck,
+  cnns: cnnsCheck,
   "data-leakage": dataLeakageCheck,
   "feature-scaling": featureScalingCheck,
   "gradient-descent": gradientDescentCheck,

@@ -25,6 +25,7 @@ export const liveExhibits: Record<string, { href: string }> = {
   pca: { href: "/exhibits/pca" },
   "random-forests": { href: "/exhibits/random-forests" },
   "gradient-boosting": { href: "/exhibits/gradient-boosting" },
+  cnns: { href: "/exhibits/cnns" },
 };
 
 export const isLive = (nodeId: string): boolean => nodeId in liveExhibits;
