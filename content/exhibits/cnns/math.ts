@@ -51,6 +51,12 @@ export const cnnsMath: MathDrawerContent = {
             { text: "10", hue: "truth" },
           ],
         },
+        { kind: "widget", widget: "conv-params" },
+        {
+          kind: "prose",
+          text: "Drag the image size. The dense count is quadratic twice over — inputs × outputs — while the shared filter is a constant ten numbers reused at every position.",
+          highlights: [{ text: "constant ten numbers", hue: "truth" }],
+        },
       ],
     },
   ],

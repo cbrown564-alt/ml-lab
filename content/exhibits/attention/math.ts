@@ -21,6 +21,15 @@ export const attentionMath: MathDrawerContent = {
             { text: "softmax", hue: "prediction" },
           ],
         },
+        { kind: "widget", widget: "softmax-temperature" },
+        {
+          kind: "prose",
+          text: "That √d_k divisor is a score scale — rescale the committed sat row yourself. Softmax is competitive: shrink the scale and one key takes nearly everything; grow it and the row flattens toward uniform.",
+          highlights: [
+            { text: "√d_k", hue: "truth" },
+            { text: "softmax", hue: "prediction" },
+          ],
+        },
       ],
     },
     {

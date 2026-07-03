@@ -51,7 +51,9 @@ export type MathBlock =
   | { kind: "equation"; lines: string[]; caption?: string; highlights?: MathHighlight[] }
   | { kind: "widget"; widget: "stability"; config: StabilityConfig }
   | { kind: "widget"; widget: "penalty"; config: PenaltyConfig }
-  | { kind: "widget"; widget: "nonlinearity" };
+  | { kind: "widget"; widget: "nonlinearity" }
+  | { kind: "widget"; widget: "conv-params" }
+  | { kind: "widget"; widget: "softmax-temperature" };
 
 export type MathDrawerSection = {
   id: string;

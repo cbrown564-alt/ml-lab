@@ -5,6 +5,9 @@ import { SquaredPenalty } from "@/components/exhibits/SquaredPenalty";
 // Lazy client boundary: keeps the widget's DecisionField + neural-net deps off every
 // other route's shared MathView bundle (see LazyNonlinearity).
 import { LazyNonlinearity } from "@/components/exhibits/LazyNonlinearity";
+import { ConvParamScale } from "@/components/exhibits/ConvParamScale";
+// Lazy for the same reason: the attention fixture JSON stays off shared MathView.
+import { LazySoftmaxTemperature } from "@/components/exhibits/LazySoftmaxTemperature";
 import { HUE_INK } from "@/lib/narrative/hues";
 import type { MathBlock, MathDrawerContent, MathHighlight } from "@/lib/narrative/math";
 import { nodes } from "@content/graph/nodes";
@@ -61,6 +64,10 @@ function Block({ block }: { block: MathBlock }) {
           <StabilityScale config={block.config} />
         ) : block.widget === "penalty" ? (
           <SquaredPenalty config={block.config} />
+        ) : block.widget === "conv-params" ? (
+          <ConvParamScale />
+        ) : block.widget === "softmax-temperature" ? (
+          <LazySoftmaxTemperature />
         ) : (
           <LazyNonlinearity />
         )}
