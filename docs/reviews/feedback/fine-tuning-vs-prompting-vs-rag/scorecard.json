@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 2,
+  "exhibit": "fine-tuning-vs-prompting-vs-rag",
+  "reviewer": "agent-panel",
+  "date": "2026-07-12",
+  "contentHash": "30f2601d418fff90",
+  "register": [
+    {
+      "dimension": "hero-as-protagonist",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/00-viewport.png",
+      "note": "Document-first hero acceptable at content tier full; not flagship register."
+    },
+    {
+      "dimension": "mechanism-in-the-picture",
+      "score": 3,
+      "exemplarFrame": "seeing-theory-regression/01-ols-anscombe-1.png"
+    },
+    {
+      "dimension": "annotation-integration",
+      "score": 3,
+      "exemplarFrame": "distill-momentum/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "atmosphere-finish",
+      "score": 2,
+      "exemplarFrame": "ciechanowski-watch/02-scroll-40pct.png",
+      "note": "Metric-hue drift table vs bars — polish, not a full-tier blocker."
+    },
+    {
+      "dimension": "motion",
+      "score": 3,
+      "exemplarFrame": "r2d3-trees/02-scroll-40pct.png"
+    },
+    {
+      "dimension": "colour-discipline",
+      "score": 2,
+      "exemplarFrame": "r2d3-trees/00-viewport.png",
+      "note": "Unify Domain/Fresh metric hues across table and Run-it bars when polishing toward flagship."
+    }
+  ],
+  "hero": {
+    "present": true,
+    "fullWidth": true,
+    "labeledAnnotation": true,
+    "depictsMechanism": true,
+    "thumbnailLegible": true,
+    "atMostOneLoadMotion": true
+  },
+  "assessment": {
+    "playableExperimentTask": true,
+    "transferIsInteractiveOrOpen": true,
+    "processFeedbackEveryOption": true,
+    "notPureMcqStack": true
+  },
+  "verdict": {
+    "decision": "hold",
+    "blocking": [],
+    "summary": "Clears content tier full (complete conceptual experience, 2 real Break triggers, parrot-resistant transfer). Held at interactive — not advanced to flagship; visual register stays below 3 on hero/atmosphere/colour."
+  }
+}

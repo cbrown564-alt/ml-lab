@@ -4,13 +4,18 @@ import { StatGrid } from "@/components/viz/StatGrid";
 import { ConvField } from "@/components/viz/ConvField";
 import { useActiveFrame } from "@/components/exhibits/story-frame";
 import type { CnnsFrame } from "@content/exhibits/cnns/spine";
-import { convParams, convState, fcParams } from "@content/exhibits/cnns/experiment";
+import {
+  convParams,
+  convState,
+  fcParams,
+  slideParam,
+} from "@content/exhibits/cnns/experiment";
 
 export function CnnsStory() {
   const frame = useActiveFrame<CnnsFrame>();
   const imageIndex = frame?.imageIndex ?? 0;
   const filterIndex = frame?.filterIndex ?? 1;
-  const slide = frame?.slide ?? 17;
+  const slide = frame?.slide ?? slideParam.default;
   const state = convState(imageIndex, filterIndex, slide);
 
   const caption =

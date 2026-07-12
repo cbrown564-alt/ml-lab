@@ -187,7 +187,7 @@ exhibits, confirmed by the critic agent against named frames, before scaling.
 
 The hard, high-leverage part — getting the *shared template* to the bar — is done
 and proven (linreg 3.0). **Foundations (15 nodes) and the trees cluster (3 nodes)
-are flagship** after the human review pass (2026-07-01). **Unsupervised cluster** (k-means, PCA) **flagship** after the cluster panel (2026-07-02). **Deep-learning on-ramps kickoff** (2026-07-03): graph stubs, typed edges, `into-deep-learning` + `understanding-llms` journeys — see [../deep-learning-workstream-plan.md](../deep-learning-workstream-plan.md). Exhibit build next (cnns first).
+are flagship** after the human review pass (2026-07-01). **Unsupervised cluster** (k-means, PCA) **flagship** after the cluster panel (2026-07-02). **Deep-learning on-ramps** — four heroes **flagship**, RAG capstone **interactive** (tier full) after the cluster panel (2026-07-12); see [../reviews/flagship-deep-learning-review/FINDINGS.md](../reviews/flagship-deep-learning-review/FINDINGS.md) and [../deep-learning-workstream-plan.md](../deep-learning-workstream-plan.md).
 
 **Honest scope note:** Phase 1 is ~25–30 exhibits; building them all to this bar
 is a multi-session effort. This session delivered the template lift + the

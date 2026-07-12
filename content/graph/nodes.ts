@@ -275,8 +275,9 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    // Opens the deep-learning on-ramps cluster. Interactive — four-act spine live.
-    status: "interactive",
+    // Opens the deep-learning on-ramps cluster. Advanced interactive→flagship by the
+    // cluster panel (docs/reviews/flagship-deep-learning-review/FINDINGS.md, 2026-07-12).
+    status: "flagship",
   },
   {
     id: "embeddings",
@@ -288,7 +289,8 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    status: "interactive",
+    // Advanced interactive→flagship by the DL cluster panel (2026-07-12).
+    status: "flagship",
   },
   {
     id: "attention",
@@ -300,7 +302,8 @@ export const nodes: ConceptNode[] = [
     kind: "concept",
     phase: 1,
     depth: "core",
-    status: "interactive",
+    // Advanced interactive→flagship by the DL cluster panel (2026-07-12).
+    status: "flagship",
   },
   {
     id: "the-transformer",
@@ -312,7 +315,8 @@ export const nodes: ConceptNode[] = [
     kind: "algorithm",
     phase: 1,
     depth: "core",
-    status: "interactive",
+    // Advanced interactive→flagship by the DL cluster panel (2026-07-12).
+    status: "flagship",
   },
   {
     id: "fine-tuning-vs-prompting-vs-rag",
@@ -324,6 +328,8 @@ export const nodes: ConceptNode[] = [
     kind: "practice",
     phase: 1,
     depth: "core",
+    // Content tier full: panel cleared the conceptual bar; held at interactive
+    // (not flagship) — hero/atmosphere/colour below register 3. See FINDINGS.md.
     status: "interactive",
   },
   {

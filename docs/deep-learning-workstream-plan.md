@@ -1,6 +1,6 @@
 # Deep learning workstream — cluster build plan
 
-**Status:** Active · **Created:** 2026-07-03 · **Owner:** orchestrator
+**Status:** Complete (flagship gate cleared 2026-07-12) · **Created:** 2026-07-03 · **Owner:** orchestrator
 
 ## 1. Why now
 
@@ -105,14 +105,14 @@ After every node is `interactive`:
 - Graph explorer shows a navigable deep-learning territory — no scattered stubs without edges.
 - `npm run validate` + `check:rubric --strict` + full test suite green throughout.
 
-## 10. Current state (kickoff commit)
+## 10. Current state (flagship gate 2026-07-12)
 
-- **Graph:** 25 nodes, 5 new stubs (`cnns`, `embeddings`, `attention`, `the-transformer`,
-  `fine-tuning-vs-prompting-vs-rag`) with typed edges from `neural-network-fundamentals`,
-  `pca`, and `classification-task`.
-- **Journeys:** `into-deep-learning` (5 stops) and `understanding-llms` (5 stops, one
-  optional) registered in `content/journeys/foundations.ts`.
-- **Exhibits:** All five deep-learning on-ramp nodes live at **interactive** (cnns →
-  fine-tuning-vs-prompting-vs-rag). Both journeys show five live stops each. **Cluster build
-  complete** — ready for non-circular batch review → flagship.
-- **Next action:** spawn cluster review panel (designer-critic / teacher / tester) per §6.
+- **Graph:** 25 nodes. Four DL heroes at **flagship** (`cnns`, `embeddings`, `attention`,
+  `the-transformer`); adaptation capstone at **interactive** (content tier full).
+- **Journeys:** `into-deep-learning` and `understanding-llms` — every stop a live door.
+- **Panel:** tester PASS · teacher PASS · designer PASS (after CheckLab slide fix).
+  Code-parity waived cluster-wide ([docs/00-decisions.md](00-decisions.md) #007).
+- **Scorecards:** `docs/reviews/feedback/{cnns,embeddings,attention,the-transformer}/`.
+- **Findings:** [reviews/flagship-deep-learning-review/FINDINGS.md](reviews/flagship-deep-learning-review/FINDINGS.md).
+- **Next action:** polish RAG toward flagship if desired; mirrored-code follow-up for
+  CNNs/attention; Phase 1 remaining / release gate.

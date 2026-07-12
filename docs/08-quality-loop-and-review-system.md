@@ -3,8 +3,10 @@
 **Status:** implemented (2026-06-23); human pass complete (2026-07-01). See
 [foundations-rejudge.md](reviews/foundations-rejudge.md) and
 [Implemented](#implemented-2026-06-23) at the foot of this doc. Unsupervised cluster
-(k-means, PCA) shipped flagship 2026-07-02; deep-learning on-ramps kickoff 2026-07-03
-(see [deep-learning-workstream-plan.md](deep-learning-workstream-plan.md)). The bridge between
+(k-means, PCA) shipped flagship 2026-07-02; deep-learning on-ramps flagship gate
+cleared 2026-07-12 (four heroes flagship; RAG held interactive — see
+[flagship-deep-learning-review/FINDINGS.md](reviews/flagship-deep-learning-review/FINDINGS.md)).
+The bridge between
 "Foundations is built to a good standard" and "Foundations clears the Distill/3B1B
 bar" — and the precondition for scaling the loop
 ([PHASE1-SCALE-PLAN.md](loop/PHASE1-SCALE-PLAN.md)) to the rest of the graph

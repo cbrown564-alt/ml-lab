@@ -60,8 +60,8 @@ Working document for the build-evaluate-improve loop. Goal: **all 19 criteria in
 3. ~~**Flagship acceptance review**~~ — done 2026-06-21; both Phase 0 exhibits advanced to `flagship`.
 4. ~~Phase 1, regression cluster~~ — Foundations + trees clusters flagship (2026-07-01).
 5. ~~Phase 1, unsupervised cluster~~ — k-means + PCA flagship (2026-07-02).
-6. **Phase 1, deep-learning on-ramps** (CNNs, embeddings, attention, transformer, LLM journey) — **cluster build complete 2026-07-03**; all five nodes interactive. See [deep-learning-workstream-plan.md](../deep-learning-workstream-plan.md). Next: batch review → flagship.
-7. **Known level-4 work, deliberately deferred**: narration choreographed to experiment visuals (temporal contiguity), force-personification characters + art bible, explorer filter/search when the graph approaches 30 nodes, 3D loss surfaces with the deep-learning cluster.
+6. ~~**Phase 1, deep-learning on-ramps**~~ — cluster flagship 2026-07-12: cnns · embeddings · attention · the-transformer → **flagship**; fine-tuning-vs-prompting-vs-rag held at **interactive** (content tier full). See [deep-learning-workstream-plan.md](../deep-learning-workstream-plan.md) and [flagship-deep-learning-review/FINDINGS.md](../reviews/flagship-deep-learning-review/FINDINGS.md).
+7. **Known level-4 work, deliberately deferred**: narration choreographed to experiment visuals (temporal contiguity), force-personification characters + art bible, explorer filter/search when the graph approaches 30 nodes, 3D loss surfaces with the deep-learning cluster; **mirrored code for CNNs/attention** (docs/00 #007).
 8. **Release gate (pre-public-launch)**: human cold walkthroughs (n≥3, think-aloud) and a manual NVDA/VoiceOver pass (including the word-span transcripts).
 
 ## Standing rules for the loop

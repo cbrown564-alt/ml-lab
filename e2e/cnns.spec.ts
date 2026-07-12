@@ -53,5 +53,7 @@ test.describe("cnns exhibit", () => {
     await openTab(page, "Explain it");
     await expect(panel(page).getByText(/Same filter idea, three grids/i)).toBeVisible();
     await expect(panel(page).getByText(/What makes a convolution different/i)).toBeVisible();
+    // Companion must open on a firing cell (slide 14), not the dead zero at slide 17.
+    await expect(panel(page).getByText(/Mass 25\.20/)).toBeVisible();
   });
 });

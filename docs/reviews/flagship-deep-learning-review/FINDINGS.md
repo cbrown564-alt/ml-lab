@@ -68,6 +68,56 @@ Captures: `docs/reviews/captures/<id>/2026-07-03/` (20 frames each, incl. 1440×
 11. Minors: cnns weight-count copy, attention "bank" hook, cnns rose feature-map hue, embeddings categorical-hue documentation.
 12. **Owner ratification: no-code-mode tier decision** — cannot be closed by the loop.
 
+## Fix pass (2026-07-03, commits ac9abdc → d3f8d3a)
+
+1. **ConvField fluid** (ac9abdc) — GridPanel SVGs scale with their minmax tracks; DOM-probed max svg right 1294/1440 (was 1632).
+2. **cnns firing defaults** (ac9abdc) — slide 14 = cell (2,2), fires 2.10 for both spine pairs; hero/story/lab all read 2.10 under "strong response".
+3. **Attention full-matrix field** (ac9abdc) — continuous single-hue ramp over all 36 cells (kills the lavender runner-up drift); hero rebuilt as matrix + peak-route chip + value-mix bars; "Keys →" label collision fixed.
+4. **Transformer canvases** (3797fa6) — hero = prefix+lg-bars | block-flow+P(mat) chip; Run-it flow chips grow to fill, bars in labeled panel; Check companion gets 1-vs-2-block P(mat) tiles (0.803→0.849 — stack-depth now has a visible payoff, teacher item 6).
+5. **Embeddings fixture honesty + second trigger** (1d5faa5) — DISCOVERED: the co-occurrence features were compositional (queen = king−man+woman exactly), so PCA preserved the analogy at distance 0.0, falsifying the exhibit's claim. Regenerated with non-compositional counts (pca miss 1.29, guarded by generator assert + unit test); Break-it "Analogy" tab is now a genuine PCA trigger/repair loop with e2e.
+6. **cnns KernelLoop trigger** (f6bb3d4) — swap stripes↔corner-block; peak |response| identical 2.10 on both (fixture-verified); trigger→symptom→repair with e2e.
+7. **Copy** (f6bb3d4) — weight-count reconciled (2,340 parameters = 2,304 weights + 36 biases); attention "bank" orphan → fixture-grounded (sat hangs on cat).
+8. **Check companions** (f6bb3d4) — embeddings: analogy-miss tiles (0.00/1.29) + overlay map; attention: 560px heatmap + ValueMixBar.
+9. **Live math widgets** (d3f8d3a) — cnns conv-params scale (dense explodes to 922,500 at 32×32 vs constant 10); attention softmax-τ (committed sat row flattens to uniform 0.17). Budgets: cluster +2–5 KB js, failure set byte-identical to baseline 4362b0e (home/what-is-ml html fails are pre-existing — verified by rebuilding the baseline commit).
+
+Not yet addressed (non-blocking polish): RAG metric-hue unification + hero balance, RAG Check companion, cnns rose feature-map hue, embeddings categorical-hue documentation, template "Waiting on the experiment above" copy, journey `gradient-descent` prereq warnings.
+
+**Owner ratification (2026-07-12):** no-code-mode for this cluster — **waived** as N/A. Recorded as [docs/00-decisions.md](../../00-decisions.md) #007. Tracked follow-up: mirrored code for CNNs and attention first.
+
+## Re-review (2026-07-12)
+
+Fresh captures: `docs/reviews/captures/<id>/2026-07-12/`. Panel: tester · designer-critic · teacher.
+
+### Tester — integrity: **PASS**
+
+axe 27/27 · cluster e2e 27/27 · validate 0 errors · vitest 314/314 · DL route budgets all within ceiling · red lines CLEAR. (Budget script exit 1 remains pre-existing out-of-cluster routes.)
+
+### Teacher — pedagogy: **PASS** (all five)
+
+| Exhibit | Verdict |
+| --- | --- |
+| cnns | YES — slide-14 defaults, KernelLoop trigger, param-scale widget verified |
+| embeddings | YES — honest PCA miss 1.29 + real Analogy trigger |
+| attention | YES (upheld) |
+| the-transformer | YES — stack-depth P(mat) payoff verified |
+| fine-tuning-vs-prompting-vs-rag | clears **full** |
+
+Code-parity unmet by design — waived under #007.
+
+### Designer-critic — visual register: **PASS** (after CheckLab fix)
+
+First re-review held cnns Explain at 2 (`OUTPUT 0.00` — CheckLab still hardcoded slide 17). Fix: `CnnsCheckLab` + `CnnsStory` fallback → `slideParam.default` (14); e2e pins Mass 25.20. embeddings / attention / the-transformer cleared register 3 on every surface. RAG clears **full** (hero/atmosphere/colour below 3 — held at interactive).
+
+| Exhibit | Hero | See | Run | Break | Explain | Clears 3? |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| cnns | 3 | 3 | 3 | 3 | 3 | **YES** |
+| embeddings | 3 | 3 | 3 | 3 | 3 | **YES** |
+| attention | 3 | 3 | 3 | 3 | 3 | **YES** |
+| the-transformer | 3 | 3 | 3 | 3 | 3 | **YES** |
+| fine-tuning-vs-prompting-vs-rag | 2 | 3 | 3 | 3 | 2–3 | **full only** |
+
 ## Verdict
 
-_Open — tester **PASS** (all five) · teacher **FAIL** first pass (attention + transformer teach; cnns + embeddings held) · designer **FAIL** first pass (embeddings clears; cnns/attention/transformer held). Fix pass in progress per the consolidated queue → re-capture → re-review._
+**GATE CLEARED.** Tester · teacher · designer all pass after the CheckLab slide fix and code-parity waiver. Four hero nodes advance `interactive`→**flagship**. Adaptation capstone stays `interactive` at content tier **full**.
+
+Standing green at flip: validate 0 · vitest · 27 cluster e2e · DL budgets · `check:rubric --strict` · scorecards in `docs/reviews/feedback/{cnns,embeddings,attention,the-transformer}/`.

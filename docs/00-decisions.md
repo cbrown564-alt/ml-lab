@@ -4,6 +4,16 @@ Lightweight ADR-style log. One entry per direction-setting decision; newest firs
 
 ---
 
+## 007 — Deep-learning cluster: code-parity waived (2026-07-12)
+
+**Decision**: The five deep-learning on-ramp exhibits (`cnns`, `embeddings`, `attention`, `the-transformer`, `fine-tuning-vs-prompting-vs-rag`) ship **without** mirrored code mode. Docs/06 "Code parity" is **N/A for this cluster**, not a silent miss. Visual↔math remains required (live widgets beside equations). Tracked follow-up: add mirrored-code beats first for CNNs and attention, where "it's just N lines of dot products" is the signature aha.
+
+**Why**: Cluster teaches and transfers on visual+math alone (panel re-review 2026-07-12). Full Pyodide parity across five neural exhibits is a separate platform lift; blocking flagship on it would stall the on-ramp journeys. Explicit waiver prevents red line #6 ("flagship with a silently incomplete section").
+
+**Trade-off accepted**: Caps CNNs/attention below the "Representation" great column until code mode lands; Foundations exhibits keep visual↔code parity.
+
+---
+
 ## 006 — Editorial voice: copy audit style system (2026-06-25)
 
 **Decision**: Adopt a single product voice documented in `docs/style/voice.md`. Learner-facing copy uses **ML Lab / exhibit / stage / journey** vocabulary; avoids museum/atlas/cabinet metaphors in UI. Four stages use action-oriented purpose lines (build the picture, try the model, find its limits, apply the idea). Claims must be vivid about interaction and conservative about theory — qualify absolutes, separate demonstration-specific behavior from general rules, and use validation vs test correctly.

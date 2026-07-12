@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ConvField } from "@/components/viz/ConvField";
-import { convState } from "@content/exhibits/cnns/experiment";
+import { convState, slideParam } from "@content/exhibits/cnns/experiment";
 
 const STAGES = [
   { id: "horizontal", label: "Horiz. stripes", imageIndex: 0, filterIndex: 1 },
@@ -13,7 +13,9 @@ const STAGES = [
 export function CnnsCheckLab() {
   const [stageId, setStageId] = useState<(typeof STAGES)[number]["id"]>("horizontal");
   const stage = STAGES.find((entry) => entry.id === stageId)!;
-  const state = convState(stage.imageIndex, stage.filterIndex, 17);
+  // Match hero/lab default (slide 14 → cell (2,2) fires 2.10). Slide 17 was a
+  // zero cell and contradicted the shaded feature map under Explain it.
+  const state = convState(stage.imageIndex, stage.filterIndex, slideParam.default);
 
   return (
     <figure className="rounded-xl border border-line bg-raised p-4">
