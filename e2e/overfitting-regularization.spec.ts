@@ -23,9 +23,56 @@ test.describe("overfitting-regularization exhibit", () => {
   test("turning up the penalty reins in the wiggle", async ({ page }) => {
     await openTab(page, "Run it");
     await expect(panel(page).getByText(/overfitting/i).first()).toBeVisible();
-    const slider = panel(page).getByRole("slider").first();
+    const slider = panel(page).getByRole("slider", { name: "Penalty λ" });
     await slider.fill("-0.5"); // log10 λ ≈ -0.5 → λ ≈ 0.32
     await expect(panel(page).getByText(/reined in/i).first()).toBeVisible();
+  });
+
+  test("Hear the gap couples complexity, error, sound opt-in, and feedback", async ({ page }) => {
+    await openTab(page, "Run it");
+    const lab = panel(page).getByRole("region", { name: "Hear the gap" });
+    const degree = lab.getByRole("slider");
+
+    await degree.fill("8");
+    await expect(
+      lab.getByRole("img", { name: /Degree 8 polynomial/ }),
+    ).toBeVisible();
+    await expect(
+      lab.getByText(
+        "Degree 8: training error keeps falling while held-out error rises. The gap is overfitting.",
+      ),
+    ).toBeVisible();
+
+    await lab.getByRole("button", { name: "Start sound" }).click();
+    await expect(lab.getByRole("button", { name: "Mute sound" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await lab.getByRole("button", { name: "Mute sound" }).click();
+    await expect(lab.getByRole("button", { name: "Start sound" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+
+    await lab.getByRole("button", { name: "Mark the turn here" }).click();
+    await expect(lab.getByRole("status")).toContainText(
+      "it began earlier—near degree 3",
+    );
+
+    await lab.getByRole("button", { name: "Reset" }).click();
+    await expect(degree).toHaveValue("1");
+    await expect(lab.getByRole("status")).toHaveCount(0);
+  });
+
+  test("Hear the gap disables automatic sweeping under reduced motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.reload();
+    await expect(page.getByTestId("mastery-badge")).toHaveText("seen");
+    await openTab(page, "Run it");
+
+    const lab = panel(page).getByRole("region", { name: "Hear the gap" });
+    await expect(lab.getByRole("button", { name: "Play sweep" })).toBeDisabled();
+    await expect(lab.getByRole("slider")).toBeEnabled();
   });
 
   test("See it enforces a committed prediction before the reveal", async ({ page }) => {

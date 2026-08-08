@@ -1,4 +1,5 @@
 import { ExhibitFrame } from "@/components/exhibits/ExhibitFrame";
+import { OverfittingAudioLabLazy } from "@/components/exhibits/OverfittingAudioLabLazy";
 import { RegularizationBreakIt } from "@/components/exhibits/RegularizationBreakIt";
 import { RegularizationCheckLab } from "@/components/exhibits/RegularizationCheckLab";
 import { RegularizationLab } from "@/components/exhibits/RegularizationLab";
@@ -23,7 +24,15 @@ export default function OverfittingRegularizationExhibit() {
       checkCompanion={<RegularizationCheckLab />}
       hero={<RegularizationHero />}
       story={<RegularizationStory />}
-      experiment={<RegularizationLab />}
+      experiment={
+        <div className="flex flex-col gap-14">
+          <OverfittingAudioLabLazy key="hear-the-gap" />
+          <div key="regularization-repair">
+            <h3 className="mb-4 text-2xl font-semibold">Now repair it with regularization</h3>
+            <RegularizationLab />
+          </div>
+        </div>
+      }
       lede={
         <p>
           Regularization adds a cost for large or complex parameter values. It reduces a
@@ -39,9 +48,9 @@ export default function OverfittingRegularizationExhibit() {
       }
       experimentLede={
         <>
-          Move λ across several orders of magnitude. Watch the coefficients shrink, the
-          curve smooth, and training and validation error trade places, then connect the
-          behavior to the ridge penalty.
+          First locate the moment training and held-out performance part company—by sight,
+          and optionally by sound. Then move λ across several orders of magnitude to rein
+          the same failure back in.
         </>
       }
     />

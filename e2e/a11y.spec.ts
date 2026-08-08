@@ -68,3 +68,13 @@ test("axe: neural-network Run it has no serious or critical violations", async (
   const blocking = await blockingAxe(page);
   expect(blocking, blocking.join("\n")).toEqual([]);
 });
+
+test("axe: overfitting audio instrument has no serious or critical violations", async ({ page }) => {
+  await page.goto("/exhibits/overfitting-regularization");
+  await page.getByRole("tab", { name: "Run it" }).click();
+  const lab = page.getByRole("region", { name: "Hear the gap" });
+  await lab.getByRole("slider").fill("8");
+  await lab.getByRole("button", { name: "Mark the turn here" }).click();
+  const blocking = await blockingAxe(page);
+  expect(blocking, blocking.join("\n")).toEqual([]);
+});

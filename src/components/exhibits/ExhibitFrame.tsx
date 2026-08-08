@@ -201,7 +201,7 @@ export function ExhibitFrame({
   // it back as code where the lab offers that), then the same model's mechanism in
   // maths: coordinated representations of one canonical state, not separate views.
   const runView = (
-    <div>
+    <div key="run">
       <div className={proseClass}>
         <p className="text-lg leading-relaxed text-ink-muted">
           {experimentLede ?? (
@@ -247,7 +247,7 @@ export function ExhibitFrame({
             label: "Break it",
             purpose: ACT_PURPOSE.break,
             content: (
-              <div>
+              <div key="break">
                 <div className={proseClass}>
                   <p className="text-lg leading-relaxed text-ink-muted">
                     Trigger the failure yourself. Watch the symptom, identify the
@@ -276,14 +276,14 @@ export function ExhibitFrame({
               // into Explain, not shrink to a corner widget. The live instrument
               // holds a co-equal column beside the checks — the same running model
               // the learner met in See/Run/Break, now answered against.
-              <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-12">
+              <div key="explain" className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-12">
                 <div className="max-w-[64ch]">
                   <ConceptCheckSection check={check} nodeTitle={node.title} next={checkNext} />
                 </div>
                 <div className="mt-10 lg:mt-0 lg:sticky lg:top-8">{checkCompanion}</div>
               </div>
             ) : (
-              <div className={proseClass}>
+              <div key="explain" className={proseClass}>
                 <ConceptCheckSection check={check} nodeTitle={node.title} next={checkNext} />
               </div>
             ),
