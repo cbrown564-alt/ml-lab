@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-08-09",
+  "shipping": false,
+  "visualDirection": {
+    "status": "provisional-reference",
+    "selected": "direction-a-cut-paper",
+    "targetScreens": [
+      "docs/reviews/visual-polish-audit/screenshots/homepage-hero.png",
+      "docs/reviews/visual-polish-audit/screenshots/linear-regression-hero-1440.png",
+      "docs/reviews/visual-polish-audit/screenshots/neural-network-fundamentals-hero.png"
+    ],
+    "candidates": [
+      { "id": "direction-a-cut-paper", "status": "provisional-reference", "master": "masters/visual-directions/direction-a-cut-paper-screen.png" },
+      { "id": "direction-b-material-specimen", "status": "rejected", "master": "masters/visual-directions/direction-b-material-specimen-screen.png" },
+      { "id": "direction-c-editorial-gouache", "status": "shortlisted", "master": "masters/visual-directions/direction-c-editorial-gouache-screen.png" }
+    ]
+  },
+  "jobs": [
+    {
+      "id": "characters-force-reference-sheet-v1",
+      "kind": "image",
+      "grounding": "docs/04-content-pipeline.md#4-art",
+      "subjects": ["Optimizer", "Noise", "Regularizer", "Curse of Dimensionality"],
+      "status": "shortlisted",
+      "direction": "direction-a-cut-paper",
+      "master": "masters/force-reference-sheet-v1.png"
+    },
+    {
+      "id": "mature-exhibit-metaphor-candidates-v1",
+      "kind": "image",
+      "grounding": "existing stable narratives",
+      "exhibits": ["attention", "cnns", "decision-trees", "k-means", "the-transformer"],
+      "status": "generated",
+      "direction": "direction-a-cut-paper",
+      "masters": [
+        "masters/exhibit-candidates/attention-routing-v1.png",
+        "masters/exhibit-candidates/cnns-weight-sharing-v1.png",
+        "masters/exhibit-candidates/k-means-wrong-k-v1.png"
+      ],
+      "remaining": ["decision-trees", "the-transformer"]
+    },
+    {
+      "id": "missing-narration-v1",
+      "kind": "audio",
+      "grounding": "existing narrative.ts files and established Gemini Sulafat pipeline",
+      "exhibits": [
+        "attention", "cnns", "decision-trees", "embeddings",
+        "fine-tuning-vs-prompting-vs-rag", "gradient-boosting", "k-means",
+        "pca", "random-forests", "the-transformer"
+      ],
+      "status": "queued-central",
+      "route": "central-elevenlabs",
+      "note": "Local provider access was mistaken for a production blocker. Central ElevenLabs can generate and normalize audio. First send decision-trees, random-forests, and gradient-boosting from their stable narrative.ts files; preserve the established calm documentary register. Return normalized masters plus generation metadata for listening review. Project integration still requires audio manifests, word timings, staleness hashes, and imports. The other seven narratives require a source-stability review and generator-catalog extension before promotion, but central master generation is available."
+    },
+    {
+      "id": "silent-loop-studies-v1",
+      "kind": "video",
+      "grounding": "reusable forces already named in docs/04-content-pipeline.md",
+      "subjects": ["optimizer navigating uncertainty", "noise disturbing a stable signal", "attention routing selectively"],
+      "status": "partially-integrated",
+      "route": "central-gemini-web-video",
+      "note": "One still keyframe study exists locally. Local absence of a video generator was not a provider blocker: central Gemini web Video can submit 10-second jobs. Send the optimizer proof first, tolerate temporary service errors with a bounded retry, remove any generated audio, and review the returned loop directly before queuing Noise or Attention.",
+      "master": "masters/motion-studies/optimizer-settle-keyframes-v1.png",
+      "remaining": [],
+      "returns": [
+        {
+          "id": "ml-lab-video-001-optimizer-settle-10s",
+          "path": "handoff/browser-video/returns/ml-lab-video-001-optimizer-settle-10s-muted.mp4",
+          "durationSeconds": 10,
+          "status": "integrated-provisional",
+          "integrationPath": "public/media/generated/gradient-descent/optimizer-settle.mp4",
+          "posterPath": "public/media/generated/gradient-descent/optimizer-settle-poster.png",
+          "use": "learner-controlled visual metaphor after the exact guided story",
+          "review": "Direct playback passed. Autoplay and looping disabled because the seam is not established."
+        },
+        {
+          "id": "ml-lab-video-002-noise-signal-10s",
+          "path": "handoff/browser-video/returns/ml-lab-video-002-noise-signal-10s-muted.mp4",
+          "durationSeconds": 6,
+          "status": "integrated-provisional",
+          "integrationPath": "public/media/generated/overfitting-regularization/noise-signal.mp4",
+          "posterPath": "public/media/generated/overfitting-regularization/noise-signal-poster.png",
+          "use": "learner-controlled visual metaphor after the exact guided story",
+          "review": "Direct playback passed at the returned six-second duration. Autoplay and looping disabled."
+        },
+        {
+          "id": "ml-lab-video-003-attention-routing-10s",
+          "path": "handoff/browser-video/returns/ml-lab-video-003-attention-routing-10s-muted.mp4",
+          "durationSeconds": 6,
+          "status": "unsuitable",
+          "review": "Rejected for integration because the return introduces prohibited arrowheads and misses the requested duration.",
+          "fallback": "public/media/generated/attention/attention-routing.png"
+        }
+      ]
+    }
+  ],
+  "integrationCheckpoint": {
+    "date": "2026-08-10",
+    "status": "integrated",
+    "placements": [
+      {
+        "exhibit": "gradient-descent",
+        "asset": "ml-lab-video-001-optimizer-settle-10s",
+        "status": "integrated-provisional"
+      },
+      {
+        "exhibit": "overfitting-regularization",
+        "asset": "ml-lab-video-002-noise-signal-10s",
+        "status": "integrated-provisional"
+      },
+      {
+        "exhibit": "attention",
+        "asset": "masters/exhibit-candidates/attention-routing-v1.png",
+        "status": "fallback-integrated",
+        "replaces": "ml-lab-video-003-attention-routing-10s"
+      }
+    ],
+    "policy": "Generated media is labelled, secondary to the native guided story and experiment, and never presented as exact model geometry. Video is silent, learner-controlled, non-looping, and poster-first.",
+    "verification": [
+      "TypeScript typecheck passed",
+      "focused lint and 318 automated tests passed",
+      "direct Next.js production compilation passed",
+      "graph validation passed with two pre-existing journey warnings",
+      "Chromium render passed at 1440x1000 and 390x844 for all three placements with no horizontal overflow",
+      "both muted videos decoded, loaded, and advanced under direct playback",
+      "attention fallback image loaded with alternative text",
+      "strict promotion rubric remains blocked pending fresh human scorecards for the three changed flagship pages"
+    ]
+  },
+  "phaseTwo": {
+    "recurringForces": {
+      "status": "generated",
+      "advance": [
+        "masters/forces/optimizer-habits-v1.png",
+        "masters/forces/noise-habits-v1.png",
+        "masters/forces/curse-dimensionality-habits-v1.png"
+      ],
+      "reserve": ["masters/forces/regularizer-habits-v1.png"],
+      "correctiveAdvance": ["masters/forces/regularizer-states-v2.png"]
+    },
+    "matureExhibits": {
+      "status": "generated",
+      "advance": [
+        "masters/exhibit-candidates/random-forests-crowd-v1.png",
+        "masters/exhibit-candidates/gradient-boosting-repairs-v1.png",
+        "masters/exhibit-candidates/transformer-repeated-blocks-v1.png"
+      ],
+      "reject": ["masters/exhibit-candidates/decision-trees-cascade-v1.png"],
+      "batchThreeAdvance": [
+        "masters/exhibit-candidates/pca-compression-v1.png",
+        "masters/exhibit-candidates/adaptation-three-ways-v1.png"
+      ],
+      "batchThreeReserve": [
+        "masters/exhibit-candidates/embeddings-relations-v1.png",
+        "masters/failure-vocabulary/failure-states-v1.png"
+      ],
+      "correctiveAdvance": [
+        "masters/exhibit-candidates/embeddings-relation-v2.png",
+        "masters/failure-vocabulary/underfit-overfit-v2.png"
+      ],
+      "correctiveReserve": [
+        "masters/failure-vocabulary/leakage-shift-v2.png"
+      ]
+    },
+    "atmosphere": {
+      "status": "generated",
+      "advance": [
+        "masters/atmosphere/lesson-opening-contours-v1.png",
+        "masters/atmosphere/stage-transition-folds-v1.png",
+        "masters/atmosphere/catalogue-placard-plate-v1.png"
+      ],
+      "reserve": [],
+      "reject": []
+    }
+  }
+}

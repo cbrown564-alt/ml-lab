@@ -4,6 +4,7 @@ import { AttentionCheckLab } from "@/components/exhibits/AttentionCheckLab";
 import { AttentionHero } from "@/components/exhibits/AttentionHero";
 import { AttentionLab } from "@/components/exhibits/AttentionLab";
 import { AttentionStory } from "@/components/exhibits/AttentionStory";
+import { GeneratedMediaNote } from "@/components/exhibits/GeneratedMediaNote";
 import { attentionCheck } from "@content/exhibits/attention/concept-check";
 import { attentionFailures } from "@content/exhibits/attention/failures";
 import { attentionMath } from "@content/exhibits/attention/math";
@@ -23,6 +24,17 @@ export default function AttentionExhibit() {
       checkCompanion={<AttentionCheckLab />}
       hero={<AttentionHero />}
       story={<AttentionStory />}
+      supportingMedia={
+        <GeneratedMediaNote
+          kind="image"
+          src="/media/generated/attention/attention-routing.png"
+          alt="Cream paper tokens connected by violet ribbons of different widths"
+          width={1672}
+          height={941}
+          title="Selective routing"
+          description="Ribbon width suggests stronger and weaker attention routes. The image does not encode exact weights, query-key geometry, or probabilities."
+        />
+      }
       experiment={<AttentionLab />}
       lede={
         <p>

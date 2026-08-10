@@ -4,6 +4,7 @@ import { GradientDescentCheckLab } from "@/components/exhibits/GradientDescentCh
 import { GradientDescentHero } from "@/components/exhibits/GradientDescentHero";
 import { GradientDescentLab } from "@/components/exhibits/GradientDescentLab";
 import { GradientDescentStory } from "@/components/exhibits/GradientDescentStory";
+import { GeneratedMediaNote } from "@/components/exhibits/GeneratedMediaNote";
 import { gradientDescentCheck } from "@content/exhibits/gradient-descent/concept-check";
 import { gradientDescentFailures } from "@content/exhibits/gradient-descent/failures";
 import { gradientDescentMath } from "@content/exhibits/gradient-descent/math";
@@ -36,6 +37,16 @@ export default function GradientDescentExhibit() {
         </>
       }
       story={<GradientDescentStory />}
+      supportingMedia={
+        <GeneratedMediaNote
+          kind="video"
+          src="/media/generated/gradient-descent/optimizer-settle.mp4"
+          poster="/media/generated/gradient-descent/optimizer-settle-poster.png"
+          duration="10 seconds"
+          title="Settling into a basin"
+          description="The teal Optimizer overshoots and settles. This is a qualitative analogy for diminishing updates, not a loss curve or a claim about a particular optimizer."
+        />
+      }
       experiment={<GradientDescentLab />}
       experimentLede={
         <>

@@ -5,6 +5,7 @@ import { RegularizationCheckLab } from "@/components/exhibits/RegularizationChec
 import { RegularizationLab } from "@/components/exhibits/RegularizationLab";
 import { RegularizationHero } from "@/components/exhibits/RegularizationHero";
 import { RegularizationStory } from "@/components/exhibits/RegularizationStory";
+import { GeneratedMediaNote } from "@/components/exhibits/GeneratedMediaNote";
 import { overfittingRegularizationCheck } from "@content/exhibits/overfitting-regularization/concept-check";
 import { overfittingRegularizationFailures } from "@content/exhibits/overfitting-regularization/failures";
 import { overfittingRegularizationMath } from "@content/exhibits/overfitting-regularization/math";
@@ -24,6 +25,16 @@ export default function OverfittingRegularizationExhibit() {
       checkCompanion={<RegularizationCheckLab />}
       hero={<RegularizationHero />}
       story={<RegularizationStory />}
+      supportingMedia={
+        <GeneratedMediaNote
+          kind="video"
+          src="/media/generated/overfitting-regularization/noise-signal.mp4"
+          poster="/media/generated/overfitting-regularization/noise-signal-poster.png"
+          duration="6 seconds"
+          title="Signal under interference"
+          description="Violet fragments make a blue signal harder to read. Noise is a recurring cue here, not a literal dataset or an explanation of regularization."
+        />
+      }
       experiment={
         <div className="flex flex-col gap-14">
           <OverfittingAudioLabLazy key="hear-the-gap" />

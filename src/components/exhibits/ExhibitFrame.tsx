@@ -73,6 +73,7 @@ export function ExhibitFrame({
   math,
   check,
   story,
+  supportingMedia,
   experiment,
   experimentLede,
   failures,
@@ -102,6 +103,8 @@ export function ExhibitFrame({
   check?: ConceptCheck;
   /** The guided graphic for the Story view (reads its per-beat frame). */
   story: ReactNode;
+  /** Optional generated analogy shown after the exact guided story. */
+  supportingMedia?: ReactNode;
   /** The full interactive sandbox for the Experiment view. */
   experiment: ReactNode;
   /**
@@ -189,12 +192,15 @@ export function ExhibitFrame({
   // The stepper is the page's main event and its end; field notes close the walk
   // as its final "In the wild" step rather than scrolling below it.
   const storyView = (
-    <StoryStepper
-      beats={beats}
-      graphic={story}
-      fieldNotes={narrative.fieldNotes}
-      layout={storyLayout}
-    />
+    <>
+      <StoryStepper
+        beats={beats}
+        graphic={story}
+        fieldNotes={narrative.fieldNotes}
+        layout={storyLayout}
+      />
+      {supportingMedia}
+    </>
   );
 
   // Run it — inspect the implementation. The open bench leads (drive it, and read
