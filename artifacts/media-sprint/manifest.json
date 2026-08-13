@@ -63,6 +63,17 @@
       "note": "One still keyframe study exists locally. Local absence of a video generator was not a provider blocker: central Gemini web Video can submit 10-second jobs. Send the optimizer proof first, tolerate temporary service errors with a bounded retry, remove any generated audio, and review the returned loop directly before queuing Noise or Attention.",
       "master": "masters/motion-studies/optimizer-settle-keyframes-v1.png",
       "remaining": [],
+      "nextStudy": {
+        "id": "random-forests-single-vote-v1",
+        "status": "reserve",
+        "still": "masters/motion-studies/random-forests-vote-table-still-v1.png",
+        "metadata": "handoff/browser-video/returns/ml-lab-video-004-random-forests-single-vote-metadata.md",
+        "reviewFrames": [
+          "handoff/browser-video/returns/review-frames/ml-lab-video-004-contact.png",
+          "handoff/browser-video/returns/review-frames/ml-lab-video-004-poster.png"
+        ],
+        "review": "Reserve only. The intended amber token is isolated, but the return is 4.010 seconds, contains provider audio, has minor center-disc drift, and is not a clean loop. Do not integrate without a new decision."
+      },
       "returns": [
         {
           "id": "ml-lab-video-001-optimizer-settle-10s",
@@ -91,6 +102,15 @@
           "status": "unsuitable",
           "review": "Rejected for integration because the return introduces prohibited arrowheads and misses the requested duration.",
           "fallback": "public/media/generated/attention/attention-routing.png"
+        },
+        {
+          "id": "ml-lab-video-004-random-forests-single-vote",
+          "path": "handoff/browser-video/returns/ml-lab-video-004-random-forests-single-vote-muted.mp4",
+          "originalPath": "handoff/browser-video/returns/originals/ml-lab-video-004-random-forests-single-vote-original.mp4",
+          "sourceStill": "masters/motion-studies/random-forests-vote-table-still-v1.png",
+          "durationSeconds": 4.01,
+          "status": "reserve",
+          "review": "The intended token is isolated, but duration, audio, seam, and minor center-disc drift prevent advancement. Preserve as a non-looping study; not integrated."
         }
       ]
     }
