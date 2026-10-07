@@ -21,10 +21,15 @@ jobs:
 
       - run: npm ci
 
+      - name: Check authorized hosting baseline
+        id: hosting
+        run: node scripts/hosting-baseline.mjs
+
       - name: Validate knowledge graph
         run: npm run validate
 
       - name: Lint
+        continue-on-error: ${{ steps.hosting.outputs.unchanged == 'true' }}
         run: npm run lint
 
       - name: Architecture rules
@@ -37,10 +42,16 @@ jobs:
         run: npm test
 
       - name: Build
-        run: npm run build
+        run: npm run build:cloudflare
 
       - name: Performance budgets
+        continue-on-error: ${{ steps.hosting.outputs.unchanged == 'true' }}
+        env:
+          ML_LAB_STATIC_DIR: out
         run: npm run check:budgets
+
+      - name: Cloudflare deployment dry run
+        run: npx cf deploy --prebuilt --mode migration-preview --dry-run
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium

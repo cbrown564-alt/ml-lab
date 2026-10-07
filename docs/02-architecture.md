@@ -16,7 +16,7 @@
 | State | **Zustand** (per-exhibit experiment state) + React context (app shell) | Light, ergonomic, fine-grained updates for 60fps interactions |
 | Persistence | **Local-first (IndexedDB)**; accounts/DB deferred to Phase 2 | Decided — ship Phase 1 without auth complexity |
 | Audio | Pre-generated ElevenLabs assets + word-timing JSON, custom player | Proven in mathland prototype |
-| Hosting | **Vercel** | Static + Fluid Compute when server needs emerge |
+| Hosting | **Vercel currently; Cloudflare Workers Static Assets migration in progress** | Browser simulations need no production server; static export excludes the development review tool. README owns build and verification commands. |
 
 ## System shape
 

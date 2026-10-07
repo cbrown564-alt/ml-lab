@@ -31,3 +31,52 @@ ML Lab turns core machine-learning ideas into exhibits you can run, break, and a
 ## Status
 
 Phase 0 complete. Phase 1 in progress: **25 live exhibits**, **25 graph nodes**, **4 journeys** — Foundations (15 flagship), `the-gradient`, trees cluster (3 flagship), unsupervised (k-means, pca, flagship), **deep-learning on-ramps** (cnns · embeddings · attention · the-transformer **flagship**; fine-tuning/RAG **interactive**, tier full). Human review gate complete for Foundations (2026-07-01); unsupervised panel (2026-07-02); DL cluster panel (2026-07-12); `check:rubric --strict` gates `prebuild`. Findings: [docs/reviews/flagship-deep-learning-review/FINDINGS.md](docs/reviews/flagship-deep-learning-review/FINDINGS.md).
+
+## Cloudflare migration
+
+Production remains on Vercel while migration verification is in progress. The
+Cloudflare target is Workers Static Assets: the experiments, IndexedDB progress,
+lazy Python runtime and media run in the browser. No learner-facing server is
+required. Existing local development and the Vercel fallback stay available.
+
+Use Node 24.19 (`.nvmrc`) and the npm lockfile. `npm run build:cloudflare` defaults
+to `migration-preview`; production uses `npm run build:cloudflare -- production`.
+Deploy the resulting package with `npx cf deploy --prebuilt --mode` followed by
+the same mode. The build retains graph validation and reports the rubric check,
+checks asset sizes and adds preview noindex / immutable asset headers. cf uses
+the Wrangler delegate to package `out/`; it does not run these build scripts
+automatically.
+
+The review tool's entry points use `.dev.ts` / `.dev.tsx`. Next development and
+ordinary Next builds recognize them; `CF_STATIC_EXPORT=1` excludes them from
+the export. Filesystem-backed review data and APIs must never be published.
+`ML_LAB_BASE_URL` lets the existing performance and Playwright checks exercise a
+packaged deployment instead of starting Next locally.
+
+At the migration baseline `7e7d880`, the strict build check fails because human
+scorecards are stale for attention, gradient descent and overfitting /
+regularization. Lint also fails on an existing unescaped apostrophe in
+`CnnsBreakIt.tsx` (12 additional warnings). Do not refresh human verdicts without
+the corresponding review.
+
+On 7 October 2026 the owner authorized a hosting-only exception for these
+inherited failures. `scripts/hosting-baseline.json` pins the entire source,
+content and dependency state. While that state matches, Cloudflare builds report
+the stale rubric records and CI records lint/budget failures without blocking
+this hosting move. Any source, content or dependency change ends the exception:
+Cloudflare builds restore strict prebuild and CI makes lint/budgets mandatory.
+Ordinary Next builds always keep strict prebuild. This does not refresh a human
+verdict, raise a performance budget or waive future product review.
+
+The initial preview's 194 passing browser cases cover exhibit interactions and
+Python execution. Its broad recommendation locator also fails against ordinary
+Next because the homepage has four journeys; the test now scopes Foundations
+and passes. One gradient-descent contrast check failed in the concurrent suite
+and passed alone on both hosts; retain this intermittent failure in the evidence.
+All five separately run responsiveness checks pass. Eleven routes exceed the
+existing raw HTML/JavaScript budgets on both ordinary Next and the static export;
+the migration does not raise those budgets or claim the full check passes.
+
+Learner progress and display preferences belong to each browser origin. Keep the
+old origin available for recovery; changing hosting does not transfer IndexedDB.
+The planned progress export/import affordance is not currently implemented.

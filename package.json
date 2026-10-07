@@ -23,7 +23,8 @@
     "check:rubric": "tsx scripts/check-rubric.ts",
     "prebuild": "npm run validate && npm run check:rubric -- --strict",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "build:cloudflare": "node scripts/build-cloudflare.mjs"
   },
   "dependencies": {
     "next": "16.2.9",
@@ -39,12 +40,14 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cf": "1.0.0-beta.12",
     "dependency-cruiser": "^17.4.3",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
     "typescript": "^5",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.8",
+    "wrangler": "4.148.0"
   }
 }

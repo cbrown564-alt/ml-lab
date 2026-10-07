@@ -6,7 +6,7 @@ export default defineConfig({
   retries: 0,
   reporter: [["list"]],
   use: {
-    baseURL: "http://localhost:3100",
+    baseURL: process.env.ML_LAB_BASE_URL ?? "http://localhost:3100",
     trace: "retain-on-failure",
   },
   expect: {
@@ -40,7 +40,7 @@ export default defineConfig({
       },
     },
   ],
-  webServer: {
+  webServer: process.env.ML_LAB_BASE_URL ? undefined : {
     command: "npm run dev -- --port 3100",
     url: "http://localhost:3100",
     reuseExistingServer: true,

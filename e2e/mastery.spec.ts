@@ -84,7 +84,7 @@ test.describe("concept check + mastery", () => {
     await expect(page.getByTestId("mastery-badge")).toHaveText("seen");
 
     await page.goto("/");
-    const next = page.getByRole("region", { name: "Your next step" });
+    const next = page.getByRole("region", { name: "Your next step on Foundations", exact: true });
     await expect(next).toBeVisible();
     await expect(
       next.getByText(/You've explored Linear Regression but haven't taken its concept check/),
