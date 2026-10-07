@@ -10,7 +10,7 @@ import { spawn } from "node:child_process";
 import { setTimeout as sleep } from "node:timers/promises";
 
 const PORT = 3210;
-const BASE = `http://localhost:${PORT}`;
+const BASE = process.env.ML_LAB_BASE_URL ?? `http://localhost:${PORT}`;
 
 /**
  * Raw (uncompressed) bytes; gzip roughly thirds this on the wire.
@@ -76,10 +76,11 @@ const BUDGETS = [
 ];
 
 const server =
-  process.platform === "win32"
+  process.env.ML_LAB_BASE_URL ? null : process.platform === "win32"
     ? spawn(`npx next start --port ${PORT}`, { stdio: "pipe", shell: true })
     : spawn("npx", ["next", "start", "--port", String(PORT)], { stdio: "pipe" });
 const stop = () => {
+  if (!server) return;
   if (process.platform === "win32") {
     spawn(`taskkill /pid ${server.pid} /T /F`, { shell: true });
   } else {
