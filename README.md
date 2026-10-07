@@ -41,6 +41,9 @@ required. Existing local development and the Vercel fallback stay available.
 
 Use Node 24.19 (`.nvmrc`) and the npm lockfile. `npm run build:cloudflare` defaults
 to `migration-preview`; production uses `npm run build:cloudflare -- production`.
+Cloudflare Workers Builds watches `main`, runs the production build command above,
+and deploys the prebuilt production package.
+
 Deploy the resulting package with `npx cf deploy --prebuilt --mode` followed by
 the same mode. The build retains graph validation and reports the rubric check,
 checks asset sizes and adds preview noindex / immutable asset headers. cf uses
