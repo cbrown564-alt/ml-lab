@@ -8,9 +8,21 @@
  */
 import { spawn } from "node:child_process";
 import { setTimeout as sleep } from "node:timers/promises";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 const PORT = 3210;
 const BASE = process.env.ML_LAB_BASE_URL ?? `http://localhost:${PORT}`;
+const staticDirectory = process.env.ML_LAB_STATIC_DIR;
+const read = async (route) => {
+  if (staticDirectory) {
+    const file = route === "/" ? "index.html" : route.startsWith("/_next/") ? route.slice(1) : `${route.slice(1)}.html`;
+    return readFile(path.join(staticDirectory, file));
+  }
+  const response = await fetch(BASE + route);
+  if (!response.ok) throw new Error(`Budget fetch failed: ${route} (${response.status})`);
+  return Buffer.from(await response.arrayBuffer());
+};
 
 /**
  * Raw (uncompressed) bytes; gzip roughly thirds this on the wire.
@@ -76,7 +88,7 @@ const BUDGETS = [
 ];
 
 const server =
-  process.env.ML_LAB_BASE_URL ? null : process.platform === "win32"
+  process.env.ML_LAB_BASE_URL || staticDirectory ? null : process.platform === "win32"
     ? spawn(`npx next start --port ${PORT}`, { stdio: "pipe", shell: true })
     : spawn("npx", ["next", "start", "--port", String(PORT)], { stdio: "pipe" });
 const stop = () => {
@@ -89,7 +101,7 @@ const stop = () => {
 };
 
 try {
-  let up = false;
+  let up = Boolean(staticDirectory);
   for (let i = 0; i < 60 && !up; i++) {
     await sleep(500);
     up = await fetch(BASE)
@@ -100,14 +112,15 @@ try {
 
   let failed = false;
   for (const { route, jsKb, htmlKb } of BUDGETS) {
-    const html = await (await fetch(BASE + route)).text();
+    const html = (await read(route)).toString();
     const htmlBytes = Buffer.byteLength(html);
 
     const srcs = [...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map((m) => m[1]);
     let jsBytes = 0;
     for (const src of new Set(srcs)) {
-      const url = src.startsWith("http") ? src : BASE + src;
-      jsBytes += (await (await fetch(url)).arrayBuffer()).byteLength;
+      jsBytes += src.startsWith("http")
+        ? (await (await fetch(src)).arrayBuffer()).byteLength
+        : (await read(src)).byteLength;
     }
 
     const jsK = Math.round(jsBytes / 1024);

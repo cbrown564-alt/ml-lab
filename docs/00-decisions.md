@@ -4,6 +4,23 @@ Lightweight ADR-style log. One entry per direction-setting decision; newest firs
 
 ---
 
+## 008 — Hosting-only migration exception (2026-10-07)
+
+**Decision:** The owner authorized moving the unchanged ML Lab from Vercel to
+Cloudflare despite three existing stale human verdicts, one lint error and eleven
+raw size-budget failures. Keep their evidence and the verdicts unchanged.
+
+**Reason:** The static export preserves the 25 learner-facing exhibits and
+excludes the local filesystem review tool. Hosting checks, unit tests and browser
+interactions support this bounded move; they do not provide new human review.
+
+**Limit:** A SHA-256 snapshot pins all source/content files and both dependency
+files. Changes end the exception automatically and restore strict Cloudflare
+prebuild and mandatory CI lint/budgets. Ordinary Next prebuild stays strict.
+Origin-local learner progress requires retaining the old host for recovery.
+
+---
+
 ## 007 — Deep-learning cluster: code-parity waived (2026-07-12)
 
 **Decision**: The five deep-learning on-ramp exhibits (`cnns`, `embeddings`, `attention`, `the-transformer`, `fine-tuning-vs-prompting-vs-rag`) ship **without** mirrored code mode. Docs/06 "Code parity" is **N/A for this cluster**, not a silent miss. Visual↔math remains required (live widgets beside equations). Tracked follow-up: add mirrored-code beats first for CNNs and attention, where "it's just N lines of dot products" is the signature aha.

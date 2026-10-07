@@ -42,7 +42,7 @@ required. Existing local development and the Vercel fallback stay available.
 Use Node 24.19 (`.nvmrc`) and the npm lockfile. `npm run build:cloudflare` defaults
 to `migration-preview`; production uses `npm run build:cloudflare -- production`.
 Deploy the resulting package with `npx cf deploy --prebuilt --mode` followed by
-the same mode. The build retains graph validation and the strict rubric check,
+the same mode. The build retains graph validation and reports the rubric check,
 checks asset sizes and adds preview noindex / immutable asset headers. cf uses
 the Wrangler delegate to package `out/`; it does not run these build scripts
 automatically.
@@ -57,8 +57,16 @@ At the migration baseline `7e7d880`, the strict build check fails because human
 scorecards are stale for attention, gradient descent and overfitting /
 regularization. Lint also fails on an existing unescaped apostrophe in
 `CnnsBreakIt.tsx` (12 additional warnings). Do not refresh human verdicts without
-the corresponding review. A separate static-export feasibility check can inform
-the migration while these production requirements remain unresolved.
+the corresponding review.
+
+On 7 October 2026 the owner authorized a hosting-only exception for these
+inherited failures. `scripts/hosting-baseline.json` pins the entire source,
+content and dependency state. While that state matches, Cloudflare builds report
+the stale rubric records and CI records lint/budget failures without blocking
+this hosting move. Any source, content or dependency change ends the exception:
+Cloudflare builds restore strict prebuild and CI makes lint/budgets mandatory.
+Ordinary Next builds always keep strict prebuild. This does not refresh a human
+verdict, raise a performance budget or waive future product review.
 
 The initial preview's 194 passing browser cases cover exhibit interactions and
 Python execution. Its broad recommendation locator also fails against ordinary
